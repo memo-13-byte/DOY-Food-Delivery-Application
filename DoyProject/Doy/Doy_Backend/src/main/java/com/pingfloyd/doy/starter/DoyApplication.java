@@ -1,4 +1,4 @@
-package com.pingfloyd.Doy.starter;
+package com.pingfloyd.doy.starter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

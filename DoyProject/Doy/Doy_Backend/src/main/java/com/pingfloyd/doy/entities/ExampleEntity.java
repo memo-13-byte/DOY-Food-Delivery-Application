@@ -1,4 +1,4 @@
-package com.pingfloyd.Doy.entities;
+package com.pingfloyd.doy.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

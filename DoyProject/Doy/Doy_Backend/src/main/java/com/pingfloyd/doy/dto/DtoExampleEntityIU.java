@@ -1,4 +1,4 @@
-package com.pingfloyd.Doy.dto;
+package com.pingfloyd.doy.dto;
 
 // Provide as argument to POST mapping methods. IU = insert update
 
