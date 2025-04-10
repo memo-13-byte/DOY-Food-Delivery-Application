@@ -1,42 +1,59 @@
 package com.pingfloyd.doy.entities;
 
-import jakarta.annotation.Nullable;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import java.util.Date;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
-@Getter
-@Setter
-@RequiredArgsConstructor
-
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+@Getter(AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
+public abstract class User {
     @Id
-    @Column
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
+    private Long id;
 
-    @Column
     @NotNull
-    private String userName;
+    @Column(name = "user_name", length = 50, nullable = false)
+    private String username;
 
-    @Column
     @NotNull
+    @Column(name = "email", length = 100, nullable = false)
     private String email;
 
-    @Column
     @NotNull
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column
-    @Nullable
+    @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
-    @Column
     @NotNull
-    private Date createdAt;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+
+    public User() {
+        setCreatedAt(LocalDateTime.now());
+    }
+
+    protected User(String username, String email, String passwordHash) {
+        this();
+        setUsername(username);
+        setEmail(email);
+        setPasswordHash(passwordHash);
+    }
+
+    protected User(String username, String email, String passwordHash, String phoneNumber) {
+        this(username, email, passwordHash);
+        setPhoneNumber(phoneNumber);
+    }
 }
