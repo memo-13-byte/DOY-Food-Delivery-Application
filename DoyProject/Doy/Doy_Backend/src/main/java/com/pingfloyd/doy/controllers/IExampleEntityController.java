@@ -1,7 +1,7 @@
-package com.pingfloyd.Doy.controllers;
+package com.pingfloyd.doy.controllers;
 
-import com.pingfloyd.Doy.dto.DtoExampleEntity;
-import com.pingfloyd.Doy.dto.DtoExampleEntityIU;
+import com.pingfloyd.doy.dto.DtoExampleEntity;
+import com.pingfloyd.doy.dto.DtoExampleEntityIU;
 
 import java.util.List;
 

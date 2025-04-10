@@ -1,8 +1,8 @@
-package com.pingfloyd.Doy.services;
+package com.pingfloyd.doy.services;
 
-import com.pingfloyd.Doy.dto.DtoExampleEntity;
-import com.pingfloyd.Doy.dto.DtoExampleEntityIU;
-import com.pingfloyd.Doy.repositories.ExampleEntityRepository;
+import com.pingfloyd.doy.dto.DtoExampleEntity;
+import com.pingfloyd.doy.dto.DtoExampleEntityIU;
+import com.pingfloyd.doy.repositories.ExampleEntityRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.pingfloyd.Doy.dto;
+package com.pingfloyd.doy.dto;
 
 //Returnee type as a result of requests such as GET. We don't ever return objects of the actual entity class.
 
