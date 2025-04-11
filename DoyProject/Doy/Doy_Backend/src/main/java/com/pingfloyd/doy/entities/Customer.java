@@ -28,8 +28,19 @@ public class Customer extends User {
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "restaurant_id")
     )
-
     private Set<Restaurant> favoriteRestaurants = new HashSet<>();
+
+
+    // --- Cart Relationship ---
+    // One Customer has One Cart
+    // 'mappedBy = "customer"': Refers to the 'customer' field in the Cart entity
+    // Cascade ALL: Cart lifecycle is tied to Customer lifecycle
+    // orphanRemoval = true: If you set customer.setCart(null), the old cart gets deleted
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    // Use @PrimaryKeyJoinColumn on the owning side if you prefer that configuration style,
+    // but mappedBy + @MapsId on the other side is very common too.
+    // @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id") // Alternative config
+    private Cart cart;
 
     public Customer() {
         super();
