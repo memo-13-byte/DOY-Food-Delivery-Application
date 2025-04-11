@@ -27,12 +27,12 @@ public class LoginService {
         try {
             //search db for username and password
             UsernamePasswordAuthenticationToken authToken
-                    = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
+                    = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
             authenticationProvider.authenticate(authToken);
 
             //find user from db, cannot fail, already checked in auth.
             //Customer dbCustomer = customerRepository.findByUsername(loginRequest.getUsername()).get();
-            User dbCustomer = userRepository.findByEmail(loginRequest.getEmail()).get();
+            User dbCustomer = userRepository.findByEmail(loginRequest.getUsername()).get();
             //create token for user, will ask user the token every time a request is made.
             String token = jwtService.generateTokenForUser(dbCustomer);
 
