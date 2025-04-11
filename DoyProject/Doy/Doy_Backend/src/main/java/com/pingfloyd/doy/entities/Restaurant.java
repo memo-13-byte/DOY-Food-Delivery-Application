@@ -1,22 +1,38 @@
 package com.pingfloyd.doy.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+
+import javax.annotation.processing.Generated;
 
 @Entity
 @Table(name = "restaurant")
+@Getter
+@Setter
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private int id;
+    @Column(name = "restaurant_id")
+    private Long id;
 
-    @Column
-    private String name;
+    @NotNull
+    @Column(name = "restaurant_name", nullable = false, length = 100)
+    private String restaurantName;
 
-    @Column
-    private String description;
+    @Column(name = "restaurant_phone")
+    private String restaurantPhone;
 
-    @Column
-    private int imageId;
+    public Restaurant() {
 
+    }
+
+    public Restaurant(String restaurantName) {
+        setRestaurantName(restaurantName);
+    }
+
+    public Restaurant(String restaurantName, String restaurantPhone) {
+        this(restaurantName);
+        setRestaurantPhone(restaurantPhone);
+    }
 }

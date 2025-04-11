@@ -1,13 +1,14 @@
 package com.pingfloyd.doy.services;
 
-import com.pingfloyd.doy.entities.DtoItem;
-import com.pingfloyd.doy.entities.DtoItemIU;
-import com.pingfloyd.doy.entities.Item;
-import org.springframework.web.multipart.MultipartFile;
+import com.pingfloyd.doy.entities.DtoMenuItem;
+import com.pingfloyd.doy.entities.DtoMenuItemIU;
+
+import java.util.List;
 
 public interface IItemService {
-    DtoItem postItem(DtoItemIU dtoItemIU);
-    DtoItem updateItem(int itemId, DtoItemIU item);
-    DtoItem deleteItem(int itemId);
-    DtoItem getItem(int itemId);
+    DtoMenuItem postItem(DtoMenuItemIU dtoMenuItemIU);
+    DtoMenuItem updateItem(Long itemId, DtoMenuItemIU item);
+    DtoMenuItem deleteItem(Long itemId);
+    DtoMenuItem getItem(Long itemId);
+    List<DtoMenuItem> getRestaurantItems(Long restaurantId);
 }

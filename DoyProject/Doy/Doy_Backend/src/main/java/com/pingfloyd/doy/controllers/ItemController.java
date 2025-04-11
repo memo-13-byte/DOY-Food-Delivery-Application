@@ -1,10 +1,12 @@
 package com.pingfloyd.doy.controllers;
 
-import com.pingfloyd.doy.entities.DtoItem;
-import com.pingfloyd.doy.entities.DtoItemIU;
+import com.pingfloyd.doy.entities.DtoMenuItem;
+import com.pingfloyd.doy.entities.DtoMenuItemIU;
 import com.pingfloyd.doy.services.IItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/item")
@@ -15,26 +17,31 @@ public class ItemController implements IItemController {
 
     @Override
     @PostMapping("/post")
-    public DtoItem postItem(@RequestBody DtoItemIU item) {
+    public DtoMenuItem postItem(@RequestBody DtoMenuItemIU item) {
         return itemService.postItem(item);
     }
 
     @Override
     @PutMapping("/update/{id}")
-    public DtoItem updateItem(@PathVariable(name = "id")int itemId, @RequestBody DtoItemIU item) {
+    public DtoMenuItem updateItem(@PathVariable(name = "id")Long itemId, @RequestBody DtoMenuItemIU item) {
         return itemService.updateItem(itemId, item);
     }
 
-
     @Override
     @DeleteMapping("/delete/{id}")
-    public DtoItem deleteItem(@PathVariable("id")int itemId) {
+    public DtoMenuItem deleteItem(@PathVariable("id")Long itemId) {
         return itemService.deleteItem(itemId);
     }
 
     @Override
     @GetMapping("/get/{id}")
-    public DtoItem getItem(@PathVariable("id") int itemId) {
+    public DtoMenuItem getItem(@PathVariable("id") Long itemId) {
         return itemService.getItem(itemId);
+    }
+
+    @Override
+    @GetMapping("/get-items/{id}")
+    public List<DtoMenuItem> getRestaurantItems(@PathVariable("id") Long restaurantId) {
+        return itemService.getRestaurantItems(restaurantId);
     }
 }

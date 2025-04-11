@@ -10,10 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DtoRestaurantIU {
-    private String name;
-    private String description;
-    private Image image;
-
-    private List<DtoItemIU> addedItems;
-    private List<Integer> removedItemIds;
+    private String restaurantName;
+    private String restaurantPhone;
 }
