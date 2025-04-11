@@ -7,10 +7,11 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication() //no database connected yet
+@SpringBootApplication
 @ComponentScan(basePackages = {"com.pingfloyd.doy"})
 @EntityScan(basePackages = {"com.pingfloyd.doy"})
 @EnableJpaRepositories(basePackages = {"com.pingfloyd.doy"})
+
 public class DoyApplication {
 
 	public static void main(String[] args) {

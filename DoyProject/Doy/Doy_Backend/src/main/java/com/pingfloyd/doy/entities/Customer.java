@@ -1,5 +1,4 @@
 package com.pingfloyd.doy.entities;
-
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,21 +7,49 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "customer")
-public class Customer implements UserDetails {
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column
-    private String username;
-    @Column
-    private String password;
+@PrimaryKeyJoinColumn(name = "user_id")
+@Getter
+@Setter
+public class Customer extends User {
+    @Column(name = "loyalty_points")
+    private Integer loyaltyPoints = 0;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+    @Column(name = "preferred_payment_method", length = 50)
+    private String preferredPaymentMethod;
+    // psql -U samet -d DOY
+    @ManyToMany
+    @JoinTable(
+            name = "favorite_restaurant",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
+    )
+
+    private Set<Restaurant> favoriteRestaurants = new HashSet<>();
+
+    public Customer() {
+        super();
     }
+
+    public Customer(String firstname,String lastname, String email, String passwordHash) {
+        super(firstname,lastname, email, passwordHash);
+    }
+
+    public Customer(String firstname,String lastname, String email, String passwordHash, String phoneNumber) {
+        super(firstname , lastname, email, passwordHash, phoneNumber);
+    }
+
+
+
 }
+
