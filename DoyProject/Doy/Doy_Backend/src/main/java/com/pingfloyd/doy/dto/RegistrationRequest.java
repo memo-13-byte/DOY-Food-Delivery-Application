@@ -1,4 +1,4 @@
-package com.example.fooddelivery.registeration;
+package com.pingfloyd.doy.dto;
 import jakarta.validation.constraints.*;
 
 import lombok.*;
