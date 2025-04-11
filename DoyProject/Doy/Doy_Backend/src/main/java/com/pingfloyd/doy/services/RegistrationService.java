@@ -2,6 +2,7 @@ package com.pingfloyd.doy.services;
 
 
 
+import com.pingfloyd.doy.dto.RegistrationRequest;
 import com.pingfloyd.doy.entities.ConfirmationToken;
 import com.pingfloyd.doy.entities.Customer;
 import com.pingfloyd.doy.entities.User;
@@ -42,7 +43,7 @@ public class RegistrationService {
         this.confirmationTokenService = confirmationTokenService;
     }
 
-    public Customer CustomerRegister(@Valid @RequestBody com.example.fooddelivery.registeration.RegistrationRequest request){
+    public Customer CustomerRegister(@Valid @RequestBody RegistrationRequest request){
         Customer user = new Customer(
                 request.getFirstName(),
                 request.getLastName(),

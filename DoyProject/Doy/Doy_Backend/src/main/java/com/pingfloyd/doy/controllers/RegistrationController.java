@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.controllers;
 
+import com.pingfloyd.doy.dto.RegistrationRequest;
 import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.services.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> register(@RequestBody com.example.fooddelivery.registeration.RegistrationRequest request){
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest request){
         try {
             User createdRestaurant = registrationService.CustomerRegister(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdRestaurant);
