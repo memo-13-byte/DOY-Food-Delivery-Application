@@ -3,6 +3,7 @@ package com.pingfloyd.doy.config;
 
 
 import com.pingfloyd.doy.entities.Customer;
+import com.pingfloyd.doy.jwt.JwtAuthFilter;
 import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +61,6 @@ public class AppConfig {
     public JwtService jwtService() {
         return new JwtService();
     }
+
+
 }
