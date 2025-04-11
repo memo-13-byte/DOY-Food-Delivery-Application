@@ -1,7 +1,7 @@
 package com.pingfloyd.doy.controllers;
 
-import com.pingfloyd.doy.jwt.LoginRequest;
-import com.pingfloyd.doy.response.LoginAuthResponse;
+import com.pingfloyd.doy.dto.LoginRequest;
+import com.pingfloyd.doy.dto.LoginAuthResponse;
 import com.pingfloyd.doy.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

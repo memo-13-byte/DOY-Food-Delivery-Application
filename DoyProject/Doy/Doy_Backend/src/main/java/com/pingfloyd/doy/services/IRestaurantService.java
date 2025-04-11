@@ -1,7 +1,7 @@
 package com.pingfloyd.doy.services;
 
-import com.pingfloyd.doy.entities.DtoRestaurant;
-import com.pingfloyd.doy.entities.DtoRestaurantIU;
+import com.pingfloyd.doy.dto.DtoRestaurant;
+import com.pingfloyd.doy.dto.DtoRestaurantIU;
 
 public interface IRestaurantService {
     DtoRestaurant getRestaurant(Long id);

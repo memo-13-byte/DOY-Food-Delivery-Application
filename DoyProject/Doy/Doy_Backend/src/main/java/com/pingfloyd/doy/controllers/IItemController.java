@@ -1,7 +1,7 @@
 package com.pingfloyd.doy.controllers;
 
-import com.pingfloyd.doy.entities.DtoMenuItem;
-import com.pingfloyd.doy.entities.DtoMenuItemIU;
+import com.pingfloyd.doy.dto.DtoMenuItem;
+import com.pingfloyd.doy.dto.DtoMenuItemIU;
 
 import java.util.List;
 

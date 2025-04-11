@@ -48,29 +48,10 @@ public class Customer extends User {
         super();
     }
 
-    public Customer(String username, String email, String passwordHash) {
-        super(username, email, passwordHash);
+    public Customer(String firstName, String lastName, String email, String passwordHash, String phoneNumber) {
+        super(firstName, lastName, email, passwordHash, phoneNumber);
     }
 
-    public Customer(String username, String email, String passwordHash, String phoneNumber) {
-        super(username, email, passwordHash, phoneNumber);
-    }
-
-    @Column(name = "preferred_payment_method", length = 50)
-    private String preferredPaymentMethod;
-    // psql -U samet -d DOY
-    @ManyToMany
-    @JoinTable(
-            name = "favorite_restaurant",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
-    )
-
-    private Set<Restaurant> favoriteRestaurants = new HashSet<>();
-
-    public Customer() {
-        super();
-    }
 
     @Override
     public String getPassword() {

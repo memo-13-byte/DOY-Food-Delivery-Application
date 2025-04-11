@@ -1,18 +1,14 @@
 package com.pingfloyd.doy.services;
 
-import com.pingfloyd.doy.entities.Customer;
 import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.jwt.JwtService;
-import com.pingfloyd.doy.jwt.LoginRequest;
-import com.pingfloyd.doy.repositories.CustomerRepository;
+import com.pingfloyd.doy.dto.LoginRequest;
 import com.pingfloyd.doy.repositories.UserRepository;
-import com.pingfloyd.doy.response.LoginAuthResponse;
+import com.pingfloyd.doy.dto.LoginAuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 @Service
 public class LoginService {
@@ -31,12 +27,12 @@ public class LoginService {
         try {
             //search db for username and password
             UsernamePasswordAuthenticationToken authToken
-                    = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+                    = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
             authenticationProvider.authenticate(authToken);
 
             //find user from db, cannot fail, already checked in auth.
             //Customer dbCustomer = customerRepository.findByUsername(loginRequest.getUsername()).get();
-            User dbCustomer = userRepository.findByEmail(loginRequest.getUsername()).get();
+            User dbCustomer = userRepository.findByEmail(loginRequest.getEmail()).get();
             //create token for user, will ask user the token every time a request is made.
             String token = jwtService.generateTokenForUser(dbCustomer);
 

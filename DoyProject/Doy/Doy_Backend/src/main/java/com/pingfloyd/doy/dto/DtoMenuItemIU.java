@@ -1,4 +1,4 @@
-package com.pingfloyd.doy.entities;
+package com.pingfloyd.doy.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,8 +9,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoMenuItem {
-    private Long id;
+public class DtoMenuItemIU {
     private String name;
     private String description;
     private String category;

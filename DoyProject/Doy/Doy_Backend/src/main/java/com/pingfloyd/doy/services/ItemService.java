@@ -1,7 +1,7 @@
 package com.pingfloyd.doy.services;
 
-import com.pingfloyd.doy.entities.DtoMenuItem;
-import com.pingfloyd.doy.entities.DtoMenuItemIU;
+import com.pingfloyd.doy.dto.DtoMenuItem;
+import com.pingfloyd.doy.dto.DtoMenuItemIU;
 import com.pingfloyd.doy.entities.MenuItem;
 import com.pingfloyd.doy.entities.Restaurant;
 import com.pingfloyd.doy.repositories.ItemRepository;
@@ -65,6 +65,7 @@ public class ItemService implements IItemService {
         MenuItem savedItem = itemRepository.save(item);
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(savedItem, dtoMenuItem);
+        dtoMenuItem.setRestaurantId(savedItem.getRestaurant().getId());
 
         return dtoMenuItem;
     }
@@ -79,6 +80,7 @@ public class ItemService implements IItemService {
         itemRepository.delete(item);
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(item, dtoMenuItem);
+        dtoMenuItem.setRestaurantId(item.getRestaurant().getId());
 
         return dtoMenuItem;
     }
@@ -91,6 +93,7 @@ public class ItemService implements IItemService {
         }
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(item, dtoMenuItem);
+        dtoMenuItem.setRestaurantId(item.getRestaurant().getId());
 
         return dtoMenuItem;
     }
@@ -107,6 +110,7 @@ public class ItemService implements IItemService {
         for (MenuItem menuItem : menuItems) {
             DtoMenuItem dtoMenuItem = new DtoMenuItem();
             BeanUtils.copyProperties(menuItem, dtoMenuItem);
+            dtoMenuItem.setRestaurantId(restaurantId);
 
             dtoMenuItems.add(dtoMenuItem);
         }

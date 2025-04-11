@@ -1,7 +1,7 @@
 package com.pingfloyd.doy.services;
 
-import com.pingfloyd.doy.entities.DtoRestaurant;
-import com.pingfloyd.doy.entities.DtoRestaurantIU;
+import com.pingfloyd.doy.dto.DtoRestaurant;
+import com.pingfloyd.doy.dto.DtoRestaurantIU;
 import com.pingfloyd.doy.entities.Restaurant;
 import com.pingfloyd.doy.repositories.RestaurantRepository;
 import org.springframework.beans.BeanUtils;
