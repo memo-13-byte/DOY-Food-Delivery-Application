@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "app_user")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Getter(AccessLevel.PROTECTED)
-@Setter(AccessLevel.PROTECTED)
+@Getter
+@Setter
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
