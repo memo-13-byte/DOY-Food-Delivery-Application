@@ -3,8 +3,10 @@ package com.pingfloyd.doy.config;
 
 
 import com.pingfloyd.doy.entities.Customer;
+import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.repositories.CustomerRepository;
+import com.pingfloyd.doy.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +25,7 @@ import java.util.Optional;
 public class AppConfig {
 
     @Autowired
-    CustomerRepository customerRepository;
+    UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -31,7 +33,7 @@ public class AppConfig {
 
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                Optional<Customer> customerOptional = customerRepository.findByUsername(username);
+                Optional<User> customerOptional = userRepository.findByEmail(username);
                 return customerOptional.orElse(null);
             }
         };
