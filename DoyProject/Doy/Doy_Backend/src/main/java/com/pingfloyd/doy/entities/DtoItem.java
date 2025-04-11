@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DtoItem {
-    private String id;
+    private int id;
     private String name;
     private String description;
     private int price;
