@@ -1,15 +1,19 @@
 package com.pingfloyd.doy.jwt;
 
+import com.pingfloyd.doy.entities.UserRoles;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /*
@@ -29,17 +33,26 @@ public class JwtService {
         int expirationDateInMilliseconds = 1000 * 60 * 60 * 2;
 
         return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date())
+                .claim("role", userDetails.getAuthorities())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationDateInMilliseconds))
                 .signWith(getKey(), SignatureAlgorithm.HS256).compact();
     }
 
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
+    }
+
     public <T> T exportToken(String token, Function<Claims, T> claimsFunction) {
-        Claims claims = Jwts.parser().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
+        Claims claims = getClaimsFromToken(token);
         return claimsFunction.apply(claims);
     }
 
     public String getUsernameFromToken(String token) {
         return exportToken(token, Claims::getSubject);
+    }
+
+    public Object getClaimFromToken(String token, String claim) {
+        return getClaimsFromToken(token).get(claim);
     }
 
     public boolean isTokenExpired(String token) {

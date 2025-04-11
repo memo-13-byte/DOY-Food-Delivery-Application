@@ -6,10 +6,10 @@ public enum UserRoles {
     COURIER("COURIER"),
     RESTAURANT_OWNER("RESTAURANT_OWNER");
 
-    public final String roleName;
+    public final String value;
 
     UserRoles(String roleName) {
-        this.roleName = roleName;
+        this.value = roleName;
     }
 
 }
