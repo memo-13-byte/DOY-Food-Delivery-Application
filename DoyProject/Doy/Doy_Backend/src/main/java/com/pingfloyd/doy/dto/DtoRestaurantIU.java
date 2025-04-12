@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DtoRestaurantIU {
     @NotNull(message = "Restaurant name must not be empty")
-    @Size(max = 100,message = "Restaurant name must not exceed 100 characters")
+    @Size(min = 2,max = 100,message = "Restaurant name must not exceed 100 characters")
     private String restaurantName;
 
     private String restaurantPhone;
