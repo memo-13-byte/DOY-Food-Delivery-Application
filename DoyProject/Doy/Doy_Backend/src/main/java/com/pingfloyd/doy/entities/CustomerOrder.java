@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.entities;
 
+import com.pingfloyd.doy.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +22,11 @@ public class CustomerOrder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 30)
+    private OrderStatus status;
+
+
 
 }

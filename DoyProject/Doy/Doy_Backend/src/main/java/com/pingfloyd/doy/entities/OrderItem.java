@@ -2,6 +2,7 @@ package com.pingfloyd.doy.entities;
 
 import jakarta.persistence.*;
 
+@Entity
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

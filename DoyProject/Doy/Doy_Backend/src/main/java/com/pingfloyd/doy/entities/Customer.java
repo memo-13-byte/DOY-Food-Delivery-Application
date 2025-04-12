@@ -16,12 +16,6 @@ import java.util.Set;
 @Getter
 @Setter
 public class Customer extends User {
-    @Column(name = "loyalty_points")
-    private Integer loyaltyPoints = 0;
-
-    @Column(name = "preferred_payment_method", length = 50)
-    private String preferredPaymentMethod;
-
     @ManyToMany
     @JoinTable(
             name = "favorite_restaurant",
@@ -29,6 +23,15 @@ public class Customer extends User {
             inverseJoinColumns = @JoinColumn(name = "restaurant_id")
     )
     private final Set<Restaurant> favoriteRestaurants = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "customer_address",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    private Set<Address> addresses = new HashSet<>();
+
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Cart cart;

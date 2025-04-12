@@ -22,6 +22,9 @@ public class Restaurant {
     @Column(name = "restaurant_name", nullable = false, length = 100)
     private String restaurantName;
 
+    @Column(name = "description", length = 255)
+    private String description;
+
     @Column(name = "restaurant_phone")
     private String restaurantPhone;
 
@@ -30,6 +33,10 @@ public class Restaurant {
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private final Set<MenuItem> menuItems = new HashSet<>();
+
+    @OneToOne
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    private Address address;
 
     public Restaurant() {
 
