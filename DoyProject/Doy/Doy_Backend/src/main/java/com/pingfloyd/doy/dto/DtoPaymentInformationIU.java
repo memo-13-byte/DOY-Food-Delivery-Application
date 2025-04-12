@@ -32,4 +32,6 @@ public class DtoPaymentInformationIU {
     private String expiryDate;
     @NotEmpty
     private String nameOnCard;
+    @NotEmpty
+    private String lastFourDigits;
 }

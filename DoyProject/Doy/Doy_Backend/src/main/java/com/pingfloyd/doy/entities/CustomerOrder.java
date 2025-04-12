@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "customer_order")
@@ -30,6 +33,13 @@ public class CustomerOrder {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 30, nullable = false)
     private OrderStatus status;
+
+    @CreationTimestamp
+    @Column(name = "creation_date", nullable = false, updatable = false)
+    private LocalDate creationDate;
+
+    @Column(name = "delivery_date")
+    private LocalDate deliveryDate;
 
 
 

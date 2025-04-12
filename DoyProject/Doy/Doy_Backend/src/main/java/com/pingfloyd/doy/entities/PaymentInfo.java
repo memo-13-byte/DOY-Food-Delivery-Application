@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.entities;
 
+import com.pingfloyd.doy.enums.CardType;
 import com.pingfloyd.doy.utils.YearMonthAttributeConverter;
 import java.time.YearMonth;
 import jakarta.persistence.*;
@@ -23,8 +24,9 @@ public class PaymentInfo {
     @Column(name = "cardholder_name", nullable = false, length = 100)
     private String cardholderName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "card_type", length = 50)
-    private String cardType;
+    private CardType cardType;
 
     @NotNull
     @Column(name = "last_four_digits", nullable = false, length = 4)
@@ -34,9 +36,6 @@ public class PaymentInfo {
     @Column(name = "expiry_date", nullable = false, length = 7)
     @Convert(converter = YearMonthAttributeConverter.class)
     private YearMonth expiryDate;
-
-    @Column(name = "payment_token", length = 255)
-    private String paymentToken;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
