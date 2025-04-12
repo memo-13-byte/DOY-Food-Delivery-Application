@@ -1,5 +1,8 @@
 package com.pingfloyd.doy.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DtoRestaurantIU {
+    @NotNull(message = "Restaurant name must not be empty")
+    @Size(max = 100,message = "Restaurant name must not exceed 100 characters")
     private String restaurantName;
+
     private String restaurantPhone;
 }
