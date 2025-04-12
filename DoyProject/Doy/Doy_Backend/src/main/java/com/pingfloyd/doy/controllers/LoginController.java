@@ -3,6 +3,7 @@ package com.pingfloyd.doy.controllers;
 import com.pingfloyd.doy.dto.LoginRequest;
 import com.pingfloyd.doy.dto.LoginAuthResponse;
 import com.pingfloyd.doy.services.LoginService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,7 @@ public class LoginController {
     private LoginService loginAuthService;
 
     @PostMapping(path = "/auth")
-    public LoginAuthResponse login(@RequestBody LoginRequest loginRequest) {
+    public LoginAuthResponse login(@RequestBody @Valid LoginRequest loginRequest) {
         return loginAuthService.login(loginRequest);
     }
 }

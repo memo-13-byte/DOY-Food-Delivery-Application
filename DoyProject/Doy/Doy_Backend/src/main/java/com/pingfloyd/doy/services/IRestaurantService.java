@@ -2,6 +2,7 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
+import org.springframework.http.ResponseEntity;
 
 public interface IRestaurantService {
     DtoRestaurant getRestaurant(Long id);
