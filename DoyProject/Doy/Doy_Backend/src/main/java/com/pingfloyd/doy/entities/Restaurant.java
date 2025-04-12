@@ -28,6 +28,12 @@ public class Restaurant {
     @Column(name = "restaurant_phone")
     private String restaurantPhone;
 
+    @Column(name = "min_order_price")
+    private Integer minOrderPrice;
+
+    @Column(name = "rating")
+    private Double rating;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "restaurant_category", length = 30, nullable = false)
