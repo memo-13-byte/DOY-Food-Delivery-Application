@@ -35,8 +35,16 @@ public class Customer extends User {
     @JoinColumn(name = "current_address")
     private Address current_address;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PaymentInfo> paymentInfos = new HashSet<>();
+
     public Customer() {
         super();
+    }
+
+    public void addPaymentInfo(PaymentInfo paymentInfo) {
+        paymentInfos.add(paymentInfo);
+        paymentInfo.setCustomer(this);
     }
 
     public Customer(String firstName, String lastName, String email, String passwordHash, String phoneNumber) {
