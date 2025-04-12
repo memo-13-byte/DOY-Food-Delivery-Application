@@ -36,6 +36,10 @@ public class Customer extends User {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Cart cart;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "current_address")
+    private Address current_address;
+
     public Customer() {
         super();
     }

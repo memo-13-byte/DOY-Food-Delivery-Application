@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.entities;
 
+import com.pingfloyd.doy.enums.MenuItemType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -35,9 +36,14 @@ public class MenuItem {
     @Column(name = "category", length = 50)
     private String category;
 
+    @Enumerated
+    @Column(name = "menu_item_type", length = 30, nullable = false)
+    private MenuItemType menuItemType;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
+
 
 }

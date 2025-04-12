@@ -1,10 +1,10 @@
 package com.pingfloyd.doy.entities;
 
+import com.pingfloyd.doy.enums.RestaurantCategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import javax.annotation.processing.Generated;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +27,12 @@ public class Restaurant {
 
     @Column(name = "restaurant_phone")
     private String restaurantPhone;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "restaurant_category", length = 30, nullable = false)
+    private RestaurantCategory restaurantCategory;
+
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private final Set<CustomerOrder> orders = new HashSet<>();
