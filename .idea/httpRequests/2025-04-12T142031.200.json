@@ -1,0 +1,49 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "restaurantName": "abc",
+      "restaurantPhone": "123456789"
+    },
+    {
+      "id": 2,
+      "restaurantName": "abcd",
+      "restaurantPhone": "123456789"
+    },
+    {
+      "id": 3,
+      "restaurantName": "abcde",
+      "restaurantPhone": "123456789"
+    },
+    {
+      "id": 4,
+      "restaurantName": "abcdef",
+      "restaurantPhone": "123456789"
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 10,
+    "sort": {
+      "empty": true,
+      "sorted": false,
+      "unsorted": true
+    },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": true,
+  "totalPages": 1,
+  "totalElements": 4,
+  "size": 10,
+  "number": 0,
+  "sort": {
+    "empty": true,
+    "sorted": false,
+    "unsorted": true
+  },
+  "numberOfElements": 4,
+  "first": true,
+  "empty": false
+}

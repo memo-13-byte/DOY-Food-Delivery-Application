@@ -16,12 +16,12 @@ import java.util.Set;
 @Setter
 public class Cart {
     @Id
-    @Column(name = "user_id")
-    private Long customerId;
+    @Column(name = "cart_id")
+    private Long cartId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "cart_id", referencedColumnName = "customer_id")
     private Customer customer;
 
     @Column(name = "status", length = 20)
