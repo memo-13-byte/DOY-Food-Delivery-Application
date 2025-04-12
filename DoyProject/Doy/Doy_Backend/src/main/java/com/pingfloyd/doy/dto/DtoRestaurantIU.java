@@ -1,6 +1,9 @@
 package com.pingfloyd.doy.dto;
 
+import com.pingfloyd.doy.enums.MenuItemType;
 import com.pingfloyd.doy.enums.RestaurantCategory;
+import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,7 +21,9 @@ public class DtoRestaurantIU {
 
     private String restaurantPhone;
 
-    private RestaurantCategory restaurantCategory ;
+    private RestaurantCategory restaurantCategory;
     private Double rating;
     private Integer minOrderPrice;
+
+
 }

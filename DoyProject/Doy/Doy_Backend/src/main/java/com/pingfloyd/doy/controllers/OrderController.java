@@ -18,6 +18,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(origins = "http://localhost:3000")
 public class OrderController {
 
     private final OrderService orderService;
@@ -26,20 +27,7 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
-    @GetMapping("/me")
-    public String testUser(){
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String name = "";
-        if (principal instanceof UserDetails) {
-            name = ((UserDetails) principal).getUsername();
-        }
-        else{
-            name = principal.toString();
-        }
-        String lala = "abc";
-        return name;
-    }
     @GetMapping("/add")
     public ResponseEntity<Boolean> AddItemToCart(@RequestParam Long itemId){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

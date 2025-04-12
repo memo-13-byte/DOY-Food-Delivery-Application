@@ -5,35 +5,166 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f128c485-adef-4fd4-968e-135679f6ea9b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163707.201.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163707.201.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163719.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163719.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163725.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163725.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163727.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163727.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163728.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T163728.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T235903.201.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-11T235903.201.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T000036.201.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T000036.201.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T000205.201.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T000205.201.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T000521.201.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T000521.201.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T000553.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T000553.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T001128.201.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T001128.201.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141057.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141057.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141918.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141918.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141922.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141922.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141923.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141923.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141924.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141924.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141930.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141930.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141934.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T141934.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T142031.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T142031.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T142050.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T142050.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T143329.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T143329.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T143411.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T143411.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T143531.200.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/2025-04-12T143531.200.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/http-client.cookies" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/http-client.cookies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/http-requests-log.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/ping-floyd.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/.idea/DoyFrontend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/.idea/DoyFrontend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/.babelrc" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/.babelrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/postcss.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/postcss.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/public/robots.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/public/robots.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/scripts/update-package.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/scripts/update-package.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/scripts/webpack-start.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/scripts/webpack-start.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/layout/footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/layout/footer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/layout/header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/layout/header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/layout/main-layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/layout/main-layout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/button.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/button.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/form.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/form.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/input.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/input.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/location-search.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/location-search.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/tabs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/tabs.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/toaster.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/toaster.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/hooks/use-auth.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/hooks/use-auth.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/hooks/use-toast.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/hooks/use-toast.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/protected-route.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/protected-route.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/queryClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/queryClient.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/auth-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/auth-page.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/courier-register-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/courier-register-page.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/home-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/home-page.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/not-found.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/not-found.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/restaurant-register-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/restaurant-register-page.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/restaurants-browse-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/restaurants-browse-page.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/DoyProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DoyProject.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Doy/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Doy/.idea/Doy.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Doy/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Doy/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Doy/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Doy/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Doy/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/config/AppConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/config/AppConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IItemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IRestaurantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IRestaurantController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/ItemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RegistrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RegistrationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RestaurantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RestaurantController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RestaurantSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RestaurantSearchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoMenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoMenuItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoMenuItemIU.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoMenuItemIU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoRestaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoRestaurant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoRestaurantIU.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoRestaurantIU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/LoginAuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/LoginAuthResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/RegistrationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/RegistrationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/RestaurantRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/RestaurantRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Address.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Cart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CartItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CartItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/ConfirmationToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/ConfirmationToken.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CustomerOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CustomerOrder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/MenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/MenuItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/OrderItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Restaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Restaurant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/UserRoles.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/UserRoles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/MenuItemType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/MenuItemType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/RestaurantCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/RestaurantCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/ApiError.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/ApiError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/ItemNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/ItemNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/RestaurantNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/RestaurantNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/jwt/JwtAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/jwt/JwtAuthFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/jwt/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/jwt/JwtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/other/RestaurantSpecification.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/other/RestaurantSpecification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/ConfirmationTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/ConfirmationTokenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CustomerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CustomerRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/ItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/ItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/RestaurantRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/RestaurantRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/ConfirmationTokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/ConfirmationTokenService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IItemService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IRestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IRestaurantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/ItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/ItemService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/LoginService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RegistrationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RegistrationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RestaurantSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RestaurantSearchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RestaurantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/starter/DoyApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/starter/DoyApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/test/java/com/pingfloyd/doy/DoyApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/test/java/com/pingfloyd/doy/DoyApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/robots.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/robots.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/CartSummary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/CartSummary.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/LocationModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/LocationModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/data/restaurantMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/data/restaurantMenu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/data/restaurants.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/data/restaurants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Cart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Cart.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Checkout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Checkout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/OrderConfirmation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/OrderConfirmation.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/PaymentResult.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/PaymentResult.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/RestaurantDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/RestaurantDetail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/reportWebVitals.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/reportWebVitals.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/setupTests.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/setupTests.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,18 +182,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;entity-login&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/said cetin/Desktop/Github/ping-floyd&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "registration-login-axios",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/hp/Documents/GitHub/ping-floyd/DoyProject/Doy/Doy_Frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.3.2.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -73,6 +217,9 @@
       <updated>1744460975528</updated>
       <workItem from="1744460976538" duration="89000" />
       <workItem from="1744461155601" duration="12000" />
+      <workItem from="1744469458838" duration="258000" />
+      <workItem from="1744469726910" duration="82000" />
+      <workItem from="1744483079648" duration="1768000" />
     </task>
     <servers />
   </component>

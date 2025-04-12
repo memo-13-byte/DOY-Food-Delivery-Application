@@ -18,13 +18,6 @@ public class DtoMenuItemIU {
     private String name;
 
     private String description;
-    /*
-    @NotEmpty(message = "Item category must not be empty.")
-    @Size(max = 50, message = "Item category must not exceed 50 characters.")
-    */
-
-    private MenuItemType menuItemType;
-
     @NotNull(message = "Item price must not be null.")
     @Positive(message = "Item price must be greater than zero")
     @Digits(integer = 10, fraction = 2, message = "Item price must not exceed 10 digits.")
@@ -33,4 +26,7 @@ public class DtoMenuItemIU {
     @NotNull(message = "Restaurant ID must not be null")
     @PositiveOrZero(message = "Restaurant ID must not be negative")
     private Long restaurantId;
+
+    @NotNull
+    private MenuItemType menuItemType;
 }
