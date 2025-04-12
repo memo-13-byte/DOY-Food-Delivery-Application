@@ -13,10 +13,10 @@ export default function RestaurantManagePage() {
   const [darkMode, setDarkMode] = useState(false)
   const [activeCategory, setActiveCategory] = useState(1)
   let categoryMap = new Map();
-  categoryMap.set("menu", 0);
-  categoryMap.set("yiyecek", 1);
-  categoryMap.set("icecek", 2);
-  categoryMap.set("ekstra", 3);
+  categoryMap.set("COMBO", 0);
+  categoryMap.set("MAIN_DISH", 1);
+  categoryMap.set("DRINK", 2);
+  categoryMap.set("EXTRA", 3);
 
   // Mock restaurant data
   const [restaurant, setRestaurant] = useState({
@@ -205,7 +205,7 @@ export default function RestaurantManagePage() {
         let responseItems = response.data;
 
         for (let i = 0; i < responseItems.length; i++) {
-          itemData[categoryMap.get(responseItems[i].category)].items.push(
+          itemData[categoryMap.get(responseItems[i].menuItemType)].items.push(
               {
                 id: responseItems[i].id,
                 name:responseItems[i].name,
