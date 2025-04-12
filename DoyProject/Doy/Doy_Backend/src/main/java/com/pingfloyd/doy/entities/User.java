@@ -5,16 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import lombok.NoArgsConstructor;
-
-import lombok.experimental.SuperBuilder;
-import org.springframework.security.core.userdetails.UserDetails;
-
 
 @Entity
 @Table(name = "app_user")

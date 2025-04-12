@@ -1,11 +1,11 @@
 package com.pingfloyd.doy.entities;
 
+import com.pingfloyd.doy.enums.MenuItemType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -22,9 +22,11 @@ public class MenuItem {
     @Column(name = "menu_item_id")
     private Long id;
 
+    @NotNull
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
+    @NotNull
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
 
@@ -34,11 +36,15 @@ public class MenuItem {
     @Column(name = "category", length = 50)
     private String category;
 
+    @Enumerated
+    @Column(name = "menu_item_type", length = 30, nullable = false)
+    private MenuItemType menuItemType;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "menuItem")
-    private Set<CartItem> cartItems = new HashSet<>();
+
 }

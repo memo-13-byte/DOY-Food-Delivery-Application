@@ -1,48 +1,39 @@
 package com.pingfloyd.doy.entities;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "customer")
-@PrimaryKeyJoinColumn(name = "user_id")
+@PrimaryKeyJoinColumn(name = "customer_id", referencedColumnName = "user_id")
 @Getter
 @Setter
 public class Customer extends User {
-    @Column(name = "loyalty_points")
-    private Integer loyaltyPoints = 0;
-
-    @Column(name = "preferred_payment_method", length = 50)
-    private String preferredPaymentMethod;
-    // psql -U samet -d DOY
     @ManyToMany
     @JoinTable(
             name = "favorite_restaurant",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "restaurant_id")
     )
-    private Set<Restaurant> favoriteRestaurants = new HashSet<>();
+    private final Set<Restaurant> favoriteRestaurants = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "customer_address",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    private Set<Address> addresses = new HashSet<>();
 
-    // --- Cart Relationship ---
-    // One Customer has One Cart
-    // 'mappedBy = "customer"': Refers to the 'customer' field in the Cart entity
-    // Cascade ALL: Cart lifecycle is tied to Customer lifecycle
-    // orphanRemoval = true: If you set customer.setCart(null), the old cart gets deleted
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    // Use @PrimaryKeyJoinColumn on the owning side if you prefer that configuration style,
-    // but mappedBy + @MapsId on the other side is very common too.
-    // @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id") // Alternative config
     private Cart cart;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "current_address")
+    private Address current_address;
 
     public Customer() {
         super();
@@ -52,9 +43,13 @@ public class Customer extends User {
         super(firstName, lastName, email, passwordHash, phoneNumber);
     }
 
+    public Customer(String firstName, String lastName, String email, String passwordHash) {
+        super(firstName, lastName, email, passwordHash);
+    }
 
     @Override
     public String getPassword() {
         return getPasswordHash();
     }
+
 }
