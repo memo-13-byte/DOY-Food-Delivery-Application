@@ -4,37 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e5c2555a-9c06-45e6-9345-62a85b9729e5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ping-floyd.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/.idea/Doy.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Address.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Cart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CartItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CartItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/MenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/MenuItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Restaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Restaurant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DoyProject/Doy/Doy_Backend/src/main/resources/application.properties" beforeDir="false" />
-    </list>
+    <list default="true" id="e5c2555a-9c06-45e6-9345-62a85b9729e5" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,37 +36,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP Request.generated-requests | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.generated-requests | #10.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.generated-requests | #2.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.generated-requests | #3.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.generated-requests | #4.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.generated-requests | #6.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.generated-requests | #7.executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DoyApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;entity-login&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/said cetin/Desktop/Github/ping-floyd&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP Request.generated-requests | #1.executor": "Run",
+    "HTTP Request.generated-requests | #10.executor": "Run",
+    "HTTP Request.generated-requests | #2.executor": "Run",
+    "HTTP Request.generated-requests | #3.executor": "Run",
+    "HTTP Request.generated-requests | #4.executor": "Run",
+    "HTTP Request.generated-requests | #6.executor": "Run",
+    "HTTP Request.generated-requests | #7.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.DoyApplication.executor": "Run",
+    "git-widget-placeholder": "entity-login",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/said cetin/Desktop/Github/ping-floyd/DoyProject/Doy/Doy_Backend/pom.xml",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Spring Boot.DoyApplication">
     <configuration name="generated-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" requestIdentifier="#1" runType="Run single request">
       <method v="2" />
@@ -149,6 +119,7 @@
       <workItem from="1744460901427" duration="73000" />
       <workItem from="1744461066794" duration="87000" />
       <workItem from="1744461168865" duration="44000" />
+      <workItem from="1744462294470" duration="44000" />
     </task>
     <servers />
   </component>

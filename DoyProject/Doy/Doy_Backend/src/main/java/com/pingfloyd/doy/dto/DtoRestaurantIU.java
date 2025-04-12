@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.dto;
 
+import com.pingfloyd.doy.enums.RestaurantCategory;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,4 +17,8 @@ public class DtoRestaurantIU {
     private String restaurantName;
 
     private String restaurantPhone;
+
+    private RestaurantCategory restaurantCategory ;
+    private Double rating;
+    private Integer minOrderPrice;
 }
