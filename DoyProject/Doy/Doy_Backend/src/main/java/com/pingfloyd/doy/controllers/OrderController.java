@@ -1,10 +1,13 @@
 package com.pingfloyd.doy.controllers;
 
 
+import com.pingfloyd.doy.dto.DtoPaymentInformationIU;
 import com.pingfloyd.doy.entities.Cart;
 import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,15 +41,24 @@ public class OrderController {
         return name;
     }
     @GetMapping("/add")
-    public Boolean AddItemToCart(@RequestParam Long itemId){
+    public ResponseEntity<Boolean> AddItemToCart(@RequestParam Long itemId){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Cart cart = orderService.AddItemToCart(principal.toString() ,itemId);
-        return cart != null;
+        return ResponseEntity.ok(orderService.AddItemToCart(principal.toString() ,itemId));
     }
     @GetMapping("/remove")
-    public Boolean RemoveItemFromCart(@RequestParam Long itemId){
+    public ResponseEntity<Boolean> RemoveItemFromCart(@RequestParam Long itemId){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Cart cart = orderService.RemoveItemFromCart(principal.toString() , itemId);
-        return cart != null;
+        return ResponseEntity.ok(orderService.RemoveItemFromCart(principal.toString() , itemId));
     }
+    @GetMapping("/confirm")
+    public ResponseEntity<Boolean>  ConfirmCart(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(orderService.ConfirmCart(principal.toString()));
+    }
+    @PostMapping("/payment")
+    public ResponseEntity<Boolean> ConfirmOrder(@RequestBody @Valid DtoPaymentInformationIU dtoPaymentInformationIU){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(orderService.ConfirmOrder(dtoPaymentInformationIU , principal.toString()));
+    }
+
 }

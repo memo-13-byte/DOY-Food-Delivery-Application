@@ -1,10 +1,7 @@
 package com.pingfloyd.doy.services;
 
 
-import com.pingfloyd.doy.entities.Cart;
-import com.pingfloyd.doy.entities.CartItem;
-import com.pingfloyd.doy.entities.Customer;
-import com.pingfloyd.doy.entities.MenuItem;
+import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.repositories.CartItemRepository;
 import com.pingfloyd.doy.repositories.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +18,10 @@ public class CartService {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
     }
-    public Cart CreateCart(Customer customer){
+    public Cart CreateCart(Customer customer , Restaurant restaurant){
         Cart cart = new Cart();
         cart.setCustomer(customer);
+        cart.setRestaurant(restaurant);
         cartRepository.save(cart);
         return cart;
     }

@@ -30,6 +30,15 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<CartItem> items = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY) // Many Carts can reference one Restaurant
+    // @MapsId removed - cartId is NOT determined by the restaurantId
+    @JoinColumn(name = "restaurant_id", // This is the FOREIGN KEY column in the 'cart' table
+            referencedColumnName = "restaurant_id", // This refers to the PRIMARY KEY column in the 'restaurant' table
+            nullable = false) // A cart must belong to a restaurant (optional, but likely desired)
+    private Restaurant restaurant;
+
+
+
     // Helper method to add an item to cart
     public void addItem(MenuItem menuItem, int quantity) {
         CartItem item = new CartItem();
