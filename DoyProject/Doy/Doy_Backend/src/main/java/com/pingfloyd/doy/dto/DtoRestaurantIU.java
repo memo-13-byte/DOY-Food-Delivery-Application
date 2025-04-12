@@ -18,7 +18,7 @@ public class DtoRestaurantIU {
 
     private String restaurantPhone;
 
-    private RestaurantCategory restaurantCategory ;
+    private RestaurantCategory restaurantCategory;
     private Double rating;
     private Integer minOrderPrice;
 }
