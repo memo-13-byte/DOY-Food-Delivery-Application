@@ -9,6 +9,7 @@ import { FaSearch } from "react-icons/fa";
 import { HiOutlineHome } from "react-icons/hi";
 import LocationModal from "../components/LocationModal";
 import { useEffect } from "react";
+import axios from "axios";
 
 
 import restaurants from "../data/restaurants";
@@ -46,14 +47,25 @@ const Home = () => {
 
 
     useEffect(() => {
-        if (searchText.trim() === "") {
-            setFilteredRestaurants([]);
-        } else {
-            const results = restaurants.filter(res =>
-                res.name.toLowerCase().includes(searchText.toLowerCase())
-            );
-            setFilteredRestaurants(results);
+        const getRestaurantsFromBackend = async () => {
+            const response = await axios.get("http://localhost:8080/api/restaurant/search",
+                {params:{
+                    key1:searchText
+                    }})
+            const data = response.data.content
+            console.log(data)
+            if (searchText.trim() === "") {
+                setFilteredRestaurants([]);
+            } else if (data !== null){
+                const results = data.filter(res =>
+                    res.restaurantName.toLowerCase().includes(searchText.toLowerCase())
+                );
+                setFilteredRestaurants(results);
+            }
         }
+
+        getRestaurantsFromBackend()
+
     }, [searchText]);
 
     return (
@@ -274,7 +286,7 @@ const Home = () => {
                                     onMouseEnter={(e) => e.currentTarget.style.background = "#f5f5f5"}
                                     onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                                 >
-                                    {r.name}
+                                    {r.restaurantName}
                                 </div>
                             ))}
                         </div>

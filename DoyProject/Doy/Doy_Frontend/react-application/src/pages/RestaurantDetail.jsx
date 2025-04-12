@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import restaurants from "../data/restaurants";
 import restaurantMenu from "../data/restaurantMenu";
 import ProductCard from "../components/ProductCard";
@@ -8,6 +8,8 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { BsMoon } from "react-icons/bs";
 import doyLogo from "../assets/doylogo.jpeg";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
+import axios from "axios";
+
 
 
 const renderStars = (rating) => {
@@ -35,13 +37,130 @@ const RestaurantDetail = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = useParams();
+    const [restaurant, setRestaurant] = useState([]);
+    const [menu, setMenu] = useState(
+        {
+            name: "Pizza City",
+            rating: 4.3,
+            description: "Taze taş fırında pişmiş pizzalar.",
+            categories: [
+                {
+                    title: "Menüler",
+                    items: [
+                        {
+                            id: 1,
+                            name: "Pepperoni Pizza Menü",
+                            description: "Büyük boy pepperoni pizza + içecek",
+                            price: 220,
+                            image: require("../assets/pepperoni.jpeg")
+                        },
+                    ]
+                },
+                {
+                    title: "Yiyecek Seçenekleri",
+                    items: [
+                        {
+                            id: 1,
+                            name: "Margarita Pizza",
+                            description: "Domates sosu, mozzarella peyniri",
+                            price: 180,
+                            image: require("../assets/margarita.jpeg")
+                        },
+                    ]
+                },
+                {
+                    title: "İçecek Seçenekleri",
+                    items: [
+                        {
+                            id: 1,
+                            name: "Kola",
+                            description: "330ml kutu",
+                            price: 30,
+                            image: require("../assets/cola.jpeg")
+                        },
+                    ]
+                },
+                {
+                    title: "Ek Seçenekleri",
+                    items: [
+                        {
+                            id: 1,
+                            name: "Sarımsaklı Kenar",
+                            description: "Pizza kenarına sarımsak aroması",
+                            price: 25,
+                            image: require("../assets/garlic.jpeg")
+                        },
+                    ]
+                },
+            ]
+        }
+    );
 
-    const menu = restaurantMenu[id];
+    let categoryMap = new Map();
+    categoryMap.set("COMBO", 0);
+    categoryMap.set("MAIN_DISH", 1);
+    categoryMap.set("DRINK", 2);
+    categoryMap.set("EXTRA", 3);
+
+    //const menu = restaurantMenu[id];
 
     const [darkMode, setDarkMode] = useState(location.state?.darkMode || false);
     const selectedAddress = location.state?.selectedAddress;
 
-    const restaurant = restaurants.find((r) => r.id === parseInt(id));
+    useEffect(() => {
+        const getRestaurant = async () => {
+            const response = await axios.get(`http://localhost:8080/api/restaurant/get/${id}`)
+            setRestaurant(response.data)
+        }
+        getRestaurant()
+
+        const getRestaurantMenus = async () => {
+            const response = await axios.get(`http://localhost:8080/api/item/get-items/${id}`)
+
+            let itemData = [
+                {
+                    title: "Menüler",
+                    items: [],
+                },
+                {
+                    title: "Yiyecek Seçenekleri",
+                    items: [],
+                },
+                {
+                    title: "İçecek Seçenekleri",
+                    items: [],
+                },
+                {
+                    title: "Ek Seçenekleri",
+                    items: [],
+                }
+            ]
+            let responseItems = response.data;
+
+            for (let i = 0; i < responseItems.length; i++) {
+                console.log(responseItems[i])
+                itemData[categoryMap.get(responseItems[i].menuItemType)].items.push(
+                    {
+                        id: responseItems[i].id,
+                        name:responseItems[i].name,
+                        description: responseItems[i].description,
+                        price: responseItems[i].price,
+                    }
+                )
+            }
+            let fetchedMenu = {
+                name: restaurant.name,
+                rating: restaurant.rating,
+                description: restaurant.description,
+                categories: itemData
+            }
+            setMenu(fetchedMenu)
+        }
+
+        getRestaurantMenus()
+
+    }, [id]);
+
 
     const handleAddToCart = (item) => setCart([...cart, item]);
 
@@ -136,12 +255,12 @@ const RestaurantDetail = () => {
                         {restaurant?.image && (
                             <img
                                 src={restaurant.image}
-                                alt={restaurant.name}
+                                alt={restaurant.restaurantName}
                                 style={{ width: "160px", height: "160px", borderRadius: "16px", objectFit: "cover" }}
                             />
                         )}
                         <div>
-                            <h2 style={{color: darkMode ? "#fff" : "#000"}}>{restaurant?.name}</h2>
+                            <h2 style={{color: darkMode ? "#fff" : "#000"}}>{restaurant?.restaurantName}</h2>
                             <div>{renderStars(restaurant?.rating)} {restaurant?.rating}/5</div>
                             <p>{restaurant?.description || "Lezzetli yemekler burada!"}</p>
                             <p>Teslim Süresi: {restaurant?.time} dk | Min. Sipariş: ₺{restaurant?.minPrice}</p>
