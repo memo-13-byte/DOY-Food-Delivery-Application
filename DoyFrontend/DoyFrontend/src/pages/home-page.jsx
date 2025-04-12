@@ -1,3 +1,5 @@
+"use client"
+
 import { Link } from "wouter"
 import { Button } from "../components/ui/button"
 import { ChevronRight, MapPin, Twitter, Instagram, Youtube, Linkedin, Menu } from "lucide-react"
@@ -70,20 +72,16 @@ export default function HomePage() {
         {/* Logo section */}
         <div className="flex justify-center py-10">
           <div className="w-40 h-40 flex items-center justify-center bg-white rounded-full shadow-xl p-2 transform hover:scale-105 transition-transform duration-300">
-            <img
-              src="/image1.png"
-              alt="DOY Logo"
-              className="w-36 h-36 rounded-full object-cover"
-            />
+            <img src="/image1.png" alt="DOY Logo" className="w-36 h-36 rounded-full object-cover" />
           </div>
         </div>
 
         {/* Welcome message */}
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-[75%] mx-auto px-4">
           <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col sm:flex-row items-center justify-between mb-12 transform hover:shadow-xl transition-shadow duration-300">
-            <p className="text-amber-800 font-medium text-lg mb-4 sm:mb-0">Konumunu seç, karnın doysun!</p>
+            <p className="text-amber-800 font-medium text-2xl mb-4 sm:mb-0">Konumunu seç, karnın doysun!</p>
             <Link href="/restaurants/browse">
-              <Button className="bg-amber-500 hover:bg-amber-400 text-white rounded-full flex items-center gap-2 px-6 py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+              <Button className="text-xl bg-amber-500 hover:bg-amber-400 text-white text-2xl rounded-full flex items-center gap-2 px-6 py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
                 <MapPin className="w-4 h-4" />
                 <span>Adresini Belirle veya Seç</span>
                 <ChevronRight className="w-4 h-4" />
@@ -93,10 +91,10 @@ export default function HomePage() {
         </div>
 
         {/* Main sections */}
-        <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="max-w-[75%] mx-auto px-4 py-6">
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-12 transform hover:shadow-xl transition-shadow duration-300">
-            <h2 className="text-2xl font-bold text-amber-800 mb-6 border-b border-amber-100 pb-3">Hakkımızda</h2>
-            <div className="text-gray-700 space-y-4">
+            <h2 className="text-3xl font-bold text-amber-800 mb-6 border-b border-amber-100 pb-3">Hakkımızda</h2>
+            <div className="text-2xl text-gray-700 space-y-4">
               <p className="leading-relaxed">
                 DOY!, lezzeti en hızlı ve en güvenilir şekilde kapına getirmek için yola çıkan bir online yemek siparişi
                 platformudur.
@@ -119,21 +117,21 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 max-w-[70%] mx-auto">
             {/* Customer Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-7 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
-              <h2 className="text-xl font-bold text-amber-800 mb-4">Müşterimiz Olun!</h2>
-              <p className="text-gray-600 mb-6 h-16">Kolay online yemek siparişi deneyimi için müşterimiz olun.</p>
+            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-2xl font-bold text-amber-800 mb-4">Müşterimiz Olun!</h2>
+              <p className="text-xl text-gray-600 mb-6 h-16">Kolay online yemek siparişi deneyimi için müşterimiz olun.</p>
               <div className="flex flex-col gap-3">
                 <Link href="/auth?tab=register">
-                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                  <Button className="text-xl w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
                     Müşteri Kayıt
                   </Button>
                 </Link>
                 <Link href="/auth?tab=login">
                   <Button
                     variant="outline"
-                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                    className="text-xl w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
                   >
                     Müşteri Giriş
                   </Button>
@@ -142,19 +140,19 @@ export default function HomePage() {
             </div>
 
             {/* Restaurant Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-7 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
-              <h2 className="text-xl font-bold text-amber-800 mb-4">Restoran İş Ortağımız Olun!</h2>
-              <p className="text-gray-600 mb-6 h-16">Menünüzü müşteriye kolayca ulaştırmak için iş ortağımız olun.</p>
+            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-2xl font-bold text-amber-800 mb-4">Restoran İş Ortağımız Olun!</h2>
+              <p className="text-xl text-gray-600 mb-6 h-16">Menünüzü müşteriye kolayca ulaştırmak için iş ortağımız olun.</p>
               <div className="flex flex-col gap-3">
                 <Link href="/restaurants/register">
-                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                  <Button className="text-xl w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
                     Restoran Kayıt
                   </Button>
                 </Link>
                 <Link href="/auth?tab=login&type=restaurant">
                   <Button
                     variant="outline"
-                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                    className="text-xl w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
                   >
                     Restoran Giriş
                   </Button>
@@ -163,19 +161,19 @@ export default function HomePage() {
             </div>
 
             {/* Courier Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-7 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
-              <h2 className="text-xl font-bold text-amber-800 mb-4">Kuryemiz Olun!</h2>
-              <p className="text-gray-600 mb-6 h-16">Siparişleri müşterilerimize ulaştırmak için kuryemiz olun.</p>
+            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-2xl font-bold text-amber-800 mb-4">Kuryemiz Olun!</h2>
+              <p className="text-xl text-gray-600 mb-6 h-16">Siparişleri müşterilerimize ulaştırmak için kuryemiz olun.</p>
               <div className="flex flex-col gap-3">
                 <Link href="/couriers/register">
-                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                  <Button className="text-xl w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
                     Kurye Kayıt
                   </Button>
                 </Link>
                 <Link href="/auth?tab=login&type=courier">
                   <Button
                     variant="outline"
-                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                    className="text-xl w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
                   >
                     Kurye Giriş
                   </Button>
@@ -187,8 +185,8 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#47300A] text-white p-10 mt-16">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center">
+      <footer className="bg-[#47300A] text-white py-6 px-10 mt-16">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="mb-8 md:mb-0">
             <div className="bg-white rounded-full p-4 w-28 h-28 flex items-center justify-center shadow-lg transform hover:rotate-3 transition-transform duration-300">
               <div className="relative w-24 h-24">
