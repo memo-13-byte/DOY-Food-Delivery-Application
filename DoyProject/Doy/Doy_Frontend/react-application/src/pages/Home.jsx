@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
 import { BsMoon } from "react-icons/bs";
 import doyLogo from "../assets/doylogo.jpeg";
@@ -32,6 +33,21 @@ const Home = () => {
     const [selectedAddress, setSelectedAddress] = useState("");
     const [searchText, setSearchText] = useState("");
     const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+    const [minRating, setMinRating] = useState(0);
+
+    const [touchStartX, setTouchStartX] = useState(null);
+    const [touchEndX, setTouchEndX] = useState(null);
+
+
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 3;
+
+    const paginatedRestaurants = filteredRestaurants.slice(
+        currentPage * itemsPerPage,
+        (currentPage + 1) * itemsPerPage
+    );
+
+
 
     const iconLinkStyle = {
         color: "inherit",
@@ -58,15 +74,36 @@ const Home = () => {
                 setFilteredRestaurants([]);
             } else if (data !== null){
                 const results = data.filter(res =>
-                    res.restaurantName.toLowerCase().includes(searchText.toLowerCase())
-                );
+                    res.restaurantName.toLowerCase().includes(searchText.toLowerCase()) &&
+                    res.rating >= minRating
+                ).sort((a, b) => b.rating - a.rating)
                 setFilteredRestaurants(results);
+                setCurrentPage(0);
             }
         }
 
         getRestaurantsFromBackend()
 
-    }, [searchText]);
+    }, [searchText, minRating]);
+
+
+    const handleSwipe = () => {
+        if (touchStartX !== null && touchEndX !== null) {
+            const diff = touchStartX - touchEndX;
+
+            if (diff > 1000 && (currentPage + 1) * itemsPerPage < filteredRestaurants.length) {
+
+                setCurrentPage((prev) => prev + 1);
+            } else if (diff < -1000 && currentPage > 0) {
+
+                setCurrentPage((prev) => prev - 1);
+            }
+        }
+
+        setTouchStartX(null);
+        setTouchEndX(null);
+    };
+
 
     return (
         <div style={{
@@ -221,12 +258,49 @@ const Home = () => {
                 width: "100%"
             }}/>
 
+
+
             <div style={{padding: "2rem 1rem", textAlign: "center", position: "relative"}}>
                 <div style={{
                     position: "relative",
                     width: "60%",
                     margin: "0 auto"
                 }}>
+
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "1rem",
+                        marginBottom: "1rem",
+                        flexWrap: "wrap"
+                    }}>
+                        <input
+                            type="range"
+                            min="0"
+                            max="5"
+                            step="0.1"
+                            value={minRating}
+                            onChange={(e) => setMinRating(parseFloat(e.target.value))}
+                            style={{
+                                width: "200px",
+                                accentColor: darkMode ? "#FFD700" : "#47300A",
+                                cursor: "pointer"
+                            }}
+                        />
+                        <span style={{
+                            fontWeight: "600",
+                            fontSize: "1rem",
+                            color: darkMode ? "#FFD700" : "#47300A",
+                            minWidth: "100px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem"
+                        }}>
+        {minRating.toFixed(1)} {renderStars(minRating)}
+    </span>
+                    </div>
+
                     <input
                         type="text"
                         placeholder="Restoran Ara"
@@ -245,11 +319,12 @@ const Home = () => {
                     <FaSearch style={{
                         position: "absolute",
                         right: "6px",
-                        top: "50%",
+                        top: "65%",
                         transform: "translateY(-50%)",
                         opacity: 0.6,
                         pointerEvents: "none"
                     }}/>
+
 
                     {/* Arama Sonuçları */}
                     {searchText && filteredRestaurants.length > 0 && (
@@ -272,7 +347,7 @@ const Home = () => {
                                 <div
                                     key={r.id}
                                     onClick={() => navigate(`/restaurant/${r.id}`, {
-                                        state: { restaurant: r, selectedAddress, darkMode }
+                                        state: {restaurant: r, selectedAddress, darkMode}
                                     })}
 
                                     style={{
@@ -297,6 +372,66 @@ const Home = () => {
 
             <h2 style={{textAlign: "center", marginBottom: "1rem"}}>Sizin için önerilen restoranlar</h2>
 
+            {/* Sayfalama Butonları (modern oklar) */}
+            <div style={{display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "1rem"}}>
+                <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+                    disabled={currentPage === 0}
+                    style={{
+                        backgroundColor: "transparent",
+                        border: `2px solid ${darkMode ? "#fff" : "#000"}`,
+                        borderRadius: "50%",
+                        padding: "0.6rem",
+                        cursor: currentPage === 0 ? "not-allowed" : "pointer",
+                        opacity: currentPage === 0 ? 0.3 : 1,
+                        transition: "all 0.3s ease",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backdropFilter: "blur(4px)"
+                    }}
+                >
+                    <FaArrowLeft color={darkMode ? "#fff" : "#000"} size={18}/>
+                </button>
+
+                <span style={{
+                    color: darkMode ? "#fff" : "#000",
+                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    alignSelf: "center"
+                }}>
+                {currentPage + 1} / {Math.ceil(filteredRestaurants.length / itemsPerPage)}
+                </span>
+
+
+                <button
+                    onClick={() =>
+                        setCurrentPage((prev) =>
+                            (prev + 1) * itemsPerPage < filteredRestaurants.length ? prev + 1 : prev
+                        )
+                    }
+                    disabled={(currentPage + 1) * itemsPerPage >= filteredRestaurants.length}
+                    style={{
+                        backgroundColor: "transparent",
+                        border: `2px solid ${darkMode ? "#fff" : "#000"}`,
+                        borderRadius: "50%",
+                        padding: "0.6rem",
+                        cursor: (currentPage + 1) * itemsPerPage >= filteredRestaurants.length
+                            ? "not-allowed"
+                            : "pointer",
+                        opacity: (currentPage + 1) * itemsPerPage >= filteredRestaurants.length ? 0.3 : 1,
+                        transition: "all 0.3s ease",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backdropFilter: "blur(4px)"
+                    }}
+                >
+                    <FaArrowRight color={darkMode ? "#fff" : "#000"} size={18}/>
+                </button>
+            </div>
+
+
             {/* Restoran Kartları */}
             <div style={{
                 backgroundColor: darkMode ? "#2b2b2b" : "#FFFFFF",
@@ -306,12 +441,18 @@ const Home = () => {
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 transition: "all 0.3s ease-in-out"
             }}>
-                <div style={{
+                <div
+                    onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
+                    onTouchEnd={(e) => {
+                        setTouchEndX(e.changedTouches[0].clientX);
+                        handleSwipe();
+                    }}
+                    style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
                     gap: "2rem"
                 }}>
-                    {restaurants.map((res) => (
+                    {paginatedRestaurants.map((res) => (
                         <div key={res.id} style={{
                             backgroundColor: darkMode ? "#3b3b3b" : "#ffffff",
                             padding: "1rem",
@@ -334,7 +475,7 @@ const Home = () => {
                             </div>
                             <button
                                 onClick={() => navigate(`/restaurant/${res.id}`, {
-                                    state: { restaurant: res, selectedAddress, darkMode }
+                                    state: {restaurant: res, selectedAddress, darkMode}
                                 })}
                                 style={{
                                     backgroundColor: "#7A0000",
@@ -350,6 +491,12 @@ const Home = () => {
                         </div>
                     ))}
                 </div>
+                {filteredRestaurants.length === 0 && (
+                    <p style={{ textAlign: "center", marginTop: "2rem", fontWeight: "bold" }}>
+                        Uygun restoran bulunamadı.
+                    </p>
+                )}
+
             </div>
 
             {/* Footer */}
@@ -383,13 +530,16 @@ const Home = () => {
                     >
                         <FaXTwitter size={24}/>
                     </a>
-                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle} className="icon-link">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle}
+                       className="icon-link">
                         <FaInstagram size={24}/>
                     </a>
-                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle} className="icon-link">
+                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle}
+                       className="icon-link">
                         <FaYoutube size={24}/>
                     </a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle} className="icon-link">
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle}
+                       className="icon-link">
                         <FaLinkedin size={24}/>
                     </a>
                 </div>
