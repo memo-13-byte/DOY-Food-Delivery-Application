@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/restaurant")
+@CrossOrigin(origins = "http://localhost:3001")
 public class RestaurantController implements IRestaurantController {
 
     @Autowired
