@@ -13,7 +13,6 @@ public class RestaurantRequest {
     private String restaurantName;
     private String restaurantPhone;
 
-    // Constructor to map from Entity to DTO
     public RestaurantRequest(Restaurant restaurant) {
         this.id = restaurant.getId();
         this.restaurantName = restaurant.getRestaurantName();
