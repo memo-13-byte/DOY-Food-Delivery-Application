@@ -1,6 +1,7 @@
 package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.entities.User;
+import com.pingfloyd.doy.exception.InvalidLoginAttemptException;
 import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.dto.LoginRequest;
 import com.pingfloyd.doy.repositories.UserRepository;
@@ -38,8 +39,7 @@ public class LoginService {
 
             return new LoginAuthResponse(dbCustomer.getEmail(), token);
         } catch (Exception exception) {
-            System.out.println("Wrong username or password");
+            throw new InvalidLoginAttemptException("Wrong username or password");
         }
-        return null;
     }
 }

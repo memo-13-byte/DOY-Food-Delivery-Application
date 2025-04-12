@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Moon, Sun } from "lucide-react"
+import axios from "axios"
 
 // Since we're having issues with the UI component imports, let's create simplified versions
 const Button = ({ className, children, ...props }) => (
@@ -192,33 +193,32 @@ export default function AuthPage() {
     try {
       // Mock API call - in a real app, you would validate credentials with an API
       // For this demo, we'll just check if email and password are provided
-      if (email && password) {
-        // Redirect to the appropriate dashboard based on user type
-        try {
-          if (userType === "restaurant") {
-            setLocation("/restaurant/profile")
-          } else if (userType === "courier") {
-            setLocation("/courier/profile")
-          } else {
-            setLocation("/customer/profile")
-          }
-        } catch (error) {
-          console.error("Navigation error:", error)
-          // Fallback - if navigation fails, try direct location change
-          const basePath =
-            userType === "restaurant"
-              ? "/restaurant/profile"
-              : userType === "courier"
-                ? "/courier/profile"
-                : "/customer/profile"
-          window.location.href = basePath
+      const response = await axios.post("http://localhost:8080/api/login/auth", {
+        username: email,
+        password: password
+      });
+
+      try {
+        if (userType === "restaurant") {
+          setLocation("/restaurant/profile")
+        } else if (userType === "courier") {
+          setLocation("/courier/profile")
+        } else {
+          setLocation("/customer/profile")
         }
-      } else {
-        setErrorMessage("Lütfen e-posta ve şifre girin")
+      } catch (error) {
+        console.error("Navigation error:", error)
+        // Fallback - if navigation fails, try direct location change
+        const basePath =
+            userType === "restaurant"
+                ? "/restaurant/profile"
+                : userType === "courier"
+                    ? "/courier/profile"
+                    : "/customer/profile"
+        window.location.href = basePath
       }
     } catch (error) {
-      setErrorMessage("Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.")
-      console.error("Login error:", error)
+      setErrorMessage("Hatalı kullanıcı adı veya şifre")
     } finally {
       setIsLoading(false)
     }

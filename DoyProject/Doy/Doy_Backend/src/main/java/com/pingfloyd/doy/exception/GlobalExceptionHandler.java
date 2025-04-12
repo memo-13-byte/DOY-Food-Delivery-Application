@@ -38,6 +38,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(createApiError(ex.getMessage()));
     }
 
+    @ExceptionHandler(value = InvalidLoginAttemptException.class)
+    public ResponseEntity<ApiError> handleInvalidLoginAttemptException(InvalidLoginAttemptException ex) {
+        return ResponseEntity.badRequest().body(createApiError(ex.getMessage()));
+    }
+
 //    @ExceptionHandler(value = BaseException.class)
 //    public ResponseEntity<ApiError> handleBaseException(BaseException ex) {
 //        return ResponseEntity.badRequest().body(createApiError(ex.getMessage()));
