@@ -64,19 +64,21 @@ const Home = () => {
 
     useEffect(() => {
         const getRestaurantsFromBackend = async () => {
+            console.log(minRating.toString())
             const response = await axios.get("http://localhost:8080/api/restaurant/search",
                 {params:{
-                    key1:searchText
+                    key1:searchText,
+                        key2:minRating.toString()
                     }})
             const data = response.data.content
-            console.log(data)
-            if (searchText.trim() === "") {
-                setFilteredRestaurants([]);
-            } else if (data !== null){
+
+            setFilteredRestaurants(data);
+            if (data != null) {
                 const results = data.filter(res =>
                     res.restaurantName.toLowerCase().includes(searchText.toLowerCase()) &&
                     res.rating >= minRating
                 ).sort((a, b) => b.rating - a.rating)
+                console.log("results:" + results)
                 setFilteredRestaurants(results);
                 setCurrentPage(0);
             }
@@ -466,7 +468,7 @@ const Home = () => {
                         }}>
                             <HiOutlineHome size={48} style={{opacity: 0.4}}/>
                             <div style={{flexGrow: 1, marginLeft: "1rem"}}>
-                                <h3 style={{margin: 0}}>{res.name}</h3>
+                                <h3 style={{margin: 0}}>{res.restaurantName}</h3>
                                 <div style={{
                                     display: "flex",
                                     alignItems: "center",
