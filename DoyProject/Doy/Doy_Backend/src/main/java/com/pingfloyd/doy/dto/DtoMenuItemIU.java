@@ -18,6 +18,12 @@ public class DtoMenuItemIU {
     private String name;
 
     private String description;
+    /*
+    @NotEmpty(message = "Item category must not be empty.")
+    @Size(max = 50, message = "Item category must not exceed 50 characters.")
+    */
+
+    private MenuItemType menuItemType;
 
     @NotNull(message = "Item price must not be null.")
     @Positive(message = "Item price must be greater than zero")

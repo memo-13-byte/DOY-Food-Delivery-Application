@@ -3,6 +3,7 @@ package com.pingfloyd.doy.services;
 
 
 import com.pingfloyd.doy.dto.RegistrationRequest;
+import com.pingfloyd.doy.entities.Cart;
 import com.pingfloyd.doy.entities.ConfirmationToken;
 import com.pingfloyd.doy.entities.Customer;
 import com.pingfloyd.doy.entities.User;
@@ -41,6 +42,7 @@ public class RegistrationService {
         this.userService = userService;
         this.emailService = emailService;
         this.confirmationTokenService = confirmationTokenService;
+
     }
 
     public Customer CustomerRegister(@Valid @RequestBody RegistrationRequest request){

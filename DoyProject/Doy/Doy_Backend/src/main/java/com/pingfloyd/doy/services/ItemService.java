@@ -24,7 +24,7 @@ public class ItemService implements IItemService {
     @Autowired
     RestaurantService restaurantService;
 
-    private MenuItem getItemById(Long id) throws ItemNotFoundException {
+    public MenuItem getItemById(Long id) throws ItemNotFoundException {
         Optional<MenuItem> item = itemRepository.findById(id);
         if (item.isEmpty()) {
             throw new ItemNotFoundException("The requested item was not found.");
