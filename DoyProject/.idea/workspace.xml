@@ -101,6 +101,31 @@
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/starter/DoyApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/starter/DoyApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/test/java/com/pingfloyd/doy/DoyApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/test/java/com/pingfloyd/doy/DoyApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/robots.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/public/robots.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/App.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/CartSummary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/CartSummary.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/LocationModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/LocationModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/components/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/data/restaurantMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/data/restaurantMenu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/data/restaurants.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/data/restaurants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Cart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Cart.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Checkout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Checkout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/OrderConfirmation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/OrderConfirmation.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/PaymentResult.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/PaymentResult.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/RestaurantDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/pages/RestaurantDetail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/reportWebVitals.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/reportWebVitals.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/setupTests.js" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/src/setupTests.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -127,6 +152,7 @@
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/hp/Documents/GitHub/ping-floyd/DoyProject/Doy/Doy_Backend/pom.xml",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "MavenSettings",
     "vue.rearranger.settings.migration": "true"
