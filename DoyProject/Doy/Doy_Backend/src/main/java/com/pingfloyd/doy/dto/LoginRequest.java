@@ -1,4 +1,4 @@
-package com.pingfloyd.doy.jwt;
+package com.pingfloyd.doy.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

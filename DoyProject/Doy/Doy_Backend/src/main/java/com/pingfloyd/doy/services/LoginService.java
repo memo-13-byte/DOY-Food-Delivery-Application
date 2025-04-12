@@ -1,12 +1,10 @@
 package com.pingfloyd.doy.services;
 
-import com.pingfloyd.doy.entities.Customer;
 import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.jwt.JwtService;
-import com.pingfloyd.doy.jwt.LoginRequest;
-import com.pingfloyd.doy.repositories.CustomerRepository;
+import com.pingfloyd.doy.dto.LoginRequest;
 import com.pingfloyd.doy.repositories.UserRepository;
-import com.pingfloyd.doy.response.LoginAuthResponse;
+import com.pingfloyd.doy.dto.LoginAuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

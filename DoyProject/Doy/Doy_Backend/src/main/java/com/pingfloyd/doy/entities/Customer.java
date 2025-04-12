@@ -1,19 +1,15 @@
 package com.pingfloyd.doy.entities;
 import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -52,15 +48,13 @@ public class Customer extends User {
         super();
     }
 
-    public Customer(String firstname,String lastname, String email, String passwordHash) {
-        super(firstname,lastname, email, passwordHash);
-    }
-
-    public Customer(String firstname,String lastname, String email, String passwordHash, String phoneNumber) {
-        super(firstname , lastname, email, passwordHash, phoneNumber);
+    public Customer(String firstName, String lastName, String email, String passwordHash, String phoneNumber) {
+        super(firstName, lastName, email, passwordHash, phoneNumber);
     }
 
 
-
+    @Override
+    public String getPassword() {
+        return getPasswordHash();
+    }
 }
-
