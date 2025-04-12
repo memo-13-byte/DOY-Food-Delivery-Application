@@ -4,11 +4,19 @@ import { Button } from "../components/ui/button"
 import { Toggle } from "../components/ui/toggle"
 import { Sun, Moon, X, Plus, Twitter, Instagram, Youtube, Linkedin, ChevronLeft, Edit, ImageIcon } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import axios from "axios"
+
+
 
 export default function RestaurantManagePage() {
   const [location, setLocation] = useLocation()
   const [darkMode, setDarkMode] = useState(false)
   const [activeCategory, setActiveCategory] = useState(1)
+  let categoryMap = new Map();
+  categoryMap.set("menu", 0);
+  categoryMap.set("yiyecek", 1);
+  categoryMap.set("icecek", 2);
+  categoryMap.set("ekstra", 3);
 
   // Mock restaurant data
   const [restaurant, setRestaurant] = useState({
@@ -156,6 +164,65 @@ export default function RestaurantManagePage() {
 
   // Toggle dark mode and update body class
   useEffect(() => {
+    const getRestaurantInformation = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/restaurant/get/1")
+        let restInfo = {
+          name: response.data.restaurantName,
+          description: response.data.restaurantPhone
+        }
+        setRestaurant(restInfo)
+      } catch (e) {
+        alert("patladım")
+      }
+    }
+
+    const getRestaurantItems = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/item/get-items/1")
+        let itemData = [
+          {
+            id: 1,
+            name: "Menüler",
+            items: [],
+          },
+          {
+            id: 2,
+            name: "Yiyecek Seçenekleri",
+            items: [],
+          },
+          {
+            id: 3,
+            name: "İçecek Seçenekleri",
+            items: [],
+          },
+          {
+            id: 4,
+            name: "Ek Seçenekleri",
+            items: [],
+          }
+        ]
+        let responseItems = response.data;
+
+        for (let i = 0; i < responseItems.length; i++) {
+          itemData[categoryMap.get(responseItems[i].category)].items.push(
+              {
+                id: responseItems[i].id,
+                name:responseItems[i].name,
+                description: responseItems[i].description,
+                price: responseItems[i].price,
+              }
+          )
+        }
+        setMenuCategories(itemData)
+      } catch (e) {
+        alert("Error fetching data.")
+      }
+    }
+
+    getRestaurantInformation().then(() => getRestaurantItems())
+
+
     if (darkMode) {
       document.body.classList.add("dark-mode")
     } else {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/registration")
+
 public class RegistrationController {
 
     private final RegistrationService registrationService;
