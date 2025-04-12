@@ -17,6 +17,8 @@ import CourierProfilePage from './pages/courier-profile-page';
 import RestaurantDetailPage from './pages/indexed-restaurant-page';
 import RestaurantManagePage from './pages/edit-restaurant-page';
 import ForgotPassword from './pages/forgot-password';
+import UpdateItemPage from './pages/update-item-page';
+import AddItemPage from './pages/add-item-page';
 
 // Sayfa yüklenirken loading spinner gösterebilirsiniz
 const LoadingSpinner = () => (
@@ -44,6 +46,9 @@ function App() {
             <Route path="/courier/profile" component={CourierProfilePage} />
             <Route path="/restaurants/manage" component={RestaurantManagePage} />
             <Route path="/restaurants/:id" component={RestaurantDetailPage} />
+            <Route path="/restaurants/:id/edit-item/:categoryId/:itemId" component={UpdateItemPage} />
+            <Route path="/restaurants/:id/add-item/:categoryId" component={AddItemPage} />
+
             
             <Route component={NotFound} />
           </Switch>
