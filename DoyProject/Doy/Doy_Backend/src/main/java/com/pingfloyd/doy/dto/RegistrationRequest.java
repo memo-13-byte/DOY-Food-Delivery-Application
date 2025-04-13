@@ -17,19 +17,15 @@ public class RegistrationRequest {
     private final String lastName;
 
     @NotBlank(message = "Email cannot be blank")
-    /*
-    @Pattern(regexp =  "^+@(hotmail|gmail)\\.com$")
-    */
+    @Email(message = "Invalid email format.")
     private final String email;
 
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, message = "Password must be at least 8 characters long")
-    /*
     @Pattern(
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
             message = "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character (@#$%^&+=!)"
     )
-    */
     private final String password;
 
     //@Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number format")

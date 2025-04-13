@@ -32,6 +32,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleItemNotFoundException(ItemNotFoundException ex) {
         return ResponseEntity.badRequest().body(createApiError(ex.getMessage()));
     }
+    @ExceptionHandler(value = UserAlreadyExistException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyExistException(UserAlreadyExistException ex){
+        return ResponseEntity.badRequest().body(createApiError(ex.getMessage()));
+    }
 
     @ExceptionHandler(value = RestaurantNotFoundException.class)
     public ResponseEntity<ApiError> handleRestaurantNotFoundException(RestaurantNotFoundException ex) {
@@ -40,6 +44,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = InvalidLoginAttemptException.class)
     public ResponseEntity<ApiError> handleInvalidLoginAttemptException(InvalidLoginAttemptException ex) {
+        return ResponseEntity.badRequest().body(createApiError(ex.getMessage()));
+    }
+    @ExceptionHandler(value = UserNotFoundException.class)
+    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex){
+        return ResponseEntity.badRequest().body(createApiError(ex.getMessage()));
+    }
+    @ExceptionHandler(value = CartIsNotEmptyException.class)
+    public ResponseEntity<ApiError> handleCartIsNotEmptyException(UserNotFoundException ex){
         return ResponseEntity.badRequest().body(createApiError(ex.getMessage()));
     }
 

@@ -58,7 +58,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.ConfirmCart("said562@hotmail.com"));
     }
     @PostMapping("/payment")
-    public ResponseEntity<Boolean> ConfirmOrder(@RequestBody DtoPaymentInformationIU dtoPaymentInformationIU){
+    public ResponseEntity<Boolean> ConfirmOrder(@Valid @RequestBody DtoPaymentInformationIU dtoPaymentInformationIU){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(orderService.ConfirmOrder(dtoPaymentInformationIU , "said562@hotmail.com"));
     }
@@ -66,13 +66,10 @@ public class OrderController {
     public ResponseEntity<UserCartDTO> getCustomerCart() {
         try {
             UserCartDTO cartDto = orderService.getCurrentUserCart("said562@hotmail.com");
-            // Service method now returns empty DTO instead of throwing for not found cart
             return ResponseEntity.ok(cartDto);
         }
-        // Catch specific exceptions if your service throws them (e.g., for customer not found)
         catch (Exception e) {
             System.err.println("Error fetching user cart in controller: " + e.getMessage());
-            // Log the full stack trace
             return ResponseEntity.status(500).build(); // Internal Server Error
         }
     }
