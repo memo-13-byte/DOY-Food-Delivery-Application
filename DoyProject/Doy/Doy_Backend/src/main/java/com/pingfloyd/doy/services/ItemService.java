@@ -4,6 +4,8 @@ import com.pingfloyd.doy.dto.DtoMenuItem;
 import com.pingfloyd.doy.dto.DtoMenuItemIU;
 import com.pingfloyd.doy.entities.MenuItem;
 import com.pingfloyd.doy.entities.Restaurant;
+import com.pingfloyd.doy.exception.ItemNotFoundException;
+import com.pingfloyd.doy.exception.RestaurantNotFoundException;
 import com.pingfloyd.doy.repositories.ItemRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +24,21 @@ public class ItemService implements IItemService {
     @Autowired
     RestaurantService restaurantService;
 
-    private MenuItem getItemById(Long id) {
+    public MenuItem getItemById(Long id) throws ItemNotFoundException {
         Optional<MenuItem> item = itemRepository.findById(id);
-        return item.orElse(null);
+        if (item.isEmpty()) {
+            throw new ItemNotFoundException("The requested item was not found.");
+        }
+        return item.get();
     }
 
     @Override
-    public DtoMenuItem postItem(DtoMenuItemIU dtoMenuItemIU) {
+    public DtoMenuItem postItem(DtoMenuItemIU dtoMenuItemIU) throws RestaurantNotFoundException {
         MenuItem item = new MenuItem();
         BeanUtils.copyProperties(dtoMenuItemIU, item);
 
         Restaurant restaurant = restaurantService.findRestaurantById(dtoMenuItemIU.getRestaurantId());
-        if (restaurant == null) {
-            return null;
-        }
+
 
         item.setRestaurant(restaurant);
 
@@ -48,16 +51,10 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public DtoMenuItem updateItem(Long itemId, DtoMenuItemIU dtoMenuItemIU) {
+    public DtoMenuItem updateItem(Long itemId, DtoMenuItemIU dtoMenuItemIU) throws ItemNotFoundException {
         MenuItem item = getItemById(itemId);
-        if (item == null) {
-            return null;
-        }
 
         Restaurant restaurant = restaurantService.findRestaurantById(dtoMenuItemIU.getRestaurantId());
-        if (restaurant == null) {
-            return null;
-        }
 
         item.setRestaurant(restaurant);
 
@@ -71,11 +68,8 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public DtoMenuItem deleteItem(Long itemId) {
+    public DtoMenuItem deleteItem(Long itemId) throws ItemNotFoundException {
         MenuItem item = getItemById(itemId);
-        if (item == null) {
-            return null;
-        }
 
         itemRepository.delete(item);
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
@@ -86,11 +80,9 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public DtoMenuItem getItem(Long itemId) {
+    public DtoMenuItem getItem(Long itemId) throws ItemNotFoundException {
         MenuItem item = getItemById(itemId);
-        if (item == null) {
-            return null;
-        }
+
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(item, dtoMenuItem);
         dtoMenuItem.setRestaurantId(item.getRestaurant().getId());
@@ -99,11 +91,11 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public List<DtoMenuItem> getRestaurantItems(Long restaurantId) {
+    public List<DtoMenuItem> getRestaurantItems(Long restaurantId) throws ItemNotFoundException {
         List<MenuItem> menuItems = itemRepository.findMenuItemsByRestaurantId(restaurantId);
 
-        if (menuItems == null) {
-            return null;
+        if (menuItems == null || menuItems.isEmpty()) {
+            throw new ItemNotFoundException("The requested items were not found.");
         }
 
         List<DtoMenuItem> dtoMenuItems = new ArrayList<>();

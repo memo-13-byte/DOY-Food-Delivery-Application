@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "firstname": "said",
+  "lastname": "cetin",
+  "email": "said562@hotmail.com",
+  "passwordHash": "$2a$10$zjodPHnuaoIHrsS8rQFiqe0kMtdcBzbQfKt9P86O2R8FITAoRvlyW",
+  "phoneNumber": "+905511361271",
+  "createdAt": "2025-04-12T00:05:19.8570425",
+  "isEnabled": false,
+  "loyaltyPoints": 0,
+  "preferredPaymentMethod": null,
+  "favoriteRestaurants": [],
+  "cart": null,
+  "password": "$2a$10$zjodPHnuaoIHrsS8rQFiqe0kMtdcBzbQfKt9P86O2R8FITAoRvlyW",
+  "enabled": false,
+  "username": "said562@hotmail.com",
+  "authorities": null,
+  "credentialsNonExpired": true,
+  "accountNonExpired": true,
+  "accountNonLocked": true
+}

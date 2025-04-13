@@ -1,0 +1,1424 @@
+can u give me restaurant owner version of this for food delivery web page
+
+
+Certainly! I'll adapt the use case you provided for a restaurant owner using a food delivery web page. The structure will remain similar, but the details will be tailored to the context of a restaurant owner managing orders on a food delivery platform. Here's the restaurant owner version:
+
+Use Case Number: 020
+
+Use Case Code: UC-FD-020
+
+Use Case Name: Restaurant Owner Login
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Restaurant Owner
+
+Short Definition: Restaurant owners log into the food delivery web page using their credentials.
+
+Pre-condition: Restaurant owner must have valid login credentials (username/email and password).
+
+Post-condition: Restaurant owner successfully logs in and can manage orders, update menus, and view delivery statuses.
+
+Priority: High
+
+Frequency of Occurrence: High, especially during peak business hours (e.g., lunch and dinner times).
+
+Main Path:
+
+Restaurant owner enters login ID (username or email) and password.
+System authenticates the credentials.
+Restaurant owner is granted access to the restaurant management dashboard.
+Alternative Path:
+
+A.01: If login fails (incorrect credentials), the system prompts the restaurant owner to re-enter login details or reset their password.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must ensure login security (e.g., CAPTCHA, two-factor authentication, or password encryption).
+The platform should support multi-language options for restaurant owners in diverse regions.
+Assumptions:
+
+Restaurant owner has an internet connection.
+The restaurant is registered on the food delivery platform.
+Note:
+
+The system should provide an option for password recovery in case the restaurant owner forgets their credentials.
+Explanation of Changes:
+Actor: Changed from "Courier" to "Restaurant Owner" to reflect the new user.
+Use Case Details: Adjusted the use case number, code, and name to fit the food delivery context (e.g., "UC-FD-020" for food delivery).
+Short Definition and Conditions: Updated to focus on the restaurant owner logging in to manage their restaurant's operations on the platform.
+Main Path: Kept the login process similar but specified the outcome as accessing a "restaurant management dashboard" instead of a "delivery dashboard."
+Alternative Path: Kept the same logic for failed logins but rephrased for the restaurant owner.
+Special Requirements: Added a multi-language support requirement, as restaurant owners may operate in diverse regions, and kept the security measures like CAPTCHA or two-factor authentication.
+Assumptions: Added that the restaurant must be registered on the platform, which is a necessary condition for the owner to have login credentials.
+Note: Added a suggestion for a password recovery option, which is practical for restaurant owners who might forget their credentials during busy operations.
+Let me know if you'd like to adjust this further or add more details! If you need additional information to refine this use case (e.g., specific platform features), I can search for more context if needed.
+
+
+
+
+
+
+
+now can u give me customer version of it
+
+
+
+
+Absolutely! I'll adapt the use case again, this time for a customer using a food delivery web page. The structure will remain consistent with the previous versions, but the details will be tailored to a customer's perspective, focusing on their interaction with the platform to place orders. Here's the customer version:
+
+Use Case Number: 030
+
+Use Case Code: UC-FD-030
+
+Use Case Name: Customer Login
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Customer
+
+Short Definition: Customers log into the food delivery web page using their credentials.
+
+Pre-condition: Customer must have valid login credentials (username/email and password).
+
+Post-condition: Customer successfully logs in and can browse restaurants, place orders, and track deliveries.
+
+Priority: High
+
+Frequency of Occurrence: High, especially during meal times (e.g., breakfast, lunch, and dinner).
+
+Main Path:
+
+Customer enters login ID (username or email) and password.
+System authenticates the credentials.
+Customer is granted access to the food delivery homepage or dashboard.
+Alternative Path:
+
+A.01: If login fails (incorrect credentials), the system prompts the customer to re-enter login details or reset their password.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must ensure login security (e.g., CAPTCHA, two-factor authentication, or password encryption).
+The platform should provide a user-friendly interface for customers, with options for guest checkout if they prefer not to log in.
+Assumptions:
+
+Customer has an internet connection.
+Customer has an account registered on the food delivery platform (unless using guest checkout).
+Note:
+
+The system should offer a "Forgot Password" option to assist customers in recovering their accounts.
+The platform should allow social media login options (e.g., Google, Facebook) to simplify the login process for customers.
+Explanation of Changes:
+Actor: Changed from "Restaurant Owner" to "Customer" to reflect the new user.
+Use Case Details: Updated the use case number and code to "UC-FD-030" to differentiate it within the food delivery context.
+Short Definition and Conditions: Adjusted to focus on the customer logging in to browse restaurants, place orders, and track deliveries.
+Main Path: Kept the login process similar but specified the outcome as accessing the "food delivery homepage or dashboard" instead of a management dashboard.
+Alternative Path: Retained the same logic for failed logins but rephrased for the customer.
+Special Requirements: Kept the security measures (CAPTCHA, two-factor authentication) and added a requirement for a user-friendly interface and guest checkout option, as customers may not always want to log in.
+Assumptions: Added that the customer has an account on the platform, with a note that guest checkout could be an alternative.
+Note: Included a "Forgot Password" option and suggested social media login options, which are common features on food delivery platforms to enhance user experience.
+Let me know if you'd like to tweak this further or if you'd like to explore another perspective (e.g., a delivery driver or admin)! If you need more details about typical food delivery platform features, I can search for additional information.
+
+
+
+
+
+
+
+Manages all user accounts, including customers, restaurants, and couriers.
+● Approves or rejects restaurant and courier registrations.
+● Handles customer complaints and resolves disputes between restaurants, couriers, and
+customers.
+● Manages platform-wide configurations, such as delivery fee policies and promotions.
+● Ensures data security and compliance with privacy regulations.
+● Can temporarily suspend or permanently ban restaurants or couriers that violate
+platform policies.  can u give me use case tables for above modules
+
+
+
+
+I'll create use case tables for the various responsibilities of an Admin on a food delivery platform, based on the modules you've provided. Each module will have its own use case table, following the structure of the previous examples. The admin's role involves managing user accounts, approving/rejecting registrations, handling complaints, managing configurations, ensuring data security, and enforcing platform policies. Below are the use case tables for each module.
+
+1. Manages All User Accounts (Customers, Restaurants, and Couriers)
+Use Case Number: 040
+
+Use Case Code: UC-FD-040
+
+Use Case Name: Admin Manages User Accounts
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Admin
+
+Short Definition: Admin manages user accounts for customers, restaurants, and couriers on the food delivery platform.
+
+Pre-condition: Admin must be logged into the system with valid credentials and have appropriate permissions.
+
+Post-condition: Admin successfully views, edits, or deletes user accounts as needed.
+
+Priority: High
+
+Frequency of Occurrence: Moderate, depending on user activity and platform growth.
+
+Main Path:
+
+Admin logs into the admin dashboard.
+Admin navigates to the "User Management" section.
+Admin selects a user type (customer, restaurant, or courier) and views the list of accounts.
+Admin performs actions such as editing account details, resetting passwords, or deleting accounts.
+System updates the user database and logs the admin’s actions.
+Alternative Path:
+
+A.01: If the user account cannot be found, the system notifies the admin to verify the user ID or search criteria.
+
+A.02: If the admin lacks permission for a specific action (e.g., deleting an account), the system displays an error and suggests escalating to a higher authority.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must log all admin actions for auditing purposes.
+The platform should provide search and filter options to easily locate user accounts.
+Assumptions:
+
+Admin has an internet connection and access to the admin dashboard.
+The user database is up-to-date and accessible.
+Note:
+
+The system should notify users (via email or in-app notification) if their account details are modified by the admin.
+2. Approves or Rejects Restaurant and Courier Registrations
+Use Case Number: 041
+
+Use Case Code: UC-FD-041
+
+Use Case Name: Admin Approves/Rejects Registrations
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Admin
+
+Short Definition: Admin reviews and approves or rejects registration requests from restaurants and couriers.
+
+Pre-condition: Admin must be logged into the system, and there must be pending registration requests.
+
+Post-condition: Registration requests are either approved (allowing access) or rejected (denying access), and the applicant is notified.
+
+Priority: High
+
+Frequency of Occurrence: Moderate, depending on the rate of new registrations.
+
+Main Path:
+
+Admin logs into the admin dashboard.
+Admin navigates to the "Pending Registrations" section.
+Admin reviews the details of a restaurant or courier registration (e.g., documents, licenses, contact info).
+Admin selects "Approve" or "Reject" and provides a reason if rejecting.
+System updates the registration status and notifies the applicant via email or in-app notification.
+Alternative Path:
+
+A.01: If the registration details are incomplete, the system prompts the admin to request additional information from the applicant.
+
+A.02: If the admin rejects the registration, the system allows the applicant to reapply after addressing the rejection reason.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must store a history of registration decisions for transparency.
+The platform should allow admins to attach comments or feedback to rejected applications.
+Assumptions:
+
+Admin has the authority to approve or reject registrations.
+Applicants have provided necessary documentation during registration.
+Note:
+
+The system should provide a checklist of required documents to streamline the review process.
+3. Handles Customer Complaints and Resolves Disputes
+Use Case Number: 042
+
+Use Case Code: UC-FD-042
+
+Use Case Name: Admin Resolves Complaints and Disputes
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Admin
+
+Short Definition: Admin handles customer complaints and resolves disputes between customers, restaurants, and couriers.
+
+Pre-condition: Admin must be logged into the system, and there must be an active complaint or dispute logged.
+
+Post-condition: Complaint or dispute is resolved, and all parties are notified of the resolution.
+
+Priority: High
+
+Frequency of Occurrence: Moderate to high, depending on platform activity and user satisfaction.
+
+Main Path:
+
+Admin logs into the admin dashboard.
+Admin navigates to the "Complaints & Disputes" section.
+Admin selects a complaint or dispute and reviews the details (e.g., customer complaint, restaurant response, courier input).
+Admin investigates by contacting involved parties or reviewing order history.
+Admin resolves the issue (e.g., issues a refund, warns a party, or escalates the case).
+System updates the complaint status and notifies all parties of the resolution.
+Alternative Path:
+
+A.01: If the complaint lacks sufficient details, the system prompts the admin to request more information from the complainant.
+
+A.02: If the dispute cannot be resolved at the admin’s level, the system allows escalation to a higher authority or legal team.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide a chat or messaging feature for the admin to communicate with involved parties.
+The platform should allow admins to issue refunds or compensation directly from the dashboard.
+Assumptions:
+
+Admin has access to order history and communication logs.
+All parties are willing to cooperate in the resolution process.
+Note:
+
+The system should allow admins to categorize complaints (e.g., late delivery, wrong order) for better tracking and analysis.
+4. Manages Platform-Wide Configurations (Delivery Fees, Promotions)
+Use Case Number: 043
+
+Use Case Code: UC-FD-043
+
+Use Case Name: Admin Manages Platform Configurations
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Admin
+
+Short Definition: Admin manages platform-wide configurations such as delivery fee policies and promotional campaigns.
+
+Pre-condition: Admin must be logged into the system with appropriate permissions.
+
+Post-condition: Platform configurations are updated, and changes are applied across the system.
+
+Priority: Medium
+
+Frequency of Occurrence: Low to moderate, depending on business needs (e.g., seasonal promotions).
+
+Main Path:
+
+Admin logs into the admin dashboard.
+Admin navigates to the "Platform Configurations" section.
+Admin selects a configuration to update (e.g., delivery fee rates, promotional discounts).
+Admin enters new values or settings (e.g., sets a 10% discount for first-time users).
+System validates the changes and applies them across the platform.
+System notifies users (if applicable) of the updated policies via email or in-app notification.
+Alternative Path:
+
+A.01: If the new configuration violates platform rules (e.g., negative delivery fees), the system alerts the admin to correct the input.
+
+A.02: If the changes require approval from a higher authority, the system flags the update for review.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide a preview of how changes will affect the platform before they are applied.
+The platform should log all configuration changes for auditing purposes.
+Assumptions:
+
+Admin has the authority to modify platform configurations.
+The platform supports real-time updates to configurations.
+Note:
+
+The system should allow admins to schedule configuration changes (e.g., a promotion starting on a specific date).
+5. Ensures Data Security and Compliance with Privacy Regulations
+Use Case Number: 044
+
+Use Case Code: UC-FD-044
+
+Use Case Name: Admin Ensures Data Security and Compliance
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Admin
+
+Short Definition: Admin ensures the platform’s data security and compliance with privacy regulations.
+
+Pre-condition: Admin must be logged into the system with appropriate permissions.
+
+Post-condition: Data security measures are implemented, and the platform remains compliant with privacy regulations.
+
+Priority: Critical
+
+Frequency of Occurrence: Ongoing, with periodic reviews (e.g., monthly audits).
+
+Main Path:
+
+Admin logs into the admin dashboard.
+Admin navigates to the "Security & Compliance" section.
+Admin reviews current security settings (e.g., encryption, two-factor authentication) and compliance status (e.g., GDPR, CCPA).
+Admin updates security protocols or privacy policies as needed (e.g., enabling mandatory two-factor authentication).
+System applies the updates and logs the changes.
+Admin schedules a compliance audit to verify adherence to regulations.
+Alternative Path:
+
+A.01: If a security vulnerability is detected, the system alerts the admin to take immediate action (e.g., patching the system).
+
+A.02: If the platform is non-compliant with a regulation, the system flags the issue and suggests corrective actions.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must encrypt sensitive user data (e.g., payment details, personal information).
+The platform should provide a compliance dashboard with real-time status updates.
+Assumptions:
+
+Admin is trained in data security and privacy regulations.
+The platform has tools to monitor and enforce compliance.
+Note:
+
+The system should notify admins of upcoming regulation changes (e.g., new privacy laws).
+6. Temporarily Suspends or Permanently Bans Restaurants or Couriers
+Use Case Number: 045
+
+Use Case Code: UC-FD-045
+
+Use Case Name: Admin Suspends/Bans Restaurants or Couriers
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Admin
+
+Short Definition: Admin temporarily suspends or permanently bans restaurants or couriers that violate platform policies.
+
+Pre-condition: Admin must be logged into the system, and there must be a reported violation by a restaurant or courier.
+
+Post-condition: The restaurant or courier account is suspended or banned, and they are notified of the action.
+
+Priority: High
+
+Frequency of Occurrence: Low to moderate, depending on policy violations.
+
+Main Path:
+
+Admin logs into the admin dashboard.
+Admin navigates to the "Policy Violations" section.
+Admin reviews the violation report (e.g., repeated late deliveries, fraudulent activity).
+Admin decides to either temporarily suspend or permanently ban the account and provides a reason.
+System updates the account status and notifies the restaurant or courier via email or in-app notification.
+Alternative Path:
+
+A.01: If the violation is under investigation, the system allows the admin to place a temporary hold on the account until the investigation is complete.
+
+A.02: If the restaurant or courier appeals the decision, the system escalates the case to a higher authority for review.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide a detailed violation history for each account.
+The platform should allow the admin to set the duration of a temporary suspension.
+Assumptions:
+
+Admin has the authority to suspend or ban accounts.
+The violation report contains sufficient evidence for decision-making.
+Note:
+
+The system should allow restaurants or couriers to appeal a ban within a specified timeframe (e.g., 7 days).
+Summary of Use Cases:
+UC-FD-040: Admin manages user accounts (customers, restaurants, couriers).
+UC-FD-041: Admin approves or rejects restaurant and courier registrations.
+UC-FD-042: Admin handles customer complaints and resolves disputes.
+UC-FD-043: Admin manages platform-wide configurations (fees, promotions).
+UC-FD-044: Admin ensures data security and compliance with privacy regulations.
+UC-FD-045: Admin suspends or bans restaurants or couriers for policy violations.
+Let me know if you'd like to refine any of these use cases further or add more details! If you need additional context about food delivery platforms or admin responsibilities, I can search for more information.
+
+
+
+
+
+
+
+Adds, updates, and deletes food items from the menu, including prices, descriptions,
+and availability.
+● Processes incoming customer orders and prepares food for pickup by couriers.
+● Assigns available couriers to deliver completed orders.
+● Views order history and tracks the status of current deliveries.
+● Responds to customer reviews and inquiries to maintain a good reputation.
+● Manages restaurant profile details, including business hours, contact information, and
+delivery range.  can u create use case table for above modules
+
+
+
+
+I'll create use case tables for the responsibilities of a Restaurant Owner on a food delivery platform, based on the modules you've provided. Each module will have its own use case table, following the structure of the previous examples. The restaurant owner's role involves managing the menu, processing orders, assigning couriers, tracking orders, responding to reviews, and managing the restaurant's profile. Below are the use case tables for each module.
+
+1. Adds, Updates, and Deletes Food Items from the Menu
+Use Case Number: 050
+
+Use Case Code: UC-FD-050
+
+Use Case Name: Restaurant Owner Manages Menu
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Restaurant Owner
+
+Short Definition: Restaurant owner adds, updates, or deletes food items on the menu, including prices, descriptions, and availability.
+
+Pre-condition: Restaurant owner must be logged into the system with valid credentials and have a registered restaurant profile.
+
+Post-condition: The menu is updated with the new, modified, or removed food items, and changes are reflected on the platform for customers to see.
+
+Priority: High
+
+Frequency of Occurrence: Moderate, depending on menu changes (e.g., daily specials, seasonal updates).
+
+Main Path:
+
+Restaurant owner logs into the restaurant management dashboard.
+Restaurant owner navigates to the "Menu Management" section.
+Restaurant owner selects an action: add a new item, update an existing item, or delete an item.
+To add: Enters item details (name, price, description, availability).
+To update: Modifies existing item details.
+To delete: Confirms deletion of the item.
+System validates the changes and updates the menu.
+System notifies customers (if applicable) of menu updates via in-app notifications.
+Alternative Path:
+
+A.01: If the item details are incomplete (e.g., missing price), the system prompts the restaurant owner to provide the required information.
+
+A.02: If the restaurant owner attempts to delete an item currently in an active order, the system warns them and suggests marking the item as unavailable instead.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must allow the restaurant owner to upload images for food items.
+The platform should provide an option to mark items as "temporarily unavailable" without deleting them.
+Assumptions:
+
+Restaurant owner has an internet connection and access to the dashboard.
+The restaurant is active on the platform.
+Note:
+
+The system should allow bulk updates for menu items to save time (e.g., updating prices for multiple items at once).
+2. Processes Incoming Customer Orders and Prepares Food for Pickup
+Use Case Number: 051
+
+Use Case Code: UC-FD-051
+
+Use Case Name: Restaurant Owner Processes Orders
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Restaurant Owner
+
+Short Definition: Restaurant owner processes incoming customer orders and prepares food for pickup by couriers.
+
+Pre-condition: Restaurant owner must be logged into the system, and there must be incoming customer orders.
+
+Post-condition: Orders are processed, food is prepared, and the order status is updated for courier pickup.
+
+Priority: High
+
+Frequency of Occurrence: High, especially during peak hours (e.g., lunch, dinner).
+
+Main Path:
+
+Restaurant owner logs into the restaurant management dashboard.
+Restaurant owner navigates to the "Incoming Orders" section.
+Restaurant owner reviews the details of a new order (e.g., items, customer instructions).
+Restaurant owner confirms the order and begins food preparation.
+Once prepared, the restaurant owner updates the order status to "Ready for Pickup."
+System notifies the assigned courier (or pool of available couriers) to pick up the order.
+Alternative Path:
+
+A.01: If an order cannot be fulfilled (e.g., out-of-stock item), the system prompts the restaurant owner to notify the customer and suggest an alternative or cancel the order.
+
+A.02: If the restaurant owner delays preparation beyond a set time, the system sends a reminder to update the order status.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide real-time order notifications to the restaurant owner.
+The platform should allow the restaurant owner to communicate with the customer if there are issues with the order.
+Assumptions:
+
+Restaurant owner has the necessary ingredients and staff to prepare the order.
+The platform supports real-time order updates.
+Note:
+
+The system should allow the restaurant owner to set estimated preparation times for each order to manage customer expectations.
+3. Assigns Available Couriers to Deliver Completed Orders
+Use Case Number: 052
+
+Use Case Code: UC-FD-052
+
+Use Case Name: Restaurant Owner Assigns Couriers
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Restaurant Owner
+
+Short Definition: Restaurant owner assigns available couriers to deliver completed orders.
+
+Pre-condition: Restaurant owner must be logged into the system, an order must be marked as "Ready for Pickup," and there must be available couriers.
+
+Post-condition: A courier is assigned to the order, and the order status is updated to "Out for Delivery."
+
+Priority: High
+
+Frequency of Occurrence: High, especially during peak delivery times.
+
+Main Path:
+
+Restaurant owner logs into the restaurant management dashboard.
+Restaurant owner navigates to the "Orders Ready for Pickup" section.
+Restaurant owner views a list of available couriers (e.g., based on proximity, availability).
+Restaurant owner assigns a courier to the order.
+System updates the order status to "Out for Delivery" and notifies the courier.
+Alternative Path:
+
+A.01: If no couriers are available, the system notifies the restaurant owner and suggests waiting or reassigning the order later.
+
+A.02: If the assigned courier declines the order, the system prompts the restaurant owner to assign a different courier.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must display courier availability and estimated arrival times for pickup.
+The platform should allow automatic courier assignment as an optional feature to save time.
+Assumptions:
+
+There are couriers registered on the platform.
+The restaurant owner has access to real-time courier data.
+Note:
+
+The system should allow the restaurant owner to view courier ratings or performance history to make informed assignment decisions.
+4. Views Order History and Tracks Status of Current Deliveries
+Use Case Number: 053
+
+Use Case Code: UC-FD-053
+
+Use Case Name: Restaurant Owner Tracks Orders
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Restaurant Owner
+
+Short Definition: Restaurant owner views order history and tracks the status of current deliveries.
+
+Pre-condition: Restaurant owner must be logged into the system, and there must be past or active orders.
+
+Post-condition: Restaurant owner successfully views order history and tracks the status of current deliveries.
+
+Priority: Medium
+
+Frequency of Occurrence: Moderate, depending on the need to review orders or monitor deliveries.
+
+Main Path:
+
+Restaurant owner logs into the restaurant management dashboard.
+Restaurant owner navigates to the "Order History" or "Current Deliveries" section.
+Restaurant owner selects an order to view its details (e.g., items, customer, status).
+For current deliveries, the system displays real-time tracking information (e.g., courier location, estimated delivery time).
+Restaurant owner monitors the order until it is marked as "Delivered."
+Alternative Path:
+
+A.01: If an order’s status is unclear (e.g., stuck in "Out for Delivery"), the system allows the restaurant owner to contact the courier for an update.
+
+A.02: If the order history is empty (e.g., new restaurant), the system displays a message indicating no orders yet.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide real-time tracking for current deliveries.
+The platform should allow filtering and sorting of order history (e.g., by date, status).
+Assumptions:
+
+The platform supports real-time tracking of couriers.
+The restaurant owner has placed orders on the platform.
+Note:
+
+The system should allow the restaurant owner to export order history for record-keeping or analysis.
+5. Responds to Customer Reviews and Inquiries
+Use Case Number: 054
+
+Use Case Code: UC-FD-054
+
+Use Case Name: Restaurant Owner Responds to Reviews and Inquiries
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Restaurant Owner
+
+Short Definition: Restaurant owner responds to customer reviews and inquiries to maintain a good reputation.
+
+Pre-condition: Restaurant owner must be logged into the system, and there must be customer reviews or inquiries.
+
+Post-condition: Restaurant owner responds to the review or inquiry, and the response is visible to the customer.
+
+Priority: Medium
+
+Frequency of Occurrence: Moderate, depending on customer feedback and inquiries.
+
+Main Path:
+
+Restaurant owner logs into the restaurant management dashboard.
+Restaurant owner navigates to the "Reviews & Inquiries" section.
+Restaurant owner selects a review or inquiry to respond to.
+Restaurant owner types a response and submits it.
+System updates the review or inquiry thread and notifies the customer of the response.
+Alternative Path:
+
+A.01: If the review is flagged as inappropriate, the system allows the restaurant owner to report it to the admin for removal.
+
+A.02: If the inquiry requires further investigation (e.g., missing order), the system allows the restaurant owner to escalate it to the admin.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must notify the restaurant owner of new reviews or inquiries in real-time.
+The platform should provide pre-written response templates for common inquiries to save time.
+Assumptions:
+
+Customers have left reviews or sent inquiries via the platform.
+The restaurant owner has the authority to respond on behalf of the restaurant.
+Note:
+
+The system should allow the restaurant owner to view their overall rating and trends in customer feedback.
+6. Manages Restaurant Profile Details (Business Hours, Contact Info, Delivery Range)
+Use Case Number: 055
+
+Use Case Code: UC-FD-055
+
+Use Case Name: Restaurant Owner Manages Profile
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Restaurant Owner
+
+Short Definition: Restaurant owner manages restaurant profile details, including business hours, contact information, and delivery range.
+
+Pre-condition: Restaurant owner must be logged into the system with a registered restaurant profile.
+
+Post-condition: Restaurant profile details are updated, and changes are reflected on the platform for customers to see.
+
+Priority: Medium
+
+Frequency of Occurrence: Low to moderate, depending on the need for updates (e.g., changing hours, expanding delivery range).
+
+Main Path:
+
+Restaurant owner logs into the restaurant management dashboard.
+Restaurant owner navigates to the "Restaurant Profile" section.
+Restaurant owner updates details such as business hours, contact information, or delivery range.
+System validates the changes (e.g., ensures delivery range is feasible).
+System updates the restaurant profile and notifies customers (if applicable) of significant changes (e.g., updated hours).
+Alternative Path:
+
+A.01: If the updated delivery range is too large for the platform’s logistics, the system warns the restaurant owner and suggests a smaller range.
+
+A.02: If the contact information is invalid (e.g., incorrect phone number format), the system prompts the restaurant owner to correct it.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must allow the restaurant owner to upload a profile picture or logo for the restaurant.
+The platform should provide a map interface for setting the delivery range.
+Assumptions:
+
+Restaurant owner has accurate information to update the profile.
+The platform supports dynamic updates to restaurant profiles.
+Note:
+
+The system should allow the restaurant owner to set temporary changes (e.g., holiday hours) without affecting the regular schedule.
+Summary of Use Cases:
+UC-FD-050: Restaurant owner adds, updates, and deletes food items from the menu.
+UC-FD-051: Restaurant owner processes incoming customer orders and prepares food.
+UC-FD-052: Restaurant owner assigns available couriers to deliver orders.
+UC-FD-053: Restaurant owner views order history and tracks current deliveries.
+UC-FD-054: Restaurant owner responds to customer reviews and inquiries.
+UC-FD-055: Restaurant owner manages restaurant profile details.
+Let me know if you'd like to refine any of these use cases further or add more details! If you need additional context about restaurant operations on food delivery platforms, I can search for more information.
+
+
+
+
+
+
+
+Registers with restaurants to be eligible for delivery assignments.
+● Sets availability status as "Available" or "Unavailable" to receive new delivery
+requests.
+● Accepts or rejects delivery requests from restaurants.
+● Views assigned orders and navigates to restaurant locations for pickup.
+● Marks orders as "Picked Up" once collected and "Delivered" upon reaching the
+customer.
+● Tracks earnings, completed deliveries, and ratings received from customers. can u give me use case tables for above modules
+
+
+
+
+I'll create use case tables for the responsibilities of a Courier on a food delivery platform, based on the modules you've provided. Each module will have its own use case table, following the structure of the previous examples. The courier's role involves registering with restaurants, setting availability, managing delivery requests, handling order pickups and deliveries, and tracking earnings and performance. Below are the use case tables for each module.
+
+1. Registers with Restaurants to Be Eligible for Delivery Assignments
+Use Case Number: 060
+
+Use Case Code: UC-FD-060
+
+Use Case Name: Courier Registers with Restaurants
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Courier
+
+Short Definition: Courier registers with restaurants on the platform to be eligible for delivery assignments.
+
+Pre-condition: Courier must be registered on the platform with valid credentials and have completed the initial onboarding process (e.g., background check, vehicle details).
+
+Post-condition: Courier is successfully registered with one or more restaurants and can receive delivery assignments from them.
+
+Priority: High
+
+Frequency of Occurrence: Low, typically a one-time action unless the courier wants to add more restaurants.
+
+Main Path:
+
+Courier logs into the courier dashboard or app.
+Courier navigates to the "Restaurant Registration" section.
+Courier selects restaurants to register with (e.g., based on location, cuisine type).
+Courier submits the registration request, including any required details (e.g., availability, delivery range).
+System forwards the request to the restaurant for approval.
+Once approved, the system updates the courier’s profile to reflect the new restaurant partnerships.
+Alternative Path:
+
+A.01: If the restaurant rejects the registration, the system notifies the courier with the reason (e.g., too many couriers already).
+
+A.02: If the courier’s profile is incomplete (e.g., missing vehicle details), the system prompts the courier to provide the required information before proceeding.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must allow couriers to filter restaurants by location or proximity.
+The platform should notify couriers of registration status updates in real-time.
+Assumptions:
+
+Courier has an internet connection and access to the platform.
+Restaurants are active on the platform and accepting new courier registrations.
+Note:
+
+The system should allow couriers to unregister from restaurants if they no longer wish to work with them.
+2. Sets Availability Status as "Available" or "Unavailable"
+Use Case Number: 061
+
+Use Case Code: UC-FD-061
+
+Use Case Name: Courier Sets Availability Status
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Courier
+
+Short Definition: Courier sets their availability status as "Available" or "Unavailable" to receive new delivery requests.
+
+Pre-condition: Courier must be logged into the system and registered with at least one restaurant.
+
+Post-condition: Courier’s availability status is updated, and they can receive delivery requests if set to "Available."
+
+Priority: High
+
+Frequency of Occurrence: High, as couriers may change their status multiple times a day.
+
+Main Path:
+
+Courier logs into the courier dashboard or app.
+Courier navigates to the "Availability" section.
+Courier selects their status as "Available" or "Unavailable."
+System updates the courier’s status and notifies restaurants of the change (if set to "Available").
+Alternative Path:
+
+A.01: If the courier is currently assigned to an active delivery, the system prevents them from setting their status to "Unavailable" until the delivery is completed.
+
+A.02: If the courier sets their status to "Available" during a low-demand period, the system informs them of expected wait times for new requests.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide a simple toggle or button for changing availability status.
+The platform should allow couriers to schedule availability in advance (e.g., available from 5 PM to 9 PM).
+Assumptions:
+
+Courier has an internet connection and access to the platform.
+The platform supports real-time status updates.
+Note:
+
+The system should notify couriers if they’ve been inactive for too long while set to "Available" to encourage status updates.
+3. Accepts or Rejects Delivery Requests from Restaurants
+Use Case Number: 062
+
+Use Case Code: UC-FD-062
+
+Use Case Name: Courier Accepts/Rejects Delivery Requests
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Courier
+
+Short Definition: Courier accepts or rejects delivery requests from restaurants.
+
+Pre-condition: Courier must be logged into the system, set to "Available," and there must be a delivery request from a restaurant.
+
+Post-condition: Delivery request is either accepted (assigned to the courier) or rejected (returned to the pool for another courier).
+
+Priority: High
+
+Frequency of Occurrence: High, especially during peak hours (e.g., lunch, dinner).
+
+Main Path:
+
+Courier receives a delivery request notification on the app.
+Courier reviews the request details (e.g., restaurant location, customer address, estimated earnings).
+Courier selects "Accept" or "Reject."
+If accepted, the system assigns the order to the courier and updates the order status to "Assigned."
+If rejected, the system returns the request to the pool for another courier to accept.
+Alternative Path:
+
+A.01: If the courier does not respond within a set time (e.g., 30 seconds), the system automatically rejects the request and assigns it to another courier.
+
+A.02: If the courier rejects too many requests consecutively, the system may temporarily lower their priority for new requests.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must display key details (e.g., distance, estimated time, earnings) in the request notification.
+The platform should allow couriers to set preferences for accepting requests (e.g., maximum distance).
+Assumptions:
+
+Courier has an internet connection and notifications enabled.
+There are active delivery requests available.
+Note:
+
+The system should allow couriers to provide a reason for rejecting a request (e.g., too far, busy) for better platform analytics.
+4. Views Assigned Orders and Navigates to Restaurant Locations for Pickup
+Use Case Number: 063
+
+Use Case Code: UC-FD-063
+
+Use Case Name: Courier Views Orders and Navigates to Restaurant
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Courier
+
+Short Definition: Courier views assigned orders and navigates to restaurant locations for pickup.
+
+Pre-condition: Courier must be logged into the system and have at least one assigned order.
+
+Post-condition: Courier successfully views the order details and navigates to the restaurant for pickup.
+
+Priority: High
+
+Frequency of Occurrence: High, as couriers handle multiple orders daily.
+
+Main Path:
+
+Courier logs into the courier dashboard or app.
+Courier navigates to the "Assigned Orders" section.
+Courier selects an order to view its details (e.g., restaurant address, items, customer instructions).
+Courier uses the in-app navigation feature to get directions to the restaurant.
+Courier arrives at the restaurant and proceeds to pick up the order.
+Alternative Path:
+
+A.01: If the restaurant location is incorrect or unreachable, the system allows the courier to contact the restaurant or report the issue to the admin.
+
+A.02: If the courier’s device lacks GPS functionality, the system provides a manual address for navigation.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must integrate with a navigation API (e.g., Google Maps) for real-time directions.
+The platform should allow couriers to contact the restaurant directly through the app if needed.
+Assumptions:
+
+Courier has a device with GPS and internet access.
+The restaurant address is accurate and accessible.
+Note:
+
+The system should provide estimated travel times to the restaurant to help couriers manage their schedule.
+5. Marks Orders as "Picked Up" and "Delivered"
+Use Case Number: 064
+
+Use Case Code: UC-FD-064
+
+Use Case Name: Courier Updates Order Status
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Courier
+
+Short Definition: Courier marks orders as "Picked Up" once collected from the restaurant and "Delivered" upon reaching the customer.
+
+Pre-condition: Courier must be logged into the system, have an assigned order, and be physically at the restaurant or customer location to update the status.
+
+Post-condition: Order status is updated to "Picked Up" and later "Delivered," and all parties (restaurant, customer) are notified.
+
+Priority: High
+
+Frequency of Occurrence: High, as couriers update statuses for each order they handle.
+
+Main Path:
+
+Courier arrives at the restaurant and collects the order.
+Courier marks the order as "Picked Up" in the app.
+System updates the order status and notifies the customer that the order is on its way.
+Courier navigates to the customer’s location and delivers the order.
+Courier marks the order as "Delivered" in the app.
+System updates the order status and notifies the customer and restaurant of the completed delivery.
+Alternative Path:
+
+A.01: If the customer is unavailable at the delivery location, the system allows the courier to mark the order as "Failed Delivery" and provides options (e.g., return to restaurant, leave at a safe location).
+
+A.02: If the restaurant delays the order preparation, the system allows the courier to report the delay and adjust the estimated delivery time.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide a simple button or gesture to update order statuses.
+The platform should allow couriers to upload proof of delivery (e.g., photo, signature) if required.
+Assumptions:
+
+Courier has an internet connection to update statuses in real-time.
+The customer’s address is accurate and accessible.
+Note:
+
+The system should allow couriers to report issues during delivery (e.g., traffic delays) to keep all parties informed.
+6. Tracks Earnings, Completed Deliveries, and Ratings
+Use Case Number: 065
+
+Use Case Code: UC-FD-065
+
+Use Case Name: Courier Tracks Earnings and Performance
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Courier
+
+Short Definition: Courier tracks earnings, completed deliveries, and ratings received from customers.
+
+Pre-condition: Courier must be logged into the system and have completed at least one delivery.
+
+Post-condition: Courier successfully views their earnings, delivery history, and customer ratings.
+
+Priority: Medium
+
+Frequency of Occurrence: Moderate, as couriers may check their performance daily or weekly.
+
+Main Path:
+
+Courier logs into the courier dashboard or app.
+Courier navigates to the "Earnings & Performance" section.
+Courier views their total earnings, number of completed deliveries, and average customer ratings.
+Courier can filter data by time period (e.g., daily, weekly, monthly).
+System displays detailed breakdowns (e.g., earnings per delivery, individual ratings).
+Alternative Path:
+
+A.01: If there are no completed deliveries (e.g., new courier), the system displays a message indicating no data yet.
+
+A.02: If a customer rating is disputed, the system allows the courier to appeal the rating with evidence (e.g., delivery proof).
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide a clear breakdown of earnings (e.g., base pay, tips, bonuses).
+The platform should allow couriers to export their earnings data for tax or personal records.
+Assumptions:
+
+Courier has completed deliveries on the platform.
+The platform tracks and stores performance data accurately.
+Note:
+
+The system should provide performance insights (e.g., busiest hours, highest-rated deliveries) to help couriers optimize their work.
+Summary of Use Cases:
+UC-FD-060: Courier registers with restaurants for delivery assignments.
+UC-FD-061: Courier sets availability status as "Available" or "Unavailable."
+UC-FD-062: Courier accepts or rejects delivery requests.
+UC-FD-063: Courier views assigned orders and navigates to restaurants.
+UC-FD-064: Courier marks orders as "Picked Up" and "Delivered."
+UC-FD-065: Courier tracks earnings, completed deliveries, and ratings.
+Let me know if you'd like to refine any of these use cases further or add more details! If you need additional context about courier operations on food delivery platforms, I can search for more information.
+
+
+
+
+
+
+
+Courier tracks earnings, completed deliveries, and ratings. what can be a shorter and a more definitive name for this use case
+
+
+
+
+The current use case name, "Courier Tracks Earnings and Performance," is descriptive but can be made shorter and more definitive while retaining clarity. Here are a couple of suggestions:
+
+Shorter and More Definitive Name Options:
+"Courier Monitors Performance"
+This name is concise and captures the essence of tracking earnings, completed deliveries, and ratings under the umbrella of "performance." It avoids listing all elements explicitly while still being clear.
+"Courier Views Stats"
+This is even shorter and uses "Stats" as a common shorthand for earnings, deliveries, and ratings. It’s definitive in focusing on the action (viewing) and the subject (statistics/performance data).
+Recommendation:
+I recommend "Courier Monitors Performance" as it strikes a balance between brevity and clarity, ensuring the purpose of the use case is immediately understood without being overly wordy.
+
+Updated Use Case Table with New Name:
+Here’s the revised use case table with the new name "Courier Monitors Performance":
+
+Use Case Number: 065
+
+Use Case Code: UC-FD-065
+
+Use Case Name: Courier Monitors Performance
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Courier
+
+Short Definition: Courier tracks earnings, completed deliveries, and ratings received from customers.
+
+Pre-condition: Courier must be logged into the system and have completed at least one delivery.
+
+Post-condition: Courier successfully views their earnings, delivery history, and customer ratings.
+
+Priority: Medium
+
+Frequency of Occurrence: Moderate, as couriers may check their performance daily or weekly.
+
+Main Path:
+
+Courier logs into the courier dashboard or app.
+Courier navigates to the "Earnings & Performance" section.
+Courier views their total earnings, number of completed deliveries, and average customer ratings.
+Courier can filter data by time period (e.g., daily, weekly, monthly).
+System displays detailed breakdowns (e.g., earnings per delivery, individual ratings).
+Alternative Path:
+
+A.01: If there are no completed deliveries (e.g., new courier), the system displays a message indicating no data yet.
+
+A.02: If a customer rating is disputed, the system allows the courier to appeal the rating with evidence (e.g., delivery proof).
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must provide a clear breakdown of earnings (e.g., base pay, tips, bonuses).
+The platform should allow couriers to export their earnings data for tax or personal records.
+Assumptions:
+
+Courier has completed deliveries on the platform.
+The platform tracks and stores performance data accurately.
+Note:
+
+The system should provide performance insights (e.g., busiest hours, highest-rated deliveries) to help couriers optimize their work.
+Let me know if you'd like to explore other naming options or make further adjustments!
+
+
+
+
+
+
+
+now can u generate tables for registeration of restaurant owner courier and customer 
+
+
+
+
+I'll create use case tables for the registration processes of a Restaurant Owner, Courier, and Customer on a food delivery platform. Each table will follow the structure of the previous examples, focusing on the registration process for each actor. These use cases will outline the steps, conditions, and requirements for registering on the platform.
+
+1. Registration of Restaurant Owner
+Use Case Number: 070
+
+Use Case Code: UC-FD-070
+
+Use Case Name: Restaurant Owner Registration
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Restaurant Owner
+
+Short Definition: Restaurant owner registers on the food delivery platform to manage their restaurant and receive orders.
+
+Pre-condition: Restaurant owner must have a valid email address, business details (e.g., restaurant name, address, licenses), and an internet connection.
+
+Post-condition: Restaurant owner is successfully registered, and their account is pending admin approval for activation.
+
+Priority: High
+
+Frequency of Occurrence: Low, typically a one-time action per restaurant.
+
+Main Path:
+
+Restaurant owner accesses the food delivery platform (via website or app).
+Restaurant owner selects the "Register as Restaurant" option.
+Restaurant owner enters required details (e.g., restaurant name, address, contact info, business license, menu details).
+Restaurant owner creates login credentials (username/email and password).
+System validates the information and submits the registration request for admin review.
+System notifies the restaurant owner that their registration is pending approval.
+Alternative Path:
+
+A.01: If the restaurant owner’s details are incomplete (e.g., missing business license), the system prompts them to provide the required information before proceeding.
+
+A.02: If the email address is already in use, the system prompts the restaurant owner to use a different email or recover the existing account.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must allow the restaurant owner to upload documents (e.g., business license, health permits) as part of the registration process.
+The platform should provide a checklist of required information to guide the restaurant owner during registration.
+Assumptions:
+
+Restaurant owner has all necessary business documentation ready.
+The platform supports document uploads and admin review processes.
+Note:
+
+The system should allow restaurant owners to save their progress and complete registration later if needed.
+2. Registration of Courier
+Use Case Number: 071
+
+Use Case Code: UC-FD-071
+
+Use Case Name: Courier Registration
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Courier
+
+Short Definition: Courier registers on the food delivery platform to become eligible for delivery assignments.
+
+Pre-condition: Courier must have a valid email address, personal details (e.g., name, phone number), vehicle information, and an internet connection.
+
+Post-condition: Courier is successfully registered, and their account is pending admin approval for activation.
+
+Priority: High
+
+Frequency of Occurrence: Low, typically a one-time action per courier.
+
+Main Path:
+
+Courier accesses the food delivery platform (via website or app).
+Courier selects the "Register as Courier" option.
+Courier enters required details (e.g., name, contact info, vehicle type, driver’s license, background check consent).
+Courier creates login credentials (username/email and password).
+System validates the information and submits the registration request for admin review.
+System notifies the courier that their registration is pending approval.
+Alternative Path:
+
+A.01: If the courier’s details are incomplete (e.g., missing driver’s license), the system prompts them to provide the required information before proceeding.
+
+A.02: If the courier fails the background check (if automated), the system informs them of the rejection and provides an appeal process.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must allow the courier to upload documents (e.g., driver’s license, vehicle registration) as part of the registration process.
+The platform should integrate with a background check service to verify courier eligibility.
+Assumptions:
+
+Courier has a valid driver’s license and vehicle for deliveries.
+The platform supports background checks and admin review processes.
+Note:
+
+The system should provide an estimated timeline for admin approval to manage courier expectations.
+3. Registration of Customer
+Use Case Number: 072
+
+Use Case Code: UC-FD-072
+
+Use Case Name: Customer Registration
+
+Decipter: Ashi T.
+
+Description Date: 14/03/2025
+
+Last Modification: [To be updated]
+
+Last Modification Date: [To be updated]
+
+Actor(s): Customer
+
+Short Definition: Customer registers on the food delivery platform to place orders and track deliveries.
+
+Pre-condition: Customer must have a valid email address or phone number and an internet connection.
+
+Post-condition: Customer is successfully registered and can log in to place orders on the platform.
+
+Priority: High
+
+Frequency of Occurrence: Moderate, as new customers register frequently.
+
+Main Path:
+
+Customer accesses the food delivery platform (via website or app).
+Customer selects the "Sign Up" or "Register as Customer" option.
+Customer enters required details (e.g., name, email, phone number, delivery address).
+Customer creates login credentials (username/email and password).
+System validates the information and creates the customer account.
+System sends a verification email or SMS to the customer to confirm their account.
+Customer verifies their account and can log in to use the platform.
+Alternative Path:
+
+A.01: If the email or phone number is already in use, the system prompts the customer to use a different email/phone number or recover the existing account.
+
+A.02: If the customer fails to verify their account within a set time (e.g., 24 hours), the system sends a reminder or deactivates the unverified account.
+
+Containing Use-Case(s):
+Special Requirements:
+
+The system must support social media login options (e.g., Google, Facebook) to simplify the registration process.
+The platform should allow customers to register without a delivery address initially, with the option to add it later.
+Assumptions:
+
+Customer has access to their email or phone to complete verification.
+The platform supports email/SMS verification processes.
+Note:
+
+The system should provide an option for guest checkout, allowing customers to place orders without registering, but encourage registration for a better experience (e.g., order tracking, saved addresses).
+Summary of Use Cases:
+UC-FD-070: Restaurant Owner Registration – Restaurant owner registers to manage their restaurant on the platform.
+UC-FD-071: Courier Registration – Courier registers to become eligible for delivery assignments.
+UC-FD-072: Customer Registration – Customer registers to place orders and track deliveries.
+Key Differences:
+Restaurant Owner and Courier Registration: Both require admin approval due to the need for verification of business details (for restaurants) or background checks (for couriers). They also involve uploading documents, which isn’t required for customers.
+Customer Registration: This process is simpler and faster, as it doesn’t require admin approval, but includes a verification step (email/SMS) to ensure account security. Social media login options are also emphasized for customers to enhance user experience.
+Let me know if you'd like to refine any of these use cases further or add more details! If you need additional context about registration processes on food delivery platforms, I can search for more information.

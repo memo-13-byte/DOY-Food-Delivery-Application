@@ -3,6 +3,7 @@ package com.pingfloyd.doy.controllers;
 import com.pingfloyd.doy.dto.RegistrationRequest;
 import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.services.RegistrationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/registration")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class RegistrationController {
 
     private final RegistrationService registrationService;
@@ -20,12 +22,12 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> register(@RequestBody RegistrationRequest request){
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest request){
         try {
             User createdRestaurant = registrationService.CustomerRegister(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdRestaurant);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("faileddd");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

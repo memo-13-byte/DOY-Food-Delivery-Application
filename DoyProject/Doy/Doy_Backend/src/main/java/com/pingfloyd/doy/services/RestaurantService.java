@@ -3,9 +3,11 @@ package com.pingfloyd.doy.services;
 import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
 import com.pingfloyd.doy.entities.Restaurant;
+import com.pingfloyd.doy.exception.RestaurantNotFoundException;
 import com.pingfloyd.doy.repositories.RestaurantRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,15 +20,16 @@ public class RestaurantService implements IRestaurantService {
 
     public Restaurant findRestaurantById(Long id) {
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
-        return optionalRestaurant.orElse(null);
+        if (optionalRestaurant.isEmpty()) {
+            throw new RestaurantNotFoundException("Requested restaurant was not found");
+        }
+        return optionalRestaurant.get();
     }
 
     @Override
-    public DtoRestaurant getRestaurant(Long id) {
+    public DtoRestaurant getRestaurant(Long id) throws RestaurantNotFoundException {
         Restaurant restaurant = findRestaurantById(id);
-        if (restaurant == null) {
-            return null;
-        }
+
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(restaurant, dtoRestaurant);
         return dtoRestaurant;
@@ -34,6 +37,7 @@ public class RestaurantService implements IRestaurantService {
 
     @Override
     public DtoRestaurant postRestaurant(DtoRestaurantIU dtoRestaurantIU) {
+
         Restaurant restaurant = new Restaurant();
         BeanUtils.copyProperties(dtoRestaurantIU, restaurant);
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
@@ -44,11 +48,9 @@ public class RestaurantService implements IRestaurantService {
     }
 
     @Override
-    public DtoRestaurant updateRestaurant(Long id, DtoRestaurantIU dtoRestaurantIU) {
+    public DtoRestaurant updateRestaurant(Long id, DtoRestaurantIU dtoRestaurantIU) throws RestaurantNotFoundException {
         Restaurant restaurant = findRestaurantById(id);
-        if (restaurant == null) {
-            return null;
-        }
+
         BeanUtils.copyProperties(dtoRestaurantIU, restaurant);
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
@@ -57,11 +59,9 @@ public class RestaurantService implements IRestaurantService {
     }
 
     @Override
-    public DtoRestaurant deleteRestaurant(Long id) {
+    public DtoRestaurant deleteRestaurant(Long id) throws RestaurantNotFoundException {
         Restaurant restaurant = findRestaurantById(id);
-        if (restaurant == null) {
-            return null;
-        }
+
         restaurantRepository.delete(restaurant);
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(restaurant, dtoRestaurant);
