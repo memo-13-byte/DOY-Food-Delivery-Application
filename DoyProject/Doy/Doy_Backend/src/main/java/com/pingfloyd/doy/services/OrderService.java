@@ -2,6 +2,7 @@ package com.pingfloyd.doy.services;
 
 
 import com.pingfloyd.doy.dto.DtoPaymentInformationIU;
+import com.pingfloyd.doy.dto.UserCartDTO;
 import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.enums.CardType;
 import com.pingfloyd.doy.enums.OrderStatus;
@@ -155,4 +156,60 @@ public class OrderService {
         paymentInfo.setCustomer(customer);
         return paymentInfo;
     }
+
+    public UserCartDTO getCurrentUserCart(String username) {
+        UserCartDTO cartDto = new UserCartDTO(); // Start with an empty DTO
+        Customer customer = userService.SearchCustomer(username);
+        if (customer == null) {
+            System.err.println("Cannot get cart: User not authenticated (Principal is null or has no name)");
+            return cartDto; // Return empty DTO for unauthenticated
+        }
+
+        //String userEmail = principal.getName(); // Assuming email/username from Principal
+
+        //Optional<Customer> customerOptional = customerRepository.findByEmail(userEmail); // Adapt method if needed
+
+
+
+        Cart cart = customer.getCart(); // Access the cart linked via @OneToOne
+
+        if (cart == null) {
+            System.out.println("No cart entity associated with customer: " + username);
+            return cartDto;
+        }
+
+        // --- Cart exists, map it ---
+        cartDto.setCartId(cart.getCartId()); // cartId comes from Customer's user_id via @MapsId
+
+        if (cart.getRestaurant() != null) {
+            cartDto.setRestaurantId(cart.getRestaurant().getId()); // Ensure getter exists
+            cartDto.setRestaurantName(cart.getRestaurant().getRestaurantName()); // Ensure getter exists
+        } else {
+            System.err.println("WARN: Cart " + cart.getCartId() + " is not linked to a Restaurant!");
+        }
+
+
+        if (cart.getItems() != null) {
+            cart.getItems().forEach(cartItem -> {
+                if (cartItem.getMenuItem() != null && cartItem.getQuantity() != null && cartItem.getQuantity() > 0) {
+                    UserCartDTO.ItemInfo itemInfo = new UserCartDTO.ItemInfo();
+                    itemInfo.setMenuItemId(cartItem.getMenuItem().getId());
+                    itemInfo.setName(cartItem.getMenuItem().getName());
+                    itemInfo.setPrice(cartItem.getMenuItem().getPrice());
+                    itemInfo.setDescription(cartItem.getMenuItem().getDescription());
+                    itemInfo.setQuantity(cartItem.getQuantity());
+                    // itemInfo.setCartItemId(cartItem.getCartItemId()); // Optional
+                    // itemInfo.setImageUrl(cartItem.getMenuItem().getImageUrl()); // Optional
+
+                    cartDto.getItems().add(itemInfo);
+                } else {
+                    System.err.println("WARN: Skipping invalid CartItem in cart " + cart.getCartId());
+                }
+            });
+        }
+
+        return cartDto;
+    }
+
+
 }
