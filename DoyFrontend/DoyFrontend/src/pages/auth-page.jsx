@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowRight, Moon, Sun } from "lucide-react"
+import {ArrowRight, CheckCircle, Moon, Sun} from "lucide-react"
 import axios from "axios"
 
 // Since we're having issues with the UI component imports, let's create simplified versions
@@ -242,6 +242,8 @@ export default function AuthPage() {
     setLocation(`/auth?${newParams.toString()}`)
   }
 
+
+
   const getTitle = () => {
     if (userType === "restaurant") return "Restoran"
     if (userType === "courier") return "Kurye"
@@ -311,6 +313,18 @@ export default function AuthPage() {
         return
       }
 
+      if (registerName.split(" ").length < 2) {
+        throw new Error("Lütfen ad-soyad girerken araya boşluk bırakınız");
+      }
+      const registrationInfo = {
+        firstName: registerName.split(" ")[0],
+        lastName: registerName.split(" ")[1],
+        email: registerEmail,
+        password: registerPassword,
+        phoneNumber: registerPhone
+      }
+      const response = await axios.post('http://localhost:8080/api/registration',
+          registrationInfo);
       // Mock API call - in a real app, you would send registration data to an API
       // For this demo, we'll just simulate a successful registration
       setTimeout(() => {
