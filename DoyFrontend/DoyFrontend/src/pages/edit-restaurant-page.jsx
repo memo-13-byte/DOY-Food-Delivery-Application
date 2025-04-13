@@ -2,14 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { Link, useLocation, useParams } from "wouter"
+import { Button } from "../components/ui/button"
+import { Toggle } from "../components/ui/toggle"
 import { Sun, Moon, X, Plus, Twitter, Instagram, Youtube, Linkedin, ChevronLeft, Edit, ImageIcon } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import axios from "axios"
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 894a25e (Added redirection to customer register to customer login in the situation of successful customer register. Also update restaurant menu item and add restaurant menu pages are added.)
 
 export default function RestaurantManagePage() {
   const [location, setLocation] = useLocation()
@@ -17,19 +14,11 @@ export default function RestaurantManagePage() {
   const { id: restaurantId } = params
   const [darkMode, setDarkMode] = useState(false)
   const [activeCategory, setActiveCategory] = useState(1)
-<<<<<<< HEAD
-  let categoryMap = new Map();
-  categoryMap.set("menu", 0);
-  categoryMap.set("yiyecek", 1);
-  categoryMap.set("icecek", 2);
-  categoryMap.set("ekstra", 3);
-=======
   const categoryMap = new Map()
-  categoryMap.set("menu", 0)
-  categoryMap.set("yiyecek", 1)
-  categoryMap.set("icecek", 2)
-  categoryMap.set("ekstra", 3)
->>>>>>> 894a25e (Added redirection to customer register to customer login in the situation of successful customer register. Also update restaurant menu item and add restaurant menu pages are added.)
+  categoryMap.set("COMBO", 0)
+  categoryMap.set("MAIN_DISH", 1)
+  categoryMap.set("DRINK", 2)
+  categoryMap.set("EXTRA", 3)
 
   // Mock restaurant data
   const [restaurant, setRestaurant] = useState({
@@ -178,17 +167,10 @@ export default function RestaurantManagePage() {
   useEffect(() => {
     const getRestaurantInformation = async () => {
       try {
-<<<<<<< HEAD
-        const response = await axios.get("http://localhost:8080/api/restaurant/get/1")
-        let restInfo = {
-          name: response.data.restaurantName,
-          description: response.data.restaurantPhone
-=======
-        const response = await axios.get(`http://localhost:8080/api/restaurant/get-items/${restaurantId || 1}`)
+        const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId || 1}`)
         const restInfo = {
           name: response.data.restaurantName,
           description: response.data.restaurantPhone,
->>>>>>> 894a25e (Added redirection to customer register to customer login in the situation of successful customer register. Also update restaurant menu item and add restaurant menu pages are added.)
         }
         setRestaurant(restInfo)
       } catch (e) {
@@ -198,13 +180,8 @@ export default function RestaurantManagePage() {
 
     const getRestaurantItems = async () => {
       try {
-<<<<<<< HEAD
-        const response = await axios.get("http://localhost:8080/api/item/get-items/1")
-        let itemData = [
-=======
         const response = await axios.get(`http://localhost:8080/api/item/get-items/${restaurantId || 1}`)
         const itemData = [
->>>>>>> 894a25e (Added redirection to customer register to customer login in the situation of successful customer register. Also update restaurant menu item and add restaurant menu pages are added.)
           {
             id: 1,
             name: "Menüler",
@@ -224,46 +201,28 @@ export default function RestaurantManagePage() {
             id: 4,
             name: "Ek Seçenekleri",
             items: [],
-<<<<<<< HEAD
-          }
-        ]
-        let responseItems = response.data;
-
-        for (let i = 0; i < responseItems.length; i++) {
-          itemData[categoryMap.get(responseItems[i].category)].items.push(
-              {
-                id: responseItems[i].id,
-                name:responseItems[i].name,
-                description: responseItems[i].description,
-                price: responseItems[i].price,
-              }
-          )
-=======
           },
         ]
         const responseItems = response.data
+        console.log(response)
 
         for (let i = 0; i < responseItems.length; i++) {
-          itemData[categoryMap.get(responseItems[i].category)].items.push({
+          itemData[categoryMap.get(responseItems[i].menuItemType)].items.push({
             id: responseItems[i].id,
             name: responseItems[i].name,
             description: responseItems[i].description,
             price: responseItems[i].price,
           })
->>>>>>> 894a25e (Added redirection to customer register to customer login in the situation of successful customer register. Also update restaurant menu item and add restaurant menu pages are added.)
         }
         setMenuCategories(itemData)
       } catch (e) {
+        console.log(e)
         alert("Error fetching data.")
       }
     }
 
     getRestaurantInformation().then(() => getRestaurantItems())
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 894a25e (Added redirection to customer register to customer login in the situation of successful customer register. Also update restaurant menu item and add restaurant menu pages are added.)
     if (darkMode) {
       document.body.classList.add("dark-mode")
     } else {
@@ -291,21 +250,23 @@ export default function RestaurantManagePage() {
           </Link>
         </motion.div>
         <div className="flex items-center gap-3">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <Toggle
+            variant="outline"
+            size="sm"
             aria-label="Toggle theme"
-            onClick={() => setDarkMode(!darkMode)}
-            className={`flex h-8 w-8 items-center justify-center rounded-md border p-1 ${darkMode ? "border-gray-600 bg-gray-700" : "border-amber-400 bg-amber-200"}`}
+            pressed={darkMode}
+            onPressedChange={setDarkMode}
+            className={`border ${darkMode ? "border-gray-600 bg-gray-700" : "border-amber-400 bg-amber-200"}`}
           >
             {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
-          </motion.button>
+          </Toggle>
           <motion.div whileHover={{ scale: 1.05 }}>
-            <button
-              className={`rounded-md px-3 py-1 font-medium ${darkMode ? "text-white hover:bg-gray-700" : "text-white hover:bg-amber-600"}`}
+            <Button
+              variant="ghost"
+              className={`font-medium ${darkMode ? "text-white hover:bg-gray-700" : "text-white hover:bg-amber-600"}`}
             >
               {restaurant.name}
-            </button>
+            </Button>
           </motion.div>
         </div>
       </motion.header>

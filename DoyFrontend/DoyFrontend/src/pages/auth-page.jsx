@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowRight, Moon, Sun, CheckCircle } from "lucide-react"
+import { ArrowRight, Moon, Sun } from "lucide-react"
+import axios from "axios"
 
 // Since we're having issues with the UI component imports, let's create simplified versions
 const Button = ({ className, children, ...props }) => (
@@ -120,57 +121,6 @@ const Link = ({ href, className, children, onClick }) => (
   </a>
 )
 
-// Simple Alertify component
-const Alertify = ({ message, type, onClose }) => {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (onClose) onClose()
-    }, 3000)
-    return () => clearTimeout(timer)
-  }, [onClose])
-
-  return (
-    <div className="fixed top-4 right-4 z-50 animate-slideIn">
-      <div
-        className={`flex items-center p-4 rounded-lg shadow-lg ${
-          type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-        }`}
-      >
-        {type === "success" ? (
-          <CheckCircle className="h-5 w-5 mr-2" />
-        ) : (
-          <svg
-            className="h-5 w-5 mr-2"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        )}
-        <span className="font-medium">{message}</span>
-        <button onClick={onClose} className="ml-4 text-gray-500 hover:text-gray-700" aria-label="Close">
-          <svg
-            className="h-4 w-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  )
-}
-
 export default function AuthPage() {
   // Custom hook to match wouter's useLocation
   const useLocation = () => {
@@ -215,18 +165,6 @@ export default function AuthPage() {
   const [rememberMe, setRememberMe] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
 
-  // Form state for registration
-  const [registerName, setRegisterName] = useState("")
-  const [registerEmail, setRegisterEmail] = useState("")
-  const [registerPhone, setRegisterPhone] = useState("")
-  const [registerPassword, setRegisterPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [acceptTerms, setAcceptTerms] = useState(false)
-  const [isRegisterLoading, setIsRegisterLoading] = useState(false)
-
-  // Alertify state
-  const [alertify, setAlertify] = useState({ show: false, message: "", type: "success" })
-
   // Update state when URL parameters change
   useEffect(() => {
     setActiveTab(tab)
@@ -255,85 +193,34 @@ export default function AuthPage() {
     try {
       // Mock API call - in a real app, you would validate credentials with an API
       // For this demo, we'll just check if email and password are provided
-      if (email && password) {
-        // Redirect to the appropriate dashboard based on user type
-        try {
-          if (userType === "restaurant") {
-            setLocation("/restaurant/profile")
-          } else if (userType === "courier") {
-            setLocation("/courier/profile")
-          } else {
-            setLocation("/customer/profile")
-          }
-        } catch (error) {
-          console.error("Navigation error:", error)
-          // Fallback - if navigation fails, try direct location change
-          const basePath =
-            userType === "restaurant"
-              ? "/restaurant/profile"
-              : userType === "courier"
-                ? "/courier/profile"
-                : "/customer/profile"
-          window.location.href = basePath
+      const response = await axios.post("http://localhost:8080/api/login/auth", {
+        username: email,
+        password: password
+      });
+
+      try {
+        if (userType === "restaurant") {
+          setLocation("/restaurant/profile")
+        } else if (userType === "courier") {
+          setLocation("/courier/profile")
+        } else {
+          setLocation("/customer/profile")
         }
-      } else {
-        setErrorMessage("Lütfen e-posta ve şifre girin")
+      } catch (error) {
+        console.error("Navigation error:", error)
+        // Fallback - if navigation fails, try direct location change
+        const basePath =
+            userType === "restaurant"
+                ? "/restaurant/profile"
+                : userType === "courier"
+                    ? "/courier/profile"
+                    : "/customer/profile"
+        window.location.href = basePath
       }
     } catch (error) {
-      setErrorMessage("Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.")
-      console.error("Login error:", error)
+      setErrorMessage("Hatalı kullanıcı adı veya şifre")
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  // Show alertify message
-  const showAlertify = (message, type = "success") => {
-    setAlertify({ show: true, message, type })
-  }
-
-  // Hide alertify message
-  const hideAlertify = () => {
-    setAlertify({ ...alertify, show: false })
-  }
-
-  // Add a new handleRegister function after the handleLogin function
-  const handleRegister = async (e) => {
-    e.preventDefault()
-    setErrorMessage("")
-    setIsRegisterLoading(true)
-
-    try {
-      // Validate passwords match
-      if (registerPassword !== confirmPassword) {
-        setErrorMessage("Şifreler eşleşmiyor")
-        setIsRegisterLoading(false)
-        return
-      }
-
-      // Mock API call - in a real app, you would send registration data to an API
-      // For this demo, we'll just simulate a successful registration
-      setTimeout(() => {
-        // Show success message
-        showAlertify("Kayıt işlemi başarıyla tamamlandı!", "success")
-
-        // Wait for the alertify to be visible before redirecting
-        setTimeout(() => {
-          // Redirect to the login page with the same user type
-          try {
-            setLocation(`/auth?tab=login&type=${userType}`)
-          } catch (error) {
-            console.error("Navigation error:", error)
-            // Fallback - if navigation fails, try direct location change
-            window.location.href = `/auth?tab=login&type=${userType}`
-          }
-        }, 2000) // Wait 2 seconds before redirecting so the user can see the message
-      }, 1000) // Simulate network delay
-    } catch (error) {
-      setErrorMessage("Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.")
-      console.error("Registration error:", error)
-    } finally {
-      setIsRegisterLoading(false)
     }
   }
 
@@ -351,7 +238,7 @@ export default function AuthPage() {
   }
 
   // Add this to the component to define the animation
-  const animations = `
+  const fadeInAnimation = `
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -359,22 +246,11 @@ export default function AuthPage() {
   .animate-fadeIn {
     animation: fadeIn 0.5s ease-in-out forwards;
   }
-  @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
-  .animate-slideIn {
-    animation: slideIn 0.3s ease-out forwards;
-  }
 `
 
   return (
     <div className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-900" : "bg-[#f5f0e1]"}`}>
-      <style>{animations}</style>
-
-      {/* Alertify notification */}
-      {alertify.show && <Alertify message={alertify.message} type={alertify.type} onClose={hideAlertify} />}
-
+      <style>{fadeInAnimation}</style>
       {/* Header section */}
       <header className={`py-3 px-6 flex justify-between items-center ${darkMode ? "bg-gray-800" : "bg-[#5c4018]"}`}>
         <div className="flex items-center">
@@ -443,7 +319,17 @@ export default function AuthPage() {
               <TabsTrigger
                 value="register"
                 className={`py-2 px-4 transition-all duration-300 ${activeTab === "register" ? "bg-white" : "bg-gray-100"}`}
-                onClick={(value) => handleTabChange(value)}
+                onClick={(value) => {
+                  // Check the user type and redirect accordingly
+                  if (getTitle() === "Restoran") {
+                    setLocation("/restaurants/register")
+                  } else if (getTitle() === "Kurye") {
+                    setLocation("/couriers/register")
+                  } else {
+                    // Default behavior for other user types
+                    handleTabChange(value)
+                  }
+                }}
               >
                 Kayıt Ol
               </TabsTrigger>
@@ -597,43 +483,13 @@ export default function AuthPage() {
 
               {activeTab === "register" && (
                 <TabsContent value="register" activeTab={activeTab} className="space-y-4">
-                  <motion.form
-                    onSubmit={handleRegister}
+                  <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
                     className="space-y-4"
                   >
-                    {errorMessage && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm"
-                      >
-                        <div className="flex">
-                          <div className="py-1">
-                            <svg
-                              className="h-6 w-6 text-red-500 mr-4"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <p className="font-medium">{errorMessage}</p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-gray-700 font-medium">
                         Ad Soyad
@@ -642,9 +498,6 @@ export default function AuthPage() {
                         id="name"
                         placeholder="Ad Soyad"
                         className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
-                        value={registerName}
-                        onChange={(e) => setRegisterName(e.target.value)}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -656,9 +509,6 @@ export default function AuthPage() {
                         type="email"
                         placeholder="E-posta"
                         className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
-                        value={registerEmail}
-                        onChange={(e) => setRegisterEmail(e.target.value)}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -669,9 +519,6 @@ export default function AuthPage() {
                         id="phone"
                         placeholder="Telefon"
                         className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
-                        value={registerPhone}
-                        onChange={(e) => setRegisterPhone(e.target.value)}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -683,9 +530,6 @@ export default function AuthPage() {
                         type="password"
                         placeholder="Şifre"
                         className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
-                        value={registerPassword}
-                        onChange={(e) => setRegisterPassword(e.target.value)}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -697,60 +541,18 @@ export default function AuthPage() {
                         type="password"
                         placeholder="Şifre Tekrar"
                         className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
                       />
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="terms"
-                        className="rounded text-[#5c4018]"
-                        checked={acceptTerms}
-                        onChange={(e) => setAcceptTerms(e.target.checked)}
-                        required
-                      />
+                      <input type="checkbox" id="terms" className="rounded text-[#5c4018]" />
                       <label htmlFor="terms" className="text-sm text-gray-700">
                         Kullanım şartlarını ve gizlilik politikasını kabul ediyorum
                       </label>
                     </div>
                     <div>
-                      <Button
-                        type="submit"
-                        className="w-full bg-[#e9c46a] hover:bg-[#e9b949] text-[#5c4018] font-medium py-2 rounded-md flex items-center justify-center gap-2"
-                        disabled={isRegisterLoading}
-                      >
-                        {isRegisterLoading ? (
-                          <div className="flex items-center justify-center">
-                            <svg
-                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#5c4018]"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              ></path>
-                            </svg>
-                            Kayıt Yapılıyor...
-                          </div>
-                        ) : (
-                          <>
-                            Kayıt Ol
-                            <ArrowRight className="h-4 w-4" />
-                          </>
-                        )}
+                      <Button className="w-full bg-[#e9c46a] hover:bg-[#e9b949] text-[#5c4018] font-medium py-2 rounded-md flex items-center justify-center gap-2">
+                        Kayıt Ol
+                        <ArrowRight className="h-4 w-4" />
                       </Button>
                     </div>
                     <div className="text-center text-sm text-gray-600 pt-2">
@@ -766,7 +568,7 @@ export default function AuthPage() {
                         Giriş Yap
                       </a>
                     </div>
-                  </motion.form>
+                  </motion.div>
                 </TabsContent>
               )}
             </AnimatePresence>
