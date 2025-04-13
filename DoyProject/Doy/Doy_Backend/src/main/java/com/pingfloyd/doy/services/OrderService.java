@@ -70,8 +70,8 @@ public class OrderService {
                 userCart.getItems().add(_item);
             }
             else if(menuItem.getRestaurant() != userCart.getRestaurant()){
-                throw new CartIsNotEmptyException("Cart is not empty, you can not add items from other restaurants!");
-                //return false;
+                //throw new CartIsNotEmptyException("Cart is not empty, you can not add items from other restaurants!");
+                return false;
             }
             else{
                 _item.setQuantity(_item.getQuantity()+1);
