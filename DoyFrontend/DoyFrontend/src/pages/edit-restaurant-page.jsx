@@ -8,17 +8,20 @@ import { Sun, Moon, X, Plus, Twitter, Instagram, Youtube, Linkedin, ChevronLeft,
 import { motion, AnimatePresence } from "framer-motion"
 import axios from "axios"
 
+
 export default function RestaurantManagePage() {
   const [location, setLocation] = useLocation()
   const params = useParams()
   const { id: restaurantId } = params
   const [darkMode, setDarkMode] = useState(false)
   const [activeCategory, setActiveCategory] = useState(1)
+
   const categoryMap = new Map()
   categoryMap.set("COMBO", 0)
   categoryMap.set("MAIN_DISH", 1)
   categoryMap.set("DRINK", 2)
   categoryMap.set("EXTRA", 3)
+
 
   // Mock restaurant data
   const [restaurant, setRestaurant] = useState({
@@ -167,10 +170,12 @@ export default function RestaurantManagePage() {
   useEffect(() => {
     const getRestaurantInformation = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId || 1}`)
-        const restInfo = {
+
+        const response = await axios.get("http://localhost:8080/api/restaurant/get/1")
+        let restInfo = {
           name: response.data.restaurantName,
-          description: response.data.restaurantPhone,
+          description: response.data.restaurantPhone
+
         }
         setRestaurant(restInfo)
       } catch (e) {
@@ -180,8 +185,11 @@ export default function RestaurantManagePage() {
 
     const getRestaurantItems = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/item/get-items/${restaurantId || 1}`)
-        const itemData = [
+
+
+        const response = await axios.get("http://localhost:8080/api/item/get-items/1")
+        let itemData = [
+
           {
             id: 1,
             name: "Menüler",
@@ -201,7 +209,12 @@ export default function RestaurantManagePage() {
             id: 4,
             name: "Ek Seçenekleri",
             items: [],
+
           },
+
+
+          
+
         ]
         const responseItems = response.data
         console.log(response)
@@ -213,6 +226,7 @@ export default function RestaurantManagePage() {
             description: responseItems[i].description,
             price: responseItems[i].price,
           })
+
         }
         setMenuCategories(itemData)
       } catch (e) {
@@ -222,6 +236,9 @@ export default function RestaurantManagePage() {
     }
 
     getRestaurantInformation().then(() => getRestaurantItems())
+
+
+
 
     if (darkMode) {
       document.body.classList.add("dark-mode")
@@ -250,23 +267,21 @@ export default function RestaurantManagePage() {
           </Link>
         </motion.div>
         <div className="flex items-center gap-3">
-          <Toggle
-            variant="outline"
-            size="sm"
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             aria-label="Toggle theme"
-            pressed={darkMode}
-            onPressedChange={setDarkMode}
-            className={`border ${darkMode ? "border-gray-600 bg-gray-700" : "border-amber-400 bg-amber-200"}`}
+            onClick={() => setDarkMode(!darkMode)}
+            className={`flex h-8 w-8 items-center justify-center rounded-md border p-1 ${darkMode ? "border-gray-600 bg-gray-700" : "border-amber-400 bg-amber-200"}`}
           >
             {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
-          </Toggle>
+          </motion.button>
           <motion.div whileHover={{ scale: 1.05 }}>
-            <Button
-              variant="ghost"
-              className={`font-medium ${darkMode ? "text-white hover:bg-gray-700" : "text-white hover:bg-amber-600"}`}
+            <button
+              className={`rounded-md px-3 py-1 font-medium ${darkMode ? "text-white hover:bg-gray-700" : "text-white hover:bg-amber-600"}`}
             >
               {restaurant.name}
-            </Button>
+            </button>
           </motion.div>
         </div>
       </motion.header>
