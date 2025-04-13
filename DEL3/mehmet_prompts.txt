@@ -1,0 +1,2062 @@
+useEffect'in sadece belirli bir parametreye (örneğin bir state veya prop) bağlı olarak tetiklenmesini istiyorsan, bağımlılık dizisi (dependency array) kullanmalısın. Bu diziye yalnızca tetikleyici olarak kullanmak istediğin parametreyi yazman yeterlidir.
+
+📌 Örnek:
+jsx
+Kopyala
+Düzenle
+import { useEffect, useState } from "react";
+
+function ExampleComponent({ userId }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Sadece userId değiştiğinde çalışır
+    fetch(`https://api.example.com/users/${userId}`)
+      .then(res => res.json())
+      .then(data => setUser(data));
+  }, [userId]); // <- sadece userId değiştiğinde tetiklenir
+
+  return (
+    <div>
+      <h1>{user ? user.name : "Yükleniyor..."}</h1>
+    </div>
+  );
+}
+🎯 Açıklama:
+useEffect(callback, [dependency]) şeklinde yazılır.
+
+dependency dizisine koyduğun değer değiştiğinde callback yeniden çalışır.
+
+Eğer boş dizi [] verirsen, sadece component mount olduğunda bir kere çalışır.
+
+⚠️ Dikkat:
+Eğer dizideki değer değişmiyorsa, useEffect tekrar tetiklenmez. Bu yüzden yalnızca gerçekten takip edilmesi gereken state veya prop'ları koymalısın.
+
+İstersen spesifik bir senaryona göre örnek kod da yazabilirim.
+
+
+Şunu dedin:
+<div className="max-w-7xl mx-auto px-4">
+
+
+BUNUN ÜSTÜNDEN MAXWIDTH AYARLARKEN NASIL YAPILIR?
+
+
+ChatGPT:
+Tailwind CSS'te max-w-7xl, bir container’ın maksimum genişliğini belirlemek için kullanılır. Eğer <div className="max-w-7xl mx-auto px-4"> koduna sahipsen, bu şu anlama gelir:
+
+max-w-7xl: Bu div'in maksimum genişliği Tailwind’in 7xl ölçüsüne eşittir (default olarak 80rem / 1280px).
+
+mx-auto: Yatayda ortalanmasını sağlar.
+
+px-4: Sağ ve sol kenarlara padding (1rem = 16px) ekler.
+
+🔧 Max Width Ayarlamak İçin Alternatifler:
+Tailwind'deki bazı max-w sınıfları ve değerleri:
+
+Sınıf	Genişlik
+max-w-xs	20rem (320px)
+max-w-sm	24rem (384px)
+max-w-md	28rem (448px)
+max-w-lg	32rem (512px)
+max-w-xl	36rem (576px)
+max-w-2xl	42rem (672px)
+max-w-3xl	48rem (768px)
+max-w-4xl	56rem (896px)
+max-w-5xl	64rem (1024px)
+max-w-6xl	72rem (1152px)
+max-w-7xl	80rem (1280px)
+max-w-full	100%
+max-w-screen-xl	Ekrana göre tam genişlik (örneğin xl breakpoint için)
+📌 Örnekler:
+Daha Dar Yapmak İçin:
+jsx
+Kopyala
+Düzenle
+<div className="max-w-xl mx-auto px-4">
+Ekran genişliğine göre ayarlamak için:
+jsx
+Kopyala
+Düzenle
+<div className="max-w-screen-md mx-auto px-4">
+Tam genişlik ama ortalanmış paddingli:
+jsx
+Kopyala
+Düzenle
+<div className="max-w-full mx-auto px-4">
+İstersen kendi özel genişliğini de tailwind.config.js içinde tanımlayabilirsin. Yardım istersen onu da gösterebilirim. Nasıl bir genişlik hedefliyorsun?
+
+
+
+
+
+
+
+Şunu dedin:
+PEKİ ARA DEĞERLERİ NASIL BELİRTEBİLİRİM?
+
+
+🔧 Max Width Ayarlamak İçin Alternatifler:
+Tailwind'deki bazı max-w sınıfları ve değerleri:
+
+Sınıf	Genişlik
+max-w-xs	20rem (320px)
+max-w-sm	24rem (384px)
+max-w-md	28rem (448px)
+max-w-lg	32rem (512px)
+max-w-xl	36rem (576px)
+max-w-2xl	42rem (672px)
+max-w-3xl	48rem (768px)
+max-w-4xl	56rem (896px)
+max-w-5xl	64rem (1024px)
+max-w-6xl	72rem (1152px)
+max-w-7xl	80rem (1280px)
+max-w-full	100%
+max-w-screen-xl	Ekrana göre tam genişlik (örneğin xl breakpoint için)
+ChatGPT:
+Tailwind CSS’te max-w-* sınıflarının ara değerlerini belirtmek istiyorsan, iki yol var:
+
+🔹 1. Tailwind’in JIT Modunda max-w-[değer] ile özel değer yazmak
+Tailwind'in JIT (Just-In-Time) modunu kullanıyorsan (ki varsayılan olarak artık aktif), doğrudan [] içerisinde özel bir max-width değeri verebilirsin:
+
+✅ Örnek:
+jsx
+Kopyala
+Düzenle
+<div className="max-w-[900px] mx-auto px-4">
+Bu, 896px olan max-w-4xl ile 1024px olan max-w-5xl arasında özel bir değeri ifade eder.
+
+🔹 2. Tailwind config ile özel maxWidth sınıfları tanımlamak
+Eğer bu özel değerleri sık sık kullanacaksan, Tailwind'in konfigürasyon dosyasında (tailwind.config.js) bunları tanımlayabilirsin:
+
+tailwind.config.js
+js
+Kopyala
+Düzenle
+module.exports = {
+  theme: {
+    extend: {
+      maxWidth: {
+        'custom-900': '900px',
+        'custom-1100': '1100px',
+      },
+    },
+  },
+}
+Sonrasında HTML/JSX içinde şöyle kullanabilirsin:
+
+jsx
+Kopyala
+Düzenle
+<div className="max-w-custom-900 mx-auto px-4">
+💡 Bonus: Oranlara göre max-width
+İstersen yüzde de kullanabilirsin:
+
+jsx
+Kopyala
+Düzenle
+<div className="max-w-[75%] mx-auto px-4">
+📌 Özet
+İhtiyaç	Kullanım Örneği
+Sabit piksel	max-w-[940px]
+Yüzde oranı	max-w-[85%]
+config.js ile özel sınıf	max-w-custom-900
+İstersen bu özel maxWidth değerlerini breakpoints ile (örneğin lg:max-w-[1000px]) de birleştirebiliriz. İhtiyacına göre yardımcı olayım mı?
+
+Şunu dedin:
+PEKİ BU KOD İÇİN YAZILARI NASIL SECTION BOYUTLARINA DAHA UYUMLU HALE GETİREBİLİRİM?
+
+"use client"
+
+import { Link } from "wouter"
+import { Button } from "../components/ui/button"
+import { ChevronRight, MapPin, Twitter, Instagram, Youtube, Linkedin, Menu } from "lucide-react"
+import { useState } from "react"
+
+export default function HomePage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-amber-50 to-amber-100">
+      {/* Header section */}
+      <header className="bg-[#47300A] text-white py-4 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        <div className="flex items-center">
+          <span className="font-bold text-2xl tracking-wide">DOY!</span>
+        </div>
+
+        {/* Mobile menu button */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="rounded-full w-10 h-10 bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Desktop navigation */}
+        <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center gap-2 mr-2">
+            <button className="rounded-full w-9 h-9 bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center">
+              <span className="text-white text-xs font-medium">TR</span>
+            </button>
+            <button className="rounded-full w-9 h-9 bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center">
+              <span className="text-white/80 text-xs font-medium">EN</span>
+            </button>
+          </div>
+          <span className="mx-1 text-white/30">|</span>
+          <button className="bg-amber-600 hover:bg-amber-500 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200">
+            Kayıt
+          </button>
+          <button className="bg-amber-500 hover:bg-amber-400 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200">
+            Giriş
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-amber-700 text-white p-4 shadow-md">
+          <div className="flex justify-center gap-3 mb-4">
+            <button className="rounded-full w-9 h-9 bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center">
+              <span className="text-white text-xs font-medium">TR</span>
+            </button>
+            <button className="rounded-full w-9 h-9 bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center">
+              <span className="text-white/80 text-xs font-medium">EN</span>
+            </button>
+          </div>
+          <div className="flex gap-3">
+            <button className="bg-amber-600 hover:bg-amber-500 transition-colors rounded-full px-4 py-2 text-sm font-medium flex-1">
+              Kayıt
+            </button>
+            <button className="bg-amber-500 hover:bg-amber-400 transition-colors rounded-full px-4 py-2 text-sm font-medium flex-1">
+              Giriş
+            </button>
+          </div>
+        </div>
+      )}
+
+      <main className="flex-grow">
+        {/* Logo section */}
+        <div className="flex justify-center py-10">
+          <div className="w-40 h-40 flex items-center justify-center bg-white rounded-full shadow-xl p-2 transform hover:scale-105 transition-transform duration-300">
+            <img src="/image1.png" alt="DOY Logo" className="w-36 h-36 rounded-full object-cover" />
+          </div>
+        </div>
+
+        {/* Welcome message */}
+        <div className="max-w-[75%] mx-auto px-4">
+          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col sm:flex-row items-center justify-between mb-12 transform hover:shadow-xl transition-shadow duration-300">
+            <p className="text-amber-800 font-medium text-lg mb-4 sm:mb-0">Konumunu seç, karnın doysun!</p>
+            <Link href="/restaurants/browse">
+              <Button className="bg-amber-500 hover:bg-amber-400 text-white rounded-full flex items-center gap-2 px-6 py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                <MapPin className="w-4 h-4" />
+                <span>Adresini Belirle veya Seç</span>
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Main sections */}
+        <div className="max-w-[75%] mx-auto px-4 py-6">
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-12 transform hover:shadow-xl transition-shadow duration-300">
+            <h2 className="text-2xl font-bold text-amber-800 mb-6 border-b border-amber-100 pb-3">Hakkımızda</h2>
+            <div className="text-gray-700 space-y-4">
+              <p className="leading-relaxed">
+                DOY!, lezzeti en hızlı ve en güvenilir şekilde kapına getirmek için yola çıkan bir online yemek siparişi
+                platformudur.
+              </p>
+              <p className="leading-relaxed">
+                Yemek siparişini kolaylaştıran arayüzümüz ve kullanıcı dostu deneyimimizle, favori restoranlarını sadece
+                birkaç tıklama uzağına getiriyoruz.
+              </p>
+              <p className="leading-relaxed">
+                Amacımız, kullanıcılarımıza geniş bir restoran ağı, çeşitli mutfaklar ve uygun fiyatlı menüler sunarak
+                doyurucu ve keyifli bir yemek deneyimi yaşatmak.
+              </p>
+              <p className="leading-relaxed">
+                Güvenli ödeme sistemimiz, hızlı teslimat altyapımız ve sürekli gelişen teknolojimizle her gün daha iyiye
+                gidiyoruz.
+              </p>
+              <p className="leading-relaxed font-medium text-amber-700">
+                Sen "Açım!" dediğinde, biz hep buradayız: DOY!
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-[60%] mx-auto">
+            {/* Customer Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-xl font-bold text-amber-800 mb-4">Müşterimiz Olun!</h2>
+              <p className="text-gray-600 mb-6 h-16">Kolay online yemek siparişi deneyimi için müşterimiz olun.</p>
+              <div className="flex flex-col gap-3">
+                <Link href="/auth?tab=register">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                    Müşteri Kayıt
+                  </Button>
+                </Link>
+                <Link href="/auth?tab=login">
+                  <Button
+                    variant="outline"
+                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                  >
+                    Müşteri Giriş
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Restaurant Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-xl font-bold text-amber-800 mb-4">Restoran İş Ortağımız Olun!</h2>
+              <p className="text-gray-600 mb-6 h-16">Menünüzü müşteriye kolayca ulaştırmak için iş ortağımız olun.</p>
+              <div className="flex flex-col gap-3">
+                <Link href="/restaurants/register">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                    Restoran Kayıt
+                  </Button>
+                </Link>
+                <Link href="/auth?tab=login&type=restaurant">
+                  <Button
+                    variant="outline"
+                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                  >
+                    Restoran Giriş
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Courier Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-xl font-bold text-amber-800 mb-4">Kuryemiz Olun!</h2>
+              <p className="text-gray-600 mb-6 h-16">Siparişleri müşterilerimize ulaştırmak için kuryemiz olun.</p>
+              <div className="flex flex-col gap-3">
+                <Link href="/couriers/register">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                    Kurye Kayıt
+                  </Button>
+                </Link>
+                <Link href="/auth?tab=login&type=courier">
+                  <Button
+                    variant="outline"
+                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                  >
+                    Kurye Giriş
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-[#47300A] text-white py-6 px-10 mt-16">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-8 md:mb-0">
+            <div className="bg-white rounded-full p-4 w-28 h-28 flex items-center justify-center shadow-lg transform hover:rotate-3 transition-transform duration-300">
+              <div className="relative w-24 h-24">
+                <img src="/image1.png" alt="DOY Logo" className="w-full h-full rounded-full" />
+                <div className="text-center text-[10px] font-bold mt-1 text-amber-800">FOOD DELIVERY</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center md:items-end">
+            <div className="text-xl font-medium mb-4">Bizi Takip Edin</div>
+            <div className="flex gap-5">
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                aria-label="Twitter"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                aria-label="YouTube"
+              >
+                <Youtube className="w-5 h-5" />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+            </div>
+            <div className="mt-6 text-sm text-white/80">© 2025 DOY! Tüm hakları saklıdır.</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+ChatGPT:
+Sayfan çok güzel yapılandırılmış, eline sağlık! 🎯 Yazıların section boyutlarına daha uyumlu hale gelmesi için temel hedef:
+
+Büyük ekranlarda çok küçük kalmamaları,
+
+Küçük ekranlarda ise fazla büyük veya taşkın olmamalarıdır.
+
+Bunu Tailwind CSS’in responsive (sm, md, lg, xl) ve text-* sınıflarıyla çözebiliriz.
+
+🔧 Genel Tavsiyeler: Yazı Boyutlarını Section Genişliğiyle Uyumlu Hale Getirme
+✅ 1. Başlıklar (h2, h1) için:
+tsx
+Kopyala
+Düzenle
+<h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-800 mb-4">
+Bu örnekte:
+
+Küçük ekranda text-xl (≈20px)
+
+Orta ekranda text-2xl (≈24px)
+
+Daha geniş ekranlarda text-3xl (≈30px)
+
+✅ 2. Paragraflar (p) için:
+tsx
+Kopyala
+Düzenle
+<p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed">
+text-sm: Küçük ekranlar
+
+text-base: Orta ekranlar
+
+text-lg: Geniş ekranlar
+
+📦 Uygulaman gereken yerler
+🔸 Örnek 1: Hakkımızda bölümündeki <h2>
+tsx
+Kopyala
+Düzenle
+<h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-800 mb-6 border-b border-amber-100 pb-3">
+🔸 Örnek 2: Hakkımızda bölümündeki <p> etiketleri
+tsx
+Kopyala
+Düzenle
+<p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed">
+🔸 Örnek 3: Kutu başlıkları (Müşterimiz Olun!, Restoran İş Ortağımız Olun!)
+tsx
+Kopyala
+Düzenle
+<h2 className="text-lg sm:text-xl md:text-2xl font-bold text-amber-800 mb-4">
+🔸 Örnek 4: Kutu açıklamaları
+tsx
+Kopyala
+Düzenle
+<p className="text-xs sm:text-sm md:text-base text-gray-600 mb-6 h-16">
+💡 Bonus: max-w-* ile metin kutularının genişliğini de sınırlayabilirsin
+Bazen sadece yazı boyutu değil, satır uzunluğu da önemli:
+
+tsx
+Kopyala
+Düzenle
+<div className="max-w-2xl mx-auto text-center">
+  <p className="text-base md:text-lg leading-relaxed text-gray-700">
+    Lorem ipsum dolor sit amet...
+  </p>
+</div>
+🔚 Özet
+Kullanım	Tailwind Sınıfı
+Başlık	text-xl sm:text-2xl md:text-3xl
+Paragraf	text-sm sm:text-base md:text-lg
+Kutu başlığı	text-lg sm:text-xl md:text-2xl
+Açıklama yazısı	text-xs sm:text-sm md:text-base
+İstersen senin dosyanı baştan bu responsive sınıflarla optimize edilmiş şekilde düzenleyebilirim. İyi bir görsel denge kurmak istiyorsan bu oldukça etkili olur. Yardımcı olayım mı?
+
+
+
+Şunu dedin:
+GİTLAB' A NASIL SONARCUBE KURULUR?
+
+
+ChatGPT:
+GitLab’a SonarQube entegrasyonu kurmak için aşağıdaki adımları izleyebilirsin. Bu işlem iki ana kısımdan oluşur:
+
+🔧 1. SonarQube Server Kurulumu
+Seçenek 1: Docker ile Kurulum (Tavsiye Edilen)
+bash
+Kopyala
+Düzenle
+docker run -d --name sonarqube \
+  -p 9000:9000 \
+  -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
+  sonarqube:latest
+SonarQube Web Arayüzü:
+Tarayıcından http://localhost:9000 adresine gidip:
+
+Kullanıcı adı: admin
+
+Şifre: admin
+
+➡️ Giriş yaptıktan sonra şifreni değiştirmeni isteyecek.
+
+🔐 2. SonarQube Token Oluştur
+Sağ üstten My Account > Security menüsüne git.
+
+gitlab-token gibi bir adla yeni bir token oluştur.
+
+Token'ı bir yere kaydet (bir daha gösterilmeyecek).
+
+🔁 3. GitLab CI/CD ile Entegrasyon
+.gitlab-ci.yml Örneği:
+yaml
+Kopyala
+Düzenle
+stages:
+  - build
+  - sonarqube
+
+variables:
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # cache için
+
+cache:
+  paths:
+    - .sonar/cache
+
+sonarqube-check:
+  stage: sonarqube
+  image: maven:3.8.6-openjdk-17  # veya projenin uyumlu image'ı
+  script:
+    - mvn clean verify sonar:sonar -Dsonar.projectKey=$CI_PROJECT_NAME \
+        -Dsonar.host.url=https://your-sonarqube-url \
+        -Dsonar.login=$SONAR_TOKEN
+  only:
+    - main
+🧪 4. GitLab Ortam Değişkenleri Ayarla
+GitLab projenin içinden:
+
+Settings → CI/CD → Variables:
+
+SONAR_TOKEN olarak SonarQube token'ını gir.
+
+SONAR_HOST_URL gerekiyorsa buraya da http://<ip>:9000 yazabilirsin.
+
+🧠 Notlar
+Java projesi dışındaysa, SonarScanner CLI veya Node için sonar-scanner kullanman gerekir.
+
+Node.js projesi için .gitlab-ci.yml'de şu şekilde olabilir:
+
+yaml
+Kopyala
+Düzenle
+sonarqube-check:
+  image: node:18
+  script:
+    - npm install
+    - npm run test
+    - npx sonar-scanner
+  only:
+    - main
+Ve ayrıca sonar-project.properties dosyası kök dizinde olmalı:
+
+properties
+Kopyala
+Düzenle
+sonar.projectKey=your-project
+sonar.sources=src
+sonar.host.url=http://<ip>:9000
+sonar.login=${SONAR_TOKEN}
+İstersen Node.js, Java, React ya da Spring Boot özelinde hazır .gitlab-ci.yml dosyası da oluşturabilirim. Hangi teknolojiyle çalıştığını söylersen ona göre düzenleyeyim mi?
+
+
+Şunu dedin:
+WEB SAYFASININ TASARIMINI GAYET BEĞENİYORUM AMA GENEL SAYFA BOYUTUNA GÖRE COMPONENTLERİN VE YAZILARIN BOYUTLARI ÇOK KÜÇÜK KALIYOR. SANA SAĞLADIĞIM RESİM SAĞLADIĞIM WEB SAYFASI KODUNUN GÖRÜNTÜSÜ:
+
+
+import { Link } from "wouter"
+import { Button } from "../components/ui/button"
+import { ChevronRight, MapPin, Twitter, Instagram, Youtube, Linkedin, Menu } from "lucide-react"
+import { useState } from "react"
+
+export default function HomePage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-amber-50 to-amber-100">
+      {/* Header section */}
+      <header className="bg-[#47300A] text-white py-4 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        <div className="flex items-center">
+          <span className="font-bold text-2xl tracking-wide">DOY!</span>
+        </div>
+
+        {/* Mobile menu button */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="rounded-full w-10 h-10 bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Desktop navigation */}
+        <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center gap-2 mr-2">
+            <button className="rounded-full w-9 h-9 bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center">
+              <span className="text-white text-xs font-medium">TR</span>
+            </button>
+            <button className="rounded-full w-9 h-9 bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center">
+              <span className="text-white/80 text-xs font-medium">EN</span>
+            </button>
+          </div>
+          <span className="mx-1 text-white/30">|</span>
+          <button className="bg-amber-600 hover:bg-amber-500 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200">
+            Kayıt
+          </button>
+          <button className="bg-amber-500 hover:bg-amber-400 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200">
+            Giriş
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-amber-700 text-white p-4 shadow-md">
+          <div className="flex justify-center gap-3 mb-4">
+            <button className="rounded-full w-9 h-9 bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center">
+              <span className="text-white text-xs font-medium">TR</span>
+            </button>
+            <button className="rounded-full w-9 h-9 bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center">
+              <span className="text-white/80 text-xs font-medium">EN</span>
+            </button>
+          </div>
+          <div className="flex gap-3">
+            <button className="bg-amber-600 hover:bg-amber-500 transition-colors rounded-full px-4 py-2 text-sm font-medium flex-1">
+              Kayıt
+            </button>
+            <button className="bg-amber-500 hover:bg-amber-400 transition-colors rounded-full px-4 py-2 text-sm font-medium flex-1">
+              Giriş
+            </button>
+          </div>
+        </div>
+      )}
+
+      <main className="flex-grow">
+        {/* Logo section */}
+        <div className="flex justify-center py-10">
+          <div className="w-40 h-40 flex items-center justify-center bg-white rounded-full shadow-xl p-2 transform hover:scale-105 transition-transform duration-300">
+            <img
+              src="/image1.png"
+              alt="DOY Logo"
+              className="w-36 h-36 rounded-full object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Welcome message */}
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col sm:flex-row items-center justify-between mb-12 transform hover:shadow-xl transition-shadow duration-300">
+            <p className="text-amber-800 font-medium text-lg mb-4 sm:mb-0">Konumunu seç, karnın doysun!</p>
+            <Link href="/restaurants/browse">
+              <Button className="bg-amber-500 hover:bg-amber-400 text-white rounded-full flex items-center gap-2 px-6 py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                <MapPin className="w-4 h-4" />
+                <span>Adresini Belirle veya Seç</span>
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Main sections */}
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-12 transform hover:shadow-xl transition-shadow duration-300">
+            <h2 className="text-2xl font-bold text-amber-800 mb-6 border-b border-amber-100 pb-3">Hakkımızda</h2>
+            <div className="text-gray-700 space-y-4">
+              <p className="leading-relaxed">
+                DOY!, lezzeti en hızlı ve en güvenilir şekilde kapına getirmek için yola çıkan bir online yemek siparişi
+                platformudur.
+              </p>
+              <p className="leading-relaxed">
+                Yemek siparişini kolaylaştıran arayüzümüz ve kullanıcı dostu deneyimimizle, favori restoranlarını sadece
+                birkaç tıklama uzağına getiriyoruz.
+              </p>
+              <p className="leading-relaxed">
+                Amacımız, kullanıcılarımıza geniş bir restoran ağı, çeşitli mutfaklar ve uygun fiyatlı menüler sunarak
+                doyurucu ve keyifli bir yemek deneyimi yaşatmak.
+              </p>
+              <p className="leading-relaxed">
+                Güvenli ödeme sistemimiz, hızlı teslimat altyapımız ve sürekli gelişen teknolojimizle her gün daha iyiye
+                gidiyoruz.
+              </p>
+              <p className="leading-relaxed font-medium text-amber-700">
+                Sen "Açım!" dediğinde, biz hep buradayız: DOY!
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Customer Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-7 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-xl font-bold text-amber-800 mb-4">Müşterimiz Olun!</h2>
+              <p className="text-gray-600 mb-6 h-16">Kolay online yemek siparişi deneyimi için müşterimiz olun.</p>
+              <div className="flex flex-col gap-3">
+                <Link href="/auth?tab=register">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                    Müşteri Kayıt
+                  </Button>
+                </Link>
+                <Link href="/auth?tab=login">
+                  <Button
+                    variant="outline"
+                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                  >
+                    Müşteri Giriş
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Restaurant Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-7 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-xl font-bold text-amber-800 mb-4">Restoran İş Ortağımız Olun!</h2>
+              <p className="text-gray-600 mb-6 h-16">Menünüzü müşteriye kolayca ulaştırmak için iş ortağımız olun.</p>
+              <div className="flex flex-col gap-3">
+                <Link href="/restaurants/register">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                    Restoran Kayıt
+                  </Button>
+                </Link>
+                <Link href="/auth?tab=login&type=restaurant">
+                  <Button
+                    variant="outline"
+                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                  >
+                    Restoran Giriş
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Courier Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-7 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200">
+              <h2 className="text-xl font-bold text-amber-800 mb-4">Kuryemiz Olun!</h2>
+              <p className="text-gray-600 mb-6 h-16">Siparişleri müşterilerimize ulaştırmak için kuryemiz olun.</p>
+              <div className="flex flex-col gap-3">
+                <Link href="/couriers/register">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-400 text-white rounded-lg py-2.5 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                    Kurye Kayıt
+                  </Button>
+                </Link>
+                <Link href="/auth?tab=login&type=courier">
+                  <Button
+                    variant="outline"
+                    className="w-full border-amber-300 text-amber-800 hover:bg-amber-100 rounded-lg py-2.5"
+                  >
+                    Kurye Giriş
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-[#47300A] text-white p-10 mt-16">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-8 md:mb-0">
+            <div className="bg-white rounded-full p-4 w-28 h-28 flex items-center justify-center shadow-lg transform hover:rotate-3 transition-transform duration-300">
+              <div className="relative w-24 h-24">
+                <img src="/image1.png" alt="DOY Logo" className="w-full h-full rounded-full" />
+                <div className="text-center text-[10px] font-bold mt-1 text-amber-800">FOOD DELIVERY</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center md:items-end">
+            <div className="text-xl font-medium mb-4">Bizi Takip Edin</div>
+            <div className="flex gap-5">
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                aria-label="Twitter"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                aria-label="YouTube"
+              >
+                <Youtube className="w-5 h-5" />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+            </div>
+            <div className="mt-6 text-sm text-white/80">© 2025 DOY! Tüm hakları saklıdır.</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+
+ChatGPT:
+Tasarımı beğenmene sevindim! 😄 Ancak yazı ve bileşen boyutlarının genel sayfa genişliğine göre küçük kalması problemi, kullanıcı deneyimini etkileyebilir. Bunu çözmek için aşağıdaki boyut ölçeklendirme önerileri ile sayfanı daha dengeli ve okunabilir hâle getirebiliriz.
+
+🔧 Ne Yapmalısın?
+1. Yazı Boyutlarını Arttır (Font Size)
+Tailwind'de varsayılan text-sm, text-base, text-lg gibi sınıfları biraz büyütebiliriz:
+
+Örnek Güncellemeler:
+jsx
+Kopyala
+Düzenle
+<span className="font-bold text-2xl tracking-wide">DOY!</span> 
+→ text-3xl
+
+<p className="text-amber-800 font-medium text-lg mb-4"> 
+→ text-xl
+
+<h2 className="text-xl font-bold text-amber-800"> 
+→ text-2xl veya text-3xl
+
+<p className="text-gray-600 mb-6 h-16"> 
+→ text-base → text-lg
+2. Butonları Büyüt
+Özellikle mobilde ve büyük ekranlarda butonlar küçük kalıyor olabilir.
+
+Örnek:
+jsx
+Kopyala
+Düzenle
+py-2.5 px-5 → py-3 px-6
+text-sm → text-base
+3. Logo ve Kart Büyüklüğünü Arttır
+jsx
+Kopyala
+Düzenle
+<div className="w-40 h-40"> 
+→ w-52 h-52
+
+<img className="w-36 h-36"> 
+→ w-48 h-48
+4. Genel Ölçek Ayarı İçin md/lg Kırılımında Yeniden Boyutlandır
+Tailwind’in responsive sınıflarını kullanarak, büyük ekranlarda otomatik olarak daha büyük boyutlara geçebilirsin:
+
+jsx
+Kopyala
+Düzenle
+text-base md:text-lg lg:text-xl
+px-4 py-2 md:px-6 md:py-3
+5. Tüm Sayfa İçin Global Font Size Base Ayarı (Opsiyonel)
+Tailwind tailwind.config.js dosyanda theme.extend.fontSize alanına base: "18px" gibi bir ayar eklersen, tüm sayfanın yazı boyutunu bir tık büyütürsün:
+
+js
+Kopyala
+Düzenle
+// tailwind.config.js
+theme: {
+  extend: {
+    fontSize: {
+      base: "18px",
+    },
+  },
+}
+✨ Bonus: Font Ailesini Değiştirerek Daha Modern Görünüm
+Google Fonts'tan Inter, Poppins, Rubik gibi modern bir yazı tipiyle genel görünümü daha okunabilir hâle getirebilirsin.
+
+Örnek Düzenlenmiş Bir Parça:
+jsx
+Kopyala
+Düzenle
+<h2 className="text-2xl md:text-3xl font-bold text-amber-800 mb-6 border-b border-amber-100 pb-3">
+  Hakkımızda
+</h2>
+<p className="text-gray-700 text-base md:text-lg leading-relaxed">
+  DOY!, lezzeti en hızlı ve en güvenilir şekilde kapına getirmek için yola çıkan bir online yemek siparişi platformudur.
+</p>
+İstersen seninle birlikte tüm kodun üstünden geçip, bu düzenlemeleri yaparak güncellenmiş bir versiyon sunabilirim. Devam etmemi ister misin?
+
+
+
+
+
+
+Şunu dedin:
+ŞU AYARLARA SAHİP SPRİNG PROJESİNİ ÇALIŞTIRINCA pgAdmin' E BAĞLANMASINI İSTİYORUM:
+
+spring.application.name=Doy
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+spring.datasource.username=postgres
+spring.datasource.password=1234
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=saidcetin93@gmail.com
+spring.mail.password=uujv ywdm mtlj rwkl
+spring.mail.properties.mail.smtp.aut =true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+app.confirm-url.base=http://localhost:8080
+
+
+ChatGPT:
+Spring Boot projenin pgAdmin üzerinden PostgreSQL veritabanına başarılı bir şekilde bağlanabilmesi için aşağıdaki adımları dikkatlice kontrol etmeni öneririm:
+
+✅ 1. PostgreSQL Servisi Aktif mi?
+pgAdmin sadece PostgreSQL sunucusunun bir arayüzüdür. Spring uygulaman PostgreSQL sunucusuna bağlanmalıdır. Önce terminalde veya görev yöneticisinde PostgreSQL servisinin aktif olduğunu kontrol et:
+
+bash
+Kopyala
+Düzenle
+sudo systemctl status postgresql  # Linux için
+✅ 2. pgAdmin'de localhost:5432 portu aktif mi?
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres ⇒ Burada postgres veritabanına bağlanmak istiyorsun. pgAdmin'de “Servers > PostgreSQL > Databases” sekmesinde postgres adlı veritabanının var olduğundan emin ol.
+
+✅ 3. Kullanıcı ve Şifre Uyuşuyor mu?
+pgAdmin’de giriş yaptığın kullanıcı adı postgres, şifresi 1234 olmalı.
+
+Eğer farklıysa Spring tarafındaki şu ayarları değiştirmen gerekir:
+
+properties
+Kopyala
+Düzenle
+spring.datasource.username=postgres
+spring.datasource.password=1234
+pgAdmin'de aynı kullanıcı bilgileri ile bağlanmayı dene:
+
+yaml
+Kopyala
+Düzenle
+Host: localhost
+Port: 5432
+Username: postgres
+Password: 1234
+✅ 4. pg_hba.conf Ayarları Uyumlu mu?
+Bazı sistemlerde localhost bağlantılarına izin verilmeyebilir. Şu dosyada izinleri kontrol et:
+
+bash
+Kopyala
+Düzenle
+sudo nano /etc/postgresql/14/main/pg_hba.conf  # Versiyon seninkinde farklı olabilir
+Aşağıdaki satır varsa bağlantıya izin verir:
+
+text
+Kopyala
+Düzenle
+host    all             all             127.0.0.1/32            md5
+Değişiklik yaptıysan PostgreSQL servisini yeniden başlat:
+
+bash
+Kopyala
+Düzenle
+sudo systemctl restart postgresql
+✅ 5. Spring Uygulamanın PostgreSQL’e Veri Yazdığını Kontrol Et
+Uygulama çalıştıktan sonra pgAdmin üzerinden şu sorguyu çalıştırarak tablo oluşumunu ve veri girişini görebilirsin:
+
+sql
+Kopyala
+Düzenle
+SELECT * FROM information_schema.tables WHERE table_schema = 'public';
+Veya doğrudan tablolar listesinde public altında oluşan tabloları görmelisin.
+
+✅ 6. Mail Ayarındaki Küçük Yazım Hatası (Opsiyonel)
+Şu satırda mail.smtp.aut yanlış yazılmış. Doğrusu:
+
+properties
+Kopyala
+Düzenle
+spring.mail.properties.mail.smtp.auth=true
+✅ Özetle
+Spring -> PostgreSQL (localhost:5432) -> pgAdmin üzerinden görüntüleme
+
+Yani bağlantı yapısı:
+
+rust
+Kopyala
+Düzenle
+Spring Data JPA --> PostgreSQL sunucusu --> pgAdmin arayüzü
+Eğer uygulamayı çalıştırdığında loglarda şu satırları görüyorsan bağlantı başarılıdır:
+
+bash
+Kopyala
+Düzenle
+HikariCP - Starting...
+HikariCP - Connected to jdbc:postgresql://localhost:5432/postgres
+Hibernate: create table ...
+İstersen Spring uygulamanı başlattıktan sonra pgAdmin üzerinden bir tablo veya veri örneği de gösterebilirim. Yardım edeyim mi?
+
+Şunu dedin:
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-04-12T18:19:53.359+03:00 ERROR 32784 --- [Doy] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+
+ÇALIŞTIRINCA BU HATAYI ALIYORUM
+ChatGPT:
+Bu hata şu anlama geliyor:
+
+⚠️ Spring Boot uygulaman 8080 portunda çalışmak istiyor ama o port zaten başka bir uygulama tarafından kullanılıyor.
+
+✅ 1. 8080 Portunu Kim Kullanıyor? Tespit Et
+🖥 Windows için:
+PowerShell veya CMD’de şu komutu çalıştır:
+
+bash
+Kopyala
+Düzenle
+netstat -ano | findstr :8080
+Çıktıda şöyle bir şey görürsen:
+
+nginx
+Kopyala
+Düzenle
+TCP    127.0.0.1:8080    0.0.0.0:0    LISTENING    12345
+Son sütundaki 12345 o portu kullanan PID (process ID)’dir.
+
+🔪 Ardından işlemi sonlandır:
+bash
+Kopyala
+Düzenle
+taskkill /PID 12345 /F
+✅ 2. Alternatif: Spring'i Farklı Portta Çalıştır
+application.properties dosyasına aşağıdaki satırı ekleyerek uygulamayı farklı bir portta (örneğin 9090) başlatabilirsin:
+
+properties
+Kopyala
+Düzenle
+server.port=9090
+Sonrasında uygulamayı http://localhost:9090 üzerinden açarsın.
+
+✅ 3. Geçici Çözüm: Komut Satırından Port Belirt
+Terminalden uygulamayı şu şekilde başlatırsan özel port üzerinden çalışır:
+
+bash
+Kopyala
+Düzenle
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=9090"
+veya Gradle ile:
+
+bash
+Kopyala
+Düzenle
+./gradlew bootRun --args='--server.port=9090'
+✅ Hızlı Özet
+Seçenek	Açıklama
+netstat	8080 portunu kullanan işlemi bul
+taskkill	Portu kullanan işlemi kapat
+server.port=9090	Spring uygulamasını farklı bir portta başlat
+--server.port=XXXX	Geçici olarak farklı portta başlat
+Hangisini tercih edersin? Yardımcı olayım. İstersen birlikte kontrol edebiliriz hangi uygulama 8080'i kullanıyor.
+
+Şunu dedin:
+C:\Users\canme\.jdks\corretto-23.0.2\bin\java.exe -XX:TieredStopAtLevel=1 -Dspring.output.ansi.enabled=always -Dcom.sun.management.jmxremote -Dspring.jmx.enabled=true -Dspring.liveBeansView.mbeanDomain -Dspring.application.admin.enabled=true "-Dmanagement.endpoints.jmx.exposure.include=*" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2024.3.3\lib\idea_rt.jar=64242:C:\Program Files\JetBrains\IntelliJ IDEA 2024.3.3\bin" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\canme\Downloads\FoodFusion\ping-floyd\DoyProject\Doy\Doy_Backend\target\classes;C:\Users\canme\.m2\repository\io\jsonwebtoken\jjwt-api\0.12.6\jjwt-api-0.12.6.jar;C:\Users\canme\.m2\repository\io\jsonwebtoken\jjwt-impl\0.12.6\jjwt-impl-0.12.6.jar;C:\Users\canme\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.12.6\jjwt-jackson-0.12.6.jar;C:\Users\canme\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.3\jackson-databind-2.18.3.jar;C:\Users\canme\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.3\jackson-annotations-2.18.3.jar;C:\Users\canme\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.3\jackson-core-2.18.3.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.4.4\spring-boot-starter-data-jpa-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter\3.4.4\spring-boot-starter-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot\3.4.4\spring-boot-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.4.4\spring-boot-autoconfigure-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.4.4\spring-boot-starter-logging-3.4.4.jar;C:\Users\canme\.m2\repository\ch\qos\logback\logback-classic\1.5.18\logback-classic-1.5.18.jar;C:\Users\canme\.m2\repository\ch\qos\logback\logback-core\1.5.18\logback-core-1.5.18.jar;C:\Users\canme\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.24.3\log4j-to-slf4j-2.24.3.jar;C:\Users\canme\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\canme\.m2\repository\org\slf4j\jul-to-slf4j\2.0.17\jul-to-slf4j-2.0.17.jar;C:\Users\canme\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\canme\.m2\repository\org\yaml\snakeyaml\2.3\snakeyaml-2.3.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.4.4\spring-boot-starter-jdbc-3.4.4.jar;C:\Users\canme\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar;C:\Users\canme\.m2\repository\org\springframework\spring-jdbc\6.2.5\spring-jdbc-6.2.5.jar;C:\Users\canme\.m2\repository\org\hibernate\orm\hibernate-core\6.6.11.Final\hibernate-core-6.6.11.Final.jar;C:\Users\canme\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\canme\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\canme\.m2\repository\org\jboss\logging\jboss-logging\3.6.1.Final\jboss-logging-3.6.1.Final.jar;C:\Users\canme\.m2\repository\org\hibernate\common\hibernate-commons-annotations\7.0.3.Final\hibernate-commons-annotations-7.0.3.Final.jar;C:\Users\canme\.m2\repository\io\smallrye\jandex\3.2.0\jandex-3.2.0.jar;C:\Users\canme\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\canme\.m2\repository\net\bytebuddy\byte-buddy\1.15.11\byte-buddy-1.15.11.jar;C:\Users\canme\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\canme\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\canme\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\canme\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\canme\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\canme\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\canme\.m2\repository\org\springframework\data\spring-data-jpa\3.4.4\spring-data-jpa-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\data\spring-data-commons\3.4.4\spring-data-commons-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\spring-orm\6.2.5\spring-orm-6.2.5.jar;C:\Users\canme\.m2\repository\org\springframework\spring-context\6.2.5\spring-context-6.2.5.jar;C:\Users\canme\.m2\repository\org\springframework\spring-tx\6.2.5\spring-tx-6.2.5.jar;C:\Users\canme\.m2\repository\org\springframework\spring-beans\6.2.5\spring-beans-6.2.5.jar;C:\Users\canme\.m2\repository\org\slf4j\slf4j-api\2.0.17\slf4j-api-2.0.17.jar;C:\Users\canme\.m2\repository\org\springframework\spring-aspects\6.2.5\spring-aspects-6.2.5.jar;C:\Users\canme\.m2\repository\org\aspectj\aspectjweaver\1.9.23\aspectjweaver-1.9.23.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.4.4\spring-boot-starter-web-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.4.4\spring-boot-starter-json-3.4.4.jar;C:\Users\canme\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.18.3\jackson-datatype-jdk8-2.18.3.jar;C:\Users\canme\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.3\jackson-datatype-jsr310-2.18.3.jar;C:\Users\canme\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.18.3\jackson-module-parameter-names-2.18.3.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.4.4\spring-boot-starter-tomcat-3.4.4.jar;C:\Users\canme\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.39\tomcat-embed-core-10.1.39.jar;C:\Users\canme\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.39\tomcat-embed-websocket-10.1.39.jar;C:\Users\canme\.m2\repository\org\springframework\spring-web\6.2.5\spring-web-6.2.5.jar;C:\Users\canme\.m2\repository\io\micrometer\micrometer-observation\1.14.5\micrometer-observation-1.14.5.jar;C:\Users\canme\.m2\repository\io\micrometer\micrometer-commons\1.14.5\micrometer-commons-1.14.5.jar;C:\Users\canme\.m2\repository\org\springframework\spring-webmvc\6.2.5\spring-webmvc-6.2.5.jar;C:\Users\canme\.m2\repository\org\springframework\spring-expression\6.2.5\spring-expression-6.2.5.jar;C:\Users\canme\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\canme\.m2\repository\org\postgresql\postgresql\42.7.5\postgresql-42.7.5.jar;C:\Users\canme\.m2\repository\org\checkerframework\checker-qual\3.48.3\checker-qual-3.48.3.jar;C:\Users\canme\.m2\repository\org\projectlombok\lombok\1.18.36\lombok-1.18.36.jar;C:\Users\canme\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\canme\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\canme\.m2\repository\org\springframework\spring-core\6.2.5\spring-core-6.2.5.jar;C:\Users\canme\.m2\repository\org\springframework\spring-jcl\6.2.5\spring-jcl-6.2.5.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.4.4\spring-boot-starter-security-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\spring-aop\6.2.5\spring-aop-6.2.5.jar;C:\Users\canme\.m2\repository\org\springframework\security\spring-security-config\6.4.4\spring-security-config-6.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\security\spring-security-web\6.4.4\spring-security-web-6.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\security\spring-security-core\6.4.4\spring-security-core-6.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\security\spring-security-crypto\6.4.4\spring-security-crypto-6.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-validation\3.4.4\spring-boot-starter-validation-3.4.4.jar;C:\Users\canme\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.39\tomcat-embed-el-10.1.39.jar;C:\Users\canme\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.2.Final\hibernate-validator-8.0.2.Final.jar;C:\Users\canme\.m2\repository\org\springframework\boot\spring-boot-starter-mail\3.4.4\spring-boot-starter-mail-3.4.4.jar;C:\Users\canme\.m2\repository\org\springframework\spring-context-support\6.2.5\spring-context-support-6.2.5.jar;C:\Users\canme\.m2\repository\org\eclipse\angus\jakarta.mail\2.0.3\jakarta.mail-2.0.3.jar;C:\Users\canme\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar com.pingfloyd.doy.starter.DoyApplication
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _ | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.4)
+
+2025-04-12T18:21:19.603+03:00  INFO 20680 --- [Doy] [           main] c.pingfloyd.doy.starter.DoyApplication   : Starting DoyApplication using Java 23.0.2 with PID 20680 (C:\Users\canme\Downloads\FoodFusion\ping-floyd\DoyProject\Doy\Doy_Backend\target\classes started by canme in C:\Users\canme\Downloads\FoodFusion\ping-floyd\DoyProject)
+2025-04-12T18:21:19.604+03:00  INFO 20680 --- [Doy] [           main] c.pingfloyd.doy.starter.DoyApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-04-12T18:21:20.000+03:00  INFO 20680 --- [Doy] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-12T18:21:20.048+03:00  INFO 20680 --- [Doy] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 5 JPA repository interfaces.
+2025-04-12T18:21:20.530+03:00  INFO 20680 --- [Doy] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-04-12T18:21:20.540+03:00  INFO 20680 --- [Doy] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-04-12T18:21:20.540+03:00  INFO 20680 --- [Doy] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-04-12T18:21:20.582+03:00  INFO 20680 --- [Doy] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-04-12T18:21:20.582+03:00  INFO 20680 --- [Doy] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 928 ms
+2025-04-12T18:21:20.672+03:00  INFO 20680 --- [Doy] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-12T18:21:20.708+03:00  INFO 20680 --- [Doy] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-04-12T18:21:20.731+03:00  INFO 20680 --- [Doy] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-04-12T18:21:20.923+03:00  INFO 20680 --- [Doy] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-12T18:21:20.944+03:00  INFO 20680 --- [Doy] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-04-12T18:21:21.071+03:00  INFO 20680 --- [Doy] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@261275ae
+2025-04-12T18:21:21.073+03:00  INFO 20680 --- [Doy] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-04-12T18:21:21.121+03:00  INFO 20680 --- [Doy] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-04-12T18:21:21.933+03:00  INFO 20680 --- [Doy] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    set client_min_messages = WARNING
+Hibernate: 
+    alter table if exists cart 
+       drop constraint if exists FKgol9os2lyo1m4bu3aa5rg7jyl
+Hibernate: 
+    alter table if exists cart_item 
+       drop constraint if exists FKneduop6kf2ile28itq2d9df3e
+Hibernate: 
+    alter table if exists cart_item 
+       drop constraint if exists FK3tqhlh2pf7k0klcxuwhvx1bg7
+Hibernate: 
+    alter table if exists confirmation_token 
+       drop constraint if exists FKe0flsojr3yhckm24wh4e4xyj4
+Hibernate: 
+    alter table if exists customer 
+       drop constraint if exists FKslkyb5dphxe4c7au3hqx3la6m
+Hibernate: 
+    alter table if exists favorite_restaurant 
+       drop constraint if exists FKj6j1sum7rs6fm73mw7j9ducyu
+Hibernate: 
+    alter table if exists favorite_restaurant 
+       drop constraint if exists FKn01y2xiicbub5mf0fx6g2mv2e
+Hibernate: 
+    alter table if exists menu_item 
+       drop constraint if exists FKewir7fwbqeuvrnk6c0aa2d2wu
+Hibernate: 
+    drop table if exists address cascade
+Hibernate: 
+    drop table if exists app_user cascade
+Hibernate: 
+    drop table if exists cart cascade
+Hibernate: 
+    drop table if exists cart_item cascade
+Hibernate: 
+    drop table if exists confirmation_token cascade
+Hibernate: 
+    drop table if exists customer cascade
+Hibernate: 
+    drop table if exists favorite_restaurant cascade
+Hibernate: 
+    drop table if exists menu_item cascade
+Hibernate: 
+    drop table if exists restaurant cascade
+Hibernate: 
+    drop sequence if exists confirmation_sequence
+Hibernate: 
+    create sequence confirmation_sequence start with 1 increment by 1
+Hibernate: 
+    create table address (
+        address_id bigint generated by default as identity,
+        primary key (address_id)
+    )
+Hibernate: 
+    create table app_user (
+        is_enabled boolean not null,
+        created_at timestamp(6) not null,
+        user_id bigint generated by default as identity,
+        phone_number varchar(20),
+        first_name varchar(50) not null,
+        last_name varchar(50) not null,
+        email varchar(100) not null,
+        password_hash varchar(255) not null,
+        primary key (user_id)
+    )
+Hibernate: 
+    create table cart (
+        user_id bigint not null,
+        status varchar(20),
+        primary key (user_id)
+    )
+Hibernate: 
+    create table cart_item (
+        quantity integer not null,
+        id bigint generated by default as identity,
+        menu_item_id bigint not null,
+        user_id bigint not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table confirmation_token (
+        confirmed boolean,
+        created_at timestamp(6) not null,
+        expired_at timestamp(6) not null,
+        id bigint not null,
+        user_id bigint not null,
+        token varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table customer (
+        loyalty_points integer,
+        user_id bigint not null,
+        preferred_payment_method varchar(50),
+        primary key (user_id)
+    )
+Hibernate: 
+    create table favorite_restaurant (
+        customer_id bigint not null,
+        restaurant_id bigint not null,
+        primary key (customer_id, restaurant_id)
+    )
+Hibernate: 
+    create table menu_item (
+        price numeric(10,2) not null,
+        menu_item_id bigint generated by default as identity,
+        restaurant_id bigint not null,
+        category varchar(50),
+        name varchar(100) not null,
+        description text,
+        primary key (menu_item_id)
+    )
+Hibernate: 
+    create table restaurant (
+        restaurant_id bigint generated by default as identity,
+        restaurant_name varchar(100) not null,
+        restaurant_phone varchar(255),
+        primary key (restaurant_id)
+    )
+Hibernate: 
+    alter table if exists cart 
+       add constraint FKgol9os2lyo1m4bu3aa5rg7jyl 
+       foreign key (user_id) 
+       references customer
+Hibernate: 
+    alter table if exists cart_item 
+       add constraint FKneduop6kf2ile28itq2d9df3e 
+       foreign key (user_id) 
+       references cart
+Hibernate: 
+    alter table if exists cart_item 
+       add constraint FK3tqhlh2pf7k0klcxuwhvx1bg7 
+       foreign key (menu_item_id) 
+       references menu_item
+Hibernate: 
+    alter table if exists confirmation_token 
+       add constraint FKe0flsojr3yhckm24wh4e4xyj4 
+       foreign key (user_id) 
+       references app_user
+Hibernate: 
+    alter table if exists customer 
+       add constraint FKslkyb5dphxe4c7au3hqx3la6m 
+       foreign key (user_id) 
+       references app_user
+Hibernate: 
+    alter table if exists favorite_restaurant 
+       add constraint FKj6j1sum7rs6fm73mw7j9ducyu 
+       foreign key (restaurant_id) 
+       references restaurant
+Hibernate: 
+    alter table if exists favorite_restaurant 
+       add constraint FKn01y2xiicbub5mf0fx6g2mv2e 
+       foreign key (customer_id) 
+       references customer
+Hibernate: 
+    alter table if exists menu_item 
+       add constraint FKewir7fwbqeuvrnk6c0aa2d2wu 
+       foreign key (restaurant_id) 
+       references restaurant 
+       on delete cascade
+2025-04-12T18:21:22.014+03:00  INFO 20680 --- [Doy] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-12T18:21:22.267+03:00  INFO 20680 --- [Doy] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-12T18:21:22.344+03:00  INFO 20680 --- [Doy] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-04-12T18:21:22.345+03:00  WARN 20680 --- [Doy] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-04-12T18:21:22.358+03:00  WARN 20680 --- [Doy] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-12T18:21:22.523+03:00  WARN 20680 --- [Doy] [           main] thorizationManagerRequestMatcherRegistry : One of the patterns in [/api/login/auth, api/registration/**] is missing a leading slash. This is discouraged; please include the leading slash in all your request matcher patterns. In future versions of Spring Security, leaving out the leading slash will result in an exception.
+2025-04-12T18:21:22.691+03:00  WARN 20680 --- [Doy] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-04-12T18:21:22.693+03:00  INFO 20680 --- [Doy] [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-12T18:21:22.695+03:00  INFO 20680 --- [Doy] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-04-12T18:21:22.697+03:00  INFO 20680 --- [Doy] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-04-12T18:21:22.706+03:00  INFO 20680 --- [Doy] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-04-12T18:21:22.717+03:00 ERROR 20680 --- [Doy] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+ 
+ChatGPT:
+Güncel log çıktısına göre uygulaman şu an PostgreSQL'e başarılı şekilde bağlanıyor ve Hibernate tablolarını oluşturuyor. ✅ Ancak uygulama en sonunda kapanıyor, çünkü:
+
+❌ Hata: Port 8080 Kullanımda
+log
+Kopyala
+Düzenle
+APPLICATION FAILED TO START
+Web server failed to start. Port 8080 was already in use.
+Bu durumda, 2 seçeneğin var:
+
+✅ Seçenek 1: 8080 Portunu Kullanan Uygulamayı Sonlandır
+1. Hangi işlem kullanıyor?
+PowerShell veya CMD'de şunu çalıştır:
+
+bash
+Kopyala
+Düzenle
+netstat -aon | findstr :8080
+Çıktı örneği:
+
+nginx
+Kopyala
+Düzenle
+TCP    127.0.0.1:8080   0.0.0.0:0   LISTENING   12840
+Bu durumda 12840 portu kullanan işlem.
+
+2. Bu işlemi sonlandır:
+bash
+Kopyala
+Düzenle
+taskkill /PID 12840 /F
+✅ Seçenek 2: Spring'i Başka Portta Başlat
+application.properties dosyasına şunu ekle veya güncelle:
+properties
+Kopyala
+Düzenle
+server.port=9090
+Bu durumda uygulaman artık http://localhost:9090 üzerinden çalışır.
+
+⚙️ Alternatif: Sadece IntelliJ Üzerinden Port Belirt
+IntelliJ’de sağ üstteki çalıştırma yapılandırmasına (Run Configuration) tıkla → Program arguments kısmına şunu ekle:
+
+ini
+Kopyala
+Düzenle
+--server.port=9090
+🔄 Sonuç
+Senin loglarında şu kısımlar zaten her şeyin düzgün çalıştığını gösteriyor:
+
+✅ Hibernate tabloları oluşturuyor.
+
+✅ PostgreSQL bağlantısı çalışıyor.
+
+✅ Email, güvenlik ayarlarında uyarılar dışında hata yok.
+
+İstersen netstat çıktına birlikte bakalım, hangisi portu meşgul ediyor sana gösterebilirim. Hazırsan çalıştır ve sonucu paylaş.
+
+
+Şunu dedin:
+HOW CAN I SEE BRANCH TREE IN GİTLAB WİTH A VİSUAL WAY?
+
+
+ChatGPT:
+To visually see the branch tree in GitLab, here are a few options:
+
+✅ 1. GitLab Web UI – Repository > Graph
+You can see a visual commit graph (like a branch tree) from the GitLab web interface:
+
+📍 Steps:
+Go to your GitLab project.
+
+In the left sidebar, click on "Repository" > "Graph".
+
+You'll see a commit graph, which visually shows:
+
+branches
+
+merges
+
+commits
+
+dates and authors
+
+This is the closest thing to a branch tree view in GitLab directly.
+
+✅ 2. GitLab Web UI – Repository > Branches
+This gives a list view of all branches:
+
+Go to Repository > Branches.
+
+You’ll see:
+
+branch names
+
+last commit messages
+
+who committed
+
+when it was last updated
+
+But this is not a tree, just a list. Still useful for overview.
+
+✅ 3. Locally with Terminal (more detailed tree)
+If you want a more detailed visual tree of branches and commits, you can use your local terminal:
+
+bash
+Kopyala
+Düzenle
+git log --oneline --graph --all --decorate
+This shows a commit graph with branches and merges like:
+
+sql
+Kopyala
+Düzenle
+*   f54c3e3 (HEAD -> main, origin/main) Merge branch 'feature-x'
+|\  
+| * a1b2c3d (feature-x) Add new feature
+* | 3d4e5f6 Update README
+|/
+* c7d8e9f Initial commit
+✅ Bonus: Use Tools Like GitKraken or Sourcetree
+If you prefer a more visual and user-friendly interface, try:
+
+GitKraken
+
+Sourcetree
+
+They show graphical branch trees, perfect for large projects.
+
+Would you like a screenshot or demo of any of these methods?
+
+
+
+Şunu dedin:
+BU GİT CLONE' U YAPARKEN SPESİFİK BİR BRANCH' TEN ÇEKMEK İSTİYORUM:
+
+git clone git@gitlab.com:bbm384-25/ping-floyd.git
+
+
+ChatGPT:
+Evet, bir Git deposunu spesifik bir branch’ten klonlamak için --branch (veya kısaca -b) parametresini kullanabilirsin. Aşağıdaki komutu örnek alabilirsin:
+
+bash
+Kopyala
+Düzenle
+git clone --branch <branch-ismi> git@gitlab.com:bbm384-25/ping-floyd.git
+Örneğin, eğer doy-frontend-v1 branch'inden klonlamak istiyorsan:
+
+bash
+Kopyala
+Düzenle
+git clone --branch doy-frontend-v1 git@gitlab.com:bbm384-25/ping-floyd.git
+Bu komut:
+
+doy-frontend-v1 isimli branch’i,
+
+ping-floyd reposundan,
+
+sadece bu branch'e ait HEAD ile birlikte,
+
+klonlar (ama tüm geçmişi indirir, shallow değilse).
+
+İstersen sadece belirli bir branch’in en güncel halini (commit geçmişi olmadan) almak için şu şekilde --depth parametresiyle shallow clone da yapabilirsin:
+
+bash
+Kopyala
+Düzenle
+git clone --branch doy-frontend-v1 --depth 1 git@gitlab.com:bbm384-25/ping-floyd.git
+İhtiyacına göre ikisinden birini kullanabilirsin. Yardımcı olayım mı başka bir konuda da?
+
+
+Şunu dedin:
+import { useState, useEffect } from "react"
+import { Link, useLocation } from "wouter"
+import { Switch } from "../components/ui/switch"
+import { Input } from "../components/ui/input"
+import { Moon, Search, Star, MapPin, ChevronRight, Utensils } from "lucide-react"
+import { motion } from "framer-motion"
+
+export default function RestaurantsPage() {
+  const [location, setLocation] = useLocation()
+  const [darkMode, setDarkMode] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  // Set isLoaded to true after component mounts for initial animations
+  useEffect(() => {
+    setIsLoaded(true)
+  }, [])
+
+  // Mock restaurant data
+  const restaurants = [
+    { id: 1, name: "Restoran A", cuisine: "Türk Mutfağı", deliveryTime: "25-35 dk", rating: 4 },
+    { id: 2, name: "Restoran B", cuisine: "İtalyan", deliveryTime: "30-40 dk", rating: 3 },
+    { id: 3, name: "Restoran C", cuisine: "Uzak Doğu", deliveryTime: "20-30 dk", rating: 2 },
+    { id: 4, name: "Restoran D", cuisine: "Fast Food", deliveryTime: "15-25 dk", rating: 4 },
+    { id: 5, name: "Restoran E", cuisine: "Deniz Ürünleri", deliveryTime: "35-45 dk", rating: 5 },
+    { id: 6, name: "Restoran F", cuisine: "Kahvaltı", deliveryTime: "25-35 dk", rating: 3 },
+    { id: 7, name: "Restoran G", cuisine: "Tatlı & Pasta", deliveryTime: "20-30 dk", rating: 4 },
+    { id: 8, name: "Restoran H", cuisine: "Vejetaryen", deliveryTime: "30-40 dk", rating: 5 },
+  ]
+
+  // Render star ratings with animation
+  const renderStars = (rating) => {
+    return (
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <motion.div
+            key={star}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+              delay: 0.1 * star,
+            }}
+          >
+            <Star className={h-4 w-4 ${star <= rating ? "text-amber-500 fill-amber-500" : "text-gray-300"}} />
+          </motion.div>
+        ))}
+      </div>
+    )
+  }
+
+  // Handle order button click
+  const handleOrderClick = (restaurantId) => {
+    setLocation(/restaurants/${restaurantId})
+  }
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12,
+      },
+    },
+  }
+
+  const logoVariants = {
+    initial: { rotate: 0 },
+    hover: {
+      rotate: 5,
+      scale: 1.05,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 10,
+      },
+    },
+  }
+
+  return (
+    <div className={flex flex-col min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-amber-50 text-gray-800"}}>
+      {/* Header section */}
+      <motion.header
+        className={${darkMode ? "bg-gray-800" : "bg-amber-800"} text-white py-3 px-6 shadow-md}
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 15 }}
+      >
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <motion.div
+            className="flex items-center"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Link href="/">
+              <span className="font-bold text-xl tracking-tight">Doy!</span>
+            </Link>
+          </motion.div>
+          <div className="flex items-center gap-4">
+            <motion.div className="flex items-center gap-2" whileTap={{ scale: 0.95 }}>
+              <Switch
+                checked={darkMode}
+                onCheckedChange={setDarkMode}
+                className={${darkMode ? "data-[state=checked]:bg-amber-400" : "data-[state=checked]:bg-amber-200"}}
+              />
+              <motion.div animate={{ rotate: darkMode ? 360 : 0 }} transition={{ duration: 0.5 }}>
+                <Moon className={h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-200"}} />
+              </motion.div>
+            </motion.div>
+            <Link href="/auth?tab=register">
+              <motion.button
+                className="bg-amber-200 hover:bg-amber-300 text-amber-800 rounded-full px-5 py-1.5 text-sm font-medium transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                KAYIT
+              </motion.button>
+            </Link>
+            <Link href="/auth?tab=login">
+              <motion.button
+                className="bg-white hover:bg-gray-100 text-amber-800 rounded-full px-5 py-1.5 text-sm font-medium transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                GİRİŞ
+              </motion.button>
+            </Link>
+          </div>
+        </div>
+      </motion.header>
+
+      {/* Hero section with logo and address selection */}
+      <div className={${darkMode ? "bg-gray-800" : "bg-gradient-to-r from-amber-100 to-amber-200"} py-12 px-6}>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
+          <motion.div
+            className="flex items-center mb-8 md:mb-0"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.2 }}
+          >
+            <motion.div
+              className="rounded-full bg-white p-6 w-36 h-36 flex items-center justify-center shadow-lg"
+              variants={logoVariants}
+              initial="initial"
+              whileHover="hover"
+            >
+              <div className="relative w-28 h-28">
+                <motion.img
+                  src="/image1.png"
+                  alt="DOY Logo"
+                  width={112}
+                  height={112}
+                  className="w-full h-full"
+                  animate={{
+                    y: [0, -5, 0],
+                  }}
+                  transition={{
+                    repeat: Number.POSITIVE_INFINITY,
+                    duration: 3,
+                    ease: "easeInOut",
+                  }}
+                />
+                <div className="text-center text-[10px] font-bold mt-1 text-gray-600">FOOD DELIVERY</div>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="flex flex-col items-center md:items-start"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.3 }}
+          >
+            <motion.h2
+              className={${darkMode ? "text-amber-300" : "text-amber-800"} text-2xl font-semibold mb-6}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              Konumunu seç, karnın doysun!
+            </motion.h2>
+            <motion.button
+              className="bg-amber-400 hover:bg-amber-500 text-amber-900 rounded-full flex items-center px-8 py-4 w-full md:w-96 shadow-md transition-all hover:shadow-lg"
+              whileHover={{ scale: 1.03, boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)" }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <motion.div
+                animate={{
+                  x: [0, 3, 0],
+                }}
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  duration: 2,
+                  ease: "easeInOut",
+                }}
+              >
+                <MapPin className="h-5 w-5 mr-3" />
+              </motion.div>
+              <span className="font-medium">Adresini Belirle veya Seç</span>
+              <motion.div
+                animate={{
+                  x: [0, 5, 0],
+                }}
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  duration: 1.5,
+                  ease: "easeInOut",
+                }}
+              >
+                <ChevronRight className="h-5 w-5 ml-auto" />
+              </motion.div>
+            </motion.button>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Search bar */}
+      <div className={${darkMode ? "bg-gray-900" : "bg-amber-50"} py-8 px-6}>
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className="relative w-full max-w-lg mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.4 }}
+          >
+            <Input
+              type="text"
+              placeholder="Restoran Ara"
+              className={${
+                darkMode ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-amber-100"
+              } pl-12 pr-4 py-3 rounded-full shadow-sm focus:ring-2 focus:ring-amber-400 focus:border-transparent}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <motion.div
+              className="absolute left-4 top-1/2 transform -translate-y-1/2"
+              animate={{
+                rotate: searchQuery ? [0, 15, 0, -15, 0] : 0,
+              }}
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+              }}
+            >
+              <Search className="h-5 w-5 text-amber-500" />
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Restaurant listings */}
+      <div className={flex-grow px-6 pb-12 ${darkMode ? "bg-gray-900" : "bg-amber-50"}}>
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className={${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-xl p-8 shadow-lg}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.5 }}
+          >
+            <motion.h1
+              className={text-2xl font-bold ${darkMode ? "text-white" : "text-gray-800"} mb-8}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              Sizin için önerilen restoranlar
+            </motion.h1>
+
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-2 gap-8"
+              variants={containerVariants}
+              initial="hidden"
+              animate={isLoaded ? "visible" : "hidden"}
+            >
+              {restaurants.map((restaurant, index) => (
+                <motion.div
+                  key={restaurant.id}
+                  className={flex items-start p-4 rounded-lg transition-all ${
+                    darkMode ? "hover:bg-gray-700" : "hover:bg-amber-50"
+                  }}
+                  variants={itemVariants}
+                  whileHover={{
+                    scale: 1.02,
+                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+                    transition: { type: "spring", stiffness: 400, damping: 10 },
+                  }}
+                >
+                  <motion.div
+                    className={rounded-lg overflow-hidden mr-4 ${darkMode ? "bg-gray-700" : "bg-amber-100"}}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                  >
+                    <div className="w-24 h-24 flex items-center justify-center">
+                      {restaurant.image ? (
+                        <img
+                          src={restaurant.image || "/placeholder.svg"}
+                          alt={restaurant.name}
+                          width={96}
+                          height={96}
+                          className="object-cover"
+                        />
+                      ) : (
+                        <motion.div
+                          animate={{ rotate: [0, 360] }}
+                          transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                          className="opacity-70"
+                        >
+                          <Utensils className="h-12 w-12 text-amber-500" />
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.div>
+                  <div className="flex-grow">
+                    <motion.h3
+                      className={font-semibold text-lg ${darkMode ? "text-white" : "text-gray-800"}}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.1 * index }}
+                    >
+                      {restaurant.name}
+                    </motion.h3>
+                    <motion.p
+                      className={text-sm ${darkMode ? "text-gray-400" : "text-gray-600"} mb-1}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.1 * index + 0.1 }}
+                    >
+                      {restaurant.cuisine} • {restaurant.deliveryTime}
+                    </motion.p>
+                    <div className="flex items-center my-2">
+                      {renderStars(restaurant.rating)}
+                      <motion.span
+                        className={ml-2 text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 * index + 0.2 }}
+                      >
+                        ({restaurant.rating})
+                      </motion.span>
+                    </div>
+                    <motion.button
+                      onClick={() => handleOrderClick(restaurant.id)}
+                      className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-6 py-2 rounded-full mt-2 transition-colors shadow-sm"
+                      whileHover={{ scale: 1.05, backgroundColor: "#d97706" }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      Sipariş Ver
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <motion.footer
+        className={${
+          darkMode ? "bg-gray-800 border-t border-gray-700" : "bg-amber-100 border-t border-amber-200"
+        } py-8 px-6}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.7 }}
+      >
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-6 md:mb-0 flex items-center">
+            <motion.div
+              className="rounded-full bg-white p-4 w-20 h-20 flex items-center justify-center shadow-md mr-4"
+              whileHover={{ rotate: 10, scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 10 }}
+            >
+              <div className="relative w-16 h-16">
+                <img src="/image1.png" alt="DOY Logo" width={64} height={64} className="w-full h-full" />
+              </div>
+            </motion.div>
+            <div>
+              <h3 className={font-bold text-xl ${darkMode ? "text-white" : "text-amber-800"}}>Doy!</h3>
+              <p className={text-sm ${darkMode ? "text-gray-400" : "text-amber-700"}}>FOOD DELIVERY</p>
+            </div>
+          </div>
+
+          <div className="flex gap-6">
+            {[
+              {
+                href: "https://twitter.com",
+                path: "M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z",
+              },
+              {
+                href: "https://instagram.com",
+                path: ["M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z", "M17.5 6.5h.01"],
+                rect: { width: 20, height: 20, x: 2, y: 2, rx: 5, ry: 5 },
+              },
+              {
+                href: "https://youtube.com",
+                path: [
+                  "M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17",
+                  "m10 15 5-3-5-3z",
+                ],
+              },
+              {
+                href: "https://linkedin.com",
+                path: [
+                  "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z",
+                  "M4 4m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0",
+                ],
+                rect: { width: 4, height: 12, x: 2, y: 9 },
+              },
+            ].map((social, index) => (
+              <motion.a
+                key={social.href}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={${
+                  darkMode ? "text-gray-400 hover:text-white" : "text-amber-700 hover:text-amber-900"
+                } transition-colors}
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 10,
+                  delay: 0.8 + index * 0.1,
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  {social.rect && <rect {...social.rect} />}
+                  {Array.isArray(social.path) ? (
+                    social.path.map((p, i) => <path key={i} d={p} />)
+                  ) : (
+                    <path d={social.path} />
+                  )}
+                </svg>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+      </motion.footer>
+    </div>
+  )
+}
+
+
+BU KOD BİR FULL STACK FOOD DELİVERY APPLİCATİON İÇİN BİR RESTAURANTS BROWSE PAGE SAYFASI, BU SAYFA İÇİN BANA RASTGELE GERÇEK VERİLERDEN OLUŞAN VE SAYFAMIN FORMATINA UYGUN BİR API YAPABİLİR MİSİN VE BU API' Yİ BENİM SAYFAMA ENTEGRE EDER MİSİN?
+
+
+ChatGPT:
+Güncellenen kayıtlı bellek
+Elbette! Sana şu şekilde yardımcı olabilirim:
+
+✅ 1. Mock API Oluşturma (Express.js)
+Aşağıdaki kod Node.js + Express.js ile çalışan bir backend API'dir. Gerçekçi ve rastgele restoran verisi döner:
+
+📁 server.js
+js
+Kopyala
+Düzenle
+const express = require('express')
+const cors = require('cors')
+const app = express()
+const PORT = 5000
+
+app.use(cors())
+
+const cuisines = [
+  "Türk Mutfağı", "İtalyan", "Uzak Doğu", "Fast Food",
+  "Deniz Ürünleri", "Kahvaltı", "Tatlı & Pasta", "Vejetaryen"
+]
+
+const generateRestaurants = () => {
+  const randomTime = () => `${15 + Math.floor(Math.random() * 30)}-${30 + Math.floor(Math.random() * 20)} dk`
+  const sample = []
+  for (let i = 1; i <= 12; i++) {
+    sample.push({
+      id: i,
+      name: `Restoran ${String.fromCharCode(64 + i)}`,
+      cuisine: cuisines[Math.floor(Math.random() * cuisines.length)],
+      deliveryTime: randomTime(),
+      rating: Math.ceil(Math.random() * 5),
+      image: `/restaurant_images/${i}.jpg` // frontend'e uygun klasör olabilir
+    })
+  }
+  return sample
+}
+
+app.get('/api/restaurants', (req, res) => {
+  const data = generateRestaurants()
+  res.json(data)
+})
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
+})
+✅ 2. API'yi React Uygulamasına Entegre Etme
+Senin RestaurantsPage'inde restaurants verisini artık API'den fetch edeceğiz:
+
+🔁 Değişiklikler:
+✅ useState + useEffect içine API çağrısı:
+js
+Kopyala
+Düzenle
+const [restaurants, setRestaurants] = useState([])
+
+useEffect(() => {
+  setIsLoaded(true)
+
+  // API'den veri çek
+  fetch("http://localhost:5000/api/restaurants")
+    .then(res => res.json())
+    .then(data => setRestaurants(data))
+    .catch(err => console.error("API Error:", err))
+}, [])
+🧪 3. Öneriler ve Notlar
+API’yi test etmek için terminalde:
+
+bash
+Kopyala
+Düzenle
+node server.js
+React uygulaman bu portta (localhost:3000), backend ise (localhost:5000). CORS engelini cors() middleware ile zaten çözdük.
+
+/restaurant_images/:id.jpg gibi görseller için frontend'de public/restaurant_images/ klasörüne 12 adet örnek .jpg koyabilirsin. Yoksa fallback olarak placeholder.svg zaten çalışır.
+
+💡 Bonus: Gerçek Veriye Geçmek
+Eğer gerçek restoran verisi istersen:
+
+Yelp Fusion API
+
+Zomato API
+
+Mockaroo ile rastgele JSON oluştur.
+
+İstersen bu Express API'yi bir vercel, railway, render gibi servisle yayına da alabiliriz ya da full stack app'ini tek proje çatısına taşıyabiliriz (örn. monorepo).
+Devam etmek istersen nasıl bir deploy ya da backend setup istediğini söyle yeter 🔧🍽️
