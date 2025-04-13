@@ -143,17 +143,20 @@ export default function RestaurantManagePage() {
 
   // Function to delete a menu item
   const deleteMenuItem = (categoryId, itemId) => {
-    setMenuCategories(
-      menuCategories.map((category) => {
-        if (category.id === categoryId) {
-          return {
-            ...category,
-            items: category.items.filter((item) => item.id !== itemId),
-          }
-        }
-        return category
-      }),
+    axios.delete(`http://localhost:8080/api/item/delete/${itemId}`).then(
+        setMenuCategories(
+            menuCategories.map((category) => {
+              if (category.id === categoryId) {
+                return {
+                  ...category,
+                  items: category.items.filter((item) => item.id !== itemId),
+                }
+              }
+              return category
+            }),
+        )
     )
+
   }
 
   // Function to navigate to add item page
