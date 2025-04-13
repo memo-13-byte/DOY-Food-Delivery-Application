@@ -37,6 +37,7 @@ public class RestaurantService implements IRestaurantService {
 
     @Override
     public DtoRestaurant postRestaurant(DtoRestaurantIU dtoRestaurantIU) {
+
         Restaurant restaurant = new Restaurant();
         BeanUtils.copyProperties(dtoRestaurantIU, restaurant);
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);

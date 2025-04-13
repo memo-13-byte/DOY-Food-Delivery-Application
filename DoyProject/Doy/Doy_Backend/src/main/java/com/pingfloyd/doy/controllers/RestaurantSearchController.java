@@ -34,7 +34,6 @@ public class RestaurantSearchController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortDirection // Default sort ASC
     ) {
-        // The service now returns a Page object which includes content and pagination info
         Page<RestaurantRequest> restaurantPage = restaurantService.searchRestaurants(
                 name, minRating, maxMinOrderPrice, cuisine,
                 page, size, sortBy, sortDirection

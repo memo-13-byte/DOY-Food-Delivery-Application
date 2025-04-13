@@ -6,6 +6,9 @@ import com.pingfloyd.doy.dto.UserCartDTO;
 import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.enums.CardType;
 import com.pingfloyd.doy.enums.OrderStatus;
+import com.pingfloyd.doy.exception.CartIsNotEmptyException;
+import com.pingfloyd.doy.exception.ItemNotFoundException;
+import com.pingfloyd.doy.exception.UserNotFoundException;
 import com.pingfloyd.doy.repositories.CustomerOrderRepository;
 import com.pingfloyd.doy.repositories.OrderItemRepository;
 import com.pingfloyd.doy.repositories.PaymentRepository;
@@ -35,11 +38,16 @@ public class OrderService {
         this.orderItemRepository = orderItemRepository;
     }
 
-    public Boolean AddItemToCart(String username, Long itemId){
+    public Boolean AddItemToCart(String username, Long itemId) throws UserNotFoundException, ItemNotFoundException, CartIsNotEmptyException {
         Customer customer = userService.SearchCustomer(username);
         MenuItem menuItem = itemService.getItemById(itemId);
         CartItem _item = null;
-        if(customer != null && menuItem !=null){
+        if(customer == null){
+            throw new UserNotFoundException("User with given email doesn't exist!");
+        }
+        if(menuItem == null){
+            throw new ItemNotFoundException("Menu item with given id doesn't exist!");
+        }
             Cart userCart = customer.getCart();
             //If first time adding item create cart
             if(userCart == null){
@@ -62,7 +70,8 @@ public class OrderService {
                 userCart.getItems().add(_item);
             }
             else if(menuItem.getRestaurant() != userCart.getRestaurant()){
-                return false;
+                throw new CartIsNotEmptyException("Cart is not empty, you can not add items from other restaurants!");
+                //return false;
             }
             else{
                 _item.setQuantity(_item.getQuantity()+1);
@@ -70,13 +79,16 @@ public class OrderService {
             cartService.SaveCartItem(_item);
             cartService.SaveCart(userCart);
             return true;
-        }
-       return false;
     }
-    public Boolean RemoveItemFromCart(String username , Long itemId){
+    public Boolean RemoveItemFromCart(String username , Long itemId) throws UserNotFoundException,ItemNotFoundException{
         Customer customer = userService.SearchCustomer(username);
         MenuItem menuItem = itemService.getItemById(itemId);
-        if(customer != null && menuItem != null){
+        if(customer == null){
+            throw new UserNotFoundException("User with given email doesn't exist!");
+        }
+        if(menuItem == null){
+            throw new ItemNotFoundException("Menu item with given id doesn't exist!");
+        }
             Cart userCart = customer.getCart();
             if(userCart == null){
                 //Throw exception
@@ -92,11 +104,9 @@ public class OrderService {
                 cartService.SaveCart(userCart);
                 return true;
             }
-        }
-        //Throw Exception
-        return false;
+            return false;
     }
-    public Boolean ConfirmCart(String username){
+    public Boolean ConfirmCart(String username) throws UserNotFoundException{
         Customer customer = userService.SearchCustomer(username);
         if(customer != null && customer.getCart() != null){
             Cart cart = customer.getCart();
@@ -157,33 +167,28 @@ public class OrderService {
         return paymentInfo;
     }
 
-    public UserCartDTO getCurrentUserCart(String username) {
+    public UserCartDTO getCurrentUserCart(String username) throws UserNotFoundException{
         UserCartDTO cartDto = new UserCartDTO(); // Start with an empty DTO
         Customer customer = userService.SearchCustomer(username);
         if (customer == null) {
-            System.err.println("Cannot get cart: User not authenticated (Principal is null or has no name)");
-            return cartDto; // Return empty DTO for unauthenticated
+            throw new UserNotFoundException("User with given email doesn't exist!");
         }
 
         //String userEmail = principal.getName(); // Assuming email/username from Principal
 
         //Optional<Customer> customerOptional = customerRepository.findByEmail(userEmail); // Adapt method if needed
-
-
-
-        Cart cart = customer.getCart(); // Access the cart linked via @OneToOne
+        Cart cart = customer.getCart();
 
         if (cart == null) {
             System.out.println("No cart entity associated with customer: " + username);
             return cartDto;
         }
 
-        // --- Cart exists, map it ---
-        cartDto.setCartId(cart.getCartId()); // cartId comes from Customer's user_id via @MapsId
+        cartDto.setCartId(cart.getCartId());
 
         if (cart.getRestaurant() != null) {
-            cartDto.setRestaurantId(cart.getRestaurant().getId()); // Ensure getter exists
-            cartDto.setRestaurantName(cart.getRestaurant().getRestaurantName()); // Ensure getter exists
+            cartDto.setRestaurantId(cart.getRestaurant().getId());
+            cartDto.setRestaurantName(cart.getRestaurant().getRestaurantName());
         } else {
             System.err.println("WARN: Cart " + cart.getCartId() + " is not linked to a Restaurant!");
         }
@@ -198,9 +203,6 @@ public class OrderService {
                     itemInfo.setPrice(cartItem.getMenuItem().getPrice());
                     itemInfo.setDescription(cartItem.getMenuItem().getDescription());
                     itemInfo.setQuantity(cartItem.getQuantity());
-                    // itemInfo.setCartItemId(cartItem.getCartItemId()); // Optional
-                    // itemInfo.setImageUrl(cartItem.getMenuItem().getImageUrl()); // Optional
-
                     cartDto.getItems().add(itemInfo);
                 } else {
                     System.err.println("WARN: Skipping invalid CartItem in cart " + cart.getCartId());

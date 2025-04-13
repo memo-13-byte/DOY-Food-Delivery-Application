@@ -7,6 +7,7 @@ import com.pingfloyd.doy.entities.Cart;
 import com.pingfloyd.doy.entities.ConfirmationToken;
 import com.pingfloyd.doy.entities.Customer;
 import com.pingfloyd.doy.entities.User;
+import com.pingfloyd.doy.exception.UserAlreadyExistException;
 import com.pingfloyd.doy.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -45,7 +46,10 @@ public class RegistrationService {
 
     }
 
-    public Customer CustomerRegister(@Valid @RequestBody RegistrationRequest request){
+    public Customer CustomerRegister(@Valid @RequestBody RegistrationRequest request) throws UserAlreadyExistException{
+        if(userService.loadUserByEmail(request.getEmail()).isPresent()){
+            throw new UserAlreadyExistException("Customer with given email already exist!") ;
+        }
         Customer user = new Customer(
                 request.getFirstName(),
                 request.getLastName(),
