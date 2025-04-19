@@ -6,10 +6,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "app_user")
@@ -48,6 +51,9 @@ public abstract class User implements UserDetails {
     @Column(name = "is_enabled" , nullable = false)
     private Boolean isEnabled = false;
 
+    @Column(name = "role", nullable = false)
+    private UserRoles role;
+
 
     public User() {
         setCreatedAt(LocalDateTime.now());
@@ -68,7 +74,7 @@ public abstract class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(role.value));
     }
 
     @Override

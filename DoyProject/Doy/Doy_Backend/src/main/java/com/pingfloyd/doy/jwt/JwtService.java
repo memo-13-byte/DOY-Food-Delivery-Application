@@ -33,7 +33,7 @@ public class JwtService {
         int expirationDateInMilliseconds = 1000 * 60 * 60 * 2;
 
         return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date())
-                .claim("role", userDetails.getAuthorities())
+                .claim("role", userDetails.getAuthorities()) //embed role to token
                 .setExpiration(new Date(System.currentTimeMillis() + expirationDateInMilliseconds))
                 .signWith(getKey(), SignatureAlgorithm.HS256).compact();
     }

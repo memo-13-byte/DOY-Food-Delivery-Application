@@ -3,10 +3,7 @@ package com.pingfloyd.doy.services;
 
 
 import com.pingfloyd.doy.dto.RegistrationRequest;
-import com.pingfloyd.doy.entities.Cart;
-import com.pingfloyd.doy.entities.ConfirmationToken;
-import com.pingfloyd.doy.entities.Customer;
-import com.pingfloyd.doy.entities.User;
+import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.exception.UserAlreadyExistException;
 import com.pingfloyd.doy.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -57,6 +54,7 @@ public class RegistrationService {
                 request.getPassword(),
                 request.getPhoneNumber()
         );
+        user.setRole(UserRoles.CUSTOMER); //add user roles like this
         String success = userService.SignUpCustomer(user);
         ConfirmationToken token = confirmationTokenService.GenerateToken(user , 15);
         String link = confirmUrlBase + "/api/registration/confirm?token=" + token.getToken();

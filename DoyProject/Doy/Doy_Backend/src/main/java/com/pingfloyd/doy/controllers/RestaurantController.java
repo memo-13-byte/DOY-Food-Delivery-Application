@@ -6,6 +6,8 @@ import com.pingfloyd.doy.services.RestaurantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,12 +32,14 @@ public class RestaurantController implements IRestaurantController {
 
     @Override
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('RESTAURANT_OWNER')") //only users with role RESTAURANT_OWNER can request this
     public ResponseEntity<DtoRestaurant> updateRestaurant(@PathVariable(name = "id") Long id, @RequestBody @Valid DtoRestaurantIU dtoRestaurantIU) {
         return ResponseEntity.ok(restaurantService.updateRestaurant(id, dtoRestaurantIU));
     }
 
     @Override
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')") // only admins can delete
     public ResponseEntity<DtoRestaurant> deleteRestaurant(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(restaurantService.deleteRestaurant(id));
     }
