@@ -41,6 +41,8 @@ public class CustomerOrder {
     @Column(name = "delivery_date")
     private LocalDate deliveryDate;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "courier_id")
+    private Courier courier;
 
 }
