@@ -26,20 +26,21 @@ public class RestaurantController implements IRestaurantController {
 
     @Override
     @PostMapping("/post")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<DtoRestaurant> postRestaurant(@RequestBody @Valid DtoRestaurantIU dtoRestaurantIU) {
         return ResponseEntity.ok(restaurantService.postRestaurant(dtoRestaurantIU));
     }
 
     @Override
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAuthority('RESTAURANT_OWNER')") //only users with role RESTAURANT_OWNER can request this
+    //@PreAuthorize("hasAuthority('RESTAURANT_OWNER') or hasAuthority('ADMIN')")
     public ResponseEntity<DtoRestaurant> updateRestaurant(@PathVariable(name = "id") Long id, @RequestBody @Valid DtoRestaurantIU dtoRestaurantIU) {
         return ResponseEntity.ok(restaurantService.updateRestaurant(id, dtoRestaurantIU));
     }
 
     @Override
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')") // only admins can delete
+    //@PreAuthorize("hasAuthority('ADMIN')") // only admins can delete
     public ResponseEntity<DtoRestaurant> deleteRestaurant(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(restaurantService.deleteRestaurant(id));
     }
