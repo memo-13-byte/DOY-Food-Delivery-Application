@@ -262,7 +262,7 @@ export default function AuthPage() {
         username: email,
         password: password
       });
-
+      localStorage.setItem("token", response.data.token) //fetch user token
       try {
         if (userType === "restaurant") {
           setLocation("/restaurant/profile")

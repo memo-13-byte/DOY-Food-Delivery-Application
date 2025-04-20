@@ -43,6 +43,7 @@ export default function CustomerProfilePage() {
 
   // Animation effect when page loads
   useEffect(() => {
+    console.log(localStorage.getItem("token")) //display token
     setIsLoaded(true)
   }, [])
 
