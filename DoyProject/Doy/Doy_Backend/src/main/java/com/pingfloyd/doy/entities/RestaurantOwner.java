@@ -14,6 +14,6 @@ public class RestaurantOwner extends User {
     @JoinColumn(name = "gid", referencedColumnName = "gid", unique = true)
     private GovernmentId governmentId;
 
-    @OneToOne(mappedBy = "restaurant_owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = "restaurantOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Restaurant restaurant;
 }
