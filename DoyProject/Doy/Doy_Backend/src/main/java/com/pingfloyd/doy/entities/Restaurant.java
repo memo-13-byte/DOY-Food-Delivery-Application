@@ -50,6 +50,11 @@ public class Restaurant {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "owner_id")
+    private RestaurantOwner restaurantOwner;
+
     public Restaurant() {
 
     }
