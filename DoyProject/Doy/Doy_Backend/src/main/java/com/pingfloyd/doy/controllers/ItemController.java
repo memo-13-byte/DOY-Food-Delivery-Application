@@ -6,6 +6,7 @@ import com.pingfloyd.doy.services.IItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class ItemController implements IItemController {
 
     @Override
     @PostMapping("/post")
+    @PreAuthorize("hasAuthority('RESTAURANT_OWNER')")
     public ResponseEntity<DtoMenuItem> postItem(@RequestBody @Valid DtoMenuItemIU item) {
         return ResponseEntity.ok(itemService.postItem(item));
     }
