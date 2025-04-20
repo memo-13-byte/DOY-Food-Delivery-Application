@@ -14,6 +14,10 @@ public class Courier extends User {
     @JoinColumn(name = "gid", referencedColumnName = "gid", unique = true)
     private GovernmentId governmentId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "district_id", nullable = false)
+    private District district;
+
     @Column(name = "is_available")
     private Boolean isAvailable;
 }

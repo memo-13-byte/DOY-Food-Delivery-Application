@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "district")
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class District {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +30,7 @@ public class District {
     @Column(name = "city")
     @Enumerated(EnumType.STRING)
     private CityEnum city;
+
+    @OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Courier> couriers;
 }
