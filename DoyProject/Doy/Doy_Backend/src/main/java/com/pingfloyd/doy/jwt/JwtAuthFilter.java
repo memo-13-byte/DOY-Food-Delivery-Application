@@ -50,6 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 //does username exist in db? if so, get details into userDetails
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (userDetails != null && !jwtService.isTokenExpired(token)) {
+                    // authorize user by extracting roles
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
 
