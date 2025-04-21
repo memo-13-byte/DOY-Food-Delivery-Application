@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -66,5 +68,18 @@ public class RestaurantService implements IRestaurantService {
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(restaurant, dtoRestaurant);
         return dtoRestaurant;
+    }
+
+    @Override
+    public List<DtoRestaurant> gelAllRestaurants() {
+        List<Restaurant> restaurantList = restaurantRepository.findAll();
+        List<DtoRestaurant> dtoRestaurantList = new ArrayList<>();
+        for (Restaurant restaurant : restaurantList) {
+            DtoRestaurant dtoRestaurant = new DtoRestaurant();
+            BeanUtils.copyProperties(restaurant, dtoRestaurant);
+            dtoRestaurantList.add(dtoRestaurant);
+        }
+
+        return dtoRestaurantList;
     }
 }
