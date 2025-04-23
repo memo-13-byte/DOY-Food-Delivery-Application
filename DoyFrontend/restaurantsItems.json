@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Neapolitan Pizza",
+    "description": "Stone oven baked, with special tomato sauce",
+    "price": 120.00,
+    "restaurantId": 1,
+    "menuItemType": "MAIN_DISH"
+  },
+  {
+    "name": "Adana Kebab",
+    "description": "Spicy Adana style, served with lavash bread",
+    "price": 90.00,
+    "restaurantId": 2,
+    "menuItemType": "MAIN_DISH"
+  },
+  {
+    "name": "Vegan Burger",
+    "description": "Completely plant-based, healthy and tasty",
+    "price": 85.00,
+    "restaurantId": 3,
+    "menuItemType": "MAIN_DISH"
+  },
+  {
+    "name": "Mixed Kebab Menu",
+    "description": "A mix of Adana, Urfa and chicken skewers",
+    "price": 150.00,
+    "restaurantId": 4,
+    "menuItemType": "COMBO"
+  },
+  {
+    "name": "Lentil Vegan Soup",
+    "description": "Gluten-free, high-protein vegan soup",
+    "price": 55.00,
+    "restaurantId": 5,
+    "menuItemType": "EXTRA"
+  },
+  {
+    "name": "French Fries",
+    "description": "Classic crispy fries",
+    "price": 30.00,
+    "restaurantId": 6,
+    "menuItemType": "EXTRA"
+  },
+  {
+    "name": "Grilled Meatballs",
+    "description": "Delicious meatballs grilled to perfection",
+    "price": 95.00,
+    "restaurantId": 7,
+    "menuItemType": "MAIN_DISH"
+  },
+  {
+    "name": "Mozzarella Pizza",
+    "description": "Thin crust, extra cheesy",
+    "price": 110.00,
+    "restaurantId": 1,
+    "menuItemType": "MAIN_DISH"
+  },
+  {
+    "name": "Turnip Juice",
+    "description": "Spicy turnip juice in Adana style",
+    "price": 15.00,
+    "restaurantId": 2,
+    "menuItemType": "DRINK"
+  },
+  {
+    "name": "Green Smoothie",
+    "description": "Blend of spinach, banana and chia seeds",
+    "price": 45.00,
+    "restaurantId": 3,
+    "menuItemType": "DRINK"
+  },
+  {
+    "name": "Künefe",
+    "description": "Shredded phyllo pastry with pistachio and syrup",
+    "price": 50.00,
+    "restaurantId": 4,
+    "menuItemType": "EXTRA"
+  },
+  {
+    "name": "Ezogelin Soup",
+    "description": "Traditional Turkish soup, served with lemon",
+    "price": 25.00,
+    "restaurantId": 5,
+    "menuItemType": "EXTRA"
+  },
+  {
+    "name": "American Burger Combo",
+    "description": "Burger, fries and a drink",
+    "price": 95.00,
+    "restaurantId": 6,
+    "menuItemType": "COMBO"
+  }
+]

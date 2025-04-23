@@ -1,0 +1,988 @@
+"use client"
+
+import { useState, useEffect, useRef } from "react"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
+import { motion, AnimatePresence } from "framer-motion"
+import {
+  Sun,
+  Moon,
+  ChevronLeft,
+  Save,
+  X,
+  ImageIcon,
+  CheckCircle,
+  Loader2,
+  AlertCircle,
+  CheckIcon,
+  AlertTriangle,
+} from "lucide-react"
+import { Toggle } from "../components/ui/toggle"
+import { Button } from "../components/ui/button"
+import { Input } from "../components/ui/input"
+import { Textarea } from "../components/ui/textarea"
+import { Label } from "../components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
+import axios from "axios"
+
+export default function AddItemPage() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const params = useParams()
+  const { id: restaurantId, menuItemTypeId, itemId } = params
+  const isEditMode = !!itemId
+
+  const [darkMode, setDarkMode] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [imagePreview, setImagePreview] = useState("/placeholder.svg?height=200&width=200")
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [focusedField, setFocusedField] = useState(null)
+  const formRef = useRef(null)
+
+  // Form validation states
+  const [errors, setErrors] = useState({})
+  const [touched, setTouched] = useState({})
+  const [formShake, setFormShake] = useState(false)
+  const [validationAttempted, setValidationAttempted] = useState(false)
+
+  // Form state
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: 0,
+    menuItemType: menuItemTypeId ? String(menuItemTypeId) : "1",
+    image: null,
+  })
+
+  // menuItemType mapping
+  const menuItemTypeMap = {
+    "1": "Menüler",
+    "2": "Yiyecek Seçenekleri",
+    "3": "İçecek Seçenekleri",
+    "4": "Ek Seçenekleri",
+  }
+
+  const reversemenuItemTypeMap = {
+    "1": "COMBO",
+    "2": "MAIN_DISH",
+    "3": "DRINK",
+    "4": "EXTRA",
+  }
+
+  // Load item data if in edit mode
+  useEffect(() => {
+    if (isEditMode && itemId) {
+      setIsLoading(true)
+      // In a real app, fetch the item data from API
+      axios
+        .get(`http://localhost:8080/api/item/get/${itemId}`)
+        .then((response) => {
+          const item = response.data
+          setFormData({
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            menuItemType: getmenuItemTypeIdFromType(item.menuItemType),
+            image: null,
+          })
+          // If there's an image URL in the response
+          if (item.imageUrl) {
+            setImagePreview(item.imageUrl)
+          }
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.error("Error fetching item:", error)
+          setIsLoading(false)
+        })
+    }
+  }, [isEditMode, itemId])
+
+  // Get menuItemType ID from menuItemType type
+  const getmenuItemTypeIdFromType = (type) => {
+    const menuItemTypeIds = {
+      COMBO: "1",
+      MAIN_DISH: "2",
+      DRINK: "3",
+      EXTRA: "4",
+    }
+    return menuItemTypeIds[type] || "1"
+  }
+
+  // Validate form data
+  const validateForm = () => {
+    const newErrors = {}
+
+    // Validate name
+    if (!formData.name.trim()) {
+      newErrors.name = "Ürün adı gereklidir"
+    } else if (formData.name.trim().length < 3) {
+      newErrors.name = "Ürün adı en az 3 karakter olmalıdır"
+    }
+
+    // Validate price
+    if (formData.price <= 0) {
+      newErrors.price = "Fiyat sıfırdan büyük olmalıdır"
+    }
+
+    // Validate description (optional but if provided, should be at least 10 chars)
+    if (formData.description && formData.description.trim().length < 10) {
+      newErrors.description = "Açıklama en az 10 karakter olmalıdır"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+
+    // Mark field as touched
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }))
+
+    // Validate on change if validation was already attempted
+    if (validationAttempted) {
+      validateForm()
+    }
+  }
+
+  // Handle field blur for validation
+  const handleBlur = (e) => {
+    const { name } = e.target
+    setFocusedField(null)
+
+    // Mark field as touched
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }))
+
+    // Validate on blur
+    validateForm()
+  }
+
+  // Handle menuItemType selection
+  const handlemenuItemTypeChange = (value) => {
+    console.log("Selected value:", value, typeof value)
+    setFormData((prev) => ({
+      ...prev,
+      menuItemType: value,
+    }))
+  }
+
+  // Handle image upload
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+      }))
+
+      // Create preview
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // Set validation attempted to true
+    setValidationAttempted(true)
+
+    // Mark all fields as touched
+    const allTouched = Object.keys(formData).reduce((acc, key) => {
+      acc[key] = true
+      return acc
+    }, {})
+    setTouched(allTouched)
+
+    // Validate form
+    const isValid = validateForm()
+
+    if (!isValid) {
+      // Shake the form to indicate validation errors
+      setFormShake(true)
+      setTimeout(() => setFormShake(false), 500)
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const formDataToSend = {
+        name: formData.name,
+        description: formData.description,
+        price: Number.parseFloat(formData.price),
+        restaurantId: restaurantId,
+        menuItemType: reversemenuItemTypeMap[formData.menuItemType],
+      }
+      console.log(formDataToSend)
+      /*
+            if (formData.image) {
+              formDataToSend.append("image", formData.image)
+            }*/
+
+      let response
+      if (isEditMode) {
+        // Update existing item
+        response = await axios.put(`http://localhost:8080/api/item/update/${itemId}`, formDataToSend)
+      } else {
+        // Create new item
+        response = await axios.post("http://localhost:8080/api/item/post", formDataToSend)
+      }
+
+      // Show success animation before redirecting
+      setShowSuccess(true)
+      setTimeout(() => {
+        // Redirect back to management page on success with restaurant ID
+        navigate(`/restaurants/manage/${restaurantId}`)
+      }, 1500)
+    } catch (error) {
+      console.error("Error saving item:", error)
+      alert("Bir hata oluştu. Lütfen tekrar deneyin.")
+      setIsLoading(false)
+    }
+  }
+
+  // Update the back button click handler
+  const handleBackClick = () => {
+    navigate(`/restaurants/manage/${restaurantId}`)
+  }
+
+  // Toggle dark mode
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode")
+    } else {
+      document.body.classList.remove("dark-mode")
+    }
+  }, [darkMode])
+
+  // Form field animation variants
+  const formFieldVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 0.3 + i * 0.1,
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    }),
+  }
+
+  // Success animation variants
+  const successVariants = {
+    hidden: { scale: 0, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: [0.34, 1.56, 0.64, 1], // Spring-like effect
+      },
+    },
+  }
+
+  // Pulse animation for submit button
+  const pulseVariants = {
+    initial: { scale: 1 },
+    pulse: {
+      scale: [1, 1.03, 1],
+      transition: {
+        duration: 2,
+        repeat: Number.POSITIVE_INFINITY,
+        repeatType: "loop",
+      },
+    },
+  }
+
+  // Shake animation for form validation errors
+  const shakeVariants = {
+    initial: { x: 0 },
+    shake: {
+      x: [-10, 10, -8, 8, -5, 5, -2, 2, 0],
+      transition: { duration: 0.5 },
+    },
+  }
+
+  // Error message animation variants
+  const errorMessageVariants = {
+    hidden: { opacity: 0, y: -10, height: 0 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      height: "auto",
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: -10,
+      height: 0,
+      transition: {
+        duration: 0.2,
+      },
+    },
+  }
+
+  // Field validation state animation variants
+  const validationIconVariants = {
+    hidden: { scale: 0, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 500,
+        damping: 15,
+      },
+    },
+    exit: {
+      scale: 0,
+      opacity: 0,
+      transition: {
+        duration: 0.2,
+      },
+    },
+  }
+
+  // Helper function to determine field validation state
+  const getFieldValidationState = (fieldName) => {
+    if (!touched[fieldName]) return null
+    return errors[fieldName] ? "error" : "success"
+  }
+
+  return (
+    <div
+      className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-amber-50 to-amber-100"}`}
+    >
+      {/* Header */}
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 100 }}
+        className={`sticky top-0 z-10 flex items-center justify-between p-4 shadow-md ${darkMode ? "bg-gray-800" : "bg-[#47300A] from-amber-800 to-amber-600"}`}
+      >
+        <motion.div whileHover={{ scale: 1.05 }} className="text-xl font-bold text-white">
+          <span className="flex items-center gap-2">
+            <motion.img
+              src="/image1.png"
+              alt="Doy Logo"
+              className="h-8 w-8 rounded-full bg-white p-1"
+              whileHover={{ rotate: 10 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            />
+            Doy!
+          </span>
+        </motion.div>
+        <div className="flex items-center gap-3">
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Toggle
+              variant="outline"
+              size="sm"
+              aria-label="Toggle theme"
+              pressed={darkMode}
+              onPressedChange={setDarkMode}
+              className={`border ${darkMode ? "border-gray-600 bg-gray-700" : "border-amber-400 bg-amber-200"}`}
+            >
+              {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
+            </Toggle>
+          </motion.div>
+        </div>
+      </motion.header>
+
+      {/* Main Content */}
+      <main className="container mx-auto max-w-3xl px-4 py-8">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mb-6 flex items-center gap-2"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05, x: -3 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate(`/restaurants/manage/${restaurantId}`)}
+            className={`flex items-center gap-1 rounded-full px-4 py-2 ${
+              darkMode ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-white text-amber-800 hover:bg-amber-50"
+            }`}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Geri Dön
+          </motion.button>
+          <motion.h1
+            className="text-2xl font-bold"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            {isEditMode ? "Ürün Düzenle" : "Yeni Ürün Ekle"}
+          </motion.h1>
+        </motion.div>
+
+        {/* Form Card */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          whileHover={{ boxShadow: darkMode ? "0 8px 30px rgba(0, 0, 0, 0.3)" : "0 8px 30px rgba(180, 120, 0, 0.15)" }}
+          className={`rounded-xl p-6 shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}
+        >
+          <AnimatePresence>
+            {showSuccess ? (
+              <motion.div
+                variants={successVariants}
+                initial="hidden"
+                animate="visible"
+                className="flex h-full w-full flex-col items-center justify-center py-12"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  className={`mb-4 rounded-full p-3 ${darkMode ? "bg-green-900/30" : "bg-green-100"}`}
+                >
+                  <CheckCircle className={`h-12 w-12 ${darkMode ? "text-green-400" : "text-green-500"}`} />
+                </motion.div>
+                <motion.h2
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="mb-2 text-xl font-bold"
+                >
+                  {isEditMode ? "Ürün Güncellendi!" : "Ürün Eklendi!"}
+                </motion.h2>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className={`text-center ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                >
+                  Yönlendiriliyorsunuz...
+                </motion.p>
+              </motion.div>
+            ) : (
+              <motion.form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                className="space-y-6"
+                variants={shakeVariants}
+                initial="initial"
+                animate={formShake ? "shake" : "initial"}
+              >
+                {/* Validation Summary - shows when form is submitted with errors */}
+                <AnimatePresence>
+                  {validationAttempted && Object.keys(errors).length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className={`rounded-md p-3 mb-4 ${
+                        darkMode ? "bg-red-900/20 text-red-300" : "bg-red-50 text-red-500"
+                      }`}
+                    >
+                      <div className="flex items-start">
+                        <AlertTriangle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <h3 className="text-sm font-medium">Lütfen aşağıdaki hataları düzeltin:</h3>
+                          <ul className="mt-1 text-xs list-disc list-inside">
+                            {Object.entries(errors).map(([field, error]) => (
+                              <li key={field}>{error}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Image Upload */}
+                <motion.div
+                  custom={0}
+                  variants={formFieldVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="flex flex-col items-center gap-4 sm:flex-row"
+                >
+                  <motion.div
+                    className="relative h-40 w-40 overflow-hidden rounded-lg"
+                    whileHover={{ scale: 1.03 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <motion.img
+                      key={imagePreview}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      src={imagePreview || "/placeholder.svg"}
+                      alt="Ürün Görseli"
+                      className="h-full w-full object-cover"
+                    />
+                    <motion.label
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      htmlFor="image-upload"
+                      className={`absolute bottom-2 right-2 cursor-pointer rounded-full p-2 ${
+                        darkMode ? "bg-gray-700 text-amber-300" : "bg-amber-100 text-amber-600"
+                      }`}
+                    >
+                      <ImageIcon className="h-5 w-5" />
+                      <input
+                        type="file"
+                        id="image-upload"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleImageChange}
+                      />
+                    </motion.label>
+                  </motion.div>
+                  <div className="flex-1 space-y-2">
+                    <h3 className="font-medium">Ürün Görseli</h3>
+                    <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Ürün için bir görsel yükleyin. Önerilen boyut: 500x500 piksel.
+                    </p>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => document.getElementById("image-upload").click()}
+                        className={`w-full ${
+                          darkMode
+                            ? "border-gray-600 bg-gray-700 text-white hover:bg-gray-600"
+                            : "border-amber-200 bg-amber-100 text-amber-800 hover:bg-amber-200"
+                        }`}
+                      >
+                        Görsel Seç
+                      </Button>
+                    </motion.div>
+                  </div>
+                </motion.div>
+
+                {/* menuItemType Selection */}
+                <motion.div
+                  custom={1}
+                  variants={formFieldVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="space-y-2"
+                >
+                  <Label htmlFor="menuItemType">Kategori</Label>
+                  <div>
+                    <Select value={formData.menuItemType} onValueChange={handlemenuItemTypeChange} disabled={isLoading}>
+                      <SelectTrigger
+                        id="menuItemType"
+                        className={`w-full ${darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"}`}
+                      >
+                        <SelectValue placeholder="Kategori seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">Menüler</SelectItem>
+                        <SelectItem value="2">Yiyecek Seçenekleri</SelectItem>
+                        <SelectItem value="3">İçecek Seçenekleri</SelectItem>
+                        <SelectItem value="4">Ek Seçenekleri</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </motion.div>
+
+                {/* Name Input */}
+                <motion.div
+                  custom={2}
+                  variants={formFieldVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="space-y-2"
+                >
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="name" className="flex items-center">
+                      Ürün Adı
+                      <span className="text-red-500 ml-1">*</span>
+                    </Label>
+
+                    {/* Validation state indicator */}
+                    <AnimatePresence mode="wait">
+                      {getFieldValidationState("name") === "error" && (
+                        <motion.div
+                          key="name-error"
+                          variants={validationIconVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          className={`rounded-full p-1 ${darkMode ? "bg-red-900/30" : "bg-red-100"}`}
+                        >
+                          <AlertCircle className={`h-3 w-3 ${darkMode ? "text-red-400" : "text-red-500"}`} />
+                        </motion.div>
+                      )}
+                      {getFieldValidationState("name") === "success" && (
+                        <motion.div
+                          key="name-success"
+                          variants={validationIconVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          className={`rounded-full p-1 ${darkMode ? "bg-green-900/30" : "bg-green-100"}`}
+                        >
+                          <CheckIcon className={`h-3 w-3 ${darkMode ? "text-green-400" : "text-green-500"}`} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    animate={
+                      focusedField === "name"
+                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#d97706" : "#f59e0b"}` }
+                        : getFieldValidationState("name") === "error"
+                          ? { boxShadow: `0 0 0 2px ${darkMode ? "#ef4444" : "#f87171"}` }
+                          : getFieldValidationState("name") === "success"
+                            ? { boxShadow: `0 0 0 2px ${darkMode ? "#10b981" : "#34d399"}` }
+                            : {}
+                    }
+                    transition={{ type: "spring", stiffness: 400 }}
+                    className="relative"
+                  >
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("name")}
+                      onBlur={handleBlur}
+                      placeholder="Ürün adını girin"
+                      required
+                      disabled={isLoading}
+                      className={`w-full ${
+                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                      } ${
+                        getFieldValidationState("name") === "error"
+                          ? darkMode
+                            ? "border-red-700"
+                            : "border-red-300"
+                          : getFieldValidationState("name") === "success"
+                            ? darkMode
+                              ? "border-green-700"
+                              : "border-green-300"
+                            : ""
+                      }`}
+                    />
+                  </motion.div>
+
+                  {/* Error message */}
+                  <AnimatePresence>
+                    {touched.name && errors.name && (
+                      <motion.div
+                        variants={errorMessageVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className={`text-xs mt-1 ${darkMode ? "text-red-400" : "text-red-500"}`}
+                      >
+                        {errors.name}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+
+                {/* Description Input */}
+                <motion.div
+                  custom={3}
+                  variants={formFieldVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="space-y-2"
+                >
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="description">Açıklama</Label>
+
+                    {/* Validation state indicator */}
+                    <AnimatePresence mode="wait">
+                      {getFieldValidationState("description") === "error" && (
+                        <motion.div
+                          key="description-error"
+                          variants={validationIconVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          className={`rounded-full p-1 ${darkMode ? "bg-red-900/30" : "bg-red-100"}`}
+                        >
+                          <AlertCircle className={`h-3 w-3 ${darkMode ? "text-red-400" : "text-red-500"}`} />
+                        </motion.div>
+                      )}
+                      {getFieldValidationState("description") === "success" && (
+                        <motion.div
+                          key="description-success"
+                          variants={validationIconVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          className={`rounded-full p-1 ${darkMode ? "bg-green-900/30" : "bg-green-100"}`}
+                        >
+                          <CheckIcon className={`h-3 w-3 ${darkMode ? "text-green-400" : "text-green-500"}`} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    animate={
+                      focusedField === "description"
+                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#d97706" : "#f59e0b"}` }
+                        : getFieldValidationState("description") === "error"
+                          ? { boxShadow: `0 0 0 2px ${darkMode ? "#ef4444" : "#f87171"}` }
+                          : getFieldValidationState("description") === "success"
+                            ? { boxShadow: `0 0 0 2px ${darkMode ? "#10b981" : "#34d399"}` }
+                            : {}
+                    }
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <Textarea
+                      id="description"
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("description")}
+                      onBlur={handleBlur}
+                      placeholder="Ürün açıklamasını girin"
+                      rows={3}
+                      disabled={isLoading}
+                      className={`w-full ${
+                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                      } ${
+                        getFieldValidationState("description") === "error"
+                          ? darkMode
+                            ? "border-red-700"
+                            : "border-red-300"
+                          : getFieldValidationState("description") === "success"
+                            ? darkMode
+                              ? "border-green-700"
+                              : "border-green-300"
+                            : ""
+                      }`}
+                    />
+                  </motion.div>
+
+                  {/* Error message */}
+                  <AnimatePresence>
+                    {touched.description && errors.description && (
+                      <motion.div
+                        variants={errorMessageVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className={`text-xs mt-1 ${darkMode ? "text-red-400" : "text-red-500"}`}
+                      >
+                        {errors.description}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+
+                {/* Price Input */}
+                <motion.div
+                  custom={4}
+                  variants={formFieldVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="space-y-2"
+                >
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="price" className="flex items-center">
+                      Fiyat (TL)
+                      <span className="text-red-500 ml-1">*</span>
+                    </Label>
+
+                    {/* Validation state indicator */}
+                    <AnimatePresence mode="wait">
+                      {getFieldValidationState("price") === "error" && (
+                        <motion.div
+                          key="price-error"
+                          variants={validationIconVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          className={`rounded-full p-1 ${darkMode ? "bg-red-900/30" : "bg-red-100"}`}
+                        >
+                          <AlertCircle className={`h-3 w-3 ${darkMode ? "text-red-400" : "text-red-500"}`} />
+                        </motion.div>
+                      )}
+                      {getFieldValidationState("price") === "success" && (
+                        <motion.div
+                          key="price-success"
+                          variants={validationIconVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          className={`rounded-full p-1 ${darkMode ? "bg-green-900/30" : "bg-green-100"}`}
+                        >
+                          <CheckIcon className={`h-3 w-3 ${darkMode ? "text-green-400" : "text-green-500"}`} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    animate={
+                      focusedField === "price"
+                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#d97706" : "#f59e0b"}` }
+                        : getFieldValidationState("price") === "error"
+                          ? { boxShadow: `0 0 0 2px ${darkMode ? "#ef4444" : "#f87171"}` }
+                          : getFieldValidationState("price") === "success"
+                            ? { boxShadow: `0 0 0 2px ${darkMode ? "#10b981" : "#34d399"}` }
+                            : {}
+                    }
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <Input
+                      id="price"
+                      name="price"
+                      type="number"
+                      value={formData.price}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("price")}
+                      onBlur={handleBlur}
+                      placeholder="Ürün fiyatını girin"
+                      required
+                      min="0"
+                      step="0.01"
+                      disabled={isLoading}
+                      className={`w-full ${
+                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                      } ${
+                        getFieldValidationState("price") === "error"
+                          ? darkMode
+                            ? "border-red-700"
+                            : "border-red-300"
+                          : getFieldValidationState("price") === "success"
+                            ? darkMode
+                              ? "border-green-700"
+                              : "border-green-300"
+                            : ""
+                      }`}
+                    />
+                  </motion.div>
+
+                  {/* Error message */}
+                  <AnimatePresence>
+                    {touched.price && errors.price && (
+                      <motion.div
+                        variants={errorMessageVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className={`text-xs mt-1 ${darkMode ? "text-red-400" : "text-red-500"}`}
+                      >
+                        {errors.price}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+
+                {/* Action Buttons */}
+                <motion.div
+                  custom={5}
+                  variants={formFieldVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="flex gap-3 pt-4"
+                >
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                    type="button"
+                    onClick={() => navigate(`/restaurants/manage/${restaurantId}`)}
+                    disabled={isLoading}
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-medium shadow-md transition-colors ${
+                      darkMode
+                        ? "bg-gray-700 text-white hover:bg-gray-600"
+                        : "bg-amber-100 text-amber-800 hover:bg-amber-200"
+                    }`}
+                  >
+                    <X className="h-5 w-5" />
+                    İptal
+                  </motion.button>
+                  <motion.button
+                    variants={pulseVariants}
+                    initial="initial"
+                    animate={isLoading ? "initial" : "pulse"}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                    type="submit"
+                    disabled={isLoading}
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-medium shadow-md transition-colors ${
+                      darkMode
+                        ? "bg-amber-600 text-white hover:bg-amber-500"
+                        : "bg-amber-500 text-white hover:bg-amber-400"
+                    }`}
+                  >
+                    {isLoading ? (
+                      <>
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                        >
+                          <Loader2 className="h-5 w-5" />
+                        </motion.div>
+                        <span>Kaydediliyor...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-5 w-5" />
+                        Kaydet
+                      </>
+                    )}
+                  </motion.button>
+                </motion.div>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </main>
+
+      {/* Footer */}
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className={`mt-8 border-t ${
+          darkMode ? "border-gray-700 bg-gray-800" : "border-amber-200 bg-[#47300A] from-amber-800 to-amber-600"
+        } py-6`}
+      >
+        <div className="container mx-auto text-center">
+          <motion.p
+            className={`text-sm ${darkMode ? "text-gray-400" : "text-white"}`}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400 }}
+          >
+            © {new Date().getFullYear()} Doy! Tüm hakları saklıdır.
+          </motion.p>
+        </div>
+      </motion.footer>
+    </div>
+  )
+}
