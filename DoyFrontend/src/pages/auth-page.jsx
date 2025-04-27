@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Moon, Sun, CheckCircle } from "lucide-react"
+import axios from "axios"
+import CustomerService from "../services/CustomerService"
 
 // Since we're having issues with the UI component imports, let's create simplified versions
 const Button = ({ className, children, ...props }) => (
@@ -187,7 +189,8 @@ export default function AuthPage() {
   const [darkMode, setDarkMode] = useState(false)
 
   // Form state for registration
-  const [registerName, setRegisterName] = useState("")
+  const [registerFirstName, setRegisterFirstName] = useState("")
+  const [registerLastName, setRegisterLastName] = useState("")
   const [registerEmail, setRegisterEmail] = useState("")
   const [registerPhone, setRegisterPhone] = useState("")
   const [registerPassword, setRegisterPassword] = useState("")
@@ -227,18 +230,18 @@ export default function AuthPage() {
       // Mock API call - in a real app, you would validate credentials with an API
       // For this demo, we'll just check if email and password are provided
       if (email && password) {
-        // Profil ID'sini email adresine göre belirleyelim (e-posta adresi ile ilişkilendirerek tutarlı ID üretelim)
-        // Bu bir demo için yapılmış yapay bir ID oluşturma yöntemidir
-        // Gerçek dünyada bu ID'ler API'den gelecektir
-        const generateProfileId = () => {
-          // E-posta adresinden basit bir ID oluşturalım
-          const emailHash = email.split("@")[0].length
-          const baseId = (emailHash % 3) + 1 // 1, 2 veya 3 ID'lerinden birini seç
-          return baseId.toString()
+
+          console.log(email)
+          console.log(password)
+        const loginInfo = {
+          username: email,
+          password: password
         }
+        console.log(loginInfo)
+        const response = await axios.post('http://localhost:8080/api/login/auth',
+            loginInfo);
 
-        const profileId = generateProfileId()
-
+        const profileId = 1;
         // Redirect to the appropriate dashboard based on user type
         try {
           if (userType === "restaurant") {
@@ -294,22 +297,24 @@ export default function AuthPage() {
         return
       }
 
+      const registrationInfo = {
+        firstName: registerFirstName,
+        lastName: registerLastName,
+        email: registerEmail,
+        password: registerPassword,
+        phoneNumber: registerPhone
+      }
+
+      
+      await CustomerService.RegisterCustomer(registrationInfo);
+
+      const profileId = 0;
+
       // Mock API call - in a real app, you would send registration data to an API
       // For this demo, we'll just simulate a successful registration
       setTimeout(() => {
         // Show success message
         showAlertify("Kayıt işlemi başarıyla tamamlandı!", "success")
-
-        // Profil ID'sini email adresine göre belirleyelim
-        // Gerçek dünyada bu ID'ler API'den gelecektir
-        const generateProfileId = () => {
-          // E-posta adresinden basit bir ID oluşturalım
-          const emailHash = registerEmail.split("@")[0].length
-          const baseId = (emailHash % 3) + 1 // 1, 2 veya 3 ID'lerinden birini seç
-          return baseId.toString()
-        }
-
-        const profileId = generateProfileId()
 
         // Wait for the alertify to be visible before redirecting
         setTimeout(() => {
@@ -626,15 +631,28 @@ export default function AuthPage() {
                       </motion.div>
                     )}
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-gray-700 font-medium">
-                        Ad Soyad
+                      <Label htmlFor="firstName" className="text-gray-700 font-medium">
+                        Ad
                       </Label>
                       <Input
-                        id="name"
-                        placeholder="Ad Soyad"
+                        id="firstName"
+                        placeholder="Ad"
                         className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
-                        value={registerName}
-                        onChange={(e) => setRegisterName(e.target.value)}
+                        value={registerFirstName}
+                        onChange={(e) => setRegisterFirstName(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName" className="text-gray-700 font-medium">
+                        Soyad
+                      </Label>
+                      <Input
+                        id="lastName"
+                        placeholder="Soyad"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        value={registerLastName}
+                        onChange={(e) => setRegisterLastName(e.target.value)}
                         required
                       />
                     </div>
