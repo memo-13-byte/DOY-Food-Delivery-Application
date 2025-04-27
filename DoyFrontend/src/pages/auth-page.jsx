@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Moon, Sun, CheckCircle } from "lucide-react"
 import axios from "axios"
 import CustomerService from "../services/CustomerService"
+import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 
 // Since we're having issues with the UI component imports, let's create simplified versions
 const Button = ({ className, children, ...props }) => (
@@ -221,7 +222,7 @@ export default function AuthPage() {
         try {
           if (userType === "restaurant") {
             navigate(`/restaurant/profile/${profileId}`)
-          } else if (userType === "courier") {
+          } else if (userType === "courier") { 
             navigate(`/courier/profile/${profileId}`)
           } else {
             navigate(`/customer/profile/${profileId}`)
