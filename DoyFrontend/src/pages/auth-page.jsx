@@ -209,9 +209,14 @@ export default function AuthPage() {
         username: email,
         password: password
       });
-      localStorage.setItem("token", response.data.token) //fetch user token
 
-        const profileId = 1;
+      localStorage.setItem("token", response.data.token) //fetch user token
+      console.log(response.data.token)
+
+      const createdUser = await axios.get(`http://localhost:8080/api/users/get-by-email/${email}`,
+         { headers: { Authorization: `Bearer ${response.data.token}` } });
+
+      const profileId = createdUser.data.id
         // Redirect to the appropriate dashboard based on user type
         try {
           if (userType === "restaurant") {
@@ -232,10 +237,8 @@ export default function AuthPage() {
                 : `/customer/profile/${profileId}`
           window.location.href = basePath
         }
-      } else {
-        setErrorMessage("Lütfen e-posta ve şifre girin")
-      }
-    } catch (error) {
+      } 
+    catch (error) {
       setErrorMessage("Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.")
       console.error("Login error:", error)
     } finally {
@@ -275,38 +278,22 @@ export default function AuthPage() {
         phoneNumber: registerPhone
       }
 
-      
       await CustomerService.RegisterCustomer(registrationInfo);
-
-      const profileId = 0;
 
       // Mock API call - in a real app, you would send registration data to an API
       // For this demo, we'll just simulate a successful registration
       setTimeout(() => {
         // Show success message
         showAlertify("Kayıt işlemi başarıyla tamamlandı!", "success")
-
         // Wait for the alertify to be visible before redirecting
         setTimeout(() => {
           // Redirect to the appropriate dashboard based on user type
           try {
-            if (userType === "restaurant") {
-              navigate(`/restaurant/profile/${profileId}`)
-            } else if (userType === "courier") {
-              navigate(`/courier/profile/${profileId}`)
-            } else {
-              navigate(`/customer/profile/${profileId}`)
-            }
+            navigate("/");
           } catch (error) {
             console.error("Navigation error:", error)
             // Fallback - if navigation fails, try direct location change
-            const basePath =
-              userType === "restaurant"
-                ? `/restaurant/profile/${profileId}`
-                : userType === "courier"
-                  ? `/courier/profile/${profileId}`
-                  : `/customer/profile/${profileId}`
-            window.location.href = basePath
+            window.location.href = "/"
           }
         }, 2000) // Wait 2 seconds before redirecting so the user can see the message
       }, 1000) // Simulate network delay
