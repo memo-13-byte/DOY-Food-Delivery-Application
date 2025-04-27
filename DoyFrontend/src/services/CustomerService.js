@@ -2,8 +2,17 @@
 // Bu servis şu anda mock veriler kullanıyor, ancak gerçek API entegrasyonu için hazır bir başlangıç noktası
 
 import { customers, getCustomerById } from './profileData';
+import axios from 'axios';
 
 export default class CustomerService {
+
+  static async RegisterCustomer(registrationInfo) {
+    const response = await axios.post('http://localhost:8080/api/registration',
+      registrationInfo);
+  }
+
+
+
   // Tüm müşterileri getir
   static getAllCustomers() {
     return customers;

@@ -1,13 +1,15 @@
+"use client"
+
 import { useState, useEffect } from "react"
-import { Link, useLocation, useParams } from "wouter"
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Button } from "../components/ui/button"
-import { Switch } from "../components/ui/switch"
 import { Checkbox } from "../components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock } from "lucide-react"
+import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
 import { getCourierById } from "../services/profileData"
 import { useToast } from "../hooks/use-toast"
+import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 
 // Mock function for updating courier data (replace with your actual API call)
 const updateCourier = (courierData) => {
@@ -17,7 +19,8 @@ const updateCourier = (courierData) => {
 }
 
 export default function CourierProfilePage() {
-  const [location, setLocation] = useLocation()
+  const navigate = useNavigate()
+  const location = useLocation()
   const params = useParams()
   const courierId = params.id
   const [darkMode, setDarkMode] = useState(false)
@@ -116,7 +119,7 @@ export default function CourierProfilePage() {
 
   const handleLogout = () => {
     // Handle logout logic here
-    setLocation("/")
+    navigate("/")
   }
 
   // Animation variants
@@ -146,43 +149,49 @@ export default function CourierProfilePage() {
   }
 
   const statsIcons = {
-    onTimeDelivery: <TrendingUp className="h-6 w-6 text-amber-600 mb-2" />,
-    customerRating: <Star className="h-6 w-6 text-amber-600 mb-2" />,
-    weeklyOrders: <Package className="h-6 w-6 text-amber-600 mb-2" />,
-    avgDeliveryTime: <Clock className="h-6 w-6 text-amber-600 mb-2" />,
+    onTimeDelivery: <TrendingUp className={`h-6 w-6 ${darkMode ? "text-purple-400" : "text-amber-600"} mb-2`} />,
+    customerRating: <Star className={`h-6 w-6 ${darkMode ? "text-purple-400" : "text-amber-600"} mb-2`} />,
+    weeklyOrders: <Package className={`h-6 w-6 ${darkMode ? "text-purple-400" : "text-amber-600"} mb-2`} />,
+    avgDeliveryTime: <Clock className={`h-6 w-6 ${darkMode ? "text-purple-400" : "text-amber-600"} mb-2`} />,
   }
 
   return (
     <div
-      className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-900 text-gray-100" : "bg-amber-50"} transition-colors duration-300`}
+      className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
       {/* Header section */}
       <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100 }}
-        className={`${darkMode ? "bg-gray-800" : "bg-[#47300A]"} text-white py-2 px-4 flex justify-between items-center sticky top-0 z-10 shadow-md`}
+        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center sticky top-0 z-10 shadow-md`}
       >
         <div className="flex items-center">
-          <Link href="/">
+          <Link to="/">
             <motion.span className="font-bold text-xl" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               Doy!
             </motion.span>
           </Link>
         </div>
         <div className="flex items-center gap-4">
-          <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.05 }}>
-            <Switch
-              checked={darkMode}
-              onCheckedChange={setDarkMode}
-              className={`data-[state=checked]:${darkMode ? "bg-amber-400" : "bg-amber-200"}`}
-            />
-            <Moon className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-200"}`} />
-          </motion.div>
+          <div className="flex items-center gap-2">
+            <div onClick={() => setDarkMode(!darkMode)} className="flex items-center gap-2 cursor-pointer">
+              <div className="w-[34px] h-[18px] bg-[#F8F5DE] rounded-full relative">
+                <div
+                  className="w-[16px] h-[16px] bg-black rounded-full absolute top-[1px]"
+                  style={{
+                    left: darkMode ? "17px" : "1px",
+                    transition: "left 0.3s",
+                  }}
+                />
+              </div>
+              <Moon className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-amber-200"}`} />
+            </div>
+          </div>
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`flex items-center justify-center rounded-full w-10 h-10 ${darkMode ? "bg-amber-400" : "bg-amber-500"}`}
+            className={`flex items-center justify-center rounded-full w-10 h-10 ${darkMode ? "bg-purple-400" : "bg-amber-500"}`}
           >
             <span className="text-white text-sm font-medium">
               {courier.firstName && courier.lastName ? courier.firstName[0] + courier.lastName[0] : "K"}
@@ -193,26 +202,20 @@ export default function CourierProfilePage() {
 
       {/* Logo section */}
       <motion.div
-        className="flex justify-center py-6"
+        className="flex justify-center py-8"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
       >
         <motion.div
-          className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg`}
+          className={`rounded-full ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg`}
           whileHover={{
             scale: 1.05,
             boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
           }}
         >
           <div className="relative w-24 h-24">
-            <img
-              src="/image1.png"
-              alt="DOY Logo"
-              width={96}
-              height={96}
-              className="w-full h-full"
-            />
+            <img src="/image1.png" alt="DOY Logo" width={96} height={96} className="w-full h-full" />
             <motion.div
               className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
               initial={{ opacity: 0 }}
@@ -228,13 +231,13 @@ export default function CourierProfilePage() {
       {/* Profile Content */}
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
         <motion.div
-          className={`w-full max-w-3xl ${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg p-6 shadow-md`}
+          className={`w-full max-w-5xl ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} rounded-lg p-8 shadow-md`}
           variants={containerVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
         >
           <motion.h1
-            className={`text-xl font-bold ${darkMode ? "text-amber-400" : "text-amber-800"} text-center mb-6`}
+            className={`text-xl font-bold ${darkMode ? "text-purple-400" : "text-[#6b4b10]"} text-center mb-8`}
             variants={itemVariants}
           >
             Hesap Profilim - Kurye
@@ -243,7 +246,7 @@ export default function CourierProfilePage() {
 
           {/* Performance Statistics */}
           <motion.div
-            className={`${darkMode ? "bg-gray-700" : "bg-amber-50"} rounded-lg p-4 mb-6 shadow-inner`}
+            className={`${darkMode ? "bg-[#333]" : "bg-[#F2E8D6]"} rounded-lg p-6 mb-8 shadow-inner`}
             variants={itemVariants}
           >
             <div className="flex items-center mb-4">
@@ -252,16 +255,16 @@ export default function CourierProfilePage() {
                 animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                 transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
               ></motion.div>
-              <span className={`text-sm font-medium ${darkMode ? "text-gray-200" : ""}`}>
+              <span className={`text-sm font-medium ${darkMode ? "text-gray-200" : "text-[#6b4b10]"}`}>
                 Performans İstatistikleri
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               {Object.entries(courier.stats).map(([key, value], index) => (
                 <motion.div
                   key={key}
-                  className={`${darkMode ? "bg-gray-800" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm`}
+                  className={`${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 rounded-md flex flex-col items-center justify-center shadow-sm`}
                   whileHover={{
                     y: -5,
                     boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
@@ -272,7 +275,7 @@ export default function CourierProfilePage() {
                 >
                   {statsIcons[key]}
                   <motion.div
-                    className={`text-2xl font-bold ${darkMode ? "text-amber-400" : "text-amber-800"}`}
+                    className={`text-2xl font-bold ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 100, delay: 0.3 + 0.1 * index }}
@@ -291,9 +294,9 @@ export default function CourierProfilePage() {
           </motion.div>
 
           {/* Courier Information */}
-          <motion.div className="space-y-4 mb-6" variants={itemVariants}>
+          <motion.div className="w-full max-w-4xl mx-auto space-y-5 mb-8" variants={itemVariants}>
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Kullanıcı Adı
               </label>
               <div className="flex">
@@ -302,55 +305,59 @@ export default function CourierProfilePage() {
                   name="fullName"
                   value={courier.fullName}
                   onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                   whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                 </motion.button>
               </div>
             </motion.div>
 
-            <motion.div className="grid grid-cols-2 gap-4" variants={fadeInVariants}>
+            <motion.div className="grid grid-cols-2 gap-6" variants={fadeInVariants}>
               <div>
-                <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Ad</label>
+                <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
+                  Ad
+                </label>
                 <div className="flex">
                   <input
                     type="text"
                     name="firstName"
                     value={courier.firstName}
                     onChange={handleInputChange}
-                    className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                    className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
                   <motion.button
-                    className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                    className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                     whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                    <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                   </motion.button>
                 </div>
               </div>
 
               <div>
-                <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Soyad</label>
+                <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
+                  Soyad
+                </label>
                 <div className="flex">
                   <input
                     type="text"
                     name="lastName"
                     value={courier.lastName}
                     onChange={handleInputChange}
-                    className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                    className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
                   <motion.button
-                    className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                    className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                     whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                    <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                   </motion.button>
                 </div>
               </div>
@@ -358,70 +365,76 @@ export default function CourierProfilePage() {
 
             {/* Email field */}
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Email</label>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
+                Email
+              </label>
               <div className="flex">
                 <input
                   type="email"
                   name="email"
                   value={courier.email}
                   onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                   whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                 </motion.button>
               </div>
             </motion.div>
 
-            {/* Phone field (from second file) */}
+            {/* Phone field */}
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Telefon</label>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
+                Telefon
+              </label>
               <div className="flex">
                 <input
                   type="tel"
                   name="phone"
                   value={courier.phone || ""}
                   onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                   whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                 </motion.button>
               </div>
             </motion.div>
 
             {/* Address field */}
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Adres</label>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
+                Adres
+              </label>
               <div className="flex">
                 <input
                   type="text"
                   name="address"
                   value={courier.address}
                   onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                   whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                 </motion.button>
               </div>
             </motion.div>
 
             {/* ID Number field */}
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 T.C. Kimlik No
               </label>
               <div className="flex">
@@ -430,31 +443,33 @@ export default function CourierProfilePage() {
                   name="idNumber"
                   value={courier.idNumber}
                   onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                   whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                 </motion.button>
               </div>
             </motion.div>
 
             {/* Vehicle Type select */}
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Araç Tipi</label>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
+                Araç Tipi
+              </label>
               <Select
                 value={courier.vehicleType}
                 onValueChange={(value) => setCourier((prev) => ({ ...prev, vehicleType: value }))}
               >
                 <SelectTrigger
-                  className={`${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} py-3 px-4 transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className={darkMode ? "bg-gray-700 text-white border-gray-600" : ""}>
+                <SelectContent className={darkMode ? "bg-[#2c2c2c] text-white border-gray-600" : ""}>
                   <SelectItem value="Motorsiklet">Motorsiklet</SelectItem>
                   <SelectItem value="Araba">Araba</SelectItem>
                   <SelectItem value="Bisiklet">Bisiklet</SelectItem>
@@ -466,7 +481,7 @@ export default function CourierProfilePage() {
 
             {/* License Plate field */}
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Plaka (Bağımsız Kurye için)
               </label>
               <div className="flex">
@@ -475,21 +490,21 @@ export default function CourierProfilePage() {
                   name="licensePlate"
                   value={courier.licensePlate}
                   onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                   whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                 </motion.button>
               </div>
             </motion.div>
 
             {/* Work Schedule select */}
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Çalışma Şekli
               </label>
               <Select
@@ -497,11 +512,11 @@ export default function CourierProfilePage() {
                 onValueChange={(value) => setCourier((prev) => ({ ...prev, workSchedule: value }))}
               >
                 <SelectTrigger
-                  className={`${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} py-3 px-4 transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className={darkMode ? "bg-gray-700 text-white border-gray-600" : ""}>
+                <SelectContent className={darkMode ? "bg-[#2c2c2c] text-white border-gray-600" : ""}>
                   <SelectItem value="Tam Zamanlı">Tam Zamanlı</SelectItem>
                   <SelectItem value="Yarı Zamanlı">Yarı Zamanlı</SelectItem>
                   <SelectItem value="Hafta Sonu">Hafta Sonu</SelectItem>
@@ -513,7 +528,7 @@ export default function CourierProfilePage() {
 
             {/* Experience field */}
             <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Deneyim (Yıl)
               </label>
               <div className="flex">
@@ -522,28 +537,30 @@ export default function CourierProfilePage() {
                   name="experience"
                   value={courier.experience}
                   onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-gray-700 text-white border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2`}
+                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
                   whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
                 </motion.button>
               </div>
             </motion.div>
           </motion.div>
 
           {/* Document Upload */}
-          <motion.div className="mb-6" variants={itemVariants}>
-            <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-2`}>Ehliyet</label>
+          <motion.div className="w-full max-w-4xl mx-auto mb-8" variants={itemVariants}>
+            <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
+              Ehliyet
+            </label>
             <motion.div
-              className={`${darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"} border rounded-md p-8 flex flex-col items-center justify-center`}
+              className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-md p-10 flex flex-col items-center justify-center`}
               whileHover={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" }}
             >
               <motion.div
-                className={`w-16 h-20 ${darkMode ? "bg-gray-800" : "bg-white"} border ${darkMode ? "border-gray-600" : "border-gray-200"} rounded-md flex items-center justify-center mb-2`}
+                className={`w-20 h-24 ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} border ${darkMode ? "border-gray-600" : "border-gray-200"} rounded-md flex items-center justify-center mb-3`}
                 whileHover={{ y: -5 }}
                 animate={{
                   boxShadow: ["0px 0px 0px rgba(0,0,0,0)", "0px 4px 8px rgba(0,0,0,0.1)", "0px 0px 0px rgba(0,0,0,0)"],
@@ -553,9 +570,11 @@ export default function CourierProfilePage() {
                   duration: 2,
                 }}
               >
-                <Upload className={`h-8 w-8 ${darkMode ? "text-gray-400" : "text-gray-400"}`} />
+                <Upload className={`h-10 w-10 ${darkMode ? "text-gray-400" : "text-gray-400"}`} />
               </motion.div>
-              <p className={`text-sm font-medium text-center ${darkMode ? "text-gray-300" : ""}`}>Kuryenin Ehliyeti</p>
+              <p className={`text-sm font-medium text-center ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}>
+                Kuryenin Ehliyeti
+              </p>
               <p className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"} text-center mt-1`}>
                 PDF, JPG veya PNG formatında
               </p>
@@ -564,7 +583,7 @@ export default function CourierProfilePage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className={`mt-4 ${darkMode ? "bg-gray-800 border-amber-400 text-amber-400 hover:bg-gray-700" : "bg-white border-amber-200 text-amber-800 hover:bg-amber-100"}`}
+                  className={`mt-4 ${darkMode ? "bg-[#2c2c2c] border-purple-400 text-purple-400 hover:bg-[#333]" : "bg-white border-amber-200 text-[#6b4b10] hover:bg-amber-100"}`}
                 >
                   Dosya Seç
                 </Button>
@@ -573,15 +592,15 @@ export default function CourierProfilePage() {
           </motion.div>
 
           {/* Working Days and Hours */}
-          <motion.div className="mb-6" variants={itemVariants}>
-            <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-2`}>
+          <motion.div className="w-full max-w-4xl mx-auto mb-8" variants={itemVariants}>
+            <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
               Çalışma Saatleri
             </label>
             <motion.div
-              className={`${darkMode ? "bg-gray-700" : "bg-amber-50"} rounded-lg p-4`}
+              className={`${darkMode ? "bg-[#333]" : "bg-[#F2E8D6]"} rounded-lg p-6`}
               whileHover={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" }}
             >
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 {Object.entries(courier.workingDays).map(([day, isWorking], index) => (
                   <motion.div
                     key={day}
@@ -595,34 +614,37 @@ export default function CourierProfilePage() {
                       checked={isWorking}
                       onCheckedChange={() => handleWorkingDayChange(day)}
                     />
-                    <label htmlFor={`day-${day}`} className={`text-sm ${darkMode ? "text-gray-300" : ""}`}>
+                    <label
+                      htmlFor={`day-${day}`}
+                      className={`text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}
+                    >
                       {day}
                     </label>
                   </motion.div>
                 ))}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+                  <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                     Başlangıç Saati
                   </label>
                   <input
                     type="time"
                     value={courier.workingHours.start}
                     onChange={(e) => handleNestedChange("workingHours", "start", e.target.value)}
-                    className={`w-full ${darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white border-amber-100"} border rounded-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                    className={`w-full ${darkMode ? "bg-[#2c2c2c] text-white border-gray-600" : "bg-white border-amber-100"} border rounded-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
                 </div>
                 <div>
-                  <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+                  <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                     Bitiş Saati
                   </label>
                   <input
                     type="time"
                     value={courier.workingHours.end}
                     onChange={(e) => handleNestedChange("workingHours", "end", e.target.value)}
-                    className={`w-full ${darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white border-amber-100"} border rounded-md py-2 px-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                    className={`w-full ${darkMode ? "bg-[#2c2c2c] text-white border-gray-600" : "bg-white border-amber-100"} border rounded-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
                 </div>
               </div>
@@ -630,10 +652,15 @@ export default function CourierProfilePage() {
           </motion.div>
 
           {/* Update Button */}
-          <motion.div variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <motion.div
+            className="w-full max-w-4xl mx-auto"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
             <Button
               onClick={handleUpdate}
-              className={`w-full ${darkMode ? "bg-amber-500 hover:bg-amber-600" : "bg-amber-300 hover:bg-amber-400"} text-amber-800 font-medium mb-4 shadow-md hover:shadow-lg transition-all duration-200`}
+              className={`w-full py-3 ${darkMode ? "bg-purple-500 hover:bg-purple-600" : "bg-amber-400 hover:bg-amber-500"} text-white font-medium mb-4 shadow-md hover:shadow-lg transition-all duration-200`}
             >
               Güncelle
             </Button>
@@ -642,110 +669,60 @@ export default function CourierProfilePage() {
           {/* Logout Link */}
           <motion.button
             onClick={handleLogout}
-            className={`w-full text-center py-2 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-gray-700" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
+            className={`w-full max-w-4xl mx-auto block text-center py-3 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-[#333]" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
             variants={itemVariants}
             whileHover={{ scale: 1.02, backgroundColor: darkMode ? "#374151" : "#f9fafb" }}
             whileTap={{ scale: 0.98 }}
           >
-            Hesabımdan Çıkış Yap
+            <div className="flex items-center justify-center gap-2">
+              <LogOut className="h-4 w-4" />
+              Hesabımdan Çıkış Yap
+            </div>
           </motion.button>
         </motion.div>
       </div>
 
       {/* Footer */}
-      <motion.footer
-        className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-amber-50 border-amber-200"} p-6 border-t`}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
+      <footer
+        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
       >
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <motion.div
-            className="mb-4 md:mb-0"
-            whileHover={{ rotate: [0, -5, 5, -5, 0] }}
-            transition={{ duration: 0.5 }}
-          >
-            <div
-              className={`rounded-full ${darkMode ? "bg-gray-700" : "bg-white"} p-4 w-20 h-20 flex items-center justify-center`}
-            >
-              <div className="relative w-16 h-16">
-                <img
-                  src="/image1.png"
-                  alt="DOY Logo"
-                  width={64}
-                  height={64}
-                  className="w-full h-full"
-                />
-                <div
-                  className={`text-center text-[8px] font-bold mt-1 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
-                >
-                  DOY
-                </div>
-              </div>
-            </div>
-          </motion.div>
+        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
 
-          <div className="flex gap-6">
-            {[
-              {
-                href: "https://twitter.com",
-                path: "M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z",
-              },
-              {
-                href: "https://instagram.com",
-                path: ["M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z", "M17.5 6.5h.01"],
-                rect: { width: 20, height: 20, x: 2, y: 2, rx: 5, ry: 5 },
-              },
-              {
-                href: "https://youtube.com",
-                path: [
-                  "M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17",
-                  "m10 15 5-3-5-3z",
-                ],
-              },
-              {
-                href: "https://linkedin.com",
-                path: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z",
-                rect: { width: 4, height: 12, x: 2, y: 9 },
-                circle: { cx: 4, cy: 4, r: 2 },
-              },
-            ].map((social, index) => (
-              <motion.a
-                key={index}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${darkMode ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"}`}
-                whileHover={{ scale: 1.2, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 + index * 0.1 }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  {social.rect && <rect {...social.rect} />}
-                  {social.circle && <circle {...social.circle} />}
-                  {Array.isArray(social.path) ? (
-                    social.path.map((p, i) => <path key={i} d={p} />)
-                  ) : (
-                    <path d={social.path} />
-                  )}
-                </svg>
-              </motion.a>
-            ))}
-          </div>
+        <div className="flex gap-6">
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Twitter size={24} />
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Instagram size={24} />
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Youtube size={24} />
+          </a>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Linkedin size={24} />
+          </a>
         </div>
-      </motion.footer>
+      </footer>
     </div>
   )
 }

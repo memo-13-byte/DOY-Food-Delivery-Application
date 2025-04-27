@@ -2,26 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import {
-  Moon,
-  Sun,
-  Utensils,
-  User,
-  Mail,
-  Phone,
-  CreditCard,
-  MapPin,
-  ChevronRight,
-  Instagram,
-  Twitter,
-  Youtube,
-  Linkedin,
-  AlertCircle,
-  CheckCircle,
-  Lock,
-  Eye,
-  EyeOff,
-} from "lucide-react"
+import { Moon, Sun, Utensils, User, Mail, Phone, CreditCard, MapPin, ChevronRight, Instagram, Twitter, Youtube, Linkedin, AlertCircle, CheckCircle, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react'
 
 // Custom UI components to avoid import issues
 const Button = ({ className, children, type = "button", disabled = false, ...props }) => {
@@ -164,6 +145,27 @@ export default function RestaurantRegisterPage() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Initialize dark mode from localStorage
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode") === "true"
+    setDarkMode(savedDarkMode)
+    if (savedDarkMode) {
+      document.documentElement.classList.add("dark")
+    }
+  }, [])
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+    if (!darkMode) {
+      document.documentElement.classList.add("dark")
+      localStorage.setItem("darkMode", "true")
+    } else {
+      document.documentElement.classList.remove("dark")
+      localStorage.setItem("darkMode", "false")
+    }
+  }
 
   // Validation functions
   const validateEmail = (email) => {
@@ -373,45 +375,71 @@ export default function RestaurantRegisterPage() {
     setShowConfirmPassword(!showConfirmPassword)
   }
 
+  // Add animations
+  const animations = `
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  .animate-slideIn {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .animate-slideUp {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+`
+
   return (
     <div
-      className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gradient-to-b from-amber-50 to-amber-100"} transition-colors duration-300`}
+      className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
+      <style>{animations}</style>
+
       {/* Header section */}
       <header
-        className={`${darkMode ? "bg-gray-800" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center sticky top-0 z-10 shadow-md transition-colors duration-300`}
+        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-4 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50 transition-colors duration-300`}
       >
         <div className="flex items-center">
-          <Link to="/">
-            <span className="font-bold text-xl hover:text-amber-200 transition-colors duration-200 cursor-pointer flex items-center gap-2">
-              <Utensils className="h-5 w-5" />
-              <span>Doy!</span>
-            </span>
+          <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
+            <span className="font-bold text-white text-xl tracking-wide">DOY!</span>
           </Link>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex gap-3 items-center">
           <div className="flex items-center gap-2">
             <Switch
               checked={darkMode}
-              onCheckedChange={setDarkMode}
-              className={`${darkMode ? "data-[state=checked]:bg-gray-600" : "data-[state=checked]:bg-amber-200"} transition-colors duration-300`}
+              onCheckedChange={toggleDarkMode}
+              className={`${darkMode ? "bg-amber-500" : "bg-gray-300"} transition-colors duration-300`}
             />
-            {darkMode ? <Sun className="h-4 w-4 text-yellow-300" /> : <Moon className="h-4 w-4 text-amber-200" />}
+            {darkMode ? <Sun className="h-4 w-4 text-white" /> : <Moon className="h-4 w-4 text-white" />}
           </div>
-          <Link to="/auth?tab=register">
-            <button
-              className={`${darkMode ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-amber-200 text-amber-800 hover:bg-amber-300"} rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 transform hover:scale-105`}
-            >
-              KAYIT
-            </button>
-          </Link>
-          <Link to="/auth?tab=login">
-            <button
-              className={`${darkMode ? "bg-gray-600 text-white hover:bg-gray-500" : "bg-white text-amber-800 hover:bg-amber-50"} rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm`}
-            >
-              GİRİŞ
-            </button>
-          </Link>
+          <div className="flex">
+            <Link to="/auth?tab=register">
+              <button
+                className={`px-4 py-1.5 text-sm font-medium rounded-l-full ${darkMode ? "bg-amber-600 text-white" : "bg-[#e8c886] text-[#6b4b10]"} transition-colors duration-300`}
+              >
+                KAYIT
+              </button>
+            </Link>
+            <Link to="/auth?tab=login">
+              <button
+                className={`px-4 py-1.5 text-sm font-medium rounded-r-full ${darkMode ? "bg-amber-700 text-white" : "bg-[#d9b978] text-[#6b4b10]"} transition-colors duration-300`}
+              >
+                GİRİŞ
+              </button>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -432,11 +460,22 @@ export default function RestaurantRegisterPage() {
       {/* Registration Form */}
       <div className="flex-grow flex justify-center items-start px-4 pb-12">
         <div
-          className={`w-full max-w-md ${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg p-8 shadow-lg transition-all duration-300 ${mounted ? "animate-slideUp" : "opacity-0 translate-y-10"}`}
+          className={`w-full md:w-3/4 lg:w-2/3 xl:w-3/5 ${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg p-8 shadow-lg transition-colors duration-300 mx-auto ${mounted ? "animate-slideUp" : "opacity-0 translate-y-10"}`}
         >
-          <h1 className={`text-2xl font-bold ${darkMode ? "text-amber-300" : "text-amber-800"} text-center mb-6`}>
-            Hesap Oluştur - Restoran
-          </h1>
+          <div className="flex items-center mb-6">
+            <Link to="/auth" className="mr-4">
+              <Button
+                className={`${darkMode ? "bg-gray-700 hover:bg-gray-600 text-gray-200" : "bg-amber-100 hover:bg-amber-200 text-amber-800"} rounded-full w-8 h-8 p-0 flex items-center justify-center`}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </Link>
+            <h1
+              className={`text-2xl font-bold ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} text-center flex-grow pr-8`}
+            >
+              Hesap Oluştur - Restoran
+            </h1>
+          </div>
 
           {/* Tabs */}
           <div className="flex mb-8">
@@ -449,7 +488,7 @@ export default function RestaurantRegisterPage() {
             </Link>
             <div className="flex-1">
               <div
-                className={`text-center py-2 border-b-2 ${darkMode ? "border-amber-400 text-amber-300" : "border-amber-500 text-amber-800"} font-medium`}
+                className={`text-center py-2 border-b-2 ${darkMode ? "border-amber-400 text-amber-400" : "border-amber-500 text-[#6b4b10]"} font-medium`}
               >
                 Kayıt Ol
               </div>
@@ -460,7 +499,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="restaurantName"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <Utensils className="h-4 w-4" />
                 Restoran Adınız
@@ -472,7 +511,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="Restoran adınızı girin"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base`}
                   error={errors.restaurantName}
                 />
                 {touched.restaurantName && !errors.restaurantName && formData.restaurantName && (
@@ -485,7 +524,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="ownerName"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <User className="h-4 w-4" />
                 Restoran Sahibinin Adı
@@ -497,7 +536,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="Adınızı girin"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base`}
                   error={errors.ownerName}
                 />
                 {touched.ownerName && !errors.ownerName && formData.ownerName && (
@@ -510,7 +549,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="ownerSurname"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <User className="h-4 w-4" />
                 Restoran Sahibinin Soyadı
@@ -522,7 +561,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="Soyadınızı girin"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base`}
                   error={errors.ownerSurname}
                 />
                 {touched.ownerSurname && !errors.ownerSurname && formData.ownerSurname && (
@@ -535,7 +574,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="email"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <Mail className="h-4 w-4" />
                 Restoran E-Postası
@@ -548,7 +587,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="Restoran e-postanızı girin"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base`}
                   error={errors.email}
                 />
                 {touched.email && !errors.email && formData.email && <SuccessIndicator darkMode={darkMode} />}
@@ -559,7 +598,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="phone"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <Phone className="h-4 w-4" />
                 Restoran Sahibinin Telefonu
@@ -571,7 +610,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="Telefonunuzu girin (5XX XXX XXXX)"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base`}
                   error={errors.phone}
                 />
                 {touched.phone && !errors.phone && formData.phone && <SuccessIndicator darkMode={darkMode} />}
@@ -582,7 +621,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="idNumber"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <CreditCard className="h-4 w-4" />
                 Restoran Sahibinin Kimlik Numarası
@@ -594,7 +633,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="T.C. Kimlik Numaranızı girin"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base`}
                   error={errors.idNumber}
                   maxLength={11}
                 />
@@ -606,7 +645,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="address"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <MapPin className="h-4 w-4" />
                 Restoran Adresi
@@ -618,7 +657,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="Restoran adresini girin"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base`}
                   error={errors.address}
                 />
                 {touched.address && !errors.address && formData.address && <SuccessIndicator darkMode={darkMode} />}
@@ -630,7 +669,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="password"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <Lock className="h-4 w-4" />
                 Şifre
@@ -643,7 +682,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="Şifrenizi girin"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300 pr-10`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base pr-10`}
                   error={errors.password}
                 />
                 <button
@@ -666,7 +705,7 @@ export default function RestaurantRegisterPage() {
             <div className="space-y-2 group">
               <Label
                 htmlFor="confirmPassword"
-                className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`}
+                className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm flex items-center gap-2`}
               >
                 <Lock className="h-4 w-4" />
                 Şifre Tekrar
@@ -679,7 +718,7 @@ export default function RestaurantRegisterPage() {
                   onChange={handleInputChange}
                   onBlur={handleBlur}
                   placeholder="Şifrenizi tekrar girin"
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300 pr-10`}
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018]"} transition-all duration-200 py-3 px-4 text-base pr-10`}
                   error={errors.confirmPassword}
                 />
                 <button
@@ -707,12 +746,12 @@ export default function RestaurantRegisterPage() {
                   onBlur={handleBlur}
                   className={`mt-0.5 ${errors.acceptTerms ? "border-red-500" : ""}`}
                 />
-                <Label htmlFor="acceptTerms" className={`${darkMode ? "text-gray-300" : "text-gray-600"} text-sm`}>
+                <Label htmlFor="acceptTerms" className={`${darkMode ? "text-gray-300" : "text-gray-700"} text-sm`}>
                   <span className="flex items-center gap-1">
                     Kullanım Şartlarını Kabul Ediyorum
                     <Link
                       to="/terms"
-                      className={`${darkMode ? "text-amber-400 hover:text-amber-300" : "text-amber-600 hover:text-amber-800"} underline underline-offset-2`}
+                      className={`${darkMode ? "text-amber-400 hover:text-amber-300" : "text-[#5c4018] hover:text-amber-800"} underline underline-offset-2`}
                       target="_blank"
                     >
                       (Şartları Oku)
@@ -725,17 +764,17 @@ export default function RestaurantRegisterPage() {
 
             <Button
               type="submit"
-              className={`w-full mt-8 ${darkMode ? "bg-amber-500 hover:bg-amber-600 text-gray-900" : "bg-amber-300 hover:bg-amber-400 text-amber-800"} font-medium transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2 h-10 px-4 py-2`}
+              className={`w-full mt-8 ${darkMode ? "bg-amber-500 hover:bg-amber-600 text-gray-900" : "bg-[#e9c46a] hover:bg-[#e9b949] text-[#5c4018]"} font-medium transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2 h-10 px-4 py-2 text-lg rounded-md`}
             >
               Kayıt Ol
               <ChevronRight className="h-4 w-4" />
             </Button>
 
-            <div className={`text-center text-sm ${darkMode ? "text-gray-400" : "text-gray-600"} mt-4`}>
+            <div className={`text-center text-base ${darkMode ? "text-gray-400" : "text-gray-600"} mt-4`}>
               Zaten bir hesabınız var mı?{" "}
               <Link
                 to="/auth?tab=login&type=restaurant"
-                className={`${darkMode ? "text-amber-400 hover:text-amber-300" : "text-amber-800 hover:text-amber-600"} hover:underline transition-colors duration-200`}
+                className={`${darkMode ? "text-amber-400 hover:text-amber-300" : "text-[#5c4018] hover:text-amber-600"} hover:underline font-medium transition-colors duration-200`}
               >
                 Giriş yap
               </Link>
@@ -746,62 +785,47 @@ export default function RestaurantRegisterPage() {
 
       {/* Footer */}
       <footer
-        className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-amber-50 border-amber-200"} p-8 border-t transition-colors duration-300`}
+        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
       >
-        <div className="flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto">
-          <div className="mb-6 md:mb-0">
-            <div
-              className={`rounded-full ${darkMode ? "bg-gray-700" : "bg-white"} p-4 w-24 h-24 flex items-center justify-center shadow-md transition-all duration-300 hover:shadow-lg transform hover:scale-105`}
-            >
-              <div className="relative w-16 h-16">
-                <img src="/image1.png" alt="DOY Logo" width={64} height={64} className="w-full h-full" />
-                <div
-                  className={`text-center text-[8px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
-                >
-                  FOOD DELIVERY
-                </div>
-              </div>
-            </div>
-          </div>
+        <img
+          src="/image1.png"
+          alt="Logo alt"
+          className="h-[50px] w-[50px] rounded-full object-cover"
+        />
 
-          <div className="flex gap-8">
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"} transition-all duration-200 transform hover:scale-110`}
-              aria-label="Twitter"
-            >
-              <Twitter className="w-6 h-6" />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"} transition-all duration-200 transform hover:scale-110`}
-              aria-label="Instagram"
-            >
-              <Instagram className="w-6 h-6" />
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"} transition-all duration-200 transform hover:scale-110`}
-              aria-label="YouTube"
-            >
-              <Youtube className="w-6 h-6" />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"} transition-all duration-200 transform hover:scale-110`}
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="w-6 h-6" />
-            </a>
-          </div>
+        <div className="flex gap-6">
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Twitter className="h-6 w-6" />
+          </a>
+          <a 
+            href="https://instagram.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Instagram className="h-6 w-6" />
+          </a>
+          <a 
+            href="https://youtube.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Youtube className="h-6 w-6" />
+          </a>
+          <a 
+            href="https://linkedin.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Linkedin className="h-6 w-6" />
+          </a>
         </div>
       </footer>
     </div>
