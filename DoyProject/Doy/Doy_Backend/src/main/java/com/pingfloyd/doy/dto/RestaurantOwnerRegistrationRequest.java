@@ -1,14 +1,20 @@
 package com.pingfloyd.doy.dto;
-import jakarta.validation.constraints.*;
 
-import lombok.*;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class RegistrationRequest {
-
+public class RestaurantOwnerRegistrationRequest {
     @NotBlank(message = "User name cannot be blank")
     @Size(min = 3 , max = 30 , message = "Username must be between 3 and 30 characters")
     private final String firstName;
@@ -20,6 +26,11 @@ public class RegistrationRequest {
     @Email(message = "Invalid email format.")
     private final String email;
 
+    @NotBlank(message = "Government Id cannot be blank")
+    @Size(min = 11, max = 11 ,message = "Please enter a valid government id")
+    @Pattern(regexp = "\\d{11}", message = "Government Id must contain only digits")
+    private final String governmentId;
+
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     @Pattern(
@@ -27,7 +38,6 @@ public class RegistrationRequest {
             message = "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character (@#$%^&+=!)"
     )
     private final String password;
-
 
     //@Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number format")
     private final String phoneNumber;

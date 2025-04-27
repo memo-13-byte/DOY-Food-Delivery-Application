@@ -31,7 +31,6 @@ public class RestaurantService implements IRestaurantService {
     @Override
     public DtoRestaurant getRestaurant(Long id) throws RestaurantNotFoundException {
         Restaurant restaurant = findRestaurantById(id);
-
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(restaurant, dtoRestaurant);
         return dtoRestaurant;
@@ -47,6 +46,10 @@ public class RestaurantService implements IRestaurantService {
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(savedRestaurant, dtoRestaurant);
         return dtoRestaurant;
+    }
+
+    public void SaveRestaurant(Restaurant restaurant){
+        restaurantRepository.save(restaurant);
     }
 
     @Override

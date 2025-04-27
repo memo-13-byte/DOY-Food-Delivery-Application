@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -151,10 +152,12 @@ public class OrderService {
     private CustomerOrder CreateCustomerOrder(Customer customer){
         CustomerOrder customerOrder = new CustomerOrder();
         customerOrder.setCustomer(customer);
-        customerOrder.setStatus(OrderStatus.ACCEPTED);
+        customerOrder.setStatus(OrderStatus.PLACED);
         customerOrder.setRestaurant(customer.getCart().getRestaurant());
         return customerOrder;
     }
+
+   // public List<CustomerOrder>
 
     private PaymentInfo CreatePayment(DtoPaymentInformationIU dtoPaymentInformationIU, Customer customer){
         PaymentInfo paymentInfo = new PaymentInfo();
