@@ -64,7 +64,6 @@ public class UserService implements UserDetailsService, IUserService {
     public Optional<User> loadUserByEmail(String email){
         return userRepository.findByEmail(email);
     }
-
     @Override
     public List<DtoUser> getAllUsers() {
         List<User> dbUsers = userRepository.findAll();

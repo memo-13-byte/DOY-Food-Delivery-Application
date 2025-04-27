@@ -21,10 +21,11 @@ import java.util.Set;
 public interface CourierRepository extends JpaRepository<Courier, Long> {
     Optional<Courier> findByEmail(String email);
     Optional<Courier> findByGovernmentId(String governmentId);
+    Optional<Courier> findCourierById(Long id);
     Optional<Courier>findCourierByEmail(String email);
 
-
     Set<Courier> findCouriersByDistrict(District district);
+    Set<Courier> findCouriersByDistrictAndIsAvailableTrue(District district);
 
     Set<Courier> findCouriersByIsEnabledFalse();
 }

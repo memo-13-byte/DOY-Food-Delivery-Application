@@ -23,16 +23,22 @@ public class CourierService {
     public Optional<Courier> GetByGovernmentId(String governmentId){
         return courierRepository.findByGovernmentId(governmentId);
     }
-
+    public Optional<Courier> GetCourierById(Long id){
+        return courierRepository.findCourierById(id);
+    }
     public Set<Courier> GetCouriersByDistrict(District district){
         return courierRepository.findCouriersByDistrict(district);
     }
+
+    public Set<Courier> GetAvailableCouriersByDistrict(District district){
+        return courierRepository.findCouriersByDistrictAndIsAvailableTrue(district);
+    }
+
     public Set<Courier> GetPendingCouriers(){
         return courierRepository.findCouriersByIsEnabledFalse();
     }
 
     public Courier SetAvailability(String email,Boolean availability){
-
         Optional<Courier> courier = courierRepository.findByEmail(email);
         if(courier.isEmpty()){
             throw new UserNotFoundException("Courier with given email doesn't exist!");
@@ -41,4 +47,5 @@ public class CourierService {
         c.setIsAvailable(availability);
         return courierRepository.save(c);
     }
+
 }
