@@ -15,8 +15,12 @@ import {
   AlertCircle,
   CheckIcon,
   AlertTriangle,
+  Upload,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
 } from "lucide-react"
-import { Toggle } from "../components/ui/toggle"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Textarea } from "../components/ui/textarea"
@@ -37,6 +41,7 @@ export default function AddItemPage() {
   const [showSuccess, setShowSuccess] = useState(false)
   const [focusedField, setFocusedField] = useState(null)
   const formRef = useRef(null)
+  const [isDragging, setIsDragging] = useState(false)
 
   // Form validation states
   const [errors, setErrors] = useState({})
@@ -195,6 +200,49 @@ export default function AddItemPage() {
     }
   }
 
+  // Handle drag over for image upload
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  // Handle drag leave for image upload
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }
+
+  // Handle drop for image upload
+  const handleDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+
+    const files = e.dataTransfer.files
+    if (files && files.length > 0) {
+      const file = files[0]
+      // Sadece resim dosyalarını kabul et
+      if (file.type.startsWith("image/")) {
+        setFormData((prev) => ({
+          ...prev,
+          image: file,
+        }))
+
+        // Create preview
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          setImagePreview(reader.result)
+        }
+        reader.readAsDataURL(file)
+      } else {
+        // Resim olmayan dosyalar için uyarı
+        alert("Lütfen sadece resim dosyaları yükleyin (JPG, PNG, GIF, vb.)")
+      }
+    }
+  }
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -270,6 +318,10 @@ export default function AddItemPage() {
       document.body.classList.remove("dark-mode")
     }
   }, [darkMode])
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+  }
 
   // Form field animation variants
   const formFieldVariants = {
@@ -371,45 +423,47 @@ export default function AddItemPage() {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-amber-50 to-amber-100"}`}
+      className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"}`}
     >
       {/* Header */}
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 100 }}
-        className={`sticky top-0 z-10 flex items-center justify-between p-4 shadow-md ${darkMode ? "bg-gray-800" : "bg-[#47300A] from-amber-800 to-amber-600"}`}
+        className={`sticky top-0 z-10 flex items-center justify-between px-6 py-5 shadow-lg ${darkMode ? "bg-[#333]" : "bg-[#47300A]"}`}
       >
-        <motion.div whileHover={{ scale: 1.05 }} className="text-xl font-bold text-white">
+        <motion.div whileHover={{ scale: 1.05 }} className="text-2xl font-bold text-white">
           <span className="flex items-center gap-2">
-            <motion.img
-              src="/image1.png"
-              alt="Doy Logo"
-              className="h-8 w-8 rounded-full bg-white p-1"
-              whileHover={{ rotate: 10 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            />
+            <img src="/image1.png" alt="Doy Logo" className="h-10 w-10 rounded-full bg-white p-1" />
             Doy!
           </span>
         </motion.div>
-        <div className="flex items-center gap-3">
-          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <Toggle
-              variant="outline"
-              size="sm"
-              aria-label="Toggle theme"
-              pressed={darkMode}
-              onPressedChange={setDarkMode}
-              className={`border ${darkMode ? "border-gray-600 bg-gray-700" : "border-amber-400 bg-amber-200"}`}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <motion.button
+              onClick={toggleDarkMode}
+              className="relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
+              style={{
+                backgroundColor: darkMode ? "#6c4c9c" : "#e2e8f0",
+                transition: "background-color 0.3s",
+              }}
             >
-              {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
-            </Toggle>
-          </motion.div>
+              <span className="sr-only">Toggle dark mode</span>
+              <motion.span
+                className="inline-block h-5 w-5 rounded-full bg-white shadow-lg"
+                animate={{
+                  x: darkMode ? 24 : 3,
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              />
+            </motion.button>
+            {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
+          </div>
         </div>
       </motion.header>
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-3xl px-4 py-8">
+      <main className="container mx-auto max-w-3xl px-6 py-8">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -419,9 +473,9 @@ export default function AddItemPage() {
           <motion.button
             whileHover={{ scale: 1.05, x: -3 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate(`/restaurants/manage/${restaurantId}`)}
+            onClick={handleBackClick}
             className={`flex items-center gap-1 rounded-full px-4 py-2 ${
-              darkMode ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-white text-amber-800 hover:bg-amber-50"
+              darkMode ? "bg-[#2c2c2c] text-white hover:bg-[#333]" : "bg-white text-[#47300A] hover:bg-amber-50"
             }`}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -442,8 +496,8 @@ export default function AddItemPage() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          whileHover={{ boxShadow: darkMode ? "0 8px 30px rgba(0, 0, 0, 0.3)" : "0 8px 30px rgba(180, 120, 0, 0.15)" }}
-          className={`rounded-xl p-6 shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}
+          whileHover={{ boxShadow: darkMode ? "0 8px 30px rgba(0, 0, 0, 0.3)" : "0 8px 30px rgba(108, 76, 156, 0.15)" }}
+          className={`rounded-2xl p-6 shadow-md ${darkMode ? "bg-[#2c2c2c]" : "bg-white"}`}
         >
           <AnimatePresence>
             {showSuccess ? (
@@ -523,10 +577,31 @@ export default function AddItemPage() {
                   className="flex flex-col items-center gap-4 sm:flex-row"
                 >
                   <motion.div
-                    className="relative h-40 w-40 overflow-hidden rounded-lg"
+                    className={`relative h-40 w-40 overflow-hidden rounded-xl border-2 transition-all duration-300 ${
+                      isDragging
+                        ? darkMode
+                          ? "border-[#6c4c9c] bg-[#6c4c9c]/20"
+                          : "border-[#6c4c9c] bg-[#6c4c9c]/10"
+                        : "border-transparent"
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
                     whileHover={{ scale: 1.03 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
+                    {isDragging && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 z-10">
+                        <motion.div
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          className={`text-white text-center p-2`}
+                        >
+                          <Upload className="h-8 w-8 mx-auto mb-1" />
+                          <span className="text-sm font-medium">Bırak</span>
+                        </motion.div>
+                      </div>
+                    )}
                     <motion.img
                       key={imagePreview}
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -541,7 +616,7 @@ export default function AddItemPage() {
                       whileTap={{ scale: 0.9 }}
                       htmlFor="image-upload"
                       className={`absolute bottom-2 right-2 cursor-pointer rounded-full p-2 ${
-                        darkMode ? "bg-gray-700 text-amber-300" : "bg-amber-100 text-amber-600"
+                        darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"
                       }`}
                     >
                       <ImageIcon className="h-5 w-5" />
@@ -553,6 +628,11 @@ export default function AddItemPage() {
                         onChange={handleImageChange}
                       />
                     </motion.label>
+                    <div className="absolute -bottom-2 left-0 right-0 text-center">
+                      <span className={`text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                        Resmi Sürükle veya Tıkla
+                      </span>
+                    </div>
                   </motion.div>
                   <div className="flex-1 space-y-2">
                     <h3 className="font-medium">Ürün Görseli</h3>
@@ -566,8 +646,8 @@ export default function AddItemPage() {
                         onClick={() => document.getElementById("image-upload").click()}
                         className={`w-full ${
                           darkMode
-                            ? "border-gray-600 bg-gray-700 text-white hover:bg-gray-600"
-                            : "border-amber-200 bg-amber-100 text-amber-800 hover:bg-amber-200"
+                            ? "border-gray-600 bg-[#333] text-white hover:bg-[#444]"
+                            : "border-[#6c4c9c]/20 bg-[#6c4c9c]/10 text-[#6c4c9c] hover:bg-[#6c4c9c]/20"
                         }`}
                       >
                         Görsel Seç
@@ -589,7 +669,7 @@ export default function AddItemPage() {
                     <Select value={formData.menuItemType} onValueChange={handlemenuItemTypeChange} disabled={isLoading}>
                       <SelectTrigger
                         id="menuItemType"
-                        className={`w-full ${darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"}`}
+                        className={`w-full ${darkMode ? "border-gray-600 bg-[#333] text-white" : "border-[#6c4c9c]/20 bg-white text-gray-800"}`}
                       >
                         <SelectValue placeholder="Kategori seçin" />
                       </SelectTrigger>
@@ -651,7 +731,7 @@ export default function AddItemPage() {
                     whileTap={{ scale: 0.99 }}
                     animate={
                       focusedField === "name"
-                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#d97706" : "#f59e0b"}` }
+                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#6c4c9c" : "#6c4c9c"}` }
                         : getFieldValidationState("name") === "error"
                           ? { boxShadow: `0 0 0 2px ${darkMode ? "#ef4444" : "#f87171"}` }
                           : getFieldValidationState("name") === "success"
@@ -671,8 +751,8 @@ export default function AddItemPage() {
                       placeholder="Ürün adını girin"
                       required
                       disabled={isLoading}
-                      className={`w-full ${
-                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                      className={`w-full rounded-xl ${
+                        darkMode ? "border-gray-600 bg-[#333] text-white" : "border-[#6c4c9c]/20 bg-white text-gray-800"
                       } ${
                         getFieldValidationState("name") === "error"
                           ? darkMode
@@ -748,7 +828,7 @@ export default function AddItemPage() {
                     whileTap={{ scale: 0.99 }}
                     animate={
                       focusedField === "description"
-                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#d97706" : "#f59e0b"}` }
+                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#6c4c9c" : "#6c4c9c"}` }
                         : getFieldValidationState("description") === "error"
                           ? { boxShadow: `0 0 0 2px ${darkMode ? "#ef4444" : "#f87171"}` }
                           : getFieldValidationState("description") === "success"
@@ -767,8 +847,8 @@ export default function AddItemPage() {
                       placeholder="Ürün açıklamasını girin"
                       rows={3}
                       disabled={isLoading}
-                      className={`w-full ${
-                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                      className={`w-full rounded-xl ${
+                        darkMode ? "border-gray-600 bg-[#333] text-white" : "border-[#6c4c9c]/20 bg-white text-gray-800"
                       } ${
                         getFieldValidationState("description") === "error"
                           ? darkMode
@@ -847,7 +927,7 @@ export default function AddItemPage() {
                     whileTap={{ scale: 0.99 }}
                     animate={
                       focusedField === "price"
-                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#d97706" : "#f59e0b"}` }
+                        ? { boxShadow: `0 0 0 2px ${darkMode ? "#6c4c9c" : "#6c4c9c"}` }
                         : getFieldValidationState("price") === "error"
                           ? { boxShadow: `0 0 0 2px ${darkMode ? "#ef4444" : "#f87171"}` }
                           : getFieldValidationState("price") === "success"
@@ -869,8 +949,8 @@ export default function AddItemPage() {
                       min="0"
                       step="0.01"
                       disabled={isLoading}
-                      className={`w-full ${
-                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                      className={`w-full rounded-xl ${
+                        darkMode ? "border-gray-600 bg-[#333] text-white" : "border-[#6c4c9c]/20 bg-white text-gray-800"
                       } ${
                         getFieldValidationState("price") === "error"
                           ? darkMode
@@ -910,16 +990,16 @@ export default function AddItemPage() {
                   className="flex gap-3 pt-4"
                 >
                   <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     transition={{ type: "spring", stiffness: 400 }}
                     type="button"
-                    onClick={() => navigate(`/restaurants/manage/${restaurantId}`)}
+                    onClick={handleBackClick}
                     disabled={isLoading}
                     className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-medium shadow-md transition-colors ${
                       darkMode
                         ? "bg-gray-700 text-white hover:bg-gray-600"
-                        : "bg-amber-100 text-amber-800 hover:bg-amber-200"
+                        : "bg-[#7A0000] text-white hover:bg-[#6A0000]"
                     }`}
                   >
                     <X className="h-5 w-5" />
@@ -929,15 +1009,15 @@ export default function AddItemPage() {
                     variants={pulseVariants}
                     initial="initial"
                     animate={isLoading ? "initial" : "pulse"}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     transition={{ type: "spring", stiffness: 400 }}
                     type="submit"
                     disabled={isLoading}
                     className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-medium shadow-md transition-colors ${
                       darkMode
-                        ? "bg-amber-600 text-white hover:bg-amber-500"
-                        : "bg-amber-500 text-white hover:bg-amber-400"
+                        ? "bg-[#6c4c9c] text-white hover:bg-[#5d3d8d]"
+                        : "bg-[#6c4c9c] text-white hover:bg-[#5d3d8d]"
                     }`}
                   >
                     {isLoading ? (
@@ -964,25 +1044,109 @@ export default function AddItemPage() {
         </motion.div>
       </main>
 
+      {/* Footer - Updated to match restaurant-manage-page.tsx */}
       {/* Footer */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className={`mt-8 border-t ${
-          darkMode ? "border-gray-700 bg-gray-800" : "border-amber-200 bg-[#47300A] from-amber-800 to-amber-600"
-        } py-6`}
+      <footer
+        style={{
+          marginTop: "2rem",
+          padding: "2rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
+          transition: "all 0.3s ease-in-out",
+        }}
       >
-        <div className="container mx-auto text-center">
-          <motion.p
-            className={`text-sm ${darkMode ? "text-gray-400" : "text-white"}`}
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400 }}
+        <img
+          src="/image1.png"
+          alt="Logo alt"
+          style={{
+            height: "50px",
+            width: "50px",
+            borderRadius: "50%",
+            objectFit: "cover",
+          }}
+        />
+
+        <div style={{ display: "flex", gap: "1.5rem" }}>
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              transition: "background-color 0.3s",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="icon-link"
           >
-            © {new Date().getFullYear()} Doy! Tüm hakları saklıdır.
-          </motion.p>
+            <Twitter size={24} />
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              transition: "background-color 0.3s",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="icon-link"
+          >
+            <Instagram size={24} />
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              transition: "background-color 0.3s",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="icon-link"
+          >
+            <Youtube size={24} />
+          </a>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              transition: "background-color 0.3s",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="icon-link"
+          >
+            <Linkedin size={24} />
+          </a>
         </div>
-      </motion.footer>
+      </footer>
     </div>
   )
 }

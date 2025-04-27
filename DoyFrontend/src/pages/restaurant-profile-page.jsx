@@ -3,9 +3,22 @@
 import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
-import { Switch } from "../components/ui/switch"
 import { Badge } from "../components/ui/badge"
-import { Moon, Clock, Phone, Mail, MapPin, Award, Clock3, TrendingUp, LogOut } from "lucide-react"
+import {
+  Moon,
+  Clock,
+  Phone,
+  Mail,
+  MapPin,
+  Award,
+  Clock3,
+  TrendingUp,
+  LogOut,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
+} from "lucide-react"
 import { motion } from "framer-motion"
 import { getRestaurantById } from "../services/profileData"
 
@@ -96,14 +109,14 @@ export default function RestaurantProfilePage() {
 
   return (
     <div
-      className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gradient-to-b from-amber-50 to-amber-100"} transition-colors duration-300`}
+      className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
       {/* Header section */}
       <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className={`${darkMode ? "bg-gray-800" : "bg-[#47300A] from-amber-800 to-amber-600"} text-white py-3 px-6 flex justify-between items-center shadow-md`}
+        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center shadow-md`}
       >
         <div className="flex items-center">
           <motion.div
@@ -125,12 +138,18 @@ export default function RestaurantProfilePage() {
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Switch
-              checked={darkMode}
-              onCheckedChange={setDarkMode}
-              className={`${darkMode ? "data-[state=checked]:bg-purple-400" : "data-[state=checked]:bg-amber-200"}`}
-            />
-            <Moon className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-amber-200"}`} />
+            <div onClick={() => setDarkMode(!darkMode)} className="flex items-center gap-2 cursor-pointer">
+              <div className="w-[34px] h-[18px] rounded-full bg-[#F8F5DE] relative">
+                <div
+                  className="w-[16px] h-[16px] rounded-full bg-[#000] absolute top-[1px]"
+                  style={{
+                    left: darkMode ? "17px" : "1px",
+                    transition: "left 0.3s",
+                  }}
+                />
+              </div>
+              <Moon className={`h-4 w-4 ${darkMode ? "text-[#F8F5DE]" : "text-[#F8F5DE]"}`} />
+            </div>
           </div>
           <Link to={`/restaurants/manage/${restaurantId}`}>
             <span
@@ -153,7 +172,7 @@ export default function RestaurantProfilePage() {
       >
         <motion.div
           whileHover={{ scale: 1.05, rotate: 5 }}
-          className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg transition-colors duration-300`}
+          className={`rounded-full ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg transition-colors duration-300`}
         >
           <div className="relative w-24 h-24 flex flex-col items-center">
             <img
@@ -174,13 +193,13 @@ export default function RestaurantProfilePage() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className={`w-full max-w-3xl ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-lg p-6 shadow-lg transition-colors duration-300`}
+          className={`w-full max-w-5xl ${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} rounded-lg p-8 shadow-lg transition-colors duration-300`}
         >
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className={`text-2xl font-bold ${darkMode ? "text-white" : "text-amber-800"} text-center mb-2`}
+            className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#6b4b10]"} text-center mb-2`}
           >
             Hesap Profilim - Restoran
           </motion.h1>
@@ -188,7 +207,7 @@ export default function RestaurantProfilePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className={`text-xl ${darkMode ? "text-amber-400" : "text-amber-600"} text-center mb-6`}
+            className={`text-xl ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} text-center mb-6`}
           >
             {restaurant.name}
           </motion.h2>
@@ -207,7 +226,7 @@ export default function RestaurantProfilePage() {
           <motion.div variants={container} initial="hidden" animate={isLoaded ? "show" : "hidden"} className="mb-6">
             <motion.label
               variants={item}
-              className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-2`}
+              className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}
             >
               Mutfak Türleri
             </motion.label>
@@ -222,7 +241,7 @@ export default function RestaurantProfilePage() {
                 >
                   <Badge
                     variant="outline"
-                    className={`${darkMode ? "bg-gray-700 text-purple-300 border-gray-600" : "bg-amber-100 text-amber-800 border-amber-200"} px-3 py-1 transition-colors duration-200`}
+                    className={`${darkMode ? "bg-gray-700 text-purple-300 border-gray-600" : "bg-amber-100 text-[#6b4b10] border-amber-200"} px-3 py-1 transition-colors duration-200`}
                   >
                     {cuisine}
                   </Badge>
@@ -236,9 +255,12 @@ export default function RestaurantProfilePage() {
             variants={container}
             initial="hidden"
             animate={isLoaded ? "show" : "hidden"}
-            className={`${darkMode ? "bg-gray-700" : "bg-amber-50"} rounded-lg p-4 mb-6 transition-colors duration-300`}
+            className={`${darkMode ? "bg-[#333]" : "bg-[#F2E8D6]"} rounded-lg p-4 mb-6 transition-colors duration-300`}
           >
-            <motion.h2 variants={item} className={`text-sm font-medium mb-4 ${darkMode ? "text-gray-200" : ""}`}>
+            <motion.h2
+              variants={item}
+              className={`text-sm font-medium mb-4 ${darkMode ? "text-gray-200" : "text-[#6b4b10]"}`}
+            >
               Performans İstatistikleri
             </motion.h2>
 
@@ -246,10 +268,10 @@ export default function RestaurantProfilePage() {
               <motion.div
                 variants={item}
                 whileHover={{ y: -5 }}
-                className={`${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
+                className={`${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
               >
-                <Award className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-amber-500"}`} />
-                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-amber-800"}`}>
+                <Award className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#6b4b10]"}`}>
                   {restaurant.stats.monthlyOrders}
                 </div>
                 <div className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Aylık Sipariş</div>
@@ -258,10 +280,10 @@ export default function RestaurantProfilePage() {
               <motion.div
                 variants={item}
                 whileHover={{ y: -5 }}
-                className={`${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
+                className={`${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
               >
-                <TrendingUp className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-amber-500"}`} />
-                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-amber-800"}`}>
+                <TrendingUp className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#6b4b10]"}`}>
                   {restaurant.stats.onTimeDelivery}
                 </div>
                 <div className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Zamanında Teslimat</div>
@@ -270,10 +292,10 @@ export default function RestaurantProfilePage() {
               <motion.div
                 variants={item}
                 whileHover={{ y: -5 }}
-                className={`${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
+                className={`${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
               >
-                <Clock3 className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-amber-500"}`} />
-                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-amber-800"}`}>
+                <Clock3 className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#6b4b10]"}`}>
                   {restaurant.stats.avgPrepTime}
                 </div>
                 <div className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Ort. Hazırlama Süresi</div>
@@ -286,10 +308,10 @@ export default function RestaurantProfilePage() {
             variants={container}
             initial="hidden"
             animate={isLoaded ? "show" : "hidden"}
-            className="space-y-4 mb-6"
+            className="space-y-5 mb-8 w-full max-w-4xl mx-auto"
           >
             <motion.div variants={item}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
                 Restoran Adı
               </label>
               <div className="flex group">
@@ -298,71 +320,77 @@ export default function RestaurantProfilePage() {
                   value={editableData.name}
                   onChange={(e) => setEditableData({ ...editableData, name: e.target.value })}
                   className={`w-full ${
-                    darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"
-                  } border rounded-md py-2 px-3 text-sm transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
+                    darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-[#F2E8D6] border-amber-100"
+                  } border rounded-md py-3 px-4 text-sm transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
                 />
               </div>
             </motion.div>
 
             <motion.div variants={item}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Telefon</label>
+              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
+                Telefon
+              </label>
               <div className="flex group">
                 <div
                   className={`flex items-center ${
-                    darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"
-                  } border rounded-l-md py-2 px-3`}
+                    darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"
+                  } border rounded-l-md py-3 px-4`}
                 >
-                  <Phone className={`h-4 w-4 ${darkMode ? "text-gray-400" : "text-amber-500"} mr-2`} />
+                  <Phone className={`h-4 w-4 ${darkMode ? "text-gray-400" : "text-[#6b4b10]"} mr-2`} />
                 </div>
                 <input
                   type="text"
                   value={editableData.phone}
                   onChange={(e) => setEditableData({ ...editableData, phone: e.target.value })}
                   className={`w-full ${
-                    darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"
-                  } border-y border-r py-2 px-3 text-sm rounded-r-md transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
+                    darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-[#F2E8D6] border-amber-100"
+                  } border-y border-r py-3 px-4 text-sm rounded-r-md transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
                 />
               </div>
             </motion.div>
 
             <motion.div variants={item}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Email</label>
+              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
+                Email
+              </label>
               <div className="flex group">
                 <div
                   className={`flex items-center ${
-                    darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"
-                  } border rounded-l-md py-2 px-3`}
+                    darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"
+                  } border rounded-l-md py-3 px-4`}
                 >
-                  <Mail className={`h-4 w-4 ${darkMode ? "text-gray-400" : "text-amber-500"} mr-2`} />
+                  <Mail className={`h-4 w-4 ${darkMode ? "text-gray-400" : "text-[#6b4b10]"} mr-2`} />
                 </div>
                 <input
                   type="email"
                   value={editableData.email}
                   onChange={(e) => setEditableData({ ...editableData, email: e.target.value })}
                   className={`w-full ${
-                    darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"
-                  } border-y border-r py-2 px-3 text-sm rounded-r-md transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
+                    darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-[#F2E8D6] border-amber-100"
+                  } border-y border-r py-3 px-4 text-sm rounded-r-md transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
                 />
               </div>
             </motion.div>
 
             <motion.div variants={item}>
-              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>Adres</label>
+              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
+                Adres
+              </label>
               <div className="flex group">
                 <div
                   className={`flex items-center ${
-                    darkMode ? "bg-gray-700 border-gray-600" : "bg-amber-50 border-amber-100"
-                  } border rounded-l-md py-2 px-3`}
+                    darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"
+                  } border rounded-l-md py-3 px-4`}
                 >
-                  <MapPin className={`h-4 w-4 ${darkMode ? "text-gray-400" : "text-amber-500"} mr-2`} />
+                  <MapPin className={`h-4 w-4 ${darkMode ? "text-gray-400" : "text-[#6b4b10]"} mr-2`} />
                 </div>
                 <input
                   type="text"
                   value={editableData.address}
                   onChange={(e) => setEditableData({ ...editableData, address: e.target.value })}
                   className={`w-full ${
-                    darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"
-                  } border-y border-r py-2 px-3 text-sm rounded-r-md transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
+                    darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-[#F2E8D6] border-amber-100"
+                  } border-y border-r py-3 px-4 text-sm rounded-r-md transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
                 />
               </div>
             </motion.div>
@@ -383,26 +411,31 @@ export default function RestaurantProfilePage() {
           </motion.div>
 
           {/* Working Hours */}
-          <motion.div variants={container} initial="hidden" animate={isLoaded ? "show" : "hidden"} className="mb-6">
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate={isLoaded ? "show" : "hidden"}
+            className="mb-8 w-full max-w-4xl mx-auto"
+          >
             <motion.h3
               variants={item}
-              className={`text-lg font-medium ${darkMode ? "text-amber-400" : "text-amber-800"} mb-3 flex items-center`}
+              className={`text-lg font-medium ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} mb-3 flex items-center`}
             >
               <Clock className="h-5 w-5 mr-2" /> Çalışma Saatleri
             </motion.h3>
             <motion.div
               variants={item}
-              className={`grid grid-cols-2 md:grid-cols-4 gap-3 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+              className={`grid grid-cols-2 md:grid-cols-4 gap-3 ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}
             >
               {Object.entries(editableData.workingHours).map(([day, hours]) => (
                 <div
                   key={day}
-                  className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-amber-100"} border rounded-md p-3 text-sm`}
+                  className={`${darkMode ? "bg-[#2c2c2c] border-gray-700" : "bg-white border-amber-100"} border rounded-md p-3 text-sm`}
                 >
                   <div className="font-medium mb-1">{day}</div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Açılış</label>
+                      <label className={`text-xs ${darkMode ? "text-gray-400" : "text-[#6b4b10]"}`}>Açılış</label>
                       <input
                         type="time"
                         value={hours.open}
@@ -412,12 +445,12 @@ export default function RestaurantProfilePage() {
                           setEditableData({ ...editableData, workingHours: updatedHours })
                         }}
                         className={`w-full ${
-                          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-amber-100"
-                        } border rounded-md py-1 px-1 text-xs transition-colors duration-200 focus:ring-1 focus:ring-amber-500 focus:border-amber-500`}
+                          darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-white border-amber-100"
+                        } border rounded-md py-2 px-2 text-xs transition-colors duration-200 focus:ring-1 focus:ring-amber-500 focus:border-amber-500`}
                       />
                     </div>
                     <div>
-                      <label className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Kapanış</label>
+                      <label className={`text-xs ${darkMode ? "text-gray-400" : "text-[#6b4b10]"}`}>Kapanış</label>
                       <input
                         type="time"
                         value={hours.close}
@@ -427,8 +460,8 @@ export default function RestaurantProfilePage() {
                           setEditableData({ ...editableData, workingHours: updatedHours })
                         }}
                         className={`w-full ${
-                          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-amber-100"
-                        } border rounded-md py-1 px-1 text-xs transition-colors duration-200 focus:ring-1 focus:ring-amber-500 focus:border-amber-500`}
+                          darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-white border-amber-100"
+                        } border rounded-md py-2 px-2 text-xs transition-colors duration-200 focus:ring-1 focus:ring-amber-500 focus:border-amber-500`}
                       />
                     </div>
                   </div>
@@ -475,121 +508,46 @@ export default function RestaurantProfilePage() {
       </div>
 
       {/* Footer */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-amber-50 border-amber-200"} p-6 border-t transition-colors duration-300`}
+      <footer
+        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
       >
-        <div className="flex justify-center mb-4">
-          <motion.div
-            whileHover={{ rotate: 10, scale: 1.1 }}
-            className={`rounded-full ${darkMode ? "bg-gray-700" : "bg-white"} p-2 w-16 h-16 flex items-center justify-center shadow-md transition-colors duration-200`}
-          >
-            <div className="relative w-12 h-12 flex flex-col items-center">
-              <img
-                src={restaurant.profileImage || "/image1.png"}
-                alt={`${restaurant.name} logo`}
-                className="w-full h-full object-cover rounded-full"
-              />
-              <div className={`text-center text-[8px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                FOOD DELIVERY
-              </div>
-            </div>
-          </motion.div>
-        </div>
-        <div className="flex justify-center gap-8">
-          <motion.a
-            whileHover={{ y: -5, scale: 1.2 }}
+        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
+
+        <div className="flex gap-6">
+          <a
             href="https://twitter.com"
             target="_blank"
             rel="noopener noreferrer"
-            className={`${darkMode ? "text-gray-400 hover:text-purple-400" : "text-gray-600 hover:text-amber-600"} transition-colors duration-200`}
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-            </svg>
-          </motion.a>
-          <motion.a
-            whileHover={{ y: -5, scale: 1.2 }}
+            <Twitter size={24} />
+          </a>
+          <a
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className={`${darkMode ? "text-gray-400 hover:text-purple-400" : "text-gray-600 hover:text-amber-600"} transition-colors duration-200`}
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-            </svg>
-          </motion.a>
-          <motion.a
-            whileHover={{ y: -5, scale: 1.2 }}
+            <Instagram size={24} />
+          </a>
+          <a
             href="https://youtube.com"
             target="_blank"
             rel="noopener noreferrer"
-            className={`${darkMode ? "text-gray-400 hover:text-purple-400" : "text-gray-600 hover:text-amber-600"} transition-colors duration-200`}
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-              <path d="m10 15 5-3-5-3z" />
-            </svg>
-          </motion.a>
-          <motion.a
-            whileHover={{ y: -5, scale: 1.2 }}
+            <Youtube size={24} />
+          </a>
+          <a
             href="https://linkedin.com"
             target="_blank"
             rel="noopener noreferrer"
-            className={`${darkMode ? "text-gray-400 hover:text-purple-400" : "text-gray-600 hover:text-amber-600"} transition-colors duration-200`}
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-              <rect width="4" height="12" x="2" y="9" />
-              <circle cx="4" cy="4" r="2" />
-            </svg>
-          </motion.a>
+            <Linkedin size={24} />
+          </a>
         </div>
-      </motion.footer>
+      </footer>
 
       {/* Alertify notification */}
       {showAlert && (
