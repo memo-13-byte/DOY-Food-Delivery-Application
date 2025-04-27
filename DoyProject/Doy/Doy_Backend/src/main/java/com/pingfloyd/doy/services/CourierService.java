@@ -32,6 +32,7 @@ public class CourierService {
     }
 
     public Courier SetAvailability(String email,Boolean availability){
+
         Optional<Courier> courier = courierRepository.findByEmail(email);
         if(courier.isEmpty()){
             throw new UserNotFoundException("Courier with given email doesn't exist!");
