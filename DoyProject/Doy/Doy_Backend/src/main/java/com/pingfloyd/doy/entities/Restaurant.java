@@ -14,9 +14,13 @@ import java.util.Set;
 @Setter
 public class Restaurant {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "restaurant_id")
     private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "owner_id")
+    private RestaurantOwner restaurantOwner;
 
     @NotNull
     @Column(name = "restaurant_name", nullable = false, length = 100)

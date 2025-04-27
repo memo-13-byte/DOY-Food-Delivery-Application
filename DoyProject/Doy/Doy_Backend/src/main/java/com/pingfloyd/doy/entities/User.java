@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "app_user") //email için index?
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)

@@ -6,9 +6,9 @@ import com.pingfloyd.doy.services.RestaurantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/restaurant")
@@ -43,5 +43,13 @@ public class RestaurantController implements IRestaurantController {
     //@PreAuthorize("hasAuthority('ADMIN')") // only admins can delete
     public ResponseEntity<DtoRestaurant> deleteRestaurant(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(restaurantService.deleteRestaurant(id));
+    }
+
+
+    @Override
+    @GetMapping("/get-all")
+    //@PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<DtoRestaurant>> getAllRestaurants() {
+        return ResponseEntity.ok(restaurantService.gelAllRestaurants());
     }
 }
