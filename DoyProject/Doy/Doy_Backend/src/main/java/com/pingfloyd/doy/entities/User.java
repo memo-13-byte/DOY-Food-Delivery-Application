@@ -30,11 +30,11 @@ public abstract class User implements UserDetails {
     private String firstname;
 
     @NotNull
-    @Column(name = "last_Name", length = 50, nullable = false)
+    @Column(name = "last_name", length = 50, nullable = false)
     private String lastname;
 
     @NotNull
-    @Column(name = "email", length = 100, nullable = false)
+    @Column(name = "email", length = 100, unique = true, nullable = false)
     private String email;
 
     @NotNull
