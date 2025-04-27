@@ -1,9 +1,22 @@
 import React from "react";
 import { BsMoon } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // ✨ location ekledik
 
 const AdminNavbar = ({ darkMode, setDarkMode }) => {
     const navigate = useNavigate();
+    const location = useLocation(); // ✨ aktif route bilgisini aldık
+
+    const getButtonStyle = (path) => ({
+        backgroundColor: location.pathname === path ? "#C8A97E" : "transparent",
+        color: location.pathname === path ? "#000" : "#fff",
+        fontWeight: "bold",
+        border: "none",
+        cursor: "pointer",
+        fontSize: "0.9rem",
+        borderRadius: "6px",
+        padding: "0.3rem 0.6rem",
+        transition: "all 0.3s ease"
+    });
 
     return (
         <div style={{
@@ -23,52 +36,22 @@ const AdminNavbar = ({ darkMode, setDarkMode }) => {
 
             {/* Menü */}
             <div style={{ display: "flex", gap: "1rem" }}>
-                <button style={{
-                    backgroundColor: "transparent",
-                    color: "white",
-                    fontWeight: "bold",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "0.9rem"
-                }}
+                <button style={getButtonStyle("/admin/account-management")}
                         onClick={() => navigate("/admin/account-management")}
                 >
                     Account Management
                 </button>
-                <button style={{
-                    backgroundColor: "transparent",
-                    color: "white",
-                    fontWeight: "bold",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "0.9rem"
-                }}
+                <button style={getButtonStyle("/admin/pending-registrations")}
                         onClick={() => navigate("/admin/pending-registrations")}
                 >
                     Pending Registrations
                 </button>
-                <button style={{
-                    backgroundColor: "#C8A97E",
-                    color: "#000",
-                    fontWeight: "bold",
-                    border: "none",
-                    cursor: "pointer",
-                    borderRadius: "6px",
-                    padding: "0.3rem 0.6rem",
-                    fontSize: "0.9rem"
-                }}
+                <button style={getButtonStyle("/admin/complaints")}
                         onClick={() => navigate("/admin/complaints")}
                 >
                     User Complaints
                 </button>
-                <button style={{
-                    backgroundColor: "transparent",
-                    color: "white",
-                    fontWeight: "bold",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "0.9rem"
-                }}
+                <button style={getButtonStyle("/admin/platform-configurations")}
                         onClick={() => navigate("/admin/platform-configurations")}
                 >
                     Platform Configurations
