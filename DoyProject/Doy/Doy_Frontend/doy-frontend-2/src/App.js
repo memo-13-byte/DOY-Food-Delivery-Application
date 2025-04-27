@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminComplaintsPage from './pages/AdminComplaintsPage';
 import AdminAccountManagementPage from './pages/AdminAccountManagementPage';
-import PendingRegistrationsPage from './pages/PendingRegistrationsPage'; // ✨ yeni import
+import PendingRegistrationsPage from './pages/PendingRegistrationsPage';
+import PlatformConfigurationsPage from './pages/PlatformConfigurationsPage'; // ✨ yeni import
 
 function App() {
     return (
@@ -11,8 +12,8 @@ function App() {
                 <Routes>
                     <Route path="/admin/complaints" element={<AdminComplaintsPage />} />
                     <Route path="/admin/account-management" element={<AdminAccountManagementPage />} />
-                    <Route path="/admin/pending-registrations" element={<PendingRegistrationsPage />} /> {/* ✨ yeni route */}
-                    {/* İleride diğer admin/user route'lar da eklenebilir */}
+                    <Route path="/admin/pending-registrations" element={<PendingRegistrationsPage />} />
+                    <Route path="/admin/platform-configurations" element={<PlatformConfigurationsPage />} /> {/* ✨ yeni route */}
                 </Routes>
             </div>
         </Router>
