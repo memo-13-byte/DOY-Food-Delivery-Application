@@ -5,7 +5,6 @@ import { FaStar, FaRegStar } from "react-icons/fa"
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa"
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6"
 import { BsMoon } from "react-icons/bs"
-import doyLogo from "../assets/doylogo.jpeg"
 // Changed from wouter to react-router-dom
 import { useNavigate, useLocation } from "react-router-dom"
 import { FaLocationDot } from "react-icons/fa6"
@@ -209,7 +208,7 @@ const Home = () => {
         }}
       >
         {/* Logo */}
-        <img src={doyLogo || "/placeholder.svg"} alt="logo" style={{ height: "180px", borderRadius: "50%" }} />
+        <img src={"/image1.png" || "/placeholder.svg"} alt="logo" style={{ height: "180px", borderRadius: "50%" }} />
 
         {/* Kutu ve yazıyı saran div */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1 }}>
@@ -536,7 +535,7 @@ const Home = () => {
         }}
       >
         <img
-          src={doyLogo || "/placeholder.svg"}
+          src={"image1.png" || "/placeholder.svg"}
           alt="Logo alt"
           style={{
             height: "50px",
