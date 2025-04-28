@@ -3,8 +3,21 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import { Sun, Moon, ChevronLeft, Save, X, ImageIcon, CheckCircle, Loader2 } from "lucide-react"
-import { Toggle } from "../components/ui/toggle"
+import {
+  Sun,
+  Moon,
+  ChevronLeft,
+  Save,
+  X,
+  ImageIcon,
+  CheckCircle,
+  Loader2,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Upload,
+} from "lucide-react"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Textarea } from "../components/ui/textarea"
@@ -22,6 +35,7 @@ export default function UpdateItemPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [imagePreview, setImagePreview] = useState("/placeholder.svg?height=200&width=200")
+  const [isDragging, setIsDragging] = useState(false)
 
   // Ref for confetti container
   const confettiContainerRef = useRef(null)
@@ -122,6 +136,49 @@ export default function UpdateItemPage() {
         setImagePreview(reader.result)
       }
       reader.readAsDataURL(file)
+    }
+  }
+
+  // Handle drag over for image upload
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  // Handle drag leave for image upload
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }
+
+  // Handle drop for image upload
+  const handleDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+
+    const files = e.dataTransfer.files
+    if (files && files.length > 0) {
+      const file = files[0]
+      // Sadece resim dosyalarını kabul et
+      if (file.type.startsWith("image/")) {
+        setFormData((prev) => ({
+          ...prev,
+          image: file,
+        }))
+
+        // Create preview
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          setImagePreview(reader.result)
+        }
+        reader.readAsDataURL(file)
+      } else {
+        // Resim olmayan dosyalar için uyarı
+        alert("Lütfen sadece resim dosyaları yükleyin (JPG, PNG, GIF, vb.)")
+      }
     }
   }
 
@@ -236,93 +293,47 @@ export default function UpdateItemPage() {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-amber-50 to-amber-100"}`}
+      className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"}`}
     >
       {/* Header */}
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 100 }}
-        className={`sticky top-0 z-10 flex items-center justify-between p-4 shadow-md ${darkMode ? "bg-gray-800" : "border-amber-200 bg-[#47300A]"}`}
+        className={`sticky top-0 z-10 flex items-center justify-between px-6 py-5 shadow-lg ${darkMode ? "bg-[#333]" : "bg-[#47300A]"}`}
       >
-        <motion.div
-          initial={{ rotate: -5 }}
-          animate={{
-            rotate: 0,
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: 0,
-            ease: "easeInOut",
-          }}
-          whileHover={{
-            scale: 1.1,
-            rotate: [0, -5, 5, -5, 0],
-            transition: { duration: 0.5 },
-          }}
-          whileTap={{ scale: 0.95 }}
-          className="text-xl font-bold text-white relative"
-        >
+        <motion.div whileHover={{ scale: 1.05 }} className="text-2xl font-bold text-white">
           <span className="flex items-center gap-2">
-            <motion.div
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="relative"
-            >
-              <motion.div
-                animate={{
-                  boxShadow: [
-                    "0px 0px 0px rgba(255,255,255,0)",
-                    "0px 0px 8px rgba(255,255,255,0.5)",
-                    "0px 0px 0px rgba(255,255,255,0)",
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "reverse",
-                }}
-                className="rounded-full"
-              >
-                <img src="/image1.png" alt="Doy Logo" className="h-8 w-8 rounded-full bg-white p-1 relative z-10" />
-              </motion.div>
-            </motion.div>
-            <motion.span
-              initial={{ x: -10, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4, type: "spring" }}
-              className="relative"
-            >
-              Doy!
-              <motion.span
-                className="absolute -top-1 -right-2 text-xs text-amber-300"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.8, type: "spring", stiffness: 300 }}
-              >
-                ✨
-              </motion.span>
-            </motion.span>
+            <img src="/image1.png" alt="Doy Logo" className="h-10 w-10 rounded-full bg-white p-1" />
+            Doy!
           </span>
         </motion.div>
-        <div className="flex items-center gap-3">
-          <Toggle
-            variant="outline"
-            size="sm"
-            aria-label="Toggle theme"
-            pressed={darkMode}
-            onPressedChange={setDarkMode}
-            className={`border ${darkMode ? "border-gray-600 bg-gray-700" : "border-amber-400 bg-amber-200"}`}
-          >
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <motion.button
+              onClick={() => setDarkMode(!darkMode)}
+              className="relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
+              style={{
+                backgroundColor: darkMode ? "#6c4c9c" : "#e2e8f0",
+                transition: "background-color 0.3s",
+              }}
+            >
+              <span className="sr-only">Toggle dark mode</span>
+              <motion.span
+                className="inline-block h-5 w-5 rounded-full bg-white shadow-lg"
+                animate={{
+                  x: darkMode ? 24 : 3,
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              />
+            </motion.button>
             {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
-          </Toggle>
+          </div>
         </div>
       </motion.header>
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-3xl px-4 py-8">
+      <main className="container mx-auto max-w-3xl px-6 py-8">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -330,17 +341,24 @@ export default function UpdateItemPage() {
           className="mb-6 flex items-center gap-2"
         >
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, x: -3 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate(`/restaurants/manage/${restaurantId}`)}
             className={`flex items-center gap-1 rounded-full px-4 py-2 ${
-              darkMode ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-white text-amber-800 hover:bg-amber-50"
+              darkMode ? "bg-[#2c2c2c] text-white hover:bg-[#333]" : "bg-white text-[#47300A] hover:bg-amber-50"
             }`}
           >
             <ChevronLeft className="h-4 w-4" />
             Geri Dön
           </motion.button>
-          <h1 className="text-2xl font-bold">{isEditMode ? "Ürün Düzenle" : "Yeni Ürün Ekle"}</h1>
+          <motion.h1
+            className="text-2xl font-bold"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            {isEditMode ? "Ürün Düzenle" : "Yeni Ürün Ekle"}
+          </motion.h1>
         </motion.div>
 
         {/* Form Card */}
@@ -348,21 +366,58 @@ export default function UpdateItemPage() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className={`rounded-xl p-6 shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}
+          whileHover={{ boxShadow: darkMode ? "0 8px 30px rgba(0, 0, 0, 0.3)" : "0 8px 30px rgba(108, 76, 156, 0.15)" }}
+          className={`rounded-2xl p-6 shadow-md ${darkMode ? "bg-[#2c2c2c]" : "bg-white"}`}
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Image Upload */}
-            <div className="flex flex-col items-center gap-4 sm:flex-row">
-              <div className="relative h-40 w-40 overflow-hidden rounded-lg">
-                <img
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-col items-center gap-4 sm:flex-row"
+            >
+              <motion.div
+                className={`relative h-40 w-40 overflow-hidden rounded-xl border-2 transition-all duration-300 ${
+                  isDragging
+                    ? darkMode
+                      ? "border-[#6c4c9c] bg-[#6c4c9c]/20"
+                      : "border-[#6c4c9c] bg-[#6c4c9c]/10"
+                    : "border-transparent"
+                }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                whileHover={{ scale: 1.03 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {isDragging && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 z-10">
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className={`text-white text-center p-2`}
+                    >
+                      <Upload className="h-8 w-8 mx-auto mb-1" />
+                      <span className="text-sm font-medium">Bırak</span>
+                    </motion.div>
+                  </div>
+                )}
+                <motion.img
+                  key={imagePreview}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
                   src={imagePreview || "/placeholder.svg"}
                   alt="Ürün Görseli"
                   className="h-full w-full object-cover"
                 />
-                <label
+                <motion.label
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   htmlFor="image-upload"
                   className={`absolute bottom-2 right-2 cursor-pointer rounded-full p-2 ${
-                    darkMode ? "bg-gray-700 text-amber-300" : "bg-amber-100 text-amber-600"
+                    darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"
                   }`}
                 >
                   <ImageIcon className="h-5 w-5" />
@@ -373,56 +428,76 @@ export default function UpdateItemPage() {
                     className="hidden"
                     onChange={handleImageChange}
                   />
-                </label>
-              </div>
+                </motion.label>
+                <div className="absolute -bottom-2 left-0 right-0 text-center">
+                  <span className={`text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                    Resmi Sürükle veya Tıkla
+                  </span>
+                </div>
+              </motion.div>
               <div className="flex-1 space-y-2">
                 <h3 className="font-medium">Ürün Görseli</h3>
                 <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                   Ürün için bir görsel yükleyin. Önerilen boyut: 500x500 piksel.
                 </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => document.getElementById("image-upload").click()}
-                  className={`w-full ${
-                    darkMode
-                      ? "border-gray-600 bg-gray-700 text-white hover:bg-gray-600"
-                      : "border-amber-200 bg-amber-100 text-amber-800 hover:bg-amber-200"
-                  }`}
-                >
-                  Görsel Seç
-                </Button>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById("image-upload").click()}
+                    className={`w-full ${
+                      darkMode
+                        ? "border-gray-600 bg-[#333] text-white hover:bg-[#444]"
+                        : "border-[#6c4c9c]/20 bg-[#6c4c9c]/10 text-[#6c4c9c] hover:bg-[#6c4c9c]/20"
+                    }`}
+                  >
+                    Görsel Seç
+                  </Button>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
 
             {/* menuItemType Selection */}
-            <div className="space-y-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="space-y-2"
+            >
               <Label htmlFor="menuItemType">Kategori</Label>
-              <Select
-                value={formData.menuItemType}
-                onValueChange={handlemenuItemTypeChange}
-                disabled={isLoading || isSuccess}
-              >
-                <SelectTrigger
-                  id="menuItemType"
-                  className={`w-full ${
-                    darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
-                  }`}
+              <div>
+                <Select
+                  value={formData.menuItemType}
+                  onValueChange={handlemenuItemTypeChange}
+                  disabled={isLoading || isSuccess}
                 >
-                  <SelectValue placeholder="Kategori seçin" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Menüler</SelectItem>
-                  <SelectItem value="2">Yiyecek Seçenekleri</SelectItem>
-                  <SelectItem value="3">İçecek Seçenekleri</SelectItem>
-                  <SelectItem value="4">Ek Seçenekleri</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                  <SelectTrigger
+                    id="menuItemType"
+                    className={`w-full ${darkMode ? "border-gray-600 bg-[#333] text-white" : "border-[#6c4c9c]/20 bg-white text-gray-800"}`}
+                  >
+                    <SelectValue placeholder="Kategori seçin" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">Menüler</SelectItem>
+                    <SelectItem value="2">Yiyecek Seçenekleri</SelectItem>
+                    <SelectItem value="3">İçecek Seçenekleri</SelectItem>
+                    <SelectItem value="4">Ek Seçenekleri</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </motion.div>
 
             {/* Name Input */}
-            <div className="space-y-2">
-              <Label htmlFor="name">Ürün Adı</Label>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="space-y-2"
+            >
+              <Label htmlFor="name" className="flex items-center">
+                Ürün Adı
+                <span className="text-red-500 ml-1">*</span>
+              </Label>
               <Input
                 id="name"
                 name="name"
@@ -431,14 +506,19 @@ export default function UpdateItemPage() {
                 placeholder="Ürün adını girin"
                 required
                 disabled={isLoading || isSuccess}
-                className={`w-full ${
-                  darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                className={`w-full rounded-xl ${
+                  darkMode ? "border-gray-600 bg-[#333] text-white" : "border-[#6c4c9c]/20 bg-white text-gray-800"
                 }`}
               />
-            </div>
+            </motion.div>
 
             {/* Description Input */}
-            <div className="space-y-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="space-y-2"
+            >
               <Label htmlFor="description">Açıklama</Label>
               <Textarea
                 id="description"
@@ -448,15 +528,23 @@ export default function UpdateItemPage() {
                 placeholder="Ürün açıklamasını girin"
                 rows={3}
                 disabled={isLoading || isSuccess}
-                className={`w-full ${
-                  darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                className={`w-full rounded-xl ${
+                  darkMode ? "border-gray-600 bg-[#333] text-white" : "border-[#6c4c9c]/20 bg-white text-gray-800"
                 }`}
               />
-            </div>
+            </motion.div>
 
             {/* Price Input */}
-            <div className="space-y-2">
-              <Label htmlFor="price">Fiyat (TL)</Label>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="space-y-2"
+            >
+              <Label htmlFor="price" className="flex items-center">
+                Fiyat (TL)
+                <span className="text-red-500 ml-1">*</span>
+              </Label>
               <Input
                 id="price"
                 name="price"
@@ -468,24 +556,28 @@ export default function UpdateItemPage() {
                 min="0"
                 step="0.01"
                 disabled={isLoading || isSuccess}
-                className={`w-full ${
-                  darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-amber-200 bg-white text-gray-800"
+                className={`w-full rounded-xl ${
+                  darkMode ? "border-gray-600 bg-[#333] text-white" : "border-[#6c4c9c]/20 bg-white text-gray-800"
                 }`}
               />
-            </div>
+            </motion.div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+              className="flex gap-3 pt-4"
+            >
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400 }}
                 type="button"
                 onClick={() => navigate(`/restaurants/manage/${restaurantId}`)}
                 disabled={isLoading || isSuccess}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-medium shadow-md transition-colors ${
-                  darkMode
-                    ? "bg-gray-700 text-white hover:bg-gray-600"
-                    : "bg-amber-100 text-amber-800 hover:bg-amber-200"
+                  darkMode ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-[#7A0000] text-white hover:bg-[#6A0000]"
                 } ${isLoading || isSuccess ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <X className="h-5 w-5" />
@@ -494,8 +586,9 @@ export default function UpdateItemPage() {
 
               <div className="relative flex-1" ref={confettiContainerRef}>
                 <motion.button
-                  whileHover={!isLoading && !isSuccess ? { scale: 1.02 } : {}}
-                  whileTap={!isLoading && !isSuccess ? { scale: 0.98 } : {}}
+                  whileHover={!isLoading && !isSuccess ? { scale: 1.05 } : {}}
+                  whileTap={!isLoading && !isSuccess ? { scale: 0.95 } : {}}
+                  transition={{ type: "spring", stiffness: 400 }}
                   type="submit"
                   disabled={isLoading || isSuccess}
                   className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 font-medium shadow-md transition-all duration-300 ${
@@ -504,8 +597,8 @@ export default function UpdateItemPage() {
                         ? "bg-green-600 text-white"
                         : "bg-green-500 text-white"
                       : darkMode
-                        ? "bg-amber-600 text-white hover:bg-amber-500"
-                        : "bg-amber-500 text-white hover:bg-amber-400"
+                        ? "bg-[#6c4c9c] text-white hover:bg-[#5d3d8d]"
+                        : "bg-[#6c4c9c] text-white hover:bg-[#5d3d8d]"
                   } ${isSuccess ? "scale-105" : ""}`}
                 >
                   <AnimatePresence mode="wait">
@@ -576,26 +669,113 @@ export default function UpdateItemPage() {
                   </AnimatePresence>
                 </motion.button>
               </div>
-            </div>
+            </motion.div>
           </form>
         </motion.div>
       </main>
 
       {/* Footer */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className={`mt-8 border-t ${
-          darkMode ? "border-gray-700 bg-gray-800" : "border-amber-200 bg-[#47300A] from-amber-800 to-amber-600"
-        } py-6`}
+      <footer
+        style={{
+          marginTop: "2rem",
+          padding: "2rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
+          transition: "all 0.3s ease-in-out",
+        }}
       >
-        <div className="container mx-auto text-center">
-          <p className={`text-sm ${darkMode ? "text-gray-400" : "text-amber-200"}`}>
-            © {new Date().getFullYear()} Doy! Tüm hakları saklıdır.
-          </p>
+        <img
+          src="/image1.png"
+          alt="Logo alt"
+          style={{
+            height: "50px",
+            width: "50px",
+            borderRadius: "50%",
+            objectFit: "cover",
+          }}
+        />
+
+        <div style={{ display: "flex", gap: "1.5rem" }}>
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              transition: "background-color 0.3s",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="icon-link"
+          >
+            <Twitter size={24} />
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              transition: "background-color 0.3s",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="icon-link"
+          >
+            <Instagram size={24} />
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              transition: "background-color 0.3s",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="icon-link"
+          >
+            <Youtube size={24} />
+          </a>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              transition: "background-color 0.3s",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="icon-link"
+          >
+            <Linkedin size={24} />
+          </a>
         </div>
-      </motion.footer>
+      </footer>
     </div>
   )
 }

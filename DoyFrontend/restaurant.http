@@ -1,0 +1,132 @@
+@baseUrl = http://localhost:8080/api/restaurant/post
+
+### Tüm restoranları gönder
+# İlk restoran
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+  "restaurantName": "Pizza City",
+  "restaurantPhone": "05550000001",
+  "restaurantCategory": "PIZZA",
+  "rating": 4.5,
+  "minOrderPrice": 100
+}
+
+### İkinci restoran
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+  "restaurantName": "BurgerX",
+  "restaurantPhone": "05550000002",
+  "restaurantCategory": "BURGER",
+  "rating": 4.2,
+  "minOrderPrice": 80
+}
+
+# Diğer restoranlar için benzer istekleri ekleyin...
+
+### Üçüncü restoran
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "restaurantName": "Sweet Heaven",
+    "restaurantPhone": "05550000003",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.8,
+    "minOrderPrice": 60
+}
+
+### Dördüncü restoran
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "restaurantName": "Sushi World",
+    "restaurantPhone": "05550000004",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.1,
+    "minOrderPrice": 120
+}
+
+### Beşinci restoran
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "restaurantName": "Taco Fiesta",
+    "restaurantPhone": "05550000005",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.6,
+    "minOrderPrice": 90
+}
+
+### Altıncı restoran
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "restaurantName": "Pasta Palace",
+    "restaurantPhone": "05550000006",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.3,
+    "minOrderPrice": 75
+}
+
+### Yedinci restoran
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "restaurantName": "Grill Master",
+    "restaurantPhone": "05550000007",
+    "restaurantCategory": "KEBAB",
+    "rating": 4.7,
+    "minOrderPrice": 110
+}
+
+### Sekizinci restoran
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "restaurantName": "Vegan Vibes",
+    "restaurantPhone": "05550000008",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.4,
+    "minOrderPrice": 85
+}

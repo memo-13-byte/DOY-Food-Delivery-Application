@@ -2,67 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 44 35% 93%;
-    --foreground: 38 49% 26%;
+/* Renk değişkenlerini güncelle */
+:root {
+  --background: 43, 40%, 89%; /* #F2E8D6 */
+  --foreground: 0, 0%, 0%;
 
-    --card: 46 44% 94%;
-    --card-foreground: 38 49% 26%;
+  --primary: 35, 60%, 50%;
+  --primary-foreground: 35, 40%, 15%;
 
-    --popover: 46 44% 94%;
-    --popover-foreground: 38 49% 26%;
+  --secondary: 35, 40%, 90%;
+  --secondary-foreground: 35, 40%, 15%;
 
-    --primary: 42 54% 65%;
-    --primary-foreground: 38 49% 9%;
+  --accent: 120, 55%, 36%;
+  --accent-foreground: 0, 0%, 100%;
 
-    --secondary: 38 26% 27%;
-    --secondary-foreground: 46 44% 94%;
+  --muted: 35, 20%, 90%;
+  --muted-foreground: 35, 10%, 40%;
 
-    --muted: 38 8% 85%;
-    --muted-foreground: 38 30% 35%;
+  --card: 0, 0%, 100%;
+  --card-foreground: 35, 40%, 15%;
 
-    --accent: 38 26% 27%;
-    --accent-foreground: 46 44% 94%;
+  --border: 35, 30%, 80%;
+  --input: 35, 30%, 80%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 38 49% 96%;
+  --destructive: 0, 84%, 60%;
+  --destructive-foreground: 0, 0%, 100%;
 
-    --border: 38 12% 80%;
-    --input: 38 12% 80%;
-    --ring: 42 54% 65%;
+  --ring: 35, 60%, 50%;
 
-    --radius: 0.5rem;
-  }
+  /* Chart colors */
+  --chart-1: 35, 60%, 50%;
+  --chart-2: 120, 55%, 36%;
+  --chart-3: 0, 84%, 60%;
+  --chart-4: 220, 70%, 50%;
+  --chart-5: 270, 60%, 50%;
 
-  .dark {
-    --background: 38 30% 12%;
-    --foreground: 46 44% 94%;
+  /* Sidebar colors */
+  --sidebar-background: 35, 40%, 15%;
+  --sidebar-foreground: 35, 20%, 90%;
+  --sidebar-primary: 35, 60%, 50%;
+  --sidebar-primary-foreground: 0, 0%, 100%;
+  --sidebar-accent: 120, 55%, 36%;
+  --sidebar-accent-foreground: 0, 0%, 100%;
+  --sidebar-border: 35, 30%, 25%;
+  --sidebar-ring: 35, 60%, 50%;
 
-    --card: 38 28% 16%;
-    --card-foreground: 46 44% 94%;
+  --radius: 0.5rem;
+}
 
-    --popover: 38 28% 16%;
-    --popover-foreground: 46 44% 94%;
+.dark {
+  --background: 0, 0%, 11%; /* #1c1c1c */
+  --foreground: 0, 0%, 100%;
 
-    --primary: 42 54% 65%;
-    --primary-foreground: 38 49% 9%;
+  --primary: 35, 60%, 50%;
+  --primary-foreground: 0, 0%, 100%;
 
-    --secondary: 38 26% 27%;
-    --secondary-foreground: 46 44% 94%;
+  --secondary: 0, 0%, 20%; /* #333333 */
+  --secondary-foreground: 35, 20%, 90%;
 
-    --muted: 38 26% 27%;
-    --muted-foreground: 38 12% 75%;
+  --accent: 120, 55%, 36%;
+  --accent-foreground: 0, 0%, 100%;
 
-    --accent: 42 54% 65%;
-    --accent-foreground: 38 49% 9%;
+  --muted: 0, 0%, 15%;
+  --muted-foreground: 35, 10%, 70%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 38 49% 96%;
+  --card: 0, 0%, 17%; /* #2c2c2c */
+  --card-foreground: 35, 20%, 90%;
 
-    --border: 38 26% 27%;
-    --input: 38 26% 27%;
-    --ring: 42 54% 65%;
+  --border: 0, 0%, 20%;
+  --input: 0, 0%, 20%;
+
+  --destructive: 0, 84%, 60%;
+  --destructive-foreground: 0, 0%, 100%;
+
+  --ring: 35, 60%, 50%;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
 
@@ -72,5 +90,75 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
+
+  /* Custom font sizes to match the screenshots */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-medium;
+  }
+
+  /* Restaurant name style */
+  .restaurant-name {
+    @apply text-2xl font-medium text-[#6b4b10];
+  }
+
+  /* Food item name style */
+  .food-item-name {
+    @apply text-lg font-medium text-[#333];
+  }
+
+  /* Food item description style */
+  .food-description {
+    @apply text-sm text-gray-600;
+  }
+
+  /* Price tag style */
+  .price-tag {
+    @apply text-sm font-medium bg-gray-200 text-gray-800 px-2 py-1 rounded-md;
+  }
+
+  /* Add to cart button style */
+  .add-to-cart-btn {
+    @apply bg-[#2a8e4b] hover:bg-[#237a40] text-white text-sm font-medium px-4 py-2 rounded-md;
+  }
+}
+
+/* Star rating styles */
+.star-rating {
+  @apply flex items-center;
+}
+
+.star-rating .star {
+  @apply text-[#ffb800];
+}
+
+.star-rating .star-empty {
+  @apply text-gray-300;
+}
+
+/* DOY! specific component styles */
+.doy-header {
+  @apply bg-[#47300A] text-white py-4 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50;
+}
+
+.doy-button-primary {
+  @apply bg-[#e8c886] hover:bg-[#d9b978] text-[#6b4b10] transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200;
+}
+
+.doy-button-secondary {
+  @apply bg-[#d9b978] hover:bg-[#c9a968] text-[#6b4b10] transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200;
+}
+
+.doy-action-button {
+  @apply bg-[#2a8e4b] hover:bg-[#237a40] text-white text-sm font-medium px-4 py-2 rounded-md shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200;
+}
+
+.doy-order-button {
+  @apply bg-[#8b0000] hover:bg-[#6b0000] text-white text-sm font-medium px-4 py-2 rounded-md shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200;
 }

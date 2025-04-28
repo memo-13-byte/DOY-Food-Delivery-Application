@@ -5,6 +5,9 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Moon, Sun, CheckCircle } from "lucide-react"
+import axios from "axios"
+import CustomerService from "../services/CustomerService"
+import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 
 // Since we're having issues with the UI component imports, let's create simplified versions
 const Button = ({ className, children, ...props }) => (
@@ -36,76 +39,6 @@ const TabsTrigger = ({ value, className, children, onClick }) => (
 
 const TabsContent = ({ value, activeTab, className, children }) => (
   <div className={`${className} ${value === activeTab ? "block" : "hidden"}`}>{children}</div>
-)
-
-// Social media icons
-const Twitter = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-  </svg>
-)
-
-const Instagram = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-  </svg>
-)
-
-const Youtube = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
-    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
-  </svg>
-)
-
-const Linkedin = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect x="2" y="9" width="4" height="12" />
-    <circle cx="4" cy="4" r="2" />
-  </svg>
 )
 
 // Simple Alertify component
@@ -159,6 +92,28 @@ const Alertify = ({ message, type, onClose }) => {
   )
 }
 
+// Add Switch component
+const Switch = ({ checked, onCheckedChange, className }) => {
+  return (
+    <button
+      role="switch"
+      aria-checked={checked}
+      data-state={checked ? "checked" : "unchecked"}
+      onClick={() => onCheckedChange(!checked)}
+      className={`relative inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 ${
+        checked ? "bg-primary" : "bg-input"
+      } ${className}`}
+    >
+      <span
+        data-state={checked ? "checked" : "unchecked"}
+        className={`pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform ${
+          checked ? "translate-x-5" : "translate-x-0"
+        }`}
+      />
+    </button>
+  )
+}
+
 export default function AuthPage() {
   // Use react-router-dom hooks instead of custom useLocation
   const location = useLocation()
@@ -176,6 +131,17 @@ export default function AuthPage() {
   // Set mounted state after component mounts
   useEffect(() => {
     setMounted(true)
+
+    // URL parametrelerine göre yönlendirme
+    if (tab === "register" && type === "restaurant") {
+      navigate("/restaurant/register")
+      return
+    }
+
+    if (tab === "register" && type === "courier") {
+      navigate("/courier/register")
+      return
+    }
   }, [])
 
   // Form state for login
@@ -187,7 +153,8 @@ export default function AuthPage() {
   const [darkMode, setDarkMode] = useState(false)
 
   // Form state for registration
-  const [registerName, setRegisterName] = useState("")
+  const [registerFirstName, setRegisterFirstName] = useState("")
+  const [registerLastName, setRegisterLastName] = useState("")
   const [registerEmail, setRegisterEmail] = useState("")
   const [registerPhone, setRegisterPhone] = useState("")
   const [registerPassword, setRegisterPassword] = useState("")
@@ -209,6 +176,18 @@ export default function AuthPage() {
     setActiveTab(value)
     const newParams = new URLSearchParams(location.search)
     newParams.set("tab", value)
+
+    // Eğer register sekmesine geçiliyorsa ve kullanıcı tipi restaurant veya courier ise, ilgili sayfaya yönlendir
+    if (value === "register" && (userType === "restaurant" || userType === "courier")) {
+      if (userType === "restaurant") {
+        navigate("/restaurant/register")
+        return
+      } else if (userType === "courier") {
+        navigate("/courier/register")
+        return
+      }
+    }
+
     navigate(`/auth?${newParams.toString()}`)
   }
 
@@ -226,24 +205,23 @@ export default function AuthPage() {
     try {
       // Mock API call - in a real app, you would validate credentials with an API
       // For this demo, we'll just check if email and password are provided
-      if (email && password) {
-        // Profil ID'sini email adresine göre belirleyelim (e-posta adresi ile ilişkilendirerek tutarlı ID üretelim)
-        // Bu bir demo için yapılmış yapay bir ID oluşturma yöntemidir
-        // Gerçek dünyada bu ID'ler API'den gelecektir
-        const generateProfileId = () => {
-          // E-posta adresinden basit bir ID oluşturalım
-          const emailHash = email.split("@")[0].length
-          const baseId = (emailHash % 3) + 1 // 1, 2 veya 3 ID'lerinden birini seç
-          return baseId.toString()
-        }
+      const response = await axios.post("http://localhost:8080/api/login/auth", {
+        username: email,
+        password: password
+      });
 
-        const profileId = generateProfileId()
+      localStorage.setItem("token", response.data.token) //fetch user token
+      console.log(response.data.token)
 
+      const createdUser = await axios.get(`http://localhost:8080/api/users/get-by-email/${email}`,
+         { headers: { Authorization: `Bearer ${response.data.token}` } });
+
+      const profileId = createdUser.data.id
         // Redirect to the appropriate dashboard based on user type
         try {
           if (userType === "restaurant") {
             navigate(`/restaurant/profile/${profileId}`)
-          } else if (userType === "courier") {
+          } else if (userType === "courier") { 
             navigate(`/courier/profile/${profileId}`)
           } else {
             navigate(`/customer/profile/${profileId}`)
@@ -259,10 +237,8 @@ export default function AuthPage() {
                 : `/customer/profile/${profileId}`
           window.location.href = basePath
         }
-      } else {
-        setErrorMessage("Lütfen e-posta ve şifre girin")
-      }
-    } catch (error) {
+      } 
+    catch (error) {
       setErrorMessage("Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.")
       console.error("Login error:", error)
     } finally {
@@ -294,44 +270,30 @@ export default function AuthPage() {
         return
       }
 
+      const registrationInfo = {
+        firstName: registerFirstName,
+        lastName: registerLastName,
+        email: registerEmail,
+        password: registerPassword,
+        phoneNumber: registerPhone
+      }
+
+      await CustomerService.RegisterCustomer(registrationInfo);
+
       // Mock API call - in a real app, you would send registration data to an API
       // For this demo, we'll just simulate a successful registration
       setTimeout(() => {
         // Show success message
         showAlertify("Kayıt işlemi başarıyla tamamlandı!", "success")
-
-        // Profil ID'sini email adresine göre belirleyelim
-        // Gerçek dünyada bu ID'ler API'den gelecektir
-        const generateProfileId = () => {
-          // E-posta adresinden basit bir ID oluşturalım
-          const emailHash = registerEmail.split("@")[0].length
-          const baseId = (emailHash % 3) + 1 // 1, 2 veya 3 ID'lerinden birini seç
-          return baseId.toString()
-        }
-
-        const profileId = generateProfileId()
-
         // Wait for the alertify to be visible before redirecting
         setTimeout(() => {
           // Redirect to the appropriate dashboard based on user type
           try {
-            if (userType === "restaurant") {
-              navigate(`/restaurant/profile/${profileId}`)
-            } else if (userType === "courier") {
-              navigate(`/courier/profile/${profileId}`)
-            } else {
-              navigate(`/customer/profile/${profileId}`)
-            }
+            navigate("/");
           } catch (error) {
             console.error("Navigation error:", error)
             // Fallback - if navigation fails, try direct location change
-            const basePath =
-              userType === "restaurant"
-                ? `/restaurant/profile/${profileId}`
-                : userType === "courier"
-                  ? `/courier/profile/${profileId}`
-                  : `/customer/profile/${profileId}`
-            window.location.href = basePath
+            window.location.href = "/"
           }
         }, 2000) // Wait 2 seconds before redirecting so the user can see the message
       }, 1000) // Simulate network delay
@@ -347,6 +309,18 @@ export default function AuthPage() {
   const changeUserType = (newType) => {
     const newParams = new URLSearchParams(location.search)
     newParams.set("type", newType)
+
+    // Eğer aktif sekme register ise ve yeni tip restaurant veya courier ise, ilgili sayfaya yönlendir
+    if (activeTab === "register" && (newType === "restaurant" || newType === "courier")) {
+      if (newType === "restaurant") {
+        navigate("/restaurant/register")
+        return
+      } else if (newType === "courier") {
+        navigate("/courier/register")
+        return
+      }
+    }
+
     navigate(`/auth?${newParams.toString()}`)
     setUserType(newType)
   }
@@ -354,7 +328,23 @@ export default function AuthPage() {
   // Toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)
+    if (!darkMode) {
+      document.documentElement.classList.add("dark")
+      localStorage.setItem("darkMode", "true")
+    } else {
+      document.documentElement.classList.remove("dark")
+      localStorage.setItem("darkMode", "false")
+    }
   }
+
+  // Initialize dark mode from localStorage
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode") === "true"
+    setDarkMode(savedDarkMode)
+    if (savedDarkMode) {
+      document.documentElement.classList.add("dark")
+    }
+  }, [])
 
   // Add this to the component to define the animation
   const animations = `
@@ -375,34 +365,41 @@ export default function AuthPage() {
 `
 
   return (
-    <div className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-900" : "bg-[#f5f0e1]"}`}>
+    <div
+      className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c]" : "bg-[#F2E8D6]"} transition-colors duration-300`}
+    >
       <style>{animations}</style>
 
       {/* Alertify notification */}
       {alertify.show && <Alertify message={alertify.message} type={alertify.type} onClose={hideAlertify} />}
 
       {/* Header section */}
-      <header className={`py-3 px-6 flex justify-between items-center ${darkMode ? "bg-gray-800" : "bg-[#5c4018]"}`}>
+      <header
+        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-4 px-6 flex justify-between items-center shadow-lg transition-colors duration-300`}
+      >
         <div className="flex items-center">
           <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
             <span className="font-bold text-white text-xl tracking-wide">DOY!</span>
           </Link>
         </div>
         <div className="flex gap-3 items-center">
-          <div className="flex items-center bg-white/20 rounded-full p-1">
-            <button onClick={toggleDarkMode} className="flex items-center justify-center w-6 h-6 rounded-full">
-              {darkMode ? <Sun className="h-4 w-4 text-white" /> : <Moon className="h-4 w-4 text-white" />}
-            </button>
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={darkMode}
+              onCheckedChange={toggleDarkMode}
+              className={`${darkMode ? "bg-amber-500" : "bg-gray-300"} transition-colors duration-300`}
+            />
+            {darkMode ? <Sun className="h-4 w-4 text-white" /> : <Moon className="h-4 w-4 text-white" />}
           </div>
           <div className="flex">
             <button
-              className={`px-4 py-1.5 text-sm font-medium rounded-l-full ${darkMode ? "bg-gray-700 text-white" : "bg-[#f5f0e1] text-[#5c4018]"}`}
+              className={`px-4 py-1.5 text-sm font-medium rounded-l-full ${darkMode ? "bg-amber-600 text-white" : "bg-[#e8c886] text-[#6b4b10]"} transition-colors duration-300`}
               onClick={() => navigate("/auth?tab=register&type=" + userType)}
             >
               KAYIT
             </button>
             <button
-              className={`px-4 py-1.5 text-sm font-medium rounded-r-full ${darkMode ? "bg-gray-600 text-white" : "bg-white text-[#5c4018]"}`}
+              className={`px-4 py-1.5 text-sm font-medium rounded-r-full ${darkMode ? "bg-amber-700 text-white" : "bg-[#d9b978] text-[#6b4b10]"} transition-colors duration-300`}
               onClick={() => navigate("/auth?tab=login&type=" + userType)}
             >
               GİRİŞ
@@ -426,22 +423,24 @@ export default function AuthPage() {
       </div>
 
       {/* Auth Form */}
-      <div className="flex-grow flex justify-center items-start p-4">
-        <div className="w-full max-w-md bg-white rounded-lg p-6 shadow-md">
-          <h2 className="text-center text-xl font-semibold text-[#5c4018] mb-6">Kullanıcı Girişi</h2>
+      <div className="flex-grow flex justify-center items-start p-4 w-full">
+        <div className="w-full md:w-3/4 lg:w-2/3 xl:w-3/5 bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg transition-colors duration-300 mx-auto">
+          <h2 className="text-center text-2xl font-semibold text-[#6b4b10] dark:text-amber-400 mb-8 transition-colors duration-300">
+            {getTitle()} Girişi
+          </h2>
 
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6 border rounded-lg overflow-hidden">
+            <TabsList className="grid w-full grid-cols-2 mb-8 border rounded-lg overflow-hidden">
               <TabsTrigger
                 value="login"
-                className={`py-2 px-4 transition-all duration-300 ${activeTab === "login" ? "bg-white" : "bg-gray-100"}`}
+                className={`py-2 px-4 transition-all duration-300 ${activeTab === "login" ? "bg-white dark:bg-gray-700" : "bg-gray-100 dark:bg-gray-600"}`}
                 onClick={handleTabChange}
               >
                 Giriş
               </TabsTrigger>
               <TabsTrigger
                 value="register"
-                className={`py-2 px-4 transition-all duration-300 ${activeTab === "register" ? "bg-white" : "bg-gray-100"}`}
+                className={`py-2 px-4 transition-all duration-300 ${activeTab === "register" ? "bg-white dark:bg-gray-700" : "bg-gray-100 dark:bg-gray-600"}`}
                 onClick={(value) => handleTabChange(value)}
               >
                 Kayıt Ol
@@ -488,29 +487,29 @@ export default function AuthPage() {
                         </div>
                       </motion.div>
                     )}
-                    <div className="space-y-2">
-                      <Label htmlFor="login-email" className="text-gray-700 font-medium">
+                    <div className="space-y-3">
+                      <Label htmlFor="login-email" className="text-gray-700 dark:text-gray-300 font-medium">
                         Email
                       </Label>
                       <Input
                         id="login-email"
                         type="email"
                         placeholder="Email adresiniz"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white py-3 px-4 text-base"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="login-password" className="text-gray-700 font-medium">
+                      <Label htmlFor="login-password" className="text-gray-700 dark:text-gray-300 font-medium">
                         Şifre
                       </Label>
                       <Input
                         id="login-password"
                         type="password"
                         placeholder="Şifreniz"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -521,16 +520,16 @@ export default function AuthPage() {
                         <input
                           id="remember-me"
                           type="checkbox"
-                          className="h-4 w-4 text-[#5c4018] focus:ring-[#5c4018] border-gray-300 rounded"
+                          className="h-4 w-4 text-[#5c4018] focus:ring-[#5c4018] border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700"
                           checked={rememberMe}
                           onChange={(e) => setRememberMe(e.target.checked)}
                         />
-                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           Beni hatırla
                         </label>
                       </div>
                       <div className="text-sm">
-                        <Link to="/forgot-password" className="text-[#5c4018] hover:underline">
+                        <Link to="/forgot-password" className="text-[#5c4018] dark:text-amber-400 hover:underline">
                           Şifremi unuttum
                         </Link>
                       </div>
@@ -538,13 +537,13 @@ export default function AuthPage() {
                     <div>
                       <Button
                         type="submit"
-                        className="w-full bg-[#e9c46a] hover:bg-[#e9b949] text-[#5c4018] font-medium py-2 rounded-md flex items-center justify-center gap-2"
+                        className="w-full bg-[#e9c46a] hover:bg-[#e9b949] dark:bg-amber-600 dark:hover:bg-amber-500 text-[#5c4018] dark:text-white font-medium py-3 text-lg rounded-md flex items-center justify-center gap-2 transition-colors duration-300 mt-6"
                         disabled={isLoading}
                       >
                         {isLoading ? (
                           <div className="flex items-center justify-center">
                             <svg
-                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#5c4018]"
+                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#5c4018] dark:text-white"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
@@ -573,11 +572,11 @@ export default function AuthPage() {
                         )}
                       </Button>
                     </div>
-                    <div className="text-center text-sm text-gray-600 pt-2">
+                    <div className="text-center text-base text-gray-600 dark:text-gray-400 pt-4">
                       Hesabınız yok mu?{" "}
                       <Link
                         to={`/auth?tab=register&type=${userType}`}
-                        className="text-[#5c4018] hover:underline font-medium"
+                        className="text-[#5c4018] dark:text-amber-400 hover:underline font-medium"
                       >
                         Kayıt ol
                       </Link>
@@ -600,12 +599,12 @@ export default function AuthPage() {
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
-                        className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm"
+                        className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
                       >
                         <div className="flex">
                           <div className="py-1">
                             <svg
-                              className="h-6 w-6 text-red-500 mr-4"
+                              className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
@@ -626,68 +625,81 @@ export default function AuthPage() {
                       </motion.div>
                     )}
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-gray-700 font-medium">
-                        Ad Soyad
+                      <Label htmlFor="firstName" className="text-gray-700 font-medium">
+                        Ad
                       </Label>
                       <Input
-                        id="name"
-                        placeholder="Ad Soyad"
+                        id="firstName"
+                        placeholder="Ad"
                         className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
-                        value={registerName}
-                        onChange={(e) => setRegisterName(e.target.value)}
+                        value={registerFirstName}
+                        onChange={(e) => setRegisterFirstName(e.target.value)}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-700 font-medium">
+                      <Label htmlFor="lastName" className="text-gray-700 font-medium">
+                        Soyad
+                      </Label>
+                      <Input
+                        id="lastName"
+                        placeholder="Soyad"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        value={registerLastName}
+                        onChange={(e) => setRegisterLastName(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <Label htmlFor="email" className="text-gray-700 dark:text-gray-300 font-medium">
                         E-posta
                       </Label>
                       <Input
                         id="email"
                         type="email"
                         placeholder="E-posta"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={registerEmail}
                         onChange={(e) => setRegisterEmail(e.target.value)}
                         required
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-gray-700 font-medium">
+                    <div className="space-y-3">
+                      <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
                         Telefon
                       </Label>
                       <Input
                         id="phone"
                         placeholder="Telefon"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={registerPhone}
                         onChange={(e) => setRegisterPhone(e.target.value)}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="password" className="text-gray-700 font-medium">
+                      <Label htmlFor="password" className="text-gray-700 dark:text-gray-300 font-medium">
                         Şifre
                       </Label>
                       <Input
                         id="password"
                         type="password"
                         placeholder="Şifre"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={registerPassword}
                         onChange={(e) => setRegisterPassword(e.target.value)}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">
+                      <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300 font-medium">
                         Şifre Tekrar
                       </Label>
                       <Input
                         id="confirmPassword"
                         type="password"
                         placeholder="Şifre Tekrar"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
@@ -697,25 +709,25 @@ export default function AuthPage() {
                       <input
                         type="checkbox"
                         id="terms"
-                        className="rounded text-[#5c4018]"
+                        className="rounded text-[#5c4018] dark:text-amber-500 dark:bg-gray-700 dark:border-gray-600"
                         checked={acceptTerms}
                         onChange={(e) => setAcceptTerms(e.target.checked)}
                         required
                       />
-                      <label htmlFor="terms" className="text-sm text-gray-700">
+                      <label htmlFor="terms" className="text-sm text-gray-700 dark:text-gray-300">
                         Kullanım şartlarını ve gizlilik politikasını kabul ediyorum
                       </label>
                     </div>
                     <div>
                       <Button
                         type="submit"
-                        className="w-full bg-[#e9c46a] hover:bg-[#e9b949] text-[#5c4018] font-medium py-2 rounded-md flex items-center justify-center gap-2"
+                        className="w-full bg-[#e9c46a] hover:bg-[#e9b949] dark:bg-amber-600 dark:hover:bg-amber-500 text-[#5c4018] dark:text-white font-medium py-3 text-lg rounded-md flex items-center justify-center gap-2 transition-colors duration-300 mt-6"
                         disabled={isRegisterLoading}
                       >
                         {isRegisterLoading ? (
                           <div className="flex items-center justify-center">
                             <svg
-                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#5c4018]"
+                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#5c4018] dark:text-white"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
@@ -744,11 +756,11 @@ export default function AuthPage() {
                         )}
                       </Button>
                     </div>
-                    <div className="text-center text-sm text-gray-600 pt-2">
+                    <div className="text-center text-base text-gray-600 dark:text-gray-400 pt-4">
                       Zaten hesabınız var mı?{" "}
                       <Link
                         to={`/auth?tab=login&type=${userType}`}
-                        className="text-[#5c4018] hover:underline font-medium"
+                        className="text-[#5c4018] dark:text-amber-400 hover:underline font-medium"
                       >
                         Giriş Yap
                       </Link>
@@ -762,52 +774,48 @@ export default function AuthPage() {
       </div>
 
       {/* Footer */}
-      <footer className="py-8 px-6 mt-auto">
-        <div className="flex flex-col items-center">
-          <div
-            className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-4 w-24 h-24 flex items-center justify-center shadow-md transition-all duration-300`}
+      <footer
+        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
+      >
+        <img
+          src="/image1.png"
+          alt="Logo alt"
+          className="h-[50px] w-[50px] rounded-full object-cover"
+        />
+
+        <div className="flex gap-6">
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <div className="relative w-16 h-16">
-              <img src="/image1.png" alt="DOY Logo" width={64} height={64} className="w-full h-full" />
-              <div className={`text-center text-[8px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                FOOD DELIVERY
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center gap-6 mt-6">
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#5c4018]"} transition-colors`}
-            >
-              <Twitter />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#5c4018]"} transition-colors`}
-            >
-              <Instagram />
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#5c4018]"} transition-colors`}
-            >
-              <Youtube />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#5c4018]"} transition-colors`}
-            >
-              <Linkedin />
-            </a>
-          </div>
+            <Twitter size={24} />
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Instagram size={24} />
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Youtube size={24} />
+          </a>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Linkedin size={24} />
+          </a>
         </div>
       </footer>
     </div>
