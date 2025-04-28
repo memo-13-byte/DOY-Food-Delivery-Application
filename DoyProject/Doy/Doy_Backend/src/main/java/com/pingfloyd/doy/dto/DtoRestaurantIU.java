@@ -16,6 +16,7 @@ public class DtoRestaurantIU {
     @Size(min = 2, max = 100, message = "Restaurant name must be between 2 and 100 characters.")
     private String restaurantName;
 
+    private String description;
 
     @NotBlank(message = "Restaurant phone number must not be empty.")
     @Size(min = 7, max = 20, message = "Phone number must be between 7 and 20 characters.")
@@ -30,5 +31,6 @@ public class DtoRestaurantIU {
 
     @Min(value = 0, message = "Minimum order price cannot be negative.")
     private Integer minOrderPrice;
+
 
 }

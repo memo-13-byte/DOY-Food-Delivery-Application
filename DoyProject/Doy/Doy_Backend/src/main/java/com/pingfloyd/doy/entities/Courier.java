@@ -10,14 +10,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Courier extends User {
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false, orphanRemoval = true)
-    @JoinColumn(name = "gid", referencedColumnName = "gid", unique = true)
-    private GovernmentId governmentId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district_id", nullable = false)
     private District district;
 
+    private String governmentId;
+
     @Column(name = "is_available")
     private Boolean isAvailable;
+    public Courier(String firstName, String lastName, String email, String passwordHash, String phoneNumber) {
+        super(firstName, lastName, email, passwordHash, phoneNumber);
+    }
+
+    public Courier() {
+
+    }
 }

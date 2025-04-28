@@ -2,6 +2,8 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
+import com.pingfloyd.doy.entities.CourierRequest;
+import com.pingfloyd.doy.entities.CustomerOrder;
 import com.pingfloyd.doy.entities.Restaurant;
 import com.pingfloyd.doy.exception.RestaurantNotFoundException;
 import com.pingfloyd.doy.repositories.RestaurantRepository;
@@ -31,11 +33,12 @@ public class RestaurantService implements IRestaurantService {
     @Override
     public DtoRestaurant getRestaurant(Long id) throws RestaurantNotFoundException {
         Restaurant restaurant = findRestaurantById(id);
-
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(restaurant, dtoRestaurant);
         return dtoRestaurant;
     }
+
+
 
     @Override
     public DtoRestaurant postRestaurant(DtoRestaurantIU dtoRestaurantIU) {
@@ -47,6 +50,10 @@ public class RestaurantService implements IRestaurantService {
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(savedRestaurant, dtoRestaurant);
         return dtoRestaurant;
+    }
+
+    public void SaveRestaurant(Restaurant restaurant){
+        restaurantRepository.save(restaurant);
     }
 
     @Override
@@ -82,4 +89,6 @@ public class RestaurantService implements IRestaurantService {
 
         return dtoRestaurantList;
     }
+
+
 }

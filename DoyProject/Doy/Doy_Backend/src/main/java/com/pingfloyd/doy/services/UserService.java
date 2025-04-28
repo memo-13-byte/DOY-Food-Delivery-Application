@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService, IUserService {
     }
 
 
-    public String SignUpCustomer(Customer customer){
+    public String SignUpCustomer(User customer){
         customer.setPasswordHash(bCryptPasswordEncoder.encode(customer.getPassword()));
         customer.setRole(UserRoles.CUSTOMER);
         userRepository.save(customer);
@@ -64,7 +64,6 @@ public class UserService implements UserDetailsService, IUserService {
     public Optional<User> loadUserByEmail(String email){
         return userRepository.findByEmail(email);
     }
-
     @Override
     public List<DtoUser> getAllUsers() {
         List<User> dbUsers = userRepository.findAll();
