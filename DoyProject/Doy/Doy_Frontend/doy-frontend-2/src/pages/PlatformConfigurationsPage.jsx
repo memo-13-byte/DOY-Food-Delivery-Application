@@ -6,8 +6,8 @@ import PromotionList from "../components/PromotionList";
 import OrderSettings from "../components/OrderSettings";
 import AutomaticApprovals from "../components/AutomaticApprovals";
 
-export default function PlatformConfigurationsPage() {
-    const [darkMode, setDarkMode] = useState(false);
+export default function PlatformConfigurationsPage({ darkMode, setDarkMode }) {
+
 
     const handleApplyChanges = () => {
         alert("Changes Applied!");

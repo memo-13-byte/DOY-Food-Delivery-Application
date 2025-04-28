@@ -5,8 +5,7 @@ import PendingUserList from "../components/PendingUserList";
 import PendingSelectedUser from "../components/PendingSelectedUser";
 import PendingActionButtons from "../components/PendingActionButtons";
 
-export default function PendingRegistrationsPage() {
-    const [darkMode, setDarkMode] = useState(false);
+export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
     const [selectedPendingUser, setSelectedPendingUser] = useState(null);
 
     return (

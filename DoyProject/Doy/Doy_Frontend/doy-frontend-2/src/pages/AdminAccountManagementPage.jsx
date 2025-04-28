@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import AdminNavbar from "../components/AdminNavbar";
 import Footer from "../components/Footer";
-import UserList from "../components/UserList"; // birazdan yazacağız
-import RestaurantList from "../components/RestaurantList"; // birazdan yazacağız
-import SelectedItem from "../components/SelectedItem"; // birazdan yazacağız
-import ActionButtons from "../components/ActionButtons"; // birazdan yazacağız
+import UserList from "../components/UserList";
+import RestaurantList from "../components/RestaurantList";
+import SelectedItem from "../components/SelectedItem";
+import ActionButtons from "../components/ActionButtons";
 
-export default function AdminAccountManagementPage() {
-    const [darkMode, setDarkMode] = useState(false);
+export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedRestaurant, setSelectedRestaurant] = useState(null);
 
