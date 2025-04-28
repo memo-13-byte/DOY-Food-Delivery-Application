@@ -47,7 +47,7 @@ public class CustomerOrder {
     @JoinColumn(name = "courier_id")
     private Courier courier;
 
-    @OneToMany(mappedBy = "customer_order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<OrderItem> items = new HashSet<>();
 
     @Column(name = "price")
