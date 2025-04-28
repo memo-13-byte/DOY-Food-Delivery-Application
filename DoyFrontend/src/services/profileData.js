@@ -2,6 +2,7 @@
 // Backend entegrasyonu tamamlandığında bu dosya gerçek API çağrılarıyla değiştirilecektir
 
 // Müşteri verileri
+import axios from "axios";
 export const customers = [
   {
     id: 1,
@@ -321,3 +322,47 @@ export const getCourierById = (id) => {
   }
   return couriers[numericId - 1];
 };
+
+export const getUserById = async(id) => {
+  
+  let user = null
+
+  try {
+    const token = localStorage.getItem("token")
+    const userResponse = await axios.get(`http://localhost:8080/api/users/get-by-id/${id}`, 
+      { headers: { Authorization: `Bearer ${token}` } })
+    
+
+      const userData = userResponse.data
+      let url
+    switch (userData.role) {
+      case "CUSTOMER":
+        url = `http://localhost:8080/api/users/customers/get-by-email/${userData.email}`
+        break;
+      case "COURIER":
+        url = `http://localhost:8080/api/users/couriers/get-by-email/${userData.email}`
+        break;
+      case "RESTAURANT_OWNER":
+        url = `http://localhost:8080/api/users/restaurant-owners/get-by-email/${userData.email}`
+        break;
+      case "ADMIN":
+        url = null
+        break;
+      default:
+        url = null
+        break;
+    }
+    
+
+    const userTypeResponse = await axios.get(url, 
+      { headers: { Authorization: `Bearer ${token}` } })
+
+    user = userTypeResponse.data 
+
+  } catch (error) {
+    console.error("Error " + error)
+  }
+  
+  return user
+};
+

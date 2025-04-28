@@ -1,6 +1,13 @@
+/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: ["./public/index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./public/index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "*.{js,ts,jsx,tsx,mdx}",
+  ],
   theme: {
     extend: {
       borderRadius: {
@@ -43,11 +50,11 @@ export default {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
+          1: "hsl(var(--chart-1))",
+          2: "hsl(var(--chart-2))",
+          3: "hsl(var(--chart-3))",
+          4: "hsl(var(--chart-4))",
+          5: "hsl(var(--chart-5))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -58,6 +65,28 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
+        // DOY! specific colors
+        doy: {
+          background: "#f5ecd7",
+          header: "#6b4b10",
+          button: {
+            primary: "#e8c886",
+            secondary: "#d9b978",
+            hover: "#c9a968",
+            text: "#6b4b10",
+          },
+          action: {
+            primary: "#2a8e4b",
+            hover: "#237a40",
+            text: "#ffffff",
+          },
+          order: {
+            primary: "#8b0000",
+            hover: "#6b0000",
+            text: "#ffffff",
+          },
+          star: "#ffb800",
         },
       },
       keyframes: {
@@ -85,4 +114,4 @@ export default {
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-};
+}

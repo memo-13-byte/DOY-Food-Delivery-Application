@@ -4,7 +4,9 @@ import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { Moon, Edit2, AlertTriangle, User, Phone, Mail, MapPin, LogOut, Check, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { getCustomerById } from "../services/profileData"
+import { getCustomerById, getUserById } from "../services/profileData"
+import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
+import axios from "axios"
 
 export default function CustomerProfilePage() {
   const location = useLocation()
@@ -16,13 +18,23 @@ export default function CustomerProfilePage() {
   const [isLoaded, setIsLoaded] = useState(false)
 
   // Fetch customer data by ID
-  const [user, setUser] = useState(() => getCustomerById(customerId))
+  const [user, setUser] = useState(
+    {
+      id: 0,
+      firstname: " ",
+      lastname: " ",
+      email: " ",
+      phoneNumber: " ",
+      role: " ",
+      address: "",
+    }) 
 
   // Form state for profile update
   const [formData, setFormData] = useState({
-    name: user.name,
+    firstname: user.firstname,
+    lastname: user.lastname,
     email: user.email,
-    phone: user.phone,
+    phoneNumber: user.phoneNumber,
     address: user.address,
     currentPassword: "",
     newPassword: "",
@@ -44,40 +56,28 @@ export default function CustomerProfilePage() {
     },
   )
 
+  useEffect(() => {
+    let userData
+    const loadUser = async () => {
+      try {
+        userData = await getUserById(customerId)
+        userData.name = userData.firstname + " " + userData.lastname
+        setUser(userData)
+        setFormData(userData)
+      } catch (error) {
+        console.error("Error: " + error)
+      }
+    }
+
+    loadUser()
+    
+    
+  }, []);
+
   // Animation effect when page loads
   useEffect(() => {
     setIsLoaded(true)
   }, [])
-
-  // Update user data when ID changes
-  useEffect(() => {
-    if (customerId) {
-      const newUserData = getCustomerById(customerId)
-      setUser(newUserData)
-      setFormData({
-        name: newUserData.name,
-        email: newUserData.email,
-        phone: newUserData.phone,
-        address: newUserData.address,
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      })
-      setAllergens(
-        newUserData.allergens || {
-          1: false,
-          2: false,
-          3: true,
-          4: false,
-          5: false,
-          6: false,
-          7: false,
-          8: false,
-          9: true,
-        },
-      )
-    }
-  }, [customerId])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -87,26 +87,36 @@ export default function CustomerProfilePage() {
     }))
   }
 
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = async(e) => {
     e.preventDefault()
     // Here you would normally send a request to the API
-    setUser({
-      ...user,
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      address: formData.address,
-    })
 
-    // Animation for success notification
-    const notification = document.getElementById("success-notification")
-    notification.classList.remove("translate-y-20", "opacity-0")
-    notification.classList.add("translate-y-0", "opacity-100")
-
-    setTimeout(() => {
-      notification.classList.add("translate-y-20", "opacity-0")
-      notification.classList.remove("translate-y-0", "opacity-100")
-    }, 3000)
+    try {
+      const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, formData)
+      console.log(formData)
+      setUser({
+        ...user,
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address,
+      })
+  
+      // Animation for success notification
+      const notification = document.getElementById("success-notification")
+      notification.classList.remove("translate-y-20", "opacity-0")
+      notification.classList.add("translate-y-0", "opacity-100")
+  
+      setTimeout(() => {
+        notification.classList.add("translate-y-20", "opacity-0")
+        notification.classList.remove("translate-y-0", "opacity-100")
+      }, 3000)
+    } catch (error) {
+      console.error("Error: " + error)
+    }
+    
+    
   }
 
   const handleAllergenChange = (id) => {
@@ -160,7 +170,7 @@ export default function CustomerProfilePage() {
 
   return (
     <div
-      className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-amber-50 to-amber-100"} transition-colors duration-300`}
+      className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
       {/* Success Notification */}
       <div
@@ -183,7 +193,7 @@ export default function CustomerProfilePage() {
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className={`${darkMode ? "bg-gray-800" : "bg-[#47300A] from-amber-700 to-amber-600"} text-white py-3 px-6 flex justify-between items-center shadow-md`}
+        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center shadow-md`}
       >
         <div className="flex items-center">
           <Link to="/">
@@ -209,10 +219,7 @@ export default function CustomerProfilePage() {
             className={`rounded-full w-10 h-10 ${darkMode ? "bg-amber-400" : "bg-amber-500"} flex items-center justify-center shadow-md hover:shadow-lg transition-shadow duration-200`}
           >
             <span className="text-white text-sm font-medium">
-              {user.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
+              {user.firstname[0].toUpperCase() + user.lastname[0].toUpperCase()}
             </span>
           </motion.button>
         </div>
@@ -233,14 +240,14 @@ export default function CustomerProfilePage() {
             {user.profileImage ? (
               <img
                 src={user.profileImage || "/placeholder.svg"}
-                alt={user.name}
+                alt={user?.firstname}
                 className="w-full h-full rounded-full object-cover"
               />
             ) : (
               <img src="/image1.png" alt="DOY Logo" width={96} height={96} className="w-full h-full" />
             )}
             <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-amber-400" : "text-amber-800"}`}>
-              {user.profileImage ? user.name : "FOOD DELIVERY"}
+              {user.profileImage ? user.firstname : "FOOD DELIVERY"}
             </div>
           </div>
         </motion.div>
@@ -252,7 +259,7 @@ export default function CustomerProfilePage() {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className={`w-full max-w-3xl ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-xl p-6 shadow-xl`}
+          className={`w-full md:w-4/5 max-w-5xl ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-xl p-6 shadow-xl`}
         >
           <h1 className={`text-2xl font-bold ${darkMode ? "text-amber-400" : "text-amber-800"} text-center mb-6`}>
             Hesap Profilim - Müşteri {customerId ? `(ID: ${customerId})` : ""}
@@ -276,6 +283,7 @@ export default function CustomerProfilePage() {
                 Profil Bilgileri
               </button>
               <button
+                disabled
                 onClick={() => setActiveTab("orders")}
                 className={`py-2 px-4 text-center transition-colors duration-200 ${
                   activeTab === "orders"
@@ -296,17 +304,17 @@ export default function CustomerProfilePage() {
                   <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
                       <label
-                        className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1 flex items-center`}
+                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                       >
-                        <User className="h-4 w-4 mr-2" /> Ad Soyad
+                        <User className="h-4 w-4 mr-2" /> Ad
                       </label>
                       <div className="flex">
                         <input
                           type="text"
-                          name="name"
-                          value={formData.name}
+                          name="firstname"
+                          value={formData.firstname}
                           onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
                         />
                         <button
                           className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
@@ -318,17 +326,40 @@ export default function CustomerProfilePage() {
 
                     <div>
                       <label
-                        className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1 flex items-center`}
+                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
+                      >
+                        <User className="h-4 w-4 mr-2" /> Soyad
+                      </label>
+                      <div className="flex">
+                        <input
+                          type="text"
+                          name="lastname"
+                          value={formData.lastname}
+                          onChange={handleInputChange}
+                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                        />
+                        <button
+                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                        >
+                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
+                        </button>
+                      </div>
+                    </div>
+
+
+                    <div>
+                      <label
+                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                       >
                         <Phone className="h-4 w-4 mr-2" /> Telefon
                       </label>
                       <div className="flex">
                         <input
                           type="text"
-                          name="phone"
-                          value={formData.phone}
+                          name="phoneNumber"
+                          value={formData.phoneNumber}
                           onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
                         />
                         <button
                           className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
@@ -340,7 +371,7 @@ export default function CustomerProfilePage() {
 
                     <div>
                       <label
-                        className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1 flex items-center`}
+                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                       >
                         <Mail className="h-4 w-4 mr-2" /> Email
                       </label>
@@ -350,7 +381,7 @@ export default function CustomerProfilePage() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
                         />
                         <button
                           className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
@@ -362,7 +393,7 @@ export default function CustomerProfilePage() {
 
                     <div>
                       <label
-                        className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1 flex items-center`}
+                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                       >
                         <MapPin className="h-4 w-4 mr-2" /> Adres
                       </label>
@@ -370,9 +401,9 @@ export default function CustomerProfilePage() {
                         <input
                           type="text"
                           name="address"
-                          value={formData.address}
+                          value={"user.address"}
                           onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-2 px-3 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
                         />
                         <button
                           className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
@@ -384,8 +415,10 @@ export default function CustomerProfilePage() {
                   </motion.div>
 
                   {/* Delivery Preference */}
-                  <motion.div variants={itemVariants} className="mb-6">
-                    <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-2`}>
+                  {/*<motion.div variants={itemVariants} className="mb-6">
+                    <label
+                      className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-2 font-medium`}
+                    >
                       Beslenme Tercihi
                     </label>
                     <div className="flex gap-4">
@@ -419,13 +452,13 @@ export default function CustomerProfilePage() {
                         </label>
                       </div>
                     </div>
-                  </motion.div>
+                  </motion.div>*/}
 
                   {/* Allergens */}
-                  <motion.div variants={itemVariants} className="mb-6">
+                  {/*<motion.div variants={itemVariants} className="mb-6">
                     <div className="flex items-center mb-2">
                       <AlertTriangle className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-500"} mr-2`} />
-                      <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                      <label className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} font-medium`}>
                         Alerjenler (Lütfen alerjik olduğunuz besinleri seçin)
                       </label>
                     </div>
@@ -570,10 +603,11 @@ export default function CustomerProfilePage() {
                           </label>
                         </motion.div>
                       </div>
-                    </div>
+                    </div>*/}
 
                     {/* Selected Allergens */}
-                    <div className="flex flex-wrap gap-2 mt-4">
+                    
+                    {/*<div className="flex flex-wrap gap-2 mt-4">
                       {selectedAllergens.map((id) => (
                         <motion.div
                           key={id}
@@ -601,11 +635,12 @@ export default function CustomerProfilePage() {
                           </span>
                         </motion.div>
                       ))}
-                    </div>
-                  </motion.div>
+                    </div>}
+                  </motion.div>*/}
 
                   {/* Password Change */}
-                  <motion.div variants={itemVariants} className="mb-6">
+                  
+                  {/*<motion.div variants={itemVariants} className="mb-6">
                     <div className="border-t pt-4 mb-4">
                       <h2 className={`text-lg font-medium ${darkMode ? "text-gray-200" : "text-gray-700"} mb-2`}>
                         Şifre Değiştir
@@ -613,46 +648,52 @@ export default function CustomerProfilePage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+                        <label
+                          className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 font-medium`}
+                        >
                           Mevcut Şifre
                         </label>
                         <input
                           type="password"
                           name="currentPassword"
-                          value={formData.currentPassword}
+                          value={"formData.currentPassword"}
                           onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-2 px-3 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
                           placeholder="Mevcut şifreniz"
                         />
                       </div>
                       <div>
-                        <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+                        <label
+                          className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 font-medium`}
+                        >
                           Yeni Şifre
                         </label>
                         <input
                           type="password"
                           name="newPassword"
-                          value={formData.newPassword}
+                          value={"formData.newPassword"}
                           onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-2 px-3 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
                           placeholder="Yeni şifreniz"
                         />
                       </div>
                       <div>
-                        <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-gray-600"} mb-1`}>
+                        <label
+                          className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 font-medium`}
+                        >
                           Şifre Onayı
                         </label>
                         <input
                           type="password"
                           name="confirmPassword"
-                          value={formData.confirmPassword}
+                          value={"formData.confirmPassword"}
                           onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-2 px-3 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
                           placeholder="Yeni şifrenizi tekrar girin"
                         />
                       </div>
                     </div>
-                  </motion.div>
+                  </motion.div>*/}
 
                   {/* Update Button */}
                   <motion.div variants={itemVariants}>
@@ -787,103 +828,46 @@ export default function CustomerProfilePage() {
       </div>
 
       {/* Footer */}
-      <motion.footer
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-        className={`${darkMode ? "bg-gray-800 border-t border-gray-700" : "bg-amber-50 border-t border-amber-200"} p-6`}
+      <footer
+        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
       >
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <motion.div
-              whileHover={{ rotate: 5 }}
-              className={`rounded-full ${darkMode ? "bg-gray-700" : "bg-white"} p-4 w-20 h-20 flex items-center justify-center shadow-md`}
-            >
-              <div className="relative w-16 h-16">
-                <img src="/image1.png" alt="DOY Logo" width={64} height={64} className="w-full h-full" />
-                <div
-                  className={`text-center text-[8px] font-bold mt-1 ${darkMode ? "text-amber-400" : "text-gray-600"}`}
-                >
-                  FOOD DELIVERY
-                </div>
-              </div>
-            </motion.div>
-          </div>
+        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
 
-          <div className="flex gap-6">
-            {[
-              {
-                href: "https://twitter.com",
-                path: "M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z",
-              },
-              {
-                href: "https://instagram.com",
-                path: "M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z",
-                rect: { width: 20, height: 20, x: 2, y: 2, rx: 5, ry: 5 },
-                line: { x1: 17.5, x2: 17.51, y1: 6.5, y2: 6.5 },
-              },
-              {
-                href: "https://youtube.com",
-                path: [
-                  "M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17",
-                  "m10 15 5-3-5-3z",
-                ],
-              },
-              {
-                href: "https://linkedin.com",
-                path: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z",
-                rect: { width: 4, height: 12, x: 2, y: 9 },
-                circle: { cx: 4, cy: 4, r: 2 },
-              },
-            ].map((social, index) => (
-              <motion.a
-                key={index}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${darkMode ? "text-gray-400 hover:text-amber-400" : "text-gray-600 hover:text-amber-800"} transition-colors duration-200`}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  {social.rect && (
-                    <rect
-                      width={social.rect.width}
-                      height={social.rect.height}
-                      x={social.rect.x}
-                      y={social.rect.y}
-                      rx={social.rect.rx}
-                      ry={social.rect.ry}
-                    />
-                  )}
-                  {social.circle && <circle cx={social.circle.cx} cy={social.circle.cy} r={social.circle.r} />}
-                  {Array.isArray(social.path) ? (
-                    social.path.map((p, i) => <path key={i} d={p} />)
-                  ) : (
-                    <path d={social.path} />
-                  )}
-                  {social.line && (
-                    <line x1={social.line.x1} x2={social.line.x2} y1={social.line.y1} y2={social.line.y2} />
-                  )}
-                </svg>
-              </motion.a>
-            ))}
-          </div>
+        <div className="flex gap-6">
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Twitter size={24} />
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Instagram size={24} />
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Youtube size={24} />
+          </a>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Linkedin size={24} />
+          </a>
         </div>
-        <div className={`text-center mt-4 text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-          © 2025 Doy! Food Delivery. Tüm hakları saklıdır.
-        </div>
-      </motion.footer>
+      </footer>
     </div>
   )
 }
