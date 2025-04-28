@@ -1,13 +1,13 @@
 package com.pingfloyd.doy.controllers;
 
 
-import com.pingfloyd.doy.dto.DtoPaymentInformationIU;
-import com.pingfloyd.doy.dto.UserCartDTO;
+import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.Cart;
 import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.services.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
@@ -73,5 +74,39 @@ public class OrderController {
             return ResponseEntity.status(500).build(); // Internal Server Error
         }
     }
+
+    @GetMapping("/restaurant/{restaurantId}/order")
+    public ResponseEntity<DtoRestaurantOrders> GetRestaurantOrders(@PathVariable Long restaurantId) {
+        return ResponseEntity.ok(orderService.GetRestaurantOrders(restaurantId));
+    }
+    @GetMapping("/restaurant/{restaurantId}/couriers")
+    public ResponseEntity<List<DtoCourierForOrder>> GetActiveCouriers(@PathVariable Long restaurantId){
+        return ResponseEntity.ok(orderService.GetAvailableCouriersByDistrict(restaurantId));
+    }
+
+    @PostMapping("/restaurant/request/{orderId}/{courierId}")
+    public ResponseEntity<Boolean> SendRequestToCourier(@PathVariable Long orderId , @PathVariable Long courierId){
+        return ResponseEntity.ok(orderService.SendRequestToCourier(orderId , courierId));
+    }
+    @GetMapping("/courier/request{courierId}")
+    public ResponseEntity<DtoCourierRequest> GetCourierRequests(@PathVariable Long courierId){
+        return ResponseEntity.ok(orderService.GetCourierRequests(courierId));
+    }
+    @PutMapping("/courier/request{requestId}-{response}")
+    public ResponseEntity<Boolean> CourierResponse(@PathVariable Long requestId,@PathVariable Boolean response){
+        return ResponseEntity.ok(orderService.CourierResponse(requestId , response));
+    }
+
+    @PatchMapping("/{orderId}/state")
+    public ResponseEntity<Void> processOrderState(
+            @PathVariable Long orderId,
+            @RequestBody DtoOrderStatus status
+            ) {
+        orderService.ProcessOrderState(orderId, status);
+        return ResponseEntity.ok().build();
+    }
+
+
+
 
 }

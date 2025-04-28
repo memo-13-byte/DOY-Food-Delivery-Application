@@ -64,14 +64,13 @@ const Home = () => {
 
     useEffect(() => {
         const getRestaurantsFromBackend = async () => {
-            console.log(minRating.toString())
+            //const token = localStorage.getItem('token') //get jwt token of user, doesnt work until frontends are connected.
+            const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYXJpcy5ieWlsZGl6QGdtYWlsLmNvbSIsImlhdCI6MTc0NTE0MTE5NSwicm9sZSI6W3siYXV0aG9yaXR5IjoiQ1VTVE9NRVIifV0sImV4cCI6MTc0NTE0ODM5NX0.V55_97MxziOuSuzfkw0VMTN5sT00IJtYgeaxQoBjuS8";
             const response = await axios.get("http://localhost:8080/api/restaurant/search",
-                {params:{
-                    key1:searchText,
-                        key2:minRating.toString()
-                    }})
+                {params:{key1:searchText,key2:minRating.toString()},
+                headers: {Authorization:`Bearer ${token}`} //add jwt token to request.
+                })
             const data = response.data.content
-
             setFilteredRestaurants(data);
             if (data != null) {
                 const results = data.filter(res =>

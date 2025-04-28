@@ -32,6 +32,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleItemNotFoundException(ItemNotFoundException ex) {
         return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
     }
+    @ExceptionHandler(value = CourierRequestNotFoundException.class)
+    public ResponseEntity<ApiError> handleItemNotFoundException(CourierRequestNotFoundException ex) {
+        return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
+    }
+    @ExceptionHandler(value = CourierIsNotAvailableException.class)
+    public ResponseEntity<ApiError> handleCourierIsNotAvailableException(CourierIsNotAvailableException ex) {
+        return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = OrderNotFoundException.class)
+    public ResponseEntity<ApiError> handleOrderNotFoundException(OrderNotFoundException ex){
+        return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
+    }
     @ExceptionHandler(value = UserAlreadyExistException.class)
     public ResponseEntity<ApiError> handleUserAlreadyExistException(UserAlreadyExistException ex){
         return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
