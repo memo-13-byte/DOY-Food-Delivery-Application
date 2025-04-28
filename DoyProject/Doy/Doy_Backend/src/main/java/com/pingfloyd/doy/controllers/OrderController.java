@@ -88,24 +88,14 @@ public class OrderController {
     public ResponseEntity<Boolean> SendRequestToCourier(@PathVariable Long orderId , @PathVariable Long courierId){
         return ResponseEntity.ok(orderService.SendRequestToCourier(orderId , courierId));
     }
-
     @GetMapping("/courier/request{courierId}")
     public ResponseEntity<DtoCourierRequest> GetCourierRequests(@PathVariable Long courierId){
         return ResponseEntity.ok(orderService.GetCourierRequests(courierId));
     }
-
     @PutMapping("/courier/request{requestId}-{response}")
     public ResponseEntity<Boolean> CourierResponse(@PathVariable Long requestId,@PathVariable Boolean response){
         return ResponseEntity.ok(orderService.CourierResponse(requestId , response));
-
     }
-
-
-
-
-
-
-
 
     @PatchMapping("/{orderId}/state")
     public ResponseEntity<Void> processOrderState(

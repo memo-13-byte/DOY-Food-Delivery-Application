@@ -26,7 +26,9 @@ public class CourierRequestService {
     public void SaveRequest(CourierRequest request){
         courierRequestRepository.save(request);
     }
-
+    public void DeleteRequest(CourierRequest request){
+        courierRequestRepository.delete(request);
+    }
     public List<CourierRequest> GetCourierRequests(Long courierId){
         Optional<Courier> courier = courierService.GetCourierById(courierId);
         if(courier.isEmpty()){

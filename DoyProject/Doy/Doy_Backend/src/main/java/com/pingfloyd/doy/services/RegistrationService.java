@@ -144,7 +144,7 @@ public class RegistrationService {
         );
         courier.setGovernmentId(request.getGovernmentId());
         courier.setRole(UserRoles.COURIER);
-        courier.setIsEnabled(false);
+        courier.setIsEnabled(true);
         District district = districtService.GetDistrict(request.getCity() , request.getName());
         courier.setDistrict(district);
         district.getCouriers().add(courier);
@@ -163,7 +163,7 @@ public class RegistrationService {
 
         restaurantOwner.setGovernmentId(request.getGovernmentId());
         restaurantOwner.setRole(UserRoles.RESTAURANT_OWNER);
-        restaurantOwner.setIsEnabled(false);
+        restaurantOwner.setIsEnabled(true);
         restaurantOwner.setCreatedAt(LocalDateTime.now());
        return restaurantOwner;
     }
