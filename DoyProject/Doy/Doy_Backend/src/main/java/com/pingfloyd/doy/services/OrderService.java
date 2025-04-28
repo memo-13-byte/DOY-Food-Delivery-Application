@@ -287,11 +287,14 @@ public class OrderService {
 
     public Boolean CourierResponse(Long requestId , Boolean response){
         CourierRequest request = courierRequestService.GetCourierRequestById(requestId);
-
-
-
-
-        return true;
+        CustomerOrder order = request.getOrder();
+        if(response){
+            order.setStatus(OrderStatus.AWAITING_PICKUP);
+            customerOrderRepository.save(order);
+            return true;
+        }
+        courierRequestService.DeleteRequest(request);
+        return false;
     }
 
     public DtoRestaurantOrders GetCourierActiveOrder(Long id){
