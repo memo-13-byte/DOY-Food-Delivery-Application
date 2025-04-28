@@ -15,9 +15,11 @@ import {
   Edit,
   ImageIcon,
   Upload,
+  Axis3D,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import axios from "axios"
+import { getResponseErrors } from "../services/exceptionUtils"
 
 export default function RestaurantManagePage() {
   const location = useLocation()
@@ -26,10 +28,10 @@ export default function RestaurantManagePage() {
   const restaurantId = params.id
   const [darkMode, setDarkMode] = useState(false)
   const categoryMap = new Map()
-  categoryMap.set("MENU", 0)
+  categoryMap.set("COMBO", 0)
   categoryMap.set("MAIN_DISH", 1)
   categoryMap.set("DRINK", 2)
-  categoryMap.set("COMBO", 3)
+  categoryMap.set("EXTRA", 3)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [isEditingName, setIsEditingName] = useState(false)
   const [nameInput, setNameInput] = useState("")
@@ -40,55 +42,44 @@ export default function RestaurantManagePage() {
   // 1. Yeni state ekleyelim - useState tanımlamalarının olduğu bölüme ekleyin
   const [draggingItemId, setDraggingItemId] = useState(null)
   const [itemImageSuccess, setItemImageSuccess] = useState({ show: false, itemName: "" })
+  const [errorMessages, setErrorMessages] = useState([])
+
+
 
   // Restoran verilerini ID'ye göre getir
   const [restaurant, setRestaurant] = useState({
-    name: "Restoran A",
+    restaurantName: "Restoran A",
     description: "Restoran Hakkında kısım",
+    restaurantPhone: "",
+    restaurantCategory: "",
+    rating: "",
+    minOrderPrice: ""
   })
 
-  // Mock function to get restaurant data by ID
-  const getRestaurantById = (id) => {
-    // Mock data for restaurants
-    const restaurants = [
-      {
-        id: "1",
-        name: "Lezzet Köşesi",
-        description: "Geleneksel Türk lezzetleri",
-      },
-      {
-        id: "2",
-        name: "Pasta Durağı",
-        description: "Enfes İtalyan lezzetleri",
-      },
-      {
-        id: "3",
-        name: "Sushi Cenneti",
-        description: "Uzakdoğu lezzetleri",
-      },
-      {
-        id: "4",
-        name: "Burger Diyarı",
-        description: "Amerikan lezzetleri",
-      },
-    ]
+  const [isEditingPhoneNumber, setIsEditingPhoneNumber] = useState(false);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+const [phoneNumberInput, setPhoneNumberInput] = useState(restaurant.restaurantPhone || '');
 
-    // Find the restaurant by ID
-    const restaurant = restaurants.find((r) => r.id === id)
-    return restaurant || null // Return the restaurant object or null if not found
-  }
+const [isEditingMinOrderPrice, setIsEditingMinOrderPrice] = useState(false);
+const [minOrderPriceInput, setMinOrderPriceInput] = useState(restaurant.minOrderPrice || '');
 
+const handleEditPhoneNumberClick = () => setIsEditingPhoneNumber(true);
+const handleCancelPhoneNumberEdit = () => {
+  setIsEditingPhoneNumber(false);
+  setPhoneNumberInput(restaurant.restaurantPhone || '');
+};
+
+const handleEditMinOrderPriceClick = () => setIsEditingMinOrderPrice(true);
+const handleCancelMinOrderPriceEdit = () => {
+  setIsEditingMinOrderPrice(false);
+  setMinOrderPriceInput(restaurant.minOrderPrice || '');
+};
   // ID'ye göre restoran verilerini yükle
   useEffect(() => {
     const getRestaurantInformation = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
-        const restInfo = {
-          name: response.data.restaurantName,
-          description: response.data.restaurantPhone,
-        }
-
-        setRestaurant(restInfo)
+        setRestaurant(response.data)
       } catch (error) {
         alert("Error fetching restaurant information:", error)
       }
@@ -111,75 +102,22 @@ export default function RestaurantManagePage() {
     {
       id: 1,
       name: "Menüler",
-      items: [
-        {
-          id: 1,
-          name: "Tavuk Burger Menü",
-          description: "Ev yapımı burger ekmeğine; 120 gr. ev yapımı tavuk burger köftesi, marul, burger sos, mayonez",
-          price: 300,
-          image: "/classic-beef-burger.png",
-        },
-      ],
+      items: [],
     },
     {
       id: 2,
       name: "Yiyecek Seçenekleri",
-      items: [
-        {
-          id: 2,
-          name: "Tavuk Burger",
-          description: "Ev yapımı burger ekmeğine; 120 gr. ev yapımı tavuk burger köftesi, marul, burger sos, mayonez",
-          price: 240,
-          image: "/classic-chicken-burger.png",
-        },
-        {
-          id: 3,
-          name: "Tavuk Burger",
-          description: "Ev yapımı burger ekmeğine; 120 gr. ev yapımı tavuk burger köftesi, marul, burger sos, mayonez",
-          price: 240,
-          image: "/classic-chicken-burger.png",
-        },
-      ],
+      items: [],
     },
     {
       id: 3,
       name: "İçecek Seçenekleri",
-      items: [
-        {
-          id: 7,
-          name: "Soda",
-          description: "Cam şişede sade soda",
-          price: 25,
-          image: "/refreshing-soda.png",
-        },
-        {
-          id: 8,
-          name: "Soda",
-          description: "Cam şişede sade soda",
-          price: 25,
-          image: "/refreshing-soda.png",
-        },
-      ],
+      items: [],
     },
     {
       id: 4,
       name: "Ek Seçenekleri",
-      items: [
-        {
-          id: 11,
-          name: "Patates Kızartması",
-          description: "Parmak dilim patates kızartması",
-          price: 100,
-          image: "/golden-fries-pile.png",
-        },
-        {
-          id: 12,
-          name: "Patates Kızartması",
-          description: "Parmak dilim patates kızartması",
-          price: 100,
-          image: "/golden-fries-pile.png",
-        },
-      ],
+      items: [],
     },
   ])
 
@@ -301,6 +239,8 @@ export default function RestaurantManagePage() {
 
   // 4. getRestaurantItems fonksiyonunu güncelleyelim - mevcut fonksiyonu aşağıdakiyle değiştirin
   const getRestaurantItems = async () => {
+    setErrorMessages([])
+
     try {
       const response = await axios.get(`http://localhost:8080/api/item/get-items/${restaurantId}`)
       const itemData = [
@@ -336,7 +276,7 @@ export default function RestaurantManagePage() {
         else if (responseItems[i].menuItemType === "MAIN_DISH") placeholderQuery = responseItems[i].name
         else if (responseItems[i].menuItemType === "MENU") placeholderQuery = "meal"
         else if (responseItems[i].menuItemType === "COMBO") placeholderQuery = "combo meal"
-
+        
         itemData[categoryMap.get(responseItems[i].menuItemType)].items.push({
           id: responseItems[i].id,
           name: responseItems[i].name,
@@ -345,12 +285,12 @@ export default function RestaurantManagePage() {
           // Sadece image alanını ekledik
           image: `/placeholder.svg?height=112&width=112&query=${encodeURIComponent(placeholderQuery)}`,
         })
+        console.log("asasda")
       }
-
+      
       setMenuCategories(itemData)
     } catch (error) {
-      console.log("Error fetching restaurant items:", error)
-      alert("Error fetching restaurant items:", error)
+      setErrorMessages(getResponseErrors(error));
     }
   }
 
@@ -367,13 +307,52 @@ export default function RestaurantManagePage() {
   }
 
   const handleSaveDescription = () => {
-    setRestaurant((prev) => ({
-      ...prev,
-      description: descriptionInput,
-    }))
-    setIsEditing(false)
-    // Here you would typically make an API call to update the restaurant description
+    if (descriptionInput.trim()) {
+      restaurant.description = descriptionInput
+
+      try {
+        console.log(restaurant)
+        axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, restaurant)
+      } catch (error) {
+        console.log(error)
+        setErrorMessages(getResponseErrors(error))
+      }
+    }
     console.log("Saving new description:", descriptionInput)
+    setIsEditing(false)
+    
+  }
+
+  const handleSavePhoneNumber = () => {
+    if (phoneNumberInput.trim()) {
+      restaurant.restaurantPhone = phoneNumberInput;
+  
+      try {
+        console.log(restaurant);
+        axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, restaurant);
+      } catch (error) {
+        console.log(error);
+        setErrorMessages(getResponseErrors(error));
+      }
+    }
+    console.log("Saving new phone number:", phoneNumberInput);
+    setIsEditingPhoneNumber(false)
+  }
+  
+  const handleSaveMinOrderPrice = () => {
+    if (minOrderPriceInput !== '' && !isNaN(minOrderPriceInput)) {
+      restaurant.minOrderPrice = minOrderPriceInput;
+  
+      try {
+        console.log(restaurant);
+        axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, restaurant);
+      } catch (error) {
+        console.log(error);
+        setErrorMessages(getResponseErrors(error));
+      }
+    }
+    console.log("Saving new minimum order price:", minOrderPriceInput);
+    setIsEditingMinOrderPrice(false)
   }
 
   const handleCancelEdit = () => {
@@ -397,17 +376,20 @@ export default function RestaurantManagePage() {
 
   const handleEditNameClick = () => {
     setIsEditingName(true)
-    setNameInput(restaurant.name)
+    setNameInput(restaurant.restaurantName)
   }
 
   const handleSaveName = () => {
     if (nameInput.trim()) {
-      setRestaurant((prev) => ({
-        ...prev,
-        name: nameInput,
-      }))
-      // Here you would typically make an API call to update the restaurant name
-      console.log("Saving new name:", nameInput)
+      restaurant.restaurantName = nameInput
+
+      try {
+        console.log(restaurant)
+        axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, restaurant)
+      } catch (error) {
+        console.log(error)
+        setErrorMessages(getResponseErrors(error))
+      }
     }
     setIsEditingName(false)
   }
@@ -532,11 +514,42 @@ export default function RestaurantManagePage() {
             <button
               className={`rounded-full px-4 py-2 font-medium text-lg ${darkMode ? "text-white hover:bg-gray-700" : "text-white hover:bg-amber-600"}`}
             >
-              {restaurant.name}
+              {restaurant.restaurantName}
             </button>
           </motion.div>
         </div>
       </motion.header>
+
+      {errorMessages.map((message, i) => (
+                        
+                        <motion.div key={i}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+                        >
+                          <div className="flex">
+                            <div className="py-1">
+                              <svg 
+                                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium">{message}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
 
       {/* Main Content */}
       <main className="container mx-auto max-w-7xl px-6 py-8">
@@ -651,7 +664,7 @@ export default function RestaurantManagePage() {
                     </div>
                   </div>
                 ) : (
-                  <h1 className="text-3xl font-bold">{restaurant.name}</h1>
+                  <h1 className="text-3xl font-bold">{restaurant.restaurantName}</h1>
                 )}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -662,6 +675,124 @@ export default function RestaurantManagePage() {
                   <Edit className="h-5 w-5" />
                 </motion.button>
               </div>
+
+              {/* PHONE NUMBER */}
+<div className="flex items-center justify-between mt-6">
+  {isEditingPhoneNumber ? (
+    <div className="flex items-center gap-3 flex-1">
+      <input
+        type="text"
+        value={phoneNumberInput}
+        onChange={(e) => setPhoneNumberInput(e.target.value)}
+        className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
+          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
+        }`}
+      />
+      <div className="flex gap-2">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSavePhoneNumber}
+          className={`rounded-full p-2 ${
+            darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleCancelPhoneNumberEdit}
+          className={`rounded-full p-2 ${
+            darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
+          }`}
+        >
+          <X className="h-5 w-5" />
+        </motion.button>
+      </div>
+    </div>
+  ) : (
+    <h2 className="text-2xl font-semibold">{"Phone Number: " + restaurant.restaurantPhone}</h2>
+  )}
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={handleEditPhoneNumberClick}
+    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+  >
+    <Edit className="h-5 w-5" />
+  </motion.button>
+</div>
+
+{/* MINIMUM ORDER PRICE */}
+<div className="flex items-center justify-between mt-6">
+  {isEditingMinOrderPrice ? (
+    <div className="flex items-center gap-3 flex-1">
+      <input
+        type="number"
+        value={minOrderPriceInput}
+        onChange={(e) => setMinOrderPriceInput(e.target.value)}
+        className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
+          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
+        }`}
+      />
+      <div className="flex gap-2">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSaveMinOrderPrice}
+          className={`rounded-full p-2 ${
+            darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleCancelMinOrderPriceEdit}
+          className={`rounded-full p-2 ${
+            darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
+          }`}
+        >
+          <X className="h-5 w-5" />
+        </motion.button>
+      </div>
+    </div>
+  ) : (
+    <h2 className="text-2xl font-semibold">{"Min Order Price: " + restaurant.minOrderPrice} ₺</h2>
+  )}
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={handleEditMinOrderPriceClick}
+    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+  >
+    <Edit className="h-5 w-5" />
+  </motion.button>
+</div>
 
               {isEditing ? (
                 <div className="flex flex-col gap-3">
@@ -698,7 +829,7 @@ export default function RestaurantManagePage() {
                 </div>
               ) : (
                 <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{restaurant.description}</p>
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Description: " + restaurant.description}</p>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -710,8 +841,13 @@ export default function RestaurantManagePage() {
                 </div>
               )}
             </div>
+            
           </div>
+
+                  
         </motion.div>
+
+
 
         {/* Menu Sections - All categories displayed vertically */}
         <div className="space-y-12">
@@ -843,33 +979,6 @@ export default function RestaurantManagePage() {
             </motion.div>
           ))}
         </div>
-
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className="flex gap-4 justify-end mb-10"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleBackClick}
-            className={`px-6 py-4 rounded-xl text-lg font-medium ${
-              darkMode ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-[#7A0000] hover:bg-[#6A0000] text-white"
-            } transition-colors duration-300 shadow-lg`}
-          >
-            İptal
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleSaveChangesClick}
-            className={`px-6 py-4 rounded-xl text-lg font-medium bg-[#6c4c9c] hover:bg-[#5d3d8d] text-white transition-colors duration-300 shadow-lg`}
-          >
-            Değişiklikleri Kaydet
-          </motion.button>
-        </motion.div>
 
         {/* Back to Profile Button */}
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>

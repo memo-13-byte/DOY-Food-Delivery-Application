@@ -24,6 +24,7 @@ import { Textarea } from "../components/ui/textarea"
 import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import axios from "axios"
+import { getResponseErrors } from "../services/exceptionUtils"
 
 export default function UpdateItemPage() {
   const navigate = useNavigate()
@@ -36,6 +37,7 @@ export default function UpdateItemPage() {
   const [isSuccess, setIsSuccess] = useState(false)
   const [imagePreview, setImagePreview] = useState("/placeholder.svg?height=200&width=200")
   const [isDragging, setIsDragging] = useState(false)
+  const [errorMessages, setErrorMessages] = useState([])
 
   // Ref for confetti container
   const confettiContainerRef = useRef(null)
@@ -276,8 +278,7 @@ export default function UpdateItemPage() {
         navigate(`/restaurants/manage/${restaurantId}`)
       }, 1500)
     } catch (error) {
-      console.error("Error saving item:", error)
-      alert("Bir hata oluştu. Lütfen tekrar deneyin.")
+      setErrorMessages(getResponseErrors(error))
       setIsLoading(false)
     }
   }
@@ -360,6 +361,37 @@ export default function UpdateItemPage() {
             {isEditMode ? "Ürün Düzenle" : "Yeni Ürün Ekle"}
           </motion.h1>
         </motion.div>
+
+        {errorMessages.map((message, i) => (
+                        
+                        <motion.div key={i}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+                        >
+                          <div className="flex">
+                            <div className="py-1">
+                              <svg 
+                                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium">{message}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
 
         {/* Form Card */}
         <motion.div

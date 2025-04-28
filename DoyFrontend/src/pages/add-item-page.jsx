@@ -27,6 +27,7 @@ import { Textarea } from "../components/ui/textarea"
 import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import axios from "axios"
+import { getResponseErrors } from "../services/exceptionUtils"
 
 export default function AddItemPage() {
   const navigate = useNavigate()
@@ -275,17 +276,18 @@ export default function AddItemPage() {
         description: formData.description,
         price: Number.parseFloat(formData.price),
         restaurantId: restaurantId,
-        menuItemType: reversemenuItemTypeMap[formData.menuItemType],
+        menuItemType: reversemenuItemTypeMap[Number.parseInt(formData.menuItemType)],
       }
       console.log(formDataToSend)
       /*
             if (formData.image) {
               formDataToSend.append("image", formData.image)
             }*/
-
+      
       let response
       if (isEditMode) {
         // Update existing item
+        
         response = await axios.put(`http://localhost:8080/api/item/update/${itemId}`, formDataToSend)
       } else {
         // Create new item
@@ -299,8 +301,7 @@ export default function AddItemPage() {
         navigate(`/restaurants/manage/${restaurantId}`)
       }, 1500)
     } catch (error) {
-      console.error("Error saving item:", error)
-      alert("Bir hata oluştu. Lütfen tekrar deneyin.")
+      setErrors(getResponseErrors(error))
       setIsLoading(false)
     }
   }
