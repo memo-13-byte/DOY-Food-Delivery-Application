@@ -29,6 +29,8 @@ public class RegistrationRequest {
     private final String password;
 
     //@Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number format")
+    @NotBlank(message = "Phone number must not be blank")
+    @Size(min = 7, max = 20, message = "Invalid phone number")
     private final String phoneNumber;
 
 

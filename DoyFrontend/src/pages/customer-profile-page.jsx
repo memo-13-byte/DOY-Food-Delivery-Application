@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { getCustomerById, getUserById } from "../services/profileData"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import axios from "axios"
+import { getResponseErrors } from "../services/exceptionUtils"
 
 export default function CustomerProfilePage() {
   const location = useLocation()
@@ -16,6 +17,7 @@ export default function CustomerProfilePage() {
   const [darkMode, setDarkMode] = useState(false)
   const [activeTab, setActiveTab] = useState("profile")
   const [isLoaded, setIsLoaded] = useState(false)
+  const [errorMessages, setErrorMessages] = useState([])
 
   // Fetch customer data by ID
   const [user, setUser] = useState(
@@ -89,11 +91,12 @@ export default function CustomerProfilePage() {
 
   const handleProfileUpdate = async(e) => {
     e.preventDefault()
-    // Here you would normally send a request to the API
+    setErrorMessages([])
 
     try {
       const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, formData)
-      console.log(formData)
+      console.log(response)
+
       setUser({
         ...user,
         firstname: formData.firstname,
@@ -113,6 +116,7 @@ export default function CustomerProfilePage() {
         notification.classList.remove("translate-y-0", "opacity-100")
       }, 3000)
     } catch (error) {
+      setErrorMessages(getResponseErrors(error))
       console.error("Error: " + error)
     }
     
@@ -298,6 +302,36 @@ export default function CustomerProfilePage() {
             </div>
 
             <div className="mt-4">
+                        {errorMessages.map((message, i) => (
+                        
+                        <motion.div key={i}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+                        >
+                          <div className="flex">
+                            <div className="py-1">
+                              <svg 
+                                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium">{message}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
               {activeTab === "profile" && (
                 <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
                   {/* Personal Information */}

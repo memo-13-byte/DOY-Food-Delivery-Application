@@ -8,6 +8,7 @@ import { ArrowRight, Moon, Sun, CheckCircle } from "lucide-react"
 import axios from "axios"
 import CustomerService from "../services/CustomerService"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
+import { getResponseErrors } from "../services/exceptionUtils"
 
 // Since we're having issues with the UI component imports, let's create simplified versions
 const Button = ({ className, children, ...props }) => (
@@ -151,6 +152,7 @@ export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
+  const [errorMessages, setErrorMessages] = useState([])
 
   // Form state for registration
   const [registerFirstName, setRegisterFirstName] = useState("")
@@ -259,13 +261,13 @@ export default function AuthPage() {
   // Add a new handleRegister function after the handleLogin function
   const handleRegister = async (e) => {
     e.preventDefault()
-    setErrorMessage("")
+    setErrorMessages([])
     setIsRegisterLoading(true)
 
     try {
       // Validate passwords match
       if (registerPassword !== confirmPassword) {
-        setErrorMessage("Şifreler eşleşmiyor")
+        setErrorMessages(["Şifreler eşleşmiyor"])
         setIsRegisterLoading(false)
         return
       }
@@ -277,6 +279,8 @@ export default function AuthPage() {
         password: registerPassword,
         phoneNumber: registerPhone
       }
+
+      console.log(registrationInfo)
 
       await CustomerService.RegisterCustomer(registrationInfo);
 
@@ -298,7 +302,8 @@ export default function AuthPage() {
         }, 2000) // Wait 2 seconds before redirecting so the user can see the message
       }, 1000) // Simulate network delay
     } catch (error) {
-      setErrorMessage("Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.")
+      
+      setErrorMessages(getResponseErrors(error))
       console.error("Registration error:", error)
     } finally {
       setIsRegisterLoading(false)
@@ -595,35 +600,38 @@ export default function AuthPage() {
                     transition={{ duration: 0.3 }}
                     className="space-y-4"
                   >
-                    {errorMessage && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
-                      >
-                        <div className="flex">
-                          <div className="py-1">
-                            <svg
-                              className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <p className="font-medium">{errorMessage}</p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
+                    {errorMessages.map((message, i) => (
+                        
+                          <motion.div key={i}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+                          >
+                            <div className="flex">
+                              <div className="py-1">
+                                <svg 
+                                  className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                  />
+                                </svg>
+                              </div>
+                              <div>
+                                <p className="font-medium">{message}</p>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                    
+                    
                     <div className="space-y-2">
                       <Label htmlFor="firstName" className="text-gray-700 font-medium">
                         Ad
@@ -673,7 +681,7 @@ export default function AuthPage() {
                         placeholder="Telefon"
                         className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={registerPhone}
-                        onChange={(e) => setRegisterPhone(e.target.value)}
+                        onChange={(e) => setRegisterPhone(e.target.value.toString())}
                         required
                       />
                     </div>
