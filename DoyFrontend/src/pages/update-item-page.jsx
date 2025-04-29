@@ -246,7 +246,7 @@ export default function UpdateItemPage() {
         name: formData.name,
         description: formData.description,
         price: formData.price,
-        restaurantId: 1,
+        restaurantId: restaurantId,
         menuItemType: reversemenuItemTypeMap[formData.menuItemType],
       }
       console.log(formDataToSend)
@@ -258,6 +258,7 @@ export default function UpdateItemPage() {
       let response
       if (isEditMode) {
         // Update existing item
+        console.log(itemId);
         response = await axios.put(`http://localhost:8080/api/item/update/${itemId}`, formDataToSend)
       } else {
         // Create new item

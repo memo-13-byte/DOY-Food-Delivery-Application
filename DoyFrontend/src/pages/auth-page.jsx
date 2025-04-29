@@ -135,12 +135,12 @@ export default function AuthPage() {
 
     // URL parametrelerine göre yönlendirme
     if (tab === "register" && type === "restaurant") {
-      navigate("/restaurant/register")
+      navigate("/restaurants/register")
       return
     }
 
     if (tab === "register" && type === "courier") {
-      navigate("/courier/register")
+      navigate("/couriers/register")
       return
     }
   }, [])
@@ -175,6 +175,7 @@ export default function AuthPage() {
 
   // Update URL when tabs change
   const handleTabChange = (value) => {
+    
     setActiveTab(value)
     const newParams = new URLSearchParams(location.search)
     newParams.set("tab", value)
@@ -182,10 +183,10 @@ export default function AuthPage() {
     // Eğer register sekmesine geçiliyorsa ve kullanıcı tipi restaurant veya courier ise, ilgili sayfaya yönlendir
     if (value === "register" && (userType === "restaurant" || userType === "courier")) {
       if (userType === "restaurant") {
-        navigate("/restaurant/register")
+        navigate("/restaurants/register")
         return
       } else if (userType === "courier") {
-        navigate("/courier/register")
+        navigate("/couriers/register")
         return
       }
     }
@@ -217,28 +218,25 @@ export default function AuthPage() {
 
       const createdUser = await axios.get(`http://localhost:8080/api/users/get-by-email/${email}`,
          { headers: { Authorization: `Bearer ${response.data.token}` } });
-
+        
       const profileId = createdUser.data.id
-        // Redirect to the appropriate dashboard based on user type
-        try {
-          if (userType === "restaurant") {
-            navigate(`/restaurant/profile/${profileId}`)
-          } else if (userType === "courier") { 
-            navigate(`/courier/profile/${profileId}`)
-          } else {
-            navigate(`/customer/profile/${profileId}`)
-          }
-        } catch (error) {
-          console.error("Navigation error:", error)
-          // Fallback - if navigation fails, try direct location change
-          const basePath =
-            userType === "restaurant"
-              ? `/restaurant/profile/${profileId}`
-              : userType === "courier"
-                ? `/courier/profile/${profileId}`
-                : `/customer/profile/${profileId}`
-          window.location.href = basePath
-        }
+
+      if (userType === "restaurant") {
+        await axios.get(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${email}`,
+          { headers: { Authorization: `Bearer ${response.data.token}` } });
+         
+        navigate(`/restaurant/profile/${profileId}`)
+      } else if (userType === "courier") { 
+        await axios.get(`http://localhost:8080/api/users/couriers/get-by-email/${email}`,
+          { headers: { Authorization: `Bearer ${response.data.token}` } });
+         
+        navigate(`/courier/profile/${profileId}`)
+      } else {
+        await axios.get(`http://localhost:8080/api/users/customers/get-by-email/${email}`,
+          { headers: { Authorization: `Bearer ${response.data.token}` } });
+         
+        navigate(`/customer/profile/${profileId}`)
+      }
       } 
     catch (error) {
       setErrorMessage("Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.")

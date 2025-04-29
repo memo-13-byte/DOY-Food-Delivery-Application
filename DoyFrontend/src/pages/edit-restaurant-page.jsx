@@ -80,6 +80,8 @@ const handleCancelMinOrderPriceEdit = () => {
       try {
         const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
         setRestaurant(response.data)
+        setPhoneNumberInput(response.data.restaurantPhone)
+        setMinOrderPriceInput(response.data.minOrderPrice)
       } catch (error) {
         alert("Error fetching restaurant information:", error)
       }
@@ -306,13 +308,18 @@ const handleCancelMinOrderPriceEdit = () => {
     setDescriptionInput(restaurant.description)
   }
 
-  const handleSaveDescription = () => {
+  const handleSaveDescription = async() => {
     if (descriptionInput.trim()) {
-      restaurant.description = descriptionInput
+      let data = {
+        ...restaurant,
+        desription: descriptionInput
+      }
+      
 
       try {
         console.log(restaurant)
-        axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, restaurant)
+        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
+        restaurant.description = descriptionInput
       } catch (error) {
         console.log(error)
         setErrorMessages(getResponseErrors(error))
@@ -323,29 +330,35 @@ const handleCancelMinOrderPriceEdit = () => {
     
   }
 
-  const handleSavePhoneNumber = () => {
+  const handleSavePhoneNumber = async () => {
     if (phoneNumberInput.trim()) {
+      let data = {
+        ...restaurant,
+        restaurantPhone: phoneNumberInput
+      }
       restaurant.restaurantPhone = phoneNumberInput;
   
       try {
         console.log(restaurant);
-        axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, restaurant);
+        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
       } catch (error) {
-        console.log(error);
         setErrorMessages(getResponseErrors(error));
       }
     }
-    console.log("Saving new phone number:", phoneNumberInput);
     setIsEditingPhoneNumber(false)
   }
   
-  const handleSaveMinOrderPrice = () => {
+  const handleSaveMinOrderPrice = async() => {
     if (minOrderPriceInput !== '' && !isNaN(minOrderPriceInput)) {
-      restaurant.minOrderPrice = minOrderPriceInput;
+      let data = {
+        ...restaurant,
+        minOrderPrice: minOrderPriceInput
+      }
   
       try {
         console.log(restaurant);
-        axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, restaurant);
+        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+        restaurant.minOrderPrice = minOrderPriceInput;
       } catch (error) {
         console.log(error);
         setErrorMessages(getResponseErrors(error));
@@ -379,13 +392,18 @@ const handleCancelMinOrderPriceEdit = () => {
     setNameInput(restaurant.restaurantName)
   }
 
-  const handleSaveName = () => {
+  const handleSaveName = async() => {
     if (nameInput.trim()) {
-      restaurant.restaurantName = nameInput
+      let data = {
+        ...restaurant,
+        restaurantName: nameInput
+      }
+      
 
       try {
         console.log(restaurant)
-        axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, restaurant)
+        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
+        restaurant.restaurantName = nameInput
       } catch (error) {
         console.log(error)
         setErrorMessages(getResponseErrors(error))

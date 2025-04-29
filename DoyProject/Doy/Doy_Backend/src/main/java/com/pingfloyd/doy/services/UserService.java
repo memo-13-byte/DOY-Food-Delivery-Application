@@ -41,10 +41,10 @@ public class UserService implements UserDetailsService, IUserService {
     }
 
 
-    public String SignUpCustomer(User customer){
-        customer.setPasswordHash(bCryptPasswordEncoder.encode(customer.getPassword()));
-        customer.setRole(UserRoles.CUSTOMER);
-        userRepository.save(customer);
+    public String SignUpCustomer(User user, UserRoles role){
+        user.setPasswordHash(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRole(role);
+        userRepository.save(user);
         return "User Signed Up Successfully";
     }
 

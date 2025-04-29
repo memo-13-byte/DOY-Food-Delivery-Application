@@ -9,11 +9,11 @@ import lombok.*;
 @ToString
 public class RegistrationRequest {
 
-    @NotBlank(message = "User name cannot be blank")
-    @Size(min = 3 , max = 30 , message = "Username must be between 3 and 30 characters")
+    @NotBlank(message = "First name cannot be blank")
+    @Size(min = 3 , max = 30 , message = "First name must be between 3 and 30 characters")
     private final String firstName;
     @NotBlank(message = "Last name cannot be blank")
-    @Size(min = 2 , max = 30 , message = "Name must be between 2 and 30 characters")
+    @Size(min = 2 , max = 30 , message = "Last name must be between 2 and 30 characters")
     private final String lastName;
 
     @NotBlank(message = "Email cannot be blank")

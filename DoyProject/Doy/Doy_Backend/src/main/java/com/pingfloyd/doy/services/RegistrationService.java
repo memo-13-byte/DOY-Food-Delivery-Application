@@ -56,7 +56,7 @@ public class RegistrationService {
                 request.getPhoneNumber()
         );
         user.setRole(UserRoles.CUSTOMER); //add user roles like this
-        String success = userService.SignUpCustomer(user);
+        String success = userService.SignUpCustomer(user, UserRoles.CUSTOMER);
         ConfirmationToken token = confirmationTokenService.GenerateToken(user , 15);
         String link = confirmUrlBase + "/api/registration/confirm?token=" + token.getToken();
         String emailBody = buildEmail(user.getUsername() , link);
@@ -80,7 +80,7 @@ public class RegistrationService {
         restaurantDb.setAddress(addressDb);
         restaurantOwner.setRestaurant(restaurantDb);
         restaurantDb.setRestaurantOwner(restaurantOwner);
-        userService.SignUpCustomer(restaurantOwner);
+        userService.SignUpCustomer(restaurantOwner, UserRoles.RESTAURANT_OWNER);
 
         String emailBody = buildInformationEmail(restaurantOwner.getFirstname()+" "+restaurantOwner.getLastname());
         emailService.send(restaurantOwner.getEmail() , "Registration for Doy" , emailBody);
@@ -96,7 +96,7 @@ public class RegistrationService {
             throw new UserAlreadyExistException("Restaurant owner with given government id already exist!");
         }
         Courier courier = CreateCourier(request);
-        userService.SignUpCustomer(courier);
+        userService.SignUpCustomer(courier, UserRoles.COURIER);
         String emailBody = buildInformationEmail(courier.getFirstname()+" "+courier.getLastname());
         emailService.send(courier.getEmail() , "Registration for Doy" , emailBody);
         return courier;
