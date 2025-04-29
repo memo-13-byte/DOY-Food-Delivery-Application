@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
@@ -26,6 +26,10 @@ import UpdateItemPage from './pages/update-item-page';
 import AddItemPage from './pages/add-item-page';
 import RestaurantOwnerProfilePage from "./pages/restaurant-owner-profile-page";
 import CourierOrdersPage from "./pages/courier-orders-page";
+import AdminComplaintsPage from './pages/AdminComplaintsPage.jsx';
+import AdminAccountManagementPage from './pages/AdminAccountManagementPage.jsx';
+import PendingRegistrationsPage from './pages/PendingRegistrationsPage.jsx';
+import PlatformConfigurationsPage from './pages/PlatformConfigurationsPage.jsx';
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -36,6 +40,7 @@ const LoadingSpinner = () => (
 );
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
@@ -61,7 +66,11 @@ function App() {
               <Route path="/restaurant/:id" element={<RestaurantDetail />} />
               <Route path="/restaurants/manage/:id/edit-item/:categoryId/:itemId" element={<UpdateItemPage />} />
               <Route path="/restaurants/manage/:id/add-item/:categoryId" element={<AddItemPage />} />
-              <Route path="/profile-test" element={<ProfileTestPageFixed />} />              
+              <Route path="/profile-test" element={<ProfileTestPageFixed />} />     
+              <Route path="/admin/complaints" element={<AdminComplaintsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
+              <Route path="/admin/account-management" element={<AdminAccountManagementPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
+              <Route path="/admin/pending-registrations" element={<PendingRegistrationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
+              <Route path="/admin/platform-configurations" element={<PlatformConfigurationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />         
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
