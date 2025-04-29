@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminNavbar from "../components/AdminNavbar";
 import Footer from "../components/Footer";
 import UserList from "../components/UserList";
@@ -6,7 +6,7 @@ import RestaurantList from "../components/RestaurantList";
 import SelectedItem from "../components/SelectedItem";
 import ActionButtons from "../components/ActionButtons";
 import Toast from "../components/Toast"; // 📌 Toast'ı import ettik
-
+import axios from "axios";
 const initialUsers = [
     { id: 1, name: "Customer A", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
     { id: 2, name: "Customer B", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
@@ -26,11 +26,12 @@ const initialRestaurants = [
 ];
 
 export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
-    const [users, setUsers] = useState(initialUsers); // ✨ User datası artık state'te
-    const [restaurants, setRestaurants] = useState(initialRestaurants);
+    const [users, setUsers] = useState([]); // ✨ User datası artık state'te
+    const [restaurants, setRestaurants] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedRestaurant, setSelectedRestaurant] = useState(null);
     const [toasts, setToasts] = useState([]); // 📌 Multiple toasts
+    
 
     // 📌 Kullanıcı güncelleme fonksiyonu
     const updateUserOrRestaurant = (id, field, value, type) => {
@@ -43,7 +44,7 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
                 if (selectedUser?.id === id) {
                     setSelectedUser(updatedUsers.find(user => user.id === id));
                 }
-
+                
                 return updatedUsers;
             });
         } else if (type === "restaurant") {
@@ -101,6 +102,7 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
                     }}>
                         <UserList
                             users={users} // ✨ users arrayini veriyoruz
+                            setUsers={setUsers}
                             setSelectedUser={setSelectedUser}
                             selectedUser={selectedUser}
                             darkMode={darkMode}
@@ -132,6 +134,7 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
                     }}>
                         <RestaurantList
                             restaurants={restaurants}
+                            setRestaurants={setRestaurants}
                             setSelectedRestaurant={setSelectedRestaurant}
                             selectedRestaurant={selectedRestaurant}
                             darkMode={darkMode}

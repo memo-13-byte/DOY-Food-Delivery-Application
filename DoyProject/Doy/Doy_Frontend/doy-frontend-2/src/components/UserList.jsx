@@ -1,22 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const UserList = ({ users, setSelectedUser, selectedUser, darkMode }) => { // 📌 Artık props'tan users alıyoruz
+const UserList = ({ users, setUsers, setSelectedUser, selectedUser, darkMode }) => { // 📌 Artık props'tan users alıyoruz
     const [search, setSearch] = useState("");
     const [showAll, setShowAll] = useState(false);
     const [filter, setFilter] = useState("all");
+    const [usersToDisplay, setUsersToDisplay] = useState([])
+    const [filteredUsers, setFilteredUsers] = useState([]);
 
-    const filteredUsers = users
-        .filter(user => {
-            const matchesSearch = user.name.toLowerCase().includes(search.toLowerCase());
-            const matchesFilter =
-                filter === "all" ||
-                (filter === "active" && !user.banned && !user.suspended) ||
-                (filter === "banned" && user.banned) ||
-                (filter === "suspended" && user.suspended);
-            return matchesSearch && matchesFilter;
-        });
+    useEffect( () => {
+            const getAllUsers = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/users/get-all`)
+                    let data = []
+                    response.data.forEach((value) => {data.push(
+                        {
+                            id: value.id,
+                            name: value.firstname + " " + value.lastname,
+                            type: value.role,
+                            banned: false,
+                            suspended: false,
+                            suspendedUntil: null
+                        }
+                    )})
 
-    const usersToDisplay = showAll ? filteredUsers : filteredUsers.slice(0, 4);
+                    
+                    setUsers(data)
+                    setFilteredUsers(users
+                        .filter(user => {
+                            const matchesSearch = user.name.toLowerCase().includes(search.toLowerCase());
+                            const matchesFilter =
+                                filter === "all" ||
+                                (filter === "active" && !user.banned && !user.suspended) ||
+                                (filter === "banned" && user.banned) ||
+                                (filter === "suspended" && user.suspended);
+                            return matchesSearch && matchesFilter;
+                        }));
+
+                        setUsersToDisplay(showAll ? filteredUsers : filteredUsers.slice(0, 4));
+                } catch (error) {
+                    console.error("No users found: " + error)
+                }
+            }
+    
+            getAllUsers()
+            
+        }, [search, ])
 
     return (
         <div style={{
