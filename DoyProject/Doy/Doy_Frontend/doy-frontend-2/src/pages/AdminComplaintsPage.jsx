@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import doyLogo from "../assets/doylogo.jpeg";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import Toast from '../components/Toast'; // 📢 Toast componentini import et
 
 export default function AdminComplaintsPage({ darkMode, setDarkMode }) {
     const [selectedComplaint, setSelectedComplaint] = useState(null);
@@ -19,6 +20,7 @@ export default function AdminComplaintsPage({ darkMode, setDarkMode }) {
     const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);
     const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
     const [visibleCount, setVisibleCount] = useState(4);
+    const [toastMessages, setToastMessages] = useState([]); // 🔥 Toast array
 
 
     const handleComplaintClick = (complaint) => {
@@ -33,6 +35,13 @@ export default function AdminComplaintsPage({ darkMode, setDarkMode }) {
             }, 300);
         }
     };
+
+      const addToast = (newMessage) => {
+          setToastMessages(prev => [...prev, newMessage]);
+          setTimeout(() => {setToastMessages(prev => prev.slice(1));}, 2500);
+      };
+
+
 
     const filteredComplaints = complaintsMockData
         .filter(c =>
@@ -276,14 +285,26 @@ export default function AdminComplaintsPage({ darkMode, setDarkMode }) {
                 <div ref={detailRef}>
                     <AnimatePresence mode="wait">
                         {selectedComplaint && (
-                            <ComplaintDetails data={selectedComplaint} darkMode={darkMode} />
-                        )}
+                            <ComplaintDetails
+                            data={selectedComplaint}
+                        darkMode={darkMode}
+                        addToast={addToast} // 📢 EKLİYORSUN BURAYI
+                    />
+
+                    )}
                     </AnimatePresence>
                 </div>
 
                 {/* Footer */}
                 <Footer darkMode={darkMode} />
+
+                {/* Toasts */}
+                {toastMessages.length > 0 && (
+                    <Toast messages={toastMessages} darkMode={darkMode} />
+                )}
+
             </div>
         </div>
     );
 }
+

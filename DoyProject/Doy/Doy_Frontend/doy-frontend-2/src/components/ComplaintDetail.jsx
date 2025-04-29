@@ -6,10 +6,10 @@ import orderHistoryMockData from "../data/orderHistoryMockData";
 import Toast from "./Toast";
 
 
-const ComplaintDetails = ({ data, darkMode }) => {
+const ComplaintDetails = ({ data, darkMode, addToast }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState("view");
-    const [toast, setToast] = useState(null); // 📌 Toast state'i
+
 
 
     if (!data) return null;
@@ -23,12 +23,6 @@ const ComplaintDetails = ({ data, darkMode }) => {
         setModalOpen(false);
     };
 
-    const showToast = (message) => {
-        setToast(message);
-        setTimeout(() => {
-            setToast(null);
-        }, 2500);
-    };
 
     const orderHistory = orderHistoryMockData[data.id] || [];
 
@@ -40,26 +34,26 @@ const ComplaintDetails = ({ data, darkMode }) => {
     const handleAction = (action) => {
         if (action === "refund" || action === "warn" || action === "other") {
             data.status = "Resolved";
-            showToast(`✅ ${action.charAt(0).toUpperCase() + action.slice(1)} completed!`);
+            addToast(`✅ ${action.charAt(0).toUpperCase() + action.slice(1)} completed!`);
         } else if (action === "save") {
             if (data.status !== "Resolved") {
                 data.status = "Resolved";
-                showToast("✅ Resolution saved!");
+                addToast("✅ Resolution saved!");
             } else {
-                showToast("⚠️ Already resolved.");
+                addToast("⚠️ Already resolved.");
             }
         } else if (action === "request") {
-            showToast("ℹ️ Requested more information from customer.");
+            addToast("ℹ️ Requested more information from customer.");
         } else if (action === "escalate") {
             data.escalated = true;
-            showToast("🚀 Complaint escalated!");
+            addToast("🚀 Complaint escalated!");
         }
     };
 
 
+
     return (
         <>
-            {toast && <Toast message={toast} darkMode={darkMode} />}
             <motion.div
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
