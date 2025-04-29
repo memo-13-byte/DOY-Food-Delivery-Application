@@ -51,6 +51,10 @@ public class OrderService {
         this.emailService = emailService;
     }
 
+    public Boolean ClearCartByRestaurant(Long id){
+        cartService.CleanCartRestaurant(id);
+        return true;
+    }
 
     @Transactional
     public Boolean AddItemToCart(String username, Long itemId) throws UserNotFoundException, ItemNotFoundException, CartIsNotEmptyException {
