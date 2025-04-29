@@ -1,0 +1,58 @@
+[
+  {
+    "restaurantName": "Pizza City",
+    "restaurantPhone": "05550000001",
+    "restaurantCategory": "PIZZA",
+    "rating": 4.5,
+    "minOrderPrice": 100
+  },
+  {
+    "restaurantName": "BurgerX",
+    "restaurantPhone": "05550000002",
+    "restaurantCategory": "BURGER",
+    "rating": 4.2,
+    "minOrderPrice": 80
+  },
+  {
+    "restaurantName": "Sweet Heaven",
+    "restaurantPhone": "05550000003",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.8,
+    "minOrderPrice": 60
+  },
+  {
+    "restaurantName": "Sushi Express",
+    "restaurantPhone": "05550000004",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.1,
+    "minOrderPrice": 120
+  },
+  {
+    "restaurantName": "Taco Fiesta",
+    "restaurantPhone": "05550000005",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.6,
+    "minOrderPrice": 90
+  },
+  {
+    "restaurantName": "Pasta House",
+    "restaurantPhone": "05550000006",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.3,
+    "minOrderPrice": 75
+  },
+  {
+    "restaurantName": "Grill Master",
+    "restaurantPhone": "05550000007",
+    "restaurantCategory": "KEBAB",
+    "rating": 4.7,
+    "minOrderPrice": 110
+  },
+  {
+    "restaurantName": "Vegan Vibes",
+    "restaurantPhone": "05550000008",
+    "restaurantCategory": "CASUAL_DINING",
+    "rating": 4.4,
+    "minOrderPrice": 85
+  }
+]
