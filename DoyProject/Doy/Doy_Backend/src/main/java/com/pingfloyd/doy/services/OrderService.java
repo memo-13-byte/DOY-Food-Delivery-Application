@@ -1,43 +1,56 @@
 package com.pingfloyd.doy.services;
 
 
-import com.pingfloyd.doy.dto.DtoPaymentInformationIU;
-import com.pingfloyd.doy.dto.UserCartDTO;
+import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.enums.CardType;
 import com.pingfloyd.doy.enums.OrderStatus;
-import com.pingfloyd.doy.exception.CartIsNotEmptyException;
-import com.pingfloyd.doy.exception.ItemNotFoundException;
-import com.pingfloyd.doy.exception.UserNotFoundException;
+import com.pingfloyd.doy.exception.*;
 import com.pingfloyd.doy.repositories.CustomerOrderRepository;
 import com.pingfloyd.doy.repositories.OrderItemRepository;
 import com.pingfloyd.doy.repositories.PaymentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class OrderService {
     private final ItemService itemService;
     private final UserService userService;
+    private final CourierService courierService;
+    private final RestaurantService restaurantService;
     private final CartService cartService;
     private final PaymentRepository paymentRepository;
     private final CustomerOrderRepository customerOrderRepository;
+    private final CourierRequestService courierRequestService;
+    private final DistrictService districtService;
     private final OrderItemRepository orderItemRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public OrderService(ItemService itemService, UserService userService, CartService cartService, PaymentRepository paymentRepository, CustomerOrderRepository customerOrderRepository, OrderItemRepository orderItemRepository){
+    public OrderService(ItemService itemService, UserService userService, CourierService courierService, RestaurantService restaurantService, CartService cartService, PaymentRepository paymentRepository, CustomerOrderRepository customerOrderRepository, CourierRequestService courierRequestService, DistrictService districtService, OrderItemRepository orderItemRepository, EmailService emailService){
         this.itemService = itemService;
         this.userService = userService;
+        this.courierService = courierService;
+        this.restaurantService = restaurantService;
         this.cartService = cartService;
         this.paymentRepository = paymentRepository;
         this.customerOrderRepository = customerOrderRepository;
+        this.courierRequestService = courierRequestService;
+        this.districtService = districtService;
         this.orderItemRepository = orderItemRepository;
+        this.emailService = emailService;
     }
 
+
+    @Transactional
     public Boolean AddItemToCart(String username, Long itemId) throws UserNotFoundException, ItemNotFoundException, CartIsNotEmptyException {
         Customer customer = userService.SearchCustomer(username);
         MenuItem menuItem = itemService.getItemById(itemId);
@@ -80,6 +93,8 @@ public class OrderService {
             cartService.SaveCart(userCart);
             return true;
     }
+
+    @Transactional
     public Boolean RemoveItemFromCart(String username , Long itemId) throws UserNotFoundException,ItemNotFoundException{
         Customer customer = userService.SearchCustomer(username);
         MenuItem menuItem = itemService.getItemById(itemId);
@@ -122,23 +137,28 @@ public class OrderService {
     private CartItem TraverseCart(Cart cart , MenuItem menuItem){
         Set<CartItem> set = cart.getItems();
         for(CartItem item: set){
-            if(item.getMenuItem() == menuItem){
+            if(item.getMenuItem().getId().equals(menuItem.getId())){
                 return item;
             }
         }
         return  null;
     }
+
+    @Transactional
     public Boolean ConfirmOrder(DtoPaymentInformationIU dtoPaymentInformationIU ,String username){
         Customer customer = userService.SearchCustomer(username);
         if(customer == null || dtoPaymentInformationIU == null){
             return false;
         }
         CustomerOrder customerOrder = CreateCustomerOrder(customer);
-        customerOrderRepository.save(customerOrder);
         Set<CartItem> set = customer.getCart().getItems();
         for(CartItem item : set){
-            orderItemRepository.save(CreateOrderItem(item,customerOrder));
+            OrderItem orderItem = CreateOrderItem(item,customerOrder);
+            //orderItemRepository.save(orderItem);
+            customerOrder.getItems().add(orderItem);
         }
+        set.clear();
+        customerOrderRepository.save(customerOrder);
         paymentRepository.save(CreatePayment(dtoPaymentInformationIU , customer));
         return true;
     }
@@ -151,10 +171,12 @@ public class OrderService {
     private CustomerOrder CreateCustomerOrder(Customer customer){
         CustomerOrder customerOrder = new CustomerOrder();
         customerOrder.setCustomer(customer);
-        customerOrder.setStatus(OrderStatus.ACCEPTED);
+        customerOrder.setStatus(OrderStatus.PLACED);
         customerOrder.setRestaurant(customer.getCart().getRestaurant());
         return customerOrder;
     }
+
+
 
     private PaymentInfo CreatePayment(DtoPaymentInformationIU dtoPaymentInformationIU, Customer customer){
         PaymentInfo paymentInfo = new PaymentInfo();
@@ -166,6 +188,188 @@ public class OrderService {
         paymentInfo.setCustomer(customer);
         return paymentInfo;
     }
+    public DtoRestaurantOrders GetRestaurantOrders(Long id){
+        Restaurant restaurant = restaurantService.findRestaurantById(id);
+        if(restaurant == null){
+            throw new RestaurantNotFoundException("Restaurant with given id doesn't exist!");
+        }
+        List<CustomerOrder> orders = customerOrderRepository.findCustomerOrdersByRestaurant(restaurant);
+        return MapOrders(orders);
+    }
+
+    public List<DtoCourierForOrder> GetAvailableCouriersByDistrict(Long restaurantId){
+        Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
+        District district = restaurant.getAddress().getDistrict();
+        Set<Courier> couriers = courierService.GetCouriersByDistrict(district);
+        List<DtoCourierForOrder> courierForOrderList = new ArrayList<>();
+        for(Courier c : couriers){
+            if(c.getIsAvailable()){
+                DtoCourierForOrder dtoCourierForOrder = MapDtoCourierForOrder(c);
+                courierForOrderList.add(dtoCourierForOrder);
+            }
+        }
+        return courierForOrderList;
+    }
+
+    public Boolean SendRequestToCourier(Long orderId, Long courierId){
+        Optional<CustomerOrder> order = customerOrderRepository.findCustomerOrderByOrderId(orderId);
+        if(order.isEmpty()){
+            throw new OrderNotFoundException("Order with given id cannot be found!");
+        }
+        Optional<Courier> courier = courierService.GetCourierById(courierId);
+        if(courier.isEmpty()){
+            throw new UserNotFoundException("Courier with given id doesn't exist!");
+        }
+        CourierRequest request = new CourierRequest();
+        request.setCourier(courier.get());
+        request.setOrder(order.get());
+        courierRequestService.SaveRequest(request);
+        return true;
+    }
+
+    public DtoCourierRequest GetCourierRequests(Long courierId){
+        List<CourierRequest> requests = courierRequestService.GetCourierRequests(courierId);
+        DtoCourierRequest request = new DtoCourierRequest();
+        for(CourierRequest req : requests){
+            CustomerOrder order = req.getOrder();
+            Customer customer = order.getCustomer();
+            DtoCourierRequest.RequestInfo requestInfo = new DtoCourierRequest.RequestInfo();
+            for(OrderItem item : order.getItems()){
+                DtoMenuItem dtoMenuItem = MapMenuItem(item.getMenuItem());
+                requestInfo.getMenuItems().add(dtoMenuItem);
+            }
+            requestInfo.setNote("None");
+            requestInfo.setRequestId(req.getRequestId());
+            requestInfo.setCustomerEmail(customer.getEmail());
+            requestInfo.setCustomerAddress(MapAddress(customer.getCurrent_address()));
+            requestInfo.setCustomerName(customer.getFirstname() + " " + customer.getLastname());
+            requestInfo.setCustomerPhone(customer.getPhoneNumber());
+            requestInfo.setRestaurantName(order.getRestaurant().getRestaurantName());
+            request.getRequestInfos().add(requestInfo);
+        }
+        return request;
+    }
+
+    private DtoAddress MapAddress(Address address){
+        DtoAddress dtoAddress = new DtoAddress();
+        dtoAddress.setCity(address.getCityEnum());
+        dtoAddress.setAvenue(address.getAvenue());
+        dtoAddress.setDistrict(address.getDistrict().getName());
+        dtoAddress.setStreet(address.getStreet());
+        dtoAddress.setNeighborhood(address.getNeighborhood());
+        dtoAddress.setApartmentNumber(Integer.valueOf(address.getApartment_number()));
+        dtoAddress.setBuildingNumber(Integer.valueOf(address.getBuildingNumber()));
+        return dtoAddress;
+    }
+    private DtoMenuItem MapMenuItem(MenuItem item){
+        DtoMenuItem dtoMenuItem = new DtoMenuItem();
+        dtoMenuItem.setRestaurantId(item.getRestaurant().getId());
+        dtoMenuItem.setMenuItemType(item.getMenuItemType());
+        dtoMenuItem.setName(item.getName());
+        dtoMenuItem.setPrice(item.getPrice());
+        dtoMenuItem.setId(item.getId());
+        dtoMenuItem.setDescription(item.getDescription());
+        return dtoMenuItem;
+    }
+
+
+    public DtoCourierForOrder MapDtoCourierForOrder(Courier c){
+        DtoCourierForOrder dtoCourierForOrder = new DtoCourierForOrder();
+        dtoCourierForOrder.setCourierId(c.getId());
+        dtoCourierForOrder.setEmail(c.getEmail());
+        dtoCourierForOrder.setLocation(c.getFirstname());
+        dtoCourierForOrder.setFirstName(c.getFirstname());
+        dtoCourierForOrder.setPhoneNumber(c.getPhoneNumber());
+        dtoCourierForOrder.setLastName(c.getLastname());
+        return dtoCourierForOrder;
+
+    }
+
+    public Boolean CourierResponse(Long requestId , Boolean response){
+        CourierRequest request = courierRequestService.GetCourierRequestById(requestId);
+        CustomerOrder order = request.getOrder();
+        if(response){
+            order.setStatus(OrderStatus.AWAITING_PICKUP);
+            customerOrderRepository.save(order);
+            return true;
+        }
+        courierRequestService.DeleteRequest(request);
+        return false;
+    }
+
+    public DtoRestaurantOrders GetCourierActiveOrder(Long id){
+        Optional<Courier> courier = courierService.GetCourierById(id);
+        if(courier.isEmpty()){
+            throw new UserNotFoundException("Courier with given id doesn't exist!");
+        }
+        Optional<CustomerOrder> orderOptional = customerOrderRepository.findCustomerOrderByCourier(courier.get());
+
+        DtoRestaurantOrders dtoRestaurantOrders = new DtoRestaurantOrders();
+        if(orderOptional.isPresent()){
+            CustomerOrder order = orderOptional.get();
+            MapOrderInfo(dtoRestaurantOrders, order);
+        }
+        return dtoRestaurantOrders;
+    }
+
+    private void MapOrderInfo(DtoRestaurantOrders dtoRestaurantOrders, CustomerOrder order) {
+        DtoRestaurantOrders.OrderInfo orderInfo = new DtoRestaurantOrders.OrderInfo();
+        orderInfo.setOrderId(order.getOrderId());
+        orderInfo.setCreationDate(order.getCreationDate());
+        orderInfo.setCustomerName(order.getCustomer().getEmail());
+        orderInfo.setCustomerPhone(order.getCustomer().getPhoneNumber());
+        orderInfo.setPrice(1000.0);
+        orderInfo.setStatus(order.getStatus());
+        dtoRestaurantOrders.getOrderInfoList().add(orderInfo);
+    }
+
+    private DtoRestaurantOrders MapOrders(List<CustomerOrder> orders){
+        DtoRestaurantOrders dtoRestaurantOrders = new DtoRestaurantOrders();
+        for(CustomerOrder order : orders){
+            MapOrderInfo(dtoRestaurantOrders, order);
+        }
+        return dtoRestaurantOrders;
+    }
+
+
+    @Transactional
+    public void ProcessOrderState(Long id , DtoOrderStatus status){
+        Optional<CustomerOrder> order = customerOrderRepository.findCustomerOrderByOrderId(id);
+        if(order.isEmpty()){
+            throw new OrderNotFoundException("Order with given id cannot be found!");
+        }
+        CustomerOrder customerOrder = order.get();
+        if(status.getAccept()){
+            customerOrder.setStatus(status.getStatus());
+        }
+        else{
+            customerOrder.setStatus(OrderStatus.REJECTED);
+        }
+        customerOrderRepository.save(customerOrder);
+    }
+
+    @Transactional
+    public void AssignCourierToOrder(Long courierId , Long orderId){
+        Optional<Courier> courierOptional = courierService.GetCourierById(courierId);
+        if(courierOptional.isEmpty()){
+            throw new UserNotFoundException("Courier with given id cannot be found!");
+        }
+        if(!courierOptional.get().getIsAvailable()){
+            throw new CourierIsNotAvailableException("Courier is not available for a new order!");
+        }
+        Optional<CustomerOrder> customerOrderOptional = customerOrderRepository.findCustomerOrderByOrderId(orderId);
+        if(customerOrderOptional.isEmpty()){
+            throw  new OrderNotFoundException("Order with given id cannot be found!");
+        }
+        customerOrderOptional.get().setCourier(courierOptional.get());
+        customerOrderRepository.save(customerOrderOptional.get());
+    }
+
+
+
+
+
+
 
     public UserCartDTO getCurrentUserCart(String username) throws UserNotFoundException{
         UserCartDTO cartDto = new UserCartDTO(); // Start with an empty DTO

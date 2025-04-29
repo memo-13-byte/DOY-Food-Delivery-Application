@@ -1,0 +1,214 @@
+@baseUrl = "http://localhost:8080/api/item/post"
+
+### Tüm restoran ürlerini gönder
+### İlk restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+User-Agent: PostmanRuntime/7.43.3
+Postman-Token: {{$timestamp}}
+
+{
+    "name": "Neapolitan Pizza",
+    "description": "Stone oven baked, with special tomato sauce",
+    "price": 120.00,
+    "restaurantId": 1,
+    "menuItemType": "MAIN_DISH"
+}
+
+### İkinci restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Adana Kebab",
+    "description": "Spicy Adana style, served with lavash bread",
+    "price": 90.00,
+    "restaurantId": 2,
+    "menuItemType": "MAIN_DISH"
+}
+
+### Üçüncü restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Vegan Burger",
+    "description": "Completely plant-based, healthy and tasty",
+    "price": 85.00,
+    "restaurantId": 3,
+    "menuItemType": "MAIN_DISH"
+}
+
+### Dördüncü restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Mixed Kebab Menu",
+    "description": "A mix of Adana, Urfa and chicken skewers",
+    "price": 150.00,
+    "restaurantId": 4,
+    "menuItemType": "COMBO"
+}
+
+### Beşinci restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Lentil Vegan Soup",
+    "description": "Gluten-free, high-protein vegan soup",
+    "price": 55.00,
+    "restaurantId": 5,
+    "menuItemType": "EXTRA"
+}
+
+### Altıncı restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "French Fries",
+    "description": "Classic crispy fries",
+    "price": 30.00,
+    "restaurantId": 6,
+    "menuItemType": "EXTRA"
+}
+
+### Yedinci restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Grilled Meatballs",
+    "description": "Delicious meatballs grilled to perfection",
+    "price": 95.00,
+    "restaurantId": 7,
+    "menuItemType": "MAIN_DISH"
+}
+
+### Sekizinci restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Mozzarella Pizza",
+    "description": "Thin crust, extra cheesy",
+    "price": 110.00,
+    "restaurantId": 1,
+    "menuItemType": "MAIN_DISH"
+}
+
+### Dokuzuncu restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Turnip Juice",
+    "description": "Spicy turnip juice in Adana style",
+    "price": 15.00,
+    "restaurantId": 2,
+    "menuItemType": "DRINK"
+}
+
+### Onuncu restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Green Smoothie",
+    "description": "Blend of spinach, banana and chia seeds",
+    "price": 45.00,
+    "restaurantId": 3,
+    "menuItemType": "DRINK"
+}
+
+### On birinci restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Künefe",
+    "description": "Shredded phyllo pastry with pistachio and syrup",
+    "price": 50.00,
+    "restaurantId": 4,
+    "menuItemType": "EXTRA"
+}
+
+### On ikinci restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "Ezogelin Soup",
+    "description": "Traditional Turkish soup, served with lemon",
+    "price": 25.00,
+    "restaurantId": 5,
+    "menuItemType": "EXTRA"
+}
+
+### On üçüncü restoran ürünü
+POST {{baseUrl}}
+Content-Type: application/json
+X-CSRF-TOKEN: test-token
+Host: localhost:8080
+Origin: http://localhost:3000
+Accept: application/json
+
+{
+    "name": "American Burger Combo",
+    "description": "Burger, fries and a drink",
+    "price": 95.00,
+    "restaurantId": 6,
+    "menuItemType": "COMBO"
+}

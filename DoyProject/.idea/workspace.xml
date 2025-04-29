@@ -35,8 +35,11 @@
       <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/http-client.cookies" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/http-client.cookies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/httpRequests/http-requests-log.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DEL2/ai_prompt_for_testcase.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../DEL2/ai_prompt_for_testcase.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DEL2/ai_prompt_for_use_case.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../DEL2/ai_prompt_for_use_case.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DEL2/ai_prompts_for_softwarerequirement.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../DEL2/ai_prompts_for_softwarerequirement.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DEL2/diagrams/er diagram.drawio.svg" beforeDir="false" afterPath="$PROJECT_DIR$/../DEL2/diagrams/er diagram.drawio.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/.idea/DoyFrontend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/.idea/DoyFrontend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/.idea/misc.xml" afterDir="false" />
@@ -59,6 +62,7 @@
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/input.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/input.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/location-search.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/location-search.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/tabs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/tabs.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/textarea.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/textarea.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/toaster.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/components/ui/toaster.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/hooks/use-auth.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/hooks/use-auth.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/hooks/use-toast.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/hooks/use-toast.js" afterDir="false" />
@@ -67,6 +71,7 @@
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/queryClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/queryClient.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/lib/utils.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/add-edit-item-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/add-edit-item-page.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/auth-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/auth-page.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/courier-register-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/courier-register-page.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/home-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/home-page.jsx" afterDir="false" />
@@ -75,9 +80,7 @@
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/restaurants-browse-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/src/pages/restaurants-browse-page.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/tailwind.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../DoyFrontend/DoyFrontend/webpack.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DoyProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DoyProject.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/.gitignore" afterDir="false" />
@@ -85,59 +88,83 @@
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/config/AppConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/config/AppConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IItemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IPaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IPaymentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IRestaurantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/IRestaurantController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/ItemController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/PaymentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RegistrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RegistrationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RestaurantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RestaurantController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RestaurantSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/controllers/RestaurantSearchController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoMenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoMenuItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoMenuItemIU.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoMenuItemIU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoPayment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoPayment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoPaymentInformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoPaymentInformation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoPaymentInformationIU.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoPaymentInformationIU.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoRestaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoRestaurant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoRestaurantIU.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/DtoRestaurantIU.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/LoginAuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/LoginAuthResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/LoginRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/RegistrationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/RegistrationRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/RestaurantRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/RestaurantRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/UserCartDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/dto/UserCartDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Address.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Cart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CartItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CartItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/ConfirmationToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/ConfirmationToken.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Customer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CustomerOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/CustomerOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Delivery.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Delivery.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/MenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/MenuItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/OrderItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/PaymentInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/PaymentInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Restaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/Restaurant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/UserRoles.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/entities/UserRoles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/CardType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/CardType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/MenuItemType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/MenuItemType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/OrderStatus.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/RestaurantCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/enums/RestaurantCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/AccessDeniedExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/AccessDeniedExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/ApiError.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/ApiError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/AuthenticationExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/AuthenticationExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/CartIsNotEmptyException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/CartIsNotEmptyException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/InvalidLoginAttemptException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/InvalidLoginAttemptException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/ItemNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/ItemNotFoundException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/RestaurantNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/RestaurantNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/UserAlreadyExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/UserAlreadyExistException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/UserNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/exception/UserNotFoundException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/jwt/JwtAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/jwt/JwtAuthFilter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/jwt/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/jwt/JwtService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/other/RestaurantSpecification.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/other/RestaurantSpecification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CartItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CartItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CartRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CartRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/ConfirmationTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/ConfirmationTokenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CustomerOrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CustomerOrderRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CustomerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/CustomerRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/ItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/ItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/OrderItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/OrderItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/PaymentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/PaymentRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/RestaurantRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/RestaurantRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/CartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/CartService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/ConfirmationTokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/ConfirmationTokenService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/EmailService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IItemService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IPaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IPaymentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IRestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/IRestaurantService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/ItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/ItemService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/LoginService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/PaymentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RegistrationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RegistrationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RestaurantSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RestaurantSearchService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/RestaurantService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/services/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/starter/DoyApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/starter/DoyApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/utils/YearMonthAttributeConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/main/java/com/pingfloyd/doy/utils/YearMonthAttributeConverter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Backend/src/test/java/com/pingfloyd/doy/DoyApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Backend/src/test/java/com/pingfloyd/doy/DoyApplicationTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Doy/Doy_Frontend/react-application/README.md" afterDir="false" />
@@ -187,9 +214,9 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "registration-login-axios",
+    "git-widget-placeholder": "frontend-send-jwt",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/hp/Documents/GitHub/ping-floyd/DoyProject/Doy/Doy_Frontend",
+    "last_opened_file_path": "C:/Users/hp/Documents/GitHub/ping-floyd",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -199,6 +226,19 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="DoyProject" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="DoyProject" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -220,6 +260,7 @@
       <workItem from="1744469458838" duration="258000" />
       <workItem from="1744469726910" duration="82000" />
       <workItem from="1744483079648" duration="1768000" />
+      <workItem from="1745137116573" duration="42000" />
     </task>
     <servers />
   </component>

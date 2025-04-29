@@ -12,6 +12,7 @@ public class DtoRestaurant {
     private Long id;
     private String restaurantName;
     private String restaurantPhone;
+    private String description;
 
     private RestaurantCategory restaurantCategory;
     private Double rating;

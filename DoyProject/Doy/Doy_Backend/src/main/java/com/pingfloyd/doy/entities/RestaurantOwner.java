@@ -10,10 +10,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestaurantOwner extends User {
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false, orphanRemoval = true)
-    @JoinColumn(name = "gid", referencedColumnName = "gid", unique = true)
-    private GovernmentId governmentId;
+
 
     @OneToOne(mappedBy = "restaurantOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Restaurant restaurant;
+    private String governmentId;
+    public RestaurantOwner(String firstName, String lastName, String email, String passwordHash, String phoneNumber) {
+        super(firstName, lastName, email, passwordHash, phoneNumber);
+    }
+
+    public RestaurantOwner() {
+
+    }
 }
