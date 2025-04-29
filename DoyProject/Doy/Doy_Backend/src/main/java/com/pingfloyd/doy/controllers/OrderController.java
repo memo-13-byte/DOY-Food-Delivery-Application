@@ -88,7 +88,7 @@ public class OrderController {
     public ResponseEntity<Boolean> SendRequestToCourier(@PathVariable Long orderId , @PathVariable Long courierId){
         return ResponseEntity.ok(orderService.SendRequestToCourier(orderId , courierId));
     }
-    @GetMapping("/courier/request{courierId}")
+    @GetMapping("/courier/{courierId}/requests")
     public ResponseEntity<DtoCourierRequest> GetCourierRequests(@PathVariable Long courierId){
         return ResponseEntity.ok(orderService.GetCourierRequests(courierId));
     }
@@ -104,6 +104,16 @@ public class OrderController {
             ) {
         orderService.ProcessOrderState(orderId, status);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/courier/update/status/{id}-{status}")
+    public ResponseEntity<Boolean> SetCourierAvailability(@PathVariable Long id , @PathVariable Boolean status){
+        return ResponseEntity.ok(orderService.SetCourierAvailability(id , status));
+
+    }
+    @GetMapping("/courier/status/{id}")
+    public ResponseEntity<Boolean> GetCourierAvailability(@PathVariable Long id){
+        return ResponseEntity.ok(orderService.GetCourierAvailability(id));
     }
 
 

@@ -24,6 +24,8 @@ import RestaurantManagePage from './pages/edit-restaurant-page';
 import ForgotPassword from './pages/forgot-password';
 import UpdateItemPage from './pages/update-item-page';
 import AddItemPage from './pages/add-item-page';
+import RestaurantOwnerProfilePage from "./pages/restaurant-owner-profile-page";
+import CourierOrdersPage from "./pages/courier-orders-page";
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -51,6 +53,8 @@ function App() {
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/restaurants/register" element={<RestaurantRegisterPage />} />
               <Route path="/restaurant/profile/:id?" element={<RestaurantProfilePage />} />
+              <Route path="/restaurantowner/profile/:id?" element={<RestaurantOwnerProfilePage/>} />
+              <Route path="/courier/requests/:id?" element={<CourierOrdersPage/>} />
               <Route path="/couriers/register" element={<CourierRegisterPage />} />
               <Route path="/courier/profile/:id?" element={<CourierProfilePage />} />
               <Route path="/restaurants/manage/:id?" element={<RestaurantManagePage />} />
