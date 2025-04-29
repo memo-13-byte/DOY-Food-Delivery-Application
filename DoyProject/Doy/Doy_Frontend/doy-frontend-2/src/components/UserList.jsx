@@ -12,32 +12,30 @@ const UserList = ({ users, setUsers, setSelectedUser, selectedUser, darkMode }) 
             const getAllUsers = async () => {
                 try {
                     const response = await axios.get(`http://localhost:8080/api/users/get-all`)
-                    let data = []
-                    response.data.forEach((value) => {data.push(
-                        {
-                            id: value.id,
-                            name: value.firstname + " " + value.lastname,
-                            type: value.role,
-                            banned: false,
-                            suspended: false,
-                            suspendedUntil: null
-                        }
-                    )})
+                    const data = response.data.map((value) => ({
+                        id: value.id,
+                        name: value.firstname + " " + value.lastname,
+                        type: value.role,
+                        banned: false,
+                        suspended: false,
+                        suspendedUntil: null,
+                    }));
+                    console.log(data)
 
-                    
+                    const filtered = data
+                    .filter(user => {
+                        const matchesSearch = user.name.toLowerCase().includes(search.toLowerCase());
+                        const matchesFilter =
+                            filter === "all" ||
+                            (filter === "active" && !user.banned && !user.suspended) ||
+                            (filter === "banned" && user.banned) ||
+                            (filter === "suspended" && user.suspended);
+                        return matchesSearch && matchesFilter;
+                    });
                     setUsers(data)
-                    setFilteredUsers(users
-                        .filter(user => {
-                            const matchesSearch = user.name.toLowerCase().includes(search.toLowerCase());
-                            const matchesFilter =
-                                filter === "all" ||
-                                (filter === "active" && !user.banned && !user.suspended) ||
-                                (filter === "banned" && user.banned) ||
-                                (filter === "suspended" && user.suspended);
-                            return matchesSearch && matchesFilter;
-                        }));
+                    setFilteredUsers(filtered)
 
-                        setUsersToDisplay(showAll ? filteredUsers : filteredUsers.slice(0, 4));
+                        setUsersToDisplay(showAll ? filtered : filtered.slice(0, 4));
                 } catch (error) {
                     console.error("No users found: " + error)
                 }
@@ -45,7 +43,7 @@ const UserList = ({ users, setUsers, setSelectedUser, selectedUser, darkMode }) 
     
             getAllUsers()
             
-        }, [search, ])
+        }, [search, filter, showAll, setUsers])
 
     return (
         <div style={{
