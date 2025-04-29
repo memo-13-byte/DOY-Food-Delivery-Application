@@ -30,6 +30,7 @@ import AdminComplaintsPage from './pages/AdminComplaintsPage.jsx';
 import AdminAccountManagementPage from './pages/AdminAccountManagementPage.jsx';
 import PendingRegistrationsPage from './pages/PendingRegistrationsPage.jsx';
 import PlatformConfigurationsPage from './pages/PlatformConfigurationsPage.jsx';
+import OrderTrackingPage from './pages/OrderTracking.jsx';
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -71,6 +72,7 @@ function App() {
               <Route path="/admin/account-management" element={<AdminAccountManagementPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/pending-registrations" element={<PendingRegistrationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/platform-configurations" element={<PlatformConfigurationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />         
+              <Route path="/restaurant/profile/:id/orders" element={<OrderTrackingPage />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
