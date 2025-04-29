@@ -1,22 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios" 
 
-const RestaurantList = ({ restaurants, setSelectedRestaurant, selectedRestaurant, darkMode }) => {
+
+const RestaurantList = ({ restaurants, setRestaurants, setSelectedRestaurant, selectedRestaurant, darkMode }) => {
     const [search, setSearch] = useState("");
+    const [filteredRestaurants, setFilteredRestaurants] = useState([]);
     const [showAll, setShowAll] = useState(false);
     const [filter, setFilter] = useState("all");
+    const [restaurantsToDisplay, setRestaurantsToDisplay] = useState([])
 
-    const filteredRestaurants = restaurants
-        .filter(restaurant => {
-            const matchesSearch = restaurant.name.toLowerCase().includes(search.toLowerCase());
-            const matchesFilter =
-                filter === "all" ||
-                (filter === "active" && !restaurant.banned && !restaurant.suspended) ||
-                (filter === "banned" && restaurant.banned) ||
-                (filter === "suspended" && restaurant.suspended);
-            return matchesSearch && matchesFilter;
-        });
 
-    const restaurantsToDisplay = showAll ? filteredRestaurants : filteredRestaurants.slice(0, 4);
+    useEffect( () => {
+        const getAllRestaurants = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/restaurant/get-all`)
+                let data = []
+                response.data.forEach((value) => {data.push(
+                    {
+                        id: value.id,
+                        name: value.restaurantName,
+                        type: "Restaurant",
+                        banned: false,
+                        suspended: false,
+                        suspendedUntil: null
+                    }
+                )})
+                setRestaurants(data)
+                setFilteredRestaurants(restaurants
+                    .filter(restaurant => {
+                        const matchesSearch = restaurant.name.toLowerCase().includes(search.toLowerCase());
+                        const matchesFilter =
+                            filter === "all" ||
+                            (filter === "active" && !restaurant.banned && !restaurant.suspended) ||
+                            (filter === "banned" && restaurant.banned) ||
+                            (filter === "suspended" && restaurant.suspended);
+                        return matchesSearch && matchesFilter;
+                    }))
+                setRestaurantsToDisplay(showAll ? filteredRestaurants : filteredRestaurants.slice(0, 4))
+            } catch (error) {
+                console.error("No restaurants found: " + error)
+            }
+        }
+
+        getAllRestaurants()
+        
+    }, [restaurants,search])
 
     return (
         <div style={{
