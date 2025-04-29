@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "./ui/button"; // Eğer özel bir button component'in yoksa, normal <button> da yazabilirim istersen
+import { Button } from "./ui/button";
 
-const PendingActionButtons = ({ selected, darkMode }) => {
+const PendingActionButtons = ({ selected, approveUser, declineUser, addToast, darkMode }) => {
     if (!selected) {
         return (
             <div style={{
@@ -31,21 +31,32 @@ const PendingActionButtons = ({ selected, darkMode }) => {
             alignItems: "center",
             justifyContent: "center",
         }}>
+            {/* Review Button */}
             <Button
                 className="bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => alert(`Reviewing profile for ${selected.name}`)}
+                onClick={() => {
+                    addToast(`👀 Reviewing profile for ${selected.name}`);
+                }}
             >
                 Review
             </Button>
+
+            {/* Approve Button */}
             <Button
                 className="bg-green-600 hover:bg-green-700 text-white"
-                onClick={() => alert(`Approved ${selected.name}`)}
+                onClick={() => {
+                    approveUser(selected.id);
+                }}
             >
                 Approve
             </Button>
+
+            {/* Decline Button */}
             <Button
                 className="bg-red-600 hover:bg-red-700 text-white"
-                onClick={() => alert(`Declined ${selected.name}`)}
+                onClick={() => {
+                    declineUser(selected.id);
+                }}
             >
                 Decline
             </Button>

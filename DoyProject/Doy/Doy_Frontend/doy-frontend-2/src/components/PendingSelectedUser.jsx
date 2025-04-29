@@ -32,7 +32,7 @@ const PendingSelectedUser = ({ selected, darkMode }) => {
         }}>
             <HiOutlineUser size={48} style={{ marginBottom: "1rem", color: darkMode ? "#fff" : "#000" }} />
             <h3 style={{ margin: "0" }}>{selected.name}</h3>
-            <p style={{ fontSize: "0.9rem", marginTop: "0.5rem", color: darkMode ? "#ccc" : "#555" }}>{selected.type}</p>
+            <p style={{ fontSize: "0.9rem", marginTop: "0.5rem", color: darkMode ? "#ccc" : "#555" }}>{selected.role}</p> {/* ✨ Düzeltildi */}
         </div>
     );
 };
