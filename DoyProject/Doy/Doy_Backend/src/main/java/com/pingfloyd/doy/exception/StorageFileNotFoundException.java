@@ -1,4 +1,4 @@
-package com.pingfloyd.doy.storage;
+package com.pingfloyd.doy.exception;
 
 public class StorageFileNotFoundException extends StorageException {
 

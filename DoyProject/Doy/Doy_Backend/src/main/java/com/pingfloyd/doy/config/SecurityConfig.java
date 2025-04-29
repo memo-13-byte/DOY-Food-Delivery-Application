@@ -39,15 +39,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
-                request -> request.requestMatchers("/api/users/**","/api/login/auth", "/api/registration/**" ,"/api/restaurant/**","/api/item/**", "/order/**")
-                        .permitAll().anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exception ->
-                    exception
-                            .authenticationEntryPoint(new AuthenticationExceptionHandler()) //added these for spring security to redirect the 401-403 security errors to create error messages
-                            .accessDeniedHandler(new AccessDeniedExceptionHandler()))
-                .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            request ->
+                request
+                    .requestMatchers(
+                        "/api/users/**",
+                        "/api/login/auth",
+                        "/api/registration/**",
+                        "/api/restaurant/**",
+                        "/api/item/**",
+                        "/order/**",
+                        "/api/upload/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(
+            exception ->
+                exception
+                    .authenticationEntryPoint(
+                        new AuthenticationExceptionHandler()) // added these for spring security to
+                                                              // redirect the 401-403 security
+                                                              // errors to create error messages
+                    .accessDeniedHandler(new AccessDeniedExceptionHandler()))
+        .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

@@ -1,5 +1,7 @@
 package com.pingfloyd.doy.storage;
 
+import com.pingfloyd.doy.exception.StorageException;
+import com.pingfloyd.doy.exception.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

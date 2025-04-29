@@ -4,7 +4,7 @@ import com.pingfloyd.doy.storage.IStorageService;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-import com.pingfloyd.doy.storage.StorageFileNotFoundException;
+import com.pingfloyd.doy.exception.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequestMapping("/api/upload")
 public class FileUploadController {
     private final IStorageService storageService;
 
