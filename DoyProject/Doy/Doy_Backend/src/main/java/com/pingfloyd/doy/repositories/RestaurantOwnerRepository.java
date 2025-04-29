@@ -12,4 +12,5 @@ public interface RestaurantOwnerRepository extends JpaRepository<RestaurantOwner
     Optional<RestaurantOwner> findByGovernmentId(String governmentId);
     Set<RestaurantOwner> findRestaurantOwnersByIsEnabledFalse();
 
+
 }

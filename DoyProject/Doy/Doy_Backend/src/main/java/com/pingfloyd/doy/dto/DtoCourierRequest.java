@@ -18,6 +18,7 @@ public class DtoCourierRequest {
     @NoArgsConstructor
     public static class RequestInfo{
         private Long requestId;
+        private Long orderId;
         private List<DtoMenuItem> menuItems = new ArrayList<>();
         private String restaurantName;
         private DtoAddress customerAddress;
