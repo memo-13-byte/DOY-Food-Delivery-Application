@@ -241,8 +241,6 @@ export default function RestaurantRegisterPage() {
         const response = await axios.post("http://localhost:8080/api/registration/restaurant", payload, {
           headers: { "Content-Type": "application/json", }
         });
-
-        console.log("Registration successful:", response.data);
         setSubmitStatus({ success: true, error: null });
         setBackendErrors(null); // Clear backend errors on success
         alert("Restoran kaydı başarıyla oluşturuldu!");

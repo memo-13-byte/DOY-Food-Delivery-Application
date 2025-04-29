@@ -24,6 +24,7 @@ public class DtoUserIU {
     @Size(max = 100, message = "Email must not exceed 100 characters")
     @Email
     private String email;
+
     @Size(min = 7, max = 20, message = "Phone number must be between 7 and 20 characters.")
     private String phoneNumber;
 

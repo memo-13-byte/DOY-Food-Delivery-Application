@@ -21,7 +21,6 @@ public class ItemController implements IItemController {
 
     @Override
     @PostMapping("/post")
-   // @PreAuthorize("hasAuthority('RESTAURANT_OWNER')")
     public ResponseEntity<DtoMenuItem> postItem(@RequestBody @Valid DtoMenuItemIU item) {
         return ResponseEntity.ok(itemService.postItem(item));
     }
