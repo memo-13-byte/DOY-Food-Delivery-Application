@@ -16,4 +16,7 @@ public class RestaurantOwner extends User {
 
     @OneToOne(mappedBy = "restaurantOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Restaurant restaurant;
+
+    @Column(name = "is_banned")
+    private Boolean isBanned;
 }

@@ -20,4 +20,7 @@ public class Courier extends User {
 
     @Column(name = "is_available")
     private Boolean isAvailable;
+
+    @Column(name = "is_banned")
+    private Boolean isBanned = false;
 }
