@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminNavbar from "../components/AdminNavbar";
 import Footer from "../components/Footer";
 import PendingUserList from "../components/PendingUserList";
 import PendingSelectedUser from "../components/PendingSelectedUser";
 import PendingActionButtons from "../components/PendingActionButtons";
 import Toast from "../components/Toast";
+import axios from "axios";
 
 const initialUsers = [
     { id: 1, name: "John Doe", email: "john@example.com", role: "Customer", status: "pending" },
@@ -22,11 +23,23 @@ export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
     const [filterStatus, setFilterStatus] = useState("pending"); // ✨ artık burada
     const [toasts, setToasts] = useState([]);
 
+    const getRegistrationRequests = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/api/users/pendings")   
+            let data = response.data.pendingUsers 
+            data.forEach((value) => {value.status = "pending"})
+            setUsers(data)
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    useEffect( () => {getRegistrationRequests()}, [])
+
     const addToast = (message) => {
         setToasts(prev => [...prev, message]);
         setTimeout(() => setToasts(prev => prev.slice(1)), 2500);
     };
-
     const approveUser = (id) => {
         setUsers(prev => prev.map(user => user.id === id ? { ...user, status: "approved" } : user));
         setSelectedUser(null);
