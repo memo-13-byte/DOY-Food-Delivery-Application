@@ -10,6 +10,7 @@ import com.pingfloyd.doy.repositories.CustomerOrderRepository;
 import com.pingfloyd.doy.repositories.OrderItemRepository;
 import com.pingfloyd.doy.repositories.PaymentRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -131,7 +132,10 @@ public class OrderService {
             for(CartItem item : set){
                 price += item.getQuantity()*item.getMenuItem().getPrice().intValue();
             }
-            return price >= cart.getRestaurant().getMinOrderPrice();
+            if(price < cart.getRestaurant().getMinOrderPrice()){
+                throw new MinOrderPriceNotMeetException("Price of current cart is lower than minimum order price!");
+            }
+            return true;
         }
         return false;
     }

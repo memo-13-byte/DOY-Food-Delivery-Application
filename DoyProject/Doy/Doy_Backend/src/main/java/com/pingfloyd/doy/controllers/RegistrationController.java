@@ -1,7 +1,6 @@
 package com.pingfloyd.doy.controllers;
 
 import com.pingfloyd.doy.dto.*;
-import com.pingfloyd.doy.entities.Restaurant;
 import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.services.RegistrationService;
 import jakarta.validation.Valid;
@@ -53,6 +52,10 @@ public class RegistrationController {
         }
     }
 
+    @PutMapping("/pending/{id}-{accept}")
+    public ResponseEntity<Boolean> PendingRegister(@PathVariable Long id , @PathVariable Boolean accept){
+        return ResponseEntity.ok(registrationService.EnableUser(id , accept));
+    }
 
     @GetMapping("/confirm")
     public ResponseEntity<String> confirmUserAccount(@RequestParam("token") String token) {

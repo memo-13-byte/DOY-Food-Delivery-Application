@@ -5,6 +5,7 @@ package com.pingfloyd.doy.services;
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.exception.UserAlreadyExistException;
+import com.pingfloyd.doy.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.Data;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Data
 @Service
@@ -144,7 +146,8 @@ public class RegistrationService {
         );
         courier.setGovernmentId(request.getGovernmentId());
         courier.setRole(UserRoles.COURIER);
-        courier.setIsEnabled(true);
+        courier.setIsEnabled(false);
+        courier.setIsBanned(false);
         District district = districtService.GetDistrict(request.getCity() , request.getName());
         courier.setDistrict(district);
         district.getCouriers().add(courier);
@@ -163,11 +166,50 @@ public class RegistrationService {
 
         restaurantOwner.setGovernmentId(request.getGovernmentId());
         restaurantOwner.setRole(UserRoles.RESTAURANT_OWNER);
-        restaurantOwner.setIsEnabled(true);
+        restaurantOwner.setIsEnabled(false);
+        restaurantOwner.setIsBanned(false);
         restaurantOwner.setCreatedAt(LocalDateTime.now());
        return restaurantOwner;
     }
 
+    @Transactional
+    public Boolean EnableUser(Long id , Boolean accept){
+        Optional<User> user = userService.FindUserById(id);
+        if(user.isEmpty()){
+            throw new UserNotFoundException("User with given id cannot be found!");
+        }
+        User u = user.get();
+        if(accept){
+            u.setIsEnabled(true);
+            SendAcceptEmail(u);
+            userService.SaveUser(u);
+        }
+        else{
+            SendRejectionEmail(u);
+            userService.DeleteUser(u);
+        }
+        return accept;
+    }
+
+    private void SendAcceptEmail(User user){
+        String emailBody = BuildAcceptEmail(user.getFirstname()+" "+user.getLastname());
+        emailService.send(user.getEmail() , "Registration for Doy" , emailBody);
+    }
+    private void SendRejectionEmail(User user){
+        String emailBody = BuildRejectEmail(user.getFirstname()+" "+user.getLastname());
+        emailService.send(user.getEmail() , "Registration for Doy" , emailBody);
+    }
+
+    private String BuildAcceptEmail(String name){
+        return "<p>Hi " + name + ",</p>" +
+                "<p>Thank you for registering. Your registration has been approved:</p>" +
+                "<p>Thanks for choosing us.</a></p>";
+    }
+    private String BuildRejectEmail(String name){
+        return "<p>Hi " + name + ",</p>" +
+                "<p>Sorry to inform u that your registration has been rejected:</p>";
+
+    }
     private String buildEmail(String name, String link) {
         // Create a nice HTML email template
         return "<p>Hi " + name + ",</p>" +

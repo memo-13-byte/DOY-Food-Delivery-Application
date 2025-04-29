@@ -10,6 +10,7 @@ import com.pingfloyd.doy.repositories.CourierRepository;
 import com.pingfloyd.doy.repositories.CustomerRepository;
 import com.pingfloyd.doy.repositories.RestaurantOwnerRepository;
 import com.pingfloyd.doy.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -29,15 +31,17 @@ public class UserService implements UserDetailsService, IUserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CourierRepository courierRepository;
     private final RestaurantOwnerRepository restaurantOwnerRepository;
+    private final SuspensionService suspensionService;
 
     @Autowired
     public UserService(UserRepository userRepository, CustomerRepository customerRepository, BCryptPasswordEncoder bCryptPasswordEncoder
-    , CourierRepository courierRepository, RestaurantOwnerRepository restaurantOwnerRepository){
+    , CourierRepository courierRepository, RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService){
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.courierRepository = courierRepository;
         this.restaurantOwnerRepository = restaurantOwnerRepository;
+        this.suspensionService = suspensionService;
     }
 
 
@@ -50,6 +54,14 @@ public class UserService implements UserDetailsService, IUserService {
 
     public void SaveUser(User user){
         userRepository.save(user);
+    }
+
+    public void DeleteUser(User user){
+        userRepository.delete(user);
+    }
+
+    public Optional<User> FindUserById(Long id){
+        return userRepository.findById(id);
     }
 
     public Customer SearchCustomer(String email){
@@ -216,8 +228,8 @@ public class UserService implements UserDetailsService, IUserService {
 
 
     public DtoPendingRegister GetPendingRegisters(){
-        Set<RestaurantOwner> pendingOwners = restaurantOwnerRepository.findRestaurantOwnersByIsEnabledFalse();
-        Set<Courier> pendingCouriers = courierRepository.findCouriersByIsEnabledFalse();
+        Set<RestaurantOwner> pendingOwners = restaurantOwnerRepository.findRestaurantOwnersByIsEnabledFalseAndIsBannedFalse();
+        Set<Courier> pendingCouriers = courierRepository.findCouriersByIsEnabledFalseAndIsBannedFalse();
         DtoPendingRegister pendingRegisters = new DtoPendingRegister();
         for(RestaurantOwner owner : pendingOwners){
             DtoPendingRegister.UserInfo info = new DtoPendingRegister.UserInfo();
@@ -236,6 +248,36 @@ public class UserService implements UserDetailsService, IUserService {
         return pendingRegisters;
     }
 
+    @Transactional
+    public Boolean SuspendUser(DtoBanRequest request){
+        Optional<Courier> u = courierRepository.findById(request.getId());
+        Optional<RestaurantOwner> r = restaurantOwnerRepository.findById(request.getId());
+        if(u.isEmpty() && r.isEmpty()){
+            throw new UserNotFoundException("Courier or Restaurant Owner with given id cannot be found!");
+        }
+        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime endTime = null;
+        if(request.getBanDuration() != -1){
+            endTime = LocalDateTime.now().plusDays(request.getBanDuration());
+        }
+        Ban ban = new Ban();
+        ban.setCreatedAt(time);
+        ban.setEndDate(endTime);
+        if(u.isPresent()){
+            ban.setUser(u.get());
+            u.get().setIsBanned(true);
+            u.get().setIsEnabled(false);
+            courierRepository.save(u.get());
+        }
+        else{
+            ban.setUser(r.get());
+            r.get().setIsBanned(true);
+            r.get().setIsEnabled(false);
+            restaurantOwnerRepository.save(r.get());
+        }
+        suspensionService.SaveBanRequest(ban);
+        return true;
+    }
 
 
 

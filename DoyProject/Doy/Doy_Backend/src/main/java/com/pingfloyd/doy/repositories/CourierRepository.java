@@ -27,5 +27,5 @@ public interface CourierRepository extends JpaRepository<Courier, Long> {
     Set<Courier> findCouriersByDistrict(District district);
     Set<Courier> findCouriersByDistrictAndIsAvailableTrue(District district);
 
-    Set<Courier> findCouriersByIsEnabledFalse();
+    Set<Courier> findCouriersByIsEnabledFalseAndIsBannedFalse();
 }

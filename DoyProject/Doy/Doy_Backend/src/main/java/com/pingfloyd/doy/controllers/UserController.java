@@ -95,6 +95,10 @@ public class UserController implements IUserController{
     public ResponseEntity<DtoPendingRegister> GetPendingRegisters(){
         return ResponseEntity.ok(userService.GetPendingRegisters());
     }
+    @PutMapping("/suspend")
+    public ResponseEntity<Boolean> SuspendUser(@RequestBody @Valid DtoBanRequest request){
+        return ResponseEntity.ok(userService.SuspendUser(request));
+    }
 
 
 }
