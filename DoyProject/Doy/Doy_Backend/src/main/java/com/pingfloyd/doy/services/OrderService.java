@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -232,16 +233,20 @@ public class OrderService {
         DtoCourierRequest request = new DtoCourierRequest();
         for(CourierRequest req : requests){
             CustomerOrder order = req.getOrder();
+            if(order.getStatus() != OrderStatus.PREPARED){
+                continue;
+            }
             Customer customer = order.getCustomer();
             DtoCourierRequest.RequestInfo requestInfo = new DtoCourierRequest.RequestInfo();
             for(OrderItem item : order.getItems()){
                 DtoMenuItem dtoMenuItem = MapMenuItem(item.getMenuItem());
                 requestInfo.getMenuItems().add(dtoMenuItem);
             }
+            requestInfo.setOrderId(order.getOrderId());
             requestInfo.setNote("None");
             requestInfo.setRequestId(req.getRequestId());
             requestInfo.setCustomerEmail(customer.getEmail());
-            requestInfo.setCustomerAddress(MapAddress(customer.getCurrent_address()));
+            //requestInfo.setCustomerAddress(MapAddress(customer.getCurrent_address()));
             requestInfo.setCustomerName(customer.getFirstname() + " " + customer.getLastname());
             requestInfo.setCustomerPhone(customer.getPhoneNumber());
             requestInfo.setRestaurantName(order.getRestaurant().getRestaurantName());
@@ -285,14 +290,26 @@ public class OrderService {
 
     }
 
+    public Boolean SetCourierAvailability(Long id , Boolean status){
+        courierService.SetAvailability(id ,status);
+        return status;
+    }
+    public Boolean GetCourierAvailability(Long id ){
+        return courierService.GetCourierAvailability(id);
+    }
+
+
     public Boolean CourierResponse(Long requestId , Boolean response){
         CourierRequest request = courierRequestService.GetCourierRequestById(requestId);
         CustomerOrder order = request.getOrder();
+
         if(response){
             order.setStatus(OrderStatus.AWAITING_PICKUP);
+            request.setAcceptedAt(LocalDateTime.now());
             customerOrderRepository.save(order);
             return true;
         }
+        request.setRejectedAt(LocalDateTime.now());
         courierRequestService.DeleteRequest(request);
         return false;
     }

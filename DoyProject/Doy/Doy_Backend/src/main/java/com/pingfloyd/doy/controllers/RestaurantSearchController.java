@@ -25,7 +25,6 @@ public class RestaurantSearchController {
     }
     */
     @GetMapping("/search")
-   // @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<Page<RestaurantRequest>> searchRestaurants(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Float minRating,

@@ -29,6 +29,10 @@ public class Courier extends User {
 
     @Column(name = "is_available")
     private Boolean isAvailable;
+
+    @Column(name = "is_banned")
+    private Boolean isBanned = false;
+
     public Courier(String firstName, String lastName, String email, String passwordHash, String phoneNumber) {
         super(firstName, lastName, email, passwordHash, phoneNumber);
     }
@@ -36,4 +40,7 @@ public class Courier extends User {
     public Courier() {
 
     }
+
+
+
 }

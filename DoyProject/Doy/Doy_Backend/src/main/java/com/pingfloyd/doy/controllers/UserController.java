@@ -3,6 +3,7 @@ package com.pingfloyd.doy.controllers;
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.services.UserService;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -89,4 +90,11 @@ public class UserController implements IUserController{
     public ResponseEntity<DtoRestaurantOwner> putRestaurantOwner(@PathVariable(name = "email") String email,@RequestBody DtoRestaurantOwnerIU dtoRestaurantOwnerIU) {
         return ResponseEntity.ok(userService.putRestaurantOwner(email, dtoRestaurantOwnerIU));
     }
+
+    @GetMapping("/pendings")
+    public ResponseEntity<DtoPendingRegister> GetPendingRegisters(){
+        return ResponseEntity.ok(userService.GetPendingRegisters());
+    }
+
+
 }

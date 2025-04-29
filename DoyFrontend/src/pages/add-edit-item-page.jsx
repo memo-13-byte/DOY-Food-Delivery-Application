@@ -88,6 +88,7 @@ export default function AddEditItemPage() {
 
   // Handle form input changes
   const handleInputChange = (e) => {
+
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,

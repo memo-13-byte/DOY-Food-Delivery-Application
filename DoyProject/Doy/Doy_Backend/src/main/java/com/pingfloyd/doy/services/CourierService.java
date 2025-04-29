@@ -38,14 +38,22 @@ public class CourierService {
         return courierRepository.findCouriersByIsEnabledFalse();
     }
 
-    public Courier SetAvailability(String email,Boolean availability){
-        Optional<Courier> courier = courierRepository.findByEmail(email);
+    public Boolean GetCourierAvailability(Long id){
+        Optional<Courier> courier = courierRepository.findById(id);
         if(courier.isEmpty()){
             throw new UserNotFoundException("Courier with given email doesn't exist!");
         }
+        return courier.get().getIsAvailable();
+
+    }
+    public void SetAvailability(Long id,Boolean availability){
+        Optional<Courier> courier = courierRepository.findById(id);
+        if(courier.isEmpty()){
+            throw new UserNotFoundException("Courier with given id doesn't exist!");
+        }
         Courier c = courier.get();
         c.setIsAvailable(availability);
-        return courierRepository.save(c);
+        courierRepository.save(c);
     }
 
 }

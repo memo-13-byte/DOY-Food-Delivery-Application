@@ -41,10 +41,10 @@ public class UserService implements UserDetailsService, IUserService {
     }
 
 
-    public String SignUpCustomer(User customer){
-        customer.setPasswordHash(bCryptPasswordEncoder.encode(customer.getPassword()));
-        customer.setRole(UserRoles.CUSTOMER);
-        userRepository.save(customer);
+    public String SignUpCustomer(User user, UserRoles role){
+        user.setPasswordHash(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRole(role);
+        userRepository.save(user);
         return "User Signed Up Successfully";
     }
 
@@ -213,4 +213,30 @@ public class UserService implements UserDetailsService, IUserService {
         BeanUtils.copyProperties(savedRestaurantOwner, dtoRestaurantOwner);
         return dtoRestaurantOwner;
     }
+
+
+    public DtoPendingRegister GetPendingRegisters(){
+        Set<RestaurantOwner> pendingOwners = restaurantOwnerRepository.findRestaurantOwnersByIsEnabledFalse();
+        Set<Courier> pendingCouriers = courierRepository.findCouriersByIsEnabledFalse();
+        DtoPendingRegister pendingRegisters = new DtoPendingRegister();
+        for(RestaurantOwner owner : pendingOwners){
+            DtoPendingRegister.UserInfo info = new DtoPendingRegister.UserInfo();
+            info.setId(owner.getId());
+            info.setName(owner.getFirstname() + " " + owner.getLastname());
+            info.setRole(UserRoles.RESTAURANT_OWNER);
+            pendingRegisters.getPendingUsers().add(info);
+        }
+        for(Courier courier : pendingCouriers){
+            DtoPendingRegister.UserInfo info = new DtoPendingRegister.UserInfo();
+            info.setId(courier.getId());
+            info.setName(courier.getFirstname() + " " + courier.getLastname());
+            info.setRole(UserRoles.COURIER);
+            pendingRegisters.getPendingUsers().add(info);
+        }
+        return pendingRegisters;
+    }
+
+
+
+
 }
