@@ -170,6 +170,7 @@ public class UserService implements UserDetailsService, IUserService {
         }
         DtoRestaurantOwner dtoRestaurantOwner  = new DtoRestaurantOwner();
         BeanUtils.copyProperties(restaurantOwner.get(), dtoRestaurantOwner);
+        dtoRestaurantOwner.setRestaurantId(restaurantOwner.get().getId());
         return dtoRestaurantOwner;
     }
 

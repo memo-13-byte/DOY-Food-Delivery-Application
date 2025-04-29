@@ -87,7 +87,7 @@ public class UserController implements IUserController{
 
     @Override
     @PutMapping("/restaurant-owners/update/{email}")
-    public ResponseEntity<DtoRestaurantOwner> putRestaurantOwner(@PathVariable(name = "email") String email,@RequestBody DtoRestaurantOwnerIU dtoRestaurantOwnerIU) {
+    public ResponseEntity<DtoRestaurantOwner> putRestaurantOwner(@PathVariable(name = "email") String email,@RequestBody @Valid DtoRestaurantOwnerIU dtoRestaurantOwnerIU) {
         return ResponseEntity.ok(userService.putRestaurantOwner(email, dtoRestaurantOwnerIU));
     }
 

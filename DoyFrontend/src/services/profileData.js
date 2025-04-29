@@ -356,7 +356,7 @@ export const getUserById = async(id) => {
 
     const userTypeResponse = await axios.get(url, 
       { headers: { Authorization: `Bearer ${token}` } })
-
+    console.log(userTypeResponse)
     user = userTypeResponse.data 
 
   } catch (error) {

@@ -8,6 +8,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DtoRestaurantOwnerIU extends DtoUserIU{
-    private GovernmentId governmentId;
-    private Restaurant restaurant;
+    private String governmentId;
+    //private Restaurant restaurant;
 }
