@@ -49,10 +49,11 @@ public class CourierService {
     public void SetAvailability(Long id,Boolean availability){
         Optional<Courier> courier = courierRepository.findById(id);
         if(courier.isEmpty()){
-            throw new UserNotFoundException("Courier with given email doesn't exist!");
+            throw new UserNotFoundException("Courier with given id doesn't exist!");
         }
         Courier c = courier.get();
         c.setIsAvailable(availability);
+        courierRepository.save(c);
     }
 
 }
