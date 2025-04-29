@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
-import doyLogo from "../assets/doylogo.jpeg";
+import doyLogo from "../assets/doylogo.jpeg"; // Assuming path is correct
 import { BsMoon } from "react-icons/bs";
-import axios from "axios";
+import axios from "axios"; // <-- Import Axios
 
 const iconLinkStyle = (darkMode) => ({
     color: darkMode ? "#ffffff" : "inherit",
@@ -17,47 +17,29 @@ const iconLinkStyle = (darkMode) => ({
     justifyContent: "center"
 });
 
+// Input style function
+const getInputStyle = (darkMode) => ({
+    width: "100%",
+    padding: "0.75rem",
+    fontSize: "1rem",
+    borderRadius: "10px",
+    border: `1px solid ${darkMode ? '#555' : '#ccc'}`, // Adjusted border color
+    marginBottom: "1rem",
+    backgroundColor: darkMode ? "#3a3a3a" : "#fff", // Slightly adjusted dark bg
+    color: darkMode ? "#fff" : "#000",
+    boxSizing: 'border-box' // Important for layout consistency
+});
+
+
 const Cart = () => {
-    // Replace wouter's useLocation with react-router-dom's useNavigate
+    const location = useLocation();
     const navigate = useNavigate();
-    
-    // Kayıtlı verileri localStorage'dan alıyoruz
-    const [darkMode, setDarkMode] = useState(() => {
-        const savedDarkMode = localStorage.getItem("darkMode");
-        return savedDarkMode ? JSON.parse(savedDarkMode) : false;
-    });
-
-    // CartItems'ı localStorage'dan alıyoruz
-    const [cartItems, setCartItems] = useState(() => {
-        const savedCart = localStorage.getItem("cartItems");
-        return savedCart ? JSON.parse(savedCart) : [];
-    });
-
+    const [darkMode, setDarkMode] = useState(location.state?.darkMode || false);
+    const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
     const [tip, setTip] = useState(0);
-    // Add missing isProcessing state
-    const [isProcessing, setIsProcessing] = useState(false);
-
-    // Restaurant bilgisini localStorage'dan alıyoruz
-    const restaurant = (() => {
-        const savedRestaurant = localStorage.getItem("restaurant");
-        return savedRestaurant ? JSON.parse(savedRestaurant) : { name: "Restoran" };
-    })();
-
-    // Seçili adresi localStorage'dan alıyoruz
-    const selectedAddress = (() => {
-        const savedAddress = localStorage.getItem("selectedAddress");
-        return savedAddress ? JSON.parse(savedAddress) : "";
-    })();
-
-    // DarkMode değişikliklerini localStorage'a kaydediyoruz
-    useEffect(() => {
-        localStorage.setItem("darkMode", JSON.stringify(darkMode));
-    }, [darkMode]);
-
-    // CartItems değişikliklerini localStorage'a kaydediyoruz
-    useEffect(() => {
-        localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    }, [cartItems]);
+    const restaurant = location.state?.restaurant || { name: "Restoran", restaurantName: "Restoran", restaurantId: null }; // Include ID if available
+    const selectedAddress = location.state?.selectedAddress;
+    const [isProcessing, setIsProcessing] = useState(false); // State for submit button loading
 
     const [form, setForm] = useState({
         address: selectedAddress || "",
@@ -67,14 +49,14 @@ const Cart = () => {
         email: "",
         cardNumber: "",
         cardName: "",
-        expiry: "",
+        expiry: "", // Stored visually as MM/YY
         cvv: "",
-        notes: "" // Add missing notes field
+        notes: ""
     });
 
+    // Handles input changes, including visual formatting for card/expiry
     const handleChange = (e) => {
         let { name, value } = e.target;
-
         if (name === 'cardNumber') {
             value = value.replace(/\D/g, '').substring(0, 16);
             value = value.replace(/(.{4})/g, '$1 ').trim();
@@ -86,7 +68,6 @@ const Cart = () => {
         } else if (name === 'cvv') {
             value = value.replace(/\D/g, '').substring(0, 3);
         }
-
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -151,7 +132,6 @@ const Cart = () => {
 
             if (response.data === true) {
                 console.log("Payment successful. Navigating to /checkout...");
-                // Changed from setLocation to navigate with state
                 navigate("/checkout", {
                     // Pass minimal state needed for checkout confirmation page
                     state: { paymentSuccess: true, totalPaid: total, darkMode }
@@ -172,281 +152,120 @@ const Cart = () => {
         }
     };
 
-    const handleRemoveItem = (indexToRemove) => {
-        setCartItems(prev => prev.filter((_, index) => index !== indexToRemove));
-    };
+    // handleRemoveItem is not used because the button was removed
+    // const handleRemoveItem = (indexToRemove) => { ... };
 
     return (
-        <div style={{ backgroundColor: darkMode ? "#1c1c1c" : "#F2E8D6", minHeight: "100vh", display: "flex", flexDirection: "column", color: darkMode ? "#fff" : "#000" }}>
-        {/* ÜST BAR */}
-            <div style={{
-                backgroundColor: darkMode ? "#333" : "#47300A",
-                padding: "0.6rem 1.5rem",
-                color: darkMode ? "#fff" : "white",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-            }}>
-                {/* Sol: Doy! yazısı */}
-                <div style={{ fontWeight: "bold", fontSize: "1.1rem" }}>Doy!</div>
-
-                {/* Sağ: Toggle + Kayıt/Giriş */}
+        <form onSubmit={handleSubmit} style={{ backgroundColor: darkMode ? "#1c1c1c" : "#F2E8D6", minHeight: "100vh", display: "flex", flexDirection: "column", color: darkMode ? "#fff" : "#000" }}>
+            {/* ÜST BAR */}
+            <div style={{ backgroundColor: darkMode ? "#333" : "#47300A", padding: "0.6rem 1.5rem", color: "white", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ fontWeight: "bold", fontSize: "1.1rem", cursor: 'pointer' }} onClick={() => navigate('/')}>Doy!</div>
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    {/* Dark Mode Toggle */}
-                    <div
-                        onClick={() => setDarkMode(!darkMode)}
-                        style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
-                    >
-                        <div style={{
-                            width: "34px",
-                            height: "18px",
-                            borderRadius: "20px",
-                            backgroundColor: "#F8F5DE",
-                            position: "relative"
-                        }}>
-                            <div style={{
-                                width: "16px",
-                                height: "16px",
-                                borderRadius: "50%",
-                                backgroundColor: "#000",
-                                position: "absolute",
-                                top: "1px",
-                                left: darkMode ? "17px" : "1px",
-                                transition: "left 0.3s"
-                            }} />
+                    <div onClick={() => setDarkMode(!darkMode)} style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}>
+                        <div style={{ width: "34px", height: "18px", borderRadius: "20px", backgroundColor: "#F8F5DE", position: "relative" }}>
+                            <div style={{ width: "16px", height: "16px", borderRadius: "50%", backgroundColor: "#000", position: "absolute", top: "1px", left: darkMode ? "17px" : "1px", transition: "left 0.3s" }} />
                         </div>
-                        <BsMoon color={darkMode ? "#000" : "#fff"} size={18} />
+                        <BsMoon color={darkMode ? "#ccc" : "#fff"} size={18} />
                     </div>
-
-                    {/* Kayıt / Giriş */}
-                    <div style={{
-                        display: "flex",
-                        backgroundColor: "#F8F5DE",
-                        borderRadius: "10px",
-                        overflow: "hidden"
-                    }}>
-                        <button
-                            onClick={() => navigate("/auth")} // Changed from setLocation to navigate
-                            style={{
-                                padding: "0.3rem 0.8rem",
-                                backgroundColor: "#F8F5DE",
-                                color: "#000",
-                                fontWeight: "bold",
-                                border: "none",
-                                borderRight: "1px solid #ccc",
-                                cursor: "pointer"
-                            }}
-                        >
-                            KAYIT
-                        </button>
-                        <button
-                            onClick={() => navigate("/auth")} // Changed from setLocation to navigate
-                            style={{
-                                padding: "0.3rem 0.8rem",
-                                backgroundColor: "#F8F5DE",
-                                color: "#000",
-                                fontWeight: "bold",
-                                border: "none",
-                                cursor: "pointer"
-                            }}
-                        >
-                            GİRİŞ
-                        </button>
+                    <div style={{ display: "flex", backgroundColor: "#F8F5DE", borderRadius: "10px", overflow: "hidden" }}>
+                        <button type="button" onClick={() => navigate("/register")} style={{ padding: "0.3rem 0.8rem", backgroundColor: "transparent", color: "#47300A", fontWeight: "bold", border: "none", borderRight: "1px solid #ccc", cursor: "pointer" }}>KAYIT</button>
+                        <button type="button" onClick={() => navigate("/login")} style={{ padding: "0.3rem 0.8rem", backgroundColor: "transparent", color: "#47300A", fontWeight: "bold", border: "none", cursor: "pointer" }}>GİRİŞ</button>
                     </div>
                 </div>
             </div>
 
             {/* Logo bar altı */}
             <div style={{ backgroundColor: darkMode ? "#2a2a2a" : "#E7DECB", padding: "1.5rem 3rem", display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
-                <img src={doyLogo || "/placeholder.svg"} alt="doylogo" style={{ height: "180px", borderRadius: "50%" }} />
+                <img src={doyLogo} alt="doylogo" style={{ height: "120px", borderRadius: "50%" }} />
+                <h2 style={{ marginLeft: '2rem', color: darkMode ? '#eee' : '#47300A' }}>Sipariş Tamamlama</h2>
             </div>
 
             {/* Alt geçiş şeridi */}
             <div style={{ height: "2px", backgroundColor: "#47300A", width: "100%" }} />
 
             {/* Ana içerik */}
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "2rem" }}>
+            <div style={{ display: "flex", flexWrap: 'wrap', justifyContent: "space-between", padding: "2rem", flexGrow: 1, gap: '2rem' }}>
                 {/* Sol Form */}
-                <div style={{flex: 2, paddingRight: "2rem"}}>
-                    <h3>Teslimat Bilgileri</h3>
-                    <input name="address" value={form.address} onChange={handleChange}
-                           placeholder="Teslimat Adresi Giriniz" style={getInputStyle(darkMode)}/>
+                <div style={{ flex: '2 1 500px', paddingRight: "1rem" }}>
+                    <section>
+                        <h3>Teslimat Bilgileri *</h3>
+                        <input name="address" value={form.address} onChange={handleChange} placeholder="Teslimat Adresi Giriniz" required style={getInputStyle(darkMode)} />
+                    </section>
 
-                    <div style={{display: "flex", alignItems: "center", marginBottom: "1rem", gap: "0.5rem"}}>
-                        <input type="checkbox" id="useSavedAddress"/>
-                        <label htmlFor="useSavedAddress">Profilimdeki teslimat adresini kullan</label>
-                    </div>
+                    <section style={{marginTop: "1.5rem"}}>
+                        <h3>Kişisel Bilgiler *</h3>
+                        <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="Cep Telefon Numaranız (5xxxxxxxxx)" required pattern="[5]{1}[0-9]{9}" title="5xxxxxxxxxx formatında girin" style={getInputStyle(darkMode)} />
+                        <div style={{display: "flex", gap: "1rem", flexWrap: 'wrap'}}>
+                            <input name="name" value={form.name} onChange={handleChange} placeholder="Adınız" required style={{...getInputStyle(darkMode), flex: 1, minWidth: '150px'}}/>
+                            <input name="surname" value={form.surname} onChange={handleChange} placeholder="Soyadınız" required style={{...getInputStyle(darkMode), flex: 1, minWidth: '150px'}}/>
+                        </div>
+                        <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="E-posta adresiniz" required style={getInputStyle(darkMode)}/>
+                    </section>
 
+                    <section style={{marginTop: "1.5rem"}}>
+                        <h3>Ek Notlar ve Bahşiş</h3>
+                        <textarea name="notes" value={form.notes} onChange={handleChange} placeholder="Kuryenize not ekleyebilirsiniz (isteğe bağlı)." style={{...getInputStyle(darkMode), height: "80px"}}/>
+                        <h4 style={{marginTop: "1rem", marginBottom: '0.5rem'}}>Kurye Bahşişi (isteğe bağlı)</h4>
+                        <div style={{display: "flex", gap: "0.8rem", flexWrap: 'wrap'}}>
+                            {[15, 20, 25, 30].map(t => (
+                                <button type="button" key={t} onClick={() => setTip(prev => prev === t ? 0 : t)}
+                                        style={{ backgroundColor: tip === t ? (darkMode ? '#8a63d2' : '#4c2c84') : (darkMode ? '#5a4a7c' : '#6c4c9c'), color: "white", borderRadius: "20px", padding: "0.5rem 1rem", border: tip === t ? `2px solid ${darkMode ? '#c5aef1' : '#3a1a5c'}` : 'none', cursor: 'pointer', transition: 'background-color 0.2s, border 0.2s' }}
+                                >{t} TL</button>
+                            ))}
+                        </div>
+                    </section>
 
-                    <h3 style={{marginTop: "2rem"}}>Kişisel Bilgiler</h3>
-                    <input name="phone" value={form.phone} onChange={handleChange}
-                           placeholder="Cep Telefon Numaranızı Giriniz" style={getInputStyle(darkMode)}/>
+                    <section style={{marginTop: "1.5rem"}}>
+                        <h3>Ödeme Bilgileri *</h3>
+                        <input name="cardNumber" value={form.cardNumber} onChange={handleChange} placeholder="Kart No (xxxx xxxx xxxx xxxx)" required pattern="^\d{4}\s\d{4}\s\d{4}\s\d{4}$" title="16 haneli kart numarası (aralarda boşluk)" style={getInputStyle(darkMode)}/>
+                        <input name="cardName" value={form.cardName} onChange={handleChange} placeholder="Kart Üzerindeki İsim Soyisim" required style={getInputStyle(darkMode)}/>
+                        <div style={{display: "flex", gap: "1rem", flexWrap: 'wrap'}}>
+                            <input name="expiry" value={form.expiry} onChange={handleChange} placeholder="Son Kul. Tarihi (AA/YY)" required pattern="(0[1-9]|1[0-2])\/?([0-9]{2})" title="AA/YY formatında (örn: 12/28)" style={{...getInputStyle(darkMode), flex: 1, minWidth: '120px'}}/>
+                            <input name="cvv" value={form.cvv} onChange={handleChange} placeholder="Güvenlik Kodu (CVV)" required pattern="\d{3}" title="Kartın arkasındaki 3 haneli kod" style={{...getInputStyle(darkMode), flex: 1, minWidth: '120px'}}/>
+                        </div>
+                    </section>
 
-                    <div style={{display: "flex", alignItems: "center", marginBottom: "1rem", gap: "0.5rem"}}>
-                        <input type="checkbox" id="useSavedPhone"/>
-                        <label htmlFor="useSavedPhone">Profilimdeki numarayı kullan</label>
-                    </div>
-
-
-                    <div style={{display: "flex", gap: "1rem"}}>
-                        <input name="name" value={form.name} onChange={handleChange} placeholder="Adınız"
-                               style={{...getInputStyle(darkMode), flex: 1}}/>
-                        <input name="surname" value={form.surname} onChange={handleChange} placeholder="Soyadınız"
-                               style={{...getInputStyle(darkMode), flex: 1}}/>
-                    </div>
-                    <input name="email" value={form.email} onChange={handleChange} placeholder="E-posta adresiniz"
-                           style={getInputStyle(darkMode)}/>
-
-                    <div style={{display: "flex", alignItems: "center", marginBottom: "1rem", gap: "0.5rem"}}>
-                        <input type="checkbox" id="useSavedInfo"/>
-                        <label htmlFor="useSavedInfo">Profilimdeki bilgileri kullan</label>
-                    </div>
-
-                    {/* Fixed textarea to properly bind to form state */}
-                    <textarea 
-                        name="notes" 
-                        value={form.notes} 
-                        onChange={handleChange}
-                        placeholder="Kuryenize not ekleyebilirsiniz." 
-                        style={{...getInputStyle(darkMode), height: "80px"}}
-                    />
-
-                    <h3 style={{marginTop: "2rem"}}>Kuryenize Bahşiş Ekleyebilirsiniz</h3>
-                    <div style={{display: "flex", gap: "1rem"}}>
-                        {[15, 20, 25, 30].map(t => (
-                            <button
-                                key={t}
-                                onClick={() => setTip(prev => prev === t ? 0 : t)}
-                                style={{
-                                    backgroundColor: tip === t ? "#4c2c84" : "#6c4c9c",
-                                    color: "white",
-                                    borderRadius: "20px",
-                                    padding: "0.5rem 1rem",
-                                    border: "none",
-                                    fontWeight: tip === t ? "bold" : "normal"
-                                }}
-                            >
-                                {t} TL
-                            </button>
-                        ))}
-
-                    </div>
-
-                    <h3 style={{marginTop: "2rem"}}>Ödeme Bilgileri</h3>
-                    <input name="cardNumber" value={form.cardNumber} onChange={handleChange} placeholder="Kart No"
-                           style={getInputStyle(darkMode)}/>
-                    <input name="cardName" value={form.cardName} onChange={handleChange}
-                           placeholder="Kart Üzerindeki İsim" style={getInputStyle(darkMode)}/>
-                    <div style={{display: "flex", gap: "1rem"}}>
-                        <input name="expiry" value={form.expiry} onChange={handleChange}
-                               placeholder="Son Kullanma Tarihi" style={{...getInputStyle(darkMode), flex: 1}}/>
-                        <input name="cvv" value={form.cvv} onChange={handleChange} placeholder="Güvenlik Kodu"
-                               style={{...getInputStyle(darkMode), flex: 1}}/>
-                    </div>
-
-                    <div style={{display: "flex", alignItems: "center", marginTop: "0.5rem", gap: "0.5rem"}}>
-                        <input type="checkbox" id="useSavedCard"/>
-                        <label htmlFor="useSavedCard">Profilimdeki kart bilgilerini kullan</label>
-                    </div>
-
-
-                    <button
-                        onClick={handleSubmit}
-                        disabled={!isFormComplete() || isProcessing}
-                        style={{
-                            backgroundColor: isFormComplete() && !isProcessing ? "#6c4c9c" : "#ccc",
-                            marginTop: "1rem",
-                            padding: "0.5rem 1rem",
-                            borderRadius: "10px",
-                            border: "none",
-                            color: "white",
-                            cursor: isFormComplete() && !isProcessing ? "pointer" : "not-allowed"
-                        }}
-                    >
-                        {isProcessing ? "İşleniyor..." : "Ödemeyi Tamamla"}
+                    {/* Submit button */}
+                    <button type="submit" disabled={!isFormComplete() || isProcessing || cartItems.length === 0}
+                            style={{ backgroundColor: (!isFormComplete() || cartItems.length === 0) ? "#aaa" : (isProcessing ? "#a886d3" : (darkMode ? '#8a63d2' : '#6c4c9c')), marginTop: "2rem", padding: "0.8rem 1.5rem", width: '100%', borderRadius: "10px", border: "none", color: "white", cursor: (!isFormComplete() || isProcessing || cartItems.length === 0) ? "not-allowed" : "pointer", fontSize: '1.1rem', fontWeight: 'bold', opacity: isProcessing ? 0.7 : 1 }}
+                    > {isProcessing ? "İşleniyor..." : `Ödemeyi Tamamla ve Siparişi Ver (₺${total.toFixed(2)})`}
                     </button>
+                    {!isFormComplete() && cartItems.length > 0 && <p style={{color: 'red', fontSize: '0.9rem', textAlign: 'center', marginTop: '0.5rem'}}>Lütfen * ile işaretli tüm alanları doğru formatta doldurun.</p>}
                 </div>
 
-                {/* Sağ Özet */}
-                <div style={{
-                    flex: 1,
-                    backgroundColor: darkMode ? "#2c2c2c" : "#fff",
-                    borderRadius: "20px",
-                    padding: "1.5rem",
-                    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-                    color: darkMode ? "#fff" : "#000",
-                }}>
-                    <h3>Siparişinizi Görüntüleyin</h3>
-                    <p>{restaurant.name}</p>
-                    {cartItems.map((item,index) => (
-                        <div key={index}
-                             style={{display: "flex", alignItems: "center", marginBottom: "1rem", gap: "1rem"}}>
-                            <img src={item.image || "/placeholder.svg"} alt={item.name}
-                                 style={{width: "60px", height: "60px", borderRadius: "10px", objectFit: "cover"}}/>
-                            <div style={{flex: 1}}>
-                                <strong>{item.name}</strong>
-                                <p style={{margin: 0, fontSize: "0.8rem"}}>{item.description}</p>
-                                <p style={{fontWeight: "bold", margin: 0}}>{item.price} TL</p>
-                            </div>
-                            <button
-                                onClick={() => handleRemoveItem(index)}
-                                style={{
-                                    backgroundColor: "#7A0000",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: "10px",
-                                    padding: "0.3rem 0.7rem",
-                                    cursor: "pointer"
-                                }}
-                            >
-                                Kaldır
-                            </button>
-
-
-                        </div>
-                    ))}
-                    <hr/>
-                    <p style={{textAlign: "right", fontWeight: "bold"}}>
-                        Toplam: {total} TL {tip > 0 && `(Bahşiş: ${tip} TL)`}
-                    </p>
-
+                {/* Sağ Özet (Kaldır Button Removed) */}
+                <div style={{ flex: '1 1 300px', backgroundColor: darkMode ? "#2c2c2c" : "#fff", borderRadius: "20px", padding: "1.5rem", boxShadow: "0 4px 15px rgba(0,0,0,0.1)", color: darkMode ? "#fff" : "#000", height: 'fit-content' }}>
+                    <h3 style={{ marginTop: 0, borderBottom: `1px solid ${darkMode ? '#555':'#eee'}`, paddingBottom: '0.5rem' }}>Sipariş Özeti</h3>
+                    <p style={{ fontWeight: 'bold', marginBottom: '1rem' }}>{restaurant?.restaurantName || restaurant?.name}</p>
+                    {cartItems.length === 0 ? ( <p style={{ fontStyle: 'italic', color: darkMode ? '#aaa' : '#666' }}>Sepetiniz boş.</p> )
+                        : ( cartItems.map((item, index) => (
+                                <div key={item.id || index} style={{display: "flex", alignItems: "center", marginBottom: "1rem", gap: "1rem", borderBottom: `1px dashed ${darkMode ? '#444' : '#eee'}`, paddingBottom: '1rem'}}>
+                                    {item.image ? (<img src={item.image} alt={item.name || ''} style={{width: "60px", height: "60px", borderRadius: "10px", objectFit: "cover", flexShrink: 0}}/>)
+                                        : (<div style={{width: "60px", height: "60px", borderRadius: "10px", backgroundColor: darkMode ? '#555' : '#ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', color: darkMode ? '#aaa' : '#555', fontSize: '0.8rem', textAlign: 'center', flexShrink: 0}}>Resim Yok</div>)}
+                                    <div style={{flex: 1, overflow: 'hidden'}}>
+                                        <strong>{item.name || "İsimsiz Ürün"}</strong>
+                                        <p style={{margin: 0, fontSize: "0.8rem", color: darkMode ? '#bbb' : '#555'}}>{item.description || ''}</p>
+                                        <p style={{fontWeight: "bold", margin: 0}}>₺{(Number(item.price) || 0).toFixed(2)}</p>
+                                    </div>
+                                    {/* Kaldır Button was here */}
+                                </div>
+                            ))
+                        )}
+                    <hr style={{ border: 'none', borderTop: `1px solid ${darkMode ? '#555':'#eee'}`, margin: '1rem 0' }}/>
+                    <div style={{ textAlign: "right", fontWeight: "bold", fontSize: '1.1rem' }}>
+                        Toplam: ₺{total.toFixed(2)} {tip > 0 && <span style={{fontSize: '0.9rem', fontWeight: 'normal'}}>(Bahşiş: ₺{tip.toFixed(2)})</span>}
+                    </div>
                 </div>
             </div>
             {/* Footer */}
-            <footer style={{
-                marginTop: "2rem",
-                padding: "2rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
-            }}>
-                <img src={doyLogo || "/placeholder.svg"} alt="Logo alt" style={{
-                    height: "50px",
-                    width: "50px",
-                    borderRadius: "50%",
-                    objectFit: "cover"
-                }} />
-                <div style={{ display: "flex", gap: "1.5rem" }}>
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaXTwitter size={24} /></a>
-                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaInstagram size={24} /></a>
-                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaYoutube size={24} /></a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaLinkedin size={24} /></a>
+            <footer style={{ marginTop: "auto", padding: "2rem", display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: darkMode ? "#1a1a1a" : "#ffffff", borderTop: `1px solid ${darkMode ? '#444' : '#ddd'}` }}>
+                <img src={doyLogo} alt="Logo alt" style={{ height: "50px", width: "50px", borderRadius: "50%", objectFit: "cover" }} />
+                <div style={{ display: "flex", gap: "1rem" }}>
+                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaXTwitter size={20} /></a> <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaInstagram size={20} /></a> <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaYoutube size={20} /></a> <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaLinkedin size={20} /></a>
                 </div>
             </footer>
-        </div>
+        </form>
     );
 };
-
-const getInputStyle = (darkMode) => ({
-    width: "100%",
-    padding: "0.75rem",
-    fontSize: "1rem",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    marginBottom: "1rem",
-    backgroundColor: darkMode ? "#2a2a2a" : "#fff",
-    color: darkMode ? "#fff" : "#000"
-});
 
 export default Cart;
