@@ -12,13 +12,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "ban")
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "ban")
 public class Ban {
+
     @Id
+    @Column(name = "user_id")
+    private Long userId;
+
     @OneToOne
+    @MapsId
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
@@ -32,3 +37,4 @@ public class Ban {
     @Column(name = "description", length = 100)
     private String description;
 }
+

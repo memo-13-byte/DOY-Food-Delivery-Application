@@ -35,7 +35,7 @@ public class CourierService {
     }
 
     public Set<Courier> GetPendingCouriers(){
-        return courierRepository.findCouriersByIsEnabledFalse();
+        return courierRepository.findCouriersByIsEnabledFalseAndIsBannedFalse();
     }
 
     public Boolean GetCourierAvailability(Long id){
