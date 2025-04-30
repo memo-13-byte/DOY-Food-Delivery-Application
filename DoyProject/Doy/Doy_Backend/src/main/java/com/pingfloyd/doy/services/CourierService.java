@@ -55,5 +55,8 @@ public class CourierService {
         c.setIsAvailable(availability);
         courierRepository.save(c);
     }
+    public void SaveCourier(Courier courier){
+        courierRepository.save(courier);
+    }
 
 }

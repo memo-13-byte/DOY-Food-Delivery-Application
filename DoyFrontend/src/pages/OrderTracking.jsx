@@ -1,6 +1,6 @@
 // OrderTrackingPage.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import axios from 'axios';
 // Import useParams to access URL parameters
 import { useParams } from 'react-router-dom';
@@ -133,7 +133,7 @@ export default function OrderTrackingPage() {
     const [availableCouriers, setAvailableCouriers] = useState([]);
     const [courierLoading, setCourierLoading] = useState(false);
     const [courierError, setCourierError] = useState(null);
-
+    const courierPollIntervalRef = useRef(null);
     // --- Get Restaurant ID from URL ---
     const { id: restaurantId } = useParams();
     console.log("OrderTrackingPage rendered. Restaurant ID from URL:", restaurantId);
@@ -244,35 +244,47 @@ export default function OrderTrackingPage() {
     };
 
     // Fetch Available Couriers
-    const fetchAvailableCouriers = async () => {
+    // Fetch Available Couriers - Modified for polling context
+    const fetchAvailableCouriers = async (isPolling = false) => {
         if (!restaurantId) {
-            console.error("fetchAvailableCouriers: No restaurantId available.");
-            setCourierError("Restoran ID bulunamadı, kuryeler yüklenemiyor.");
-            setAvailableCouriers([]);
-            return false; // Indicate critical failure
+            if (!isPolling) setCourierError("Restoran ID bulunamadı, kuryeler yüklenemiyor.");
+            console.error("fetchAvailableCouriers: No restaurantId available."); // Keep your logs if different
+            // setAvailableCouriers([]); // Decide if you want to clear list on critical error
+            return false;
         }
-        console.log(`WorkspaceAvailableCouriers: Fetching for restaurant ID: ${restaurantId}`); // Kept existing log prefix
-        setCourierLoading(true);
-        setCourierError(null);
-        setAvailableCouriers([]);
+        // Keep any existing console logs you have here if they differ
+        console.log(`WorkspaceAvailableCouriers: Fetching (Polling: ${isPolling}) for restaurant ID: ${restaurantId}`); // Using your log prefix
+
+        // Only set loading/clear error on initial fetch
+        if (!isPolling) {
+            setCourierLoading(true);
+            setCourierError(null);
+            // setAvailableCouriers([]); // Decide if you want to clear list on initial fetch
+        }
+
         const url = `http://localhost:8080/order/restaurant/${restaurantId}/couriers`;
         try {
             const response = await axios.get(url);
+            // Keep any existing success logs you have
             console.log("fetchAvailableCouriers: API Response (Couriers):", response.data);
             if (response.data && Array.isArray(response.data)) {
-                setAvailableCouriers(response.data);
-                return true; // Indicate success
+                setAvailableCouriers(response.data); // Update the list
+                setCourierError(null); // Clear error on success
+                return true;
             } else {
                 console.error("fetchAvailableCouriers: Unexpected response format:", response.data);
-                setCourierError("Kuryeler yüklenirken beklenmedik bir formatla karşılaşıldı.");
-                return true; // Still return true as fetch technically completed, but list is empty
+                if (!isPolling) setCourierError("Kuryeler yüklenirken beklenmedik bir formatla karşılaşıldı.");
+                return true; // Allow modal open
             }
         } catch (err) {
-            console.error(`WorkspaceAvailableCouriers: Error fetching couriers for restaurant ${restaurantId}:`, err.response || err.message || err); // Kept existing log prefix
-            setCourierError(`Kuryeler yüklenirken bir hata oluştu: ${err.response?.data?.message || err.message || 'Bilinmeyen hata'}`);
-            return false; // Indicate fetch failure
+            // Keep any existing error logs you have
+            console.error(`WorkspaceAvailableCouriers: Error fetching couriers for restaurant ${restaurantId}:`, err.response || err.message || err);
+            const errorMsg = `Kuryeler yüklenirken bir hata oluştu: ${err.response?.data?.message || err.message || 'Bilinmeyen hata'}`;
+            setCourierError(errorMsg); // Update error state
+            return false; // Indicate failure
         } finally {
-            setCourierLoading(false);
+            // Only stop loading indicator for initial fetch
+            if (!isPolling) setCourierLoading(false);
         }
     };
 
@@ -290,7 +302,29 @@ export default function OrderTrackingPage() {
         // Cleanup function (optional)
         // return () => { console.log("Cleanup effect"); };
     }, [restaurantId]); // Dependency array
+    // --- ADDED: Effect for Courier Polling ---
+    useEffect(() => {
+        // Log added - adjust if needed
+        console.log(`Courier Polling useEffect: Running. showCourierModal=<span class="math-inline">\{showCourierModal\}, restaurantId\=</span>{restaurantId}`);
+        // Only run if modal is shown AND we have a restaurant ID
+        if (showCourierModal && restaurantId) {
+            console.log("Courier Polling Effect: Starting interval.");
+            // Set interval to call fetchAvailableCouriers every 3 seconds
+            // Pass true to indicate this is a polling call (affects loading/error state handling)
+            courierPollIntervalRef.current = setInterval(() => {
+                fetchAvailableCouriers(true);
+            }, 3000); // 3000 ms = 3 seconds
 
+            // Cleanup function: This is crucial to stop the interval
+            return () => {
+                console.log("Courier Polling Effect: Clearing interval.");
+                clearInterval(courierPollIntervalRef.current);
+            };
+        } else {
+            // If the modal is not shown, ensure any existing interval is cleared
+            clearInterval(courierPollIntervalRef.current);
+        }
+    }, [showCourierModal, restaurantId]); // Dependencies: effect re-runs if modal visibility or restaurantId changes
 
     // --- Event Handlers ---
     const handleShowDetailsClick = (order) => {
@@ -333,7 +367,7 @@ export default function OrderTrackingPage() {
         setSelectedOrderForCourier(order);
         setCourierRequests({}); // Reset requests
 
-        const couriersFetchedSuccessfully = await fetchAvailableCouriers();
+        const couriersFetchedSuccessfully = await fetchAvailableCouriers(false); // Ensure 'false' is passed
 
         if (couriersFetchedSuccessfully !== false) {
             console.log("handleOpenCourierModal: Couriers fetched (or fetch completed), opening modal.");

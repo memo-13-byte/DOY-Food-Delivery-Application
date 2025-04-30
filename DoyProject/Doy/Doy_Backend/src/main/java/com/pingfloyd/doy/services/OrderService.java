@@ -312,9 +312,11 @@ public class OrderService {
         CustomerOrder order = request.getOrder();
         if(response){
             order.setStatus(OrderStatus.AWAITING_PICKUP);
+            request.getCourier().setIsAvailable(false);
             order.setCourier(request.getCourier());
             request.setAcceptedAt(LocalDateTime.now());
             customerOrderRepository.save(order);
+            courierService.SaveCourier(request.getCourier());
             return true;
         }
         request.setRejectedAt(LocalDateTime.now());
@@ -341,7 +343,7 @@ public class OrderService {
         DtoRestaurantOrders.OrderInfo orderInfo = new DtoRestaurantOrders.OrderInfo();
         orderInfo.setOrderId(order.getOrderId());
         orderInfo.setCreationDate(order.getCreationDate());
-        orderInfo.setCustomerName(order.getCustomer().getEmail());
+        orderInfo.setCustomerName(order.getCustomer().getFirstname() + " " +order.getCustomer().getLastname());
         orderInfo.setCustomerPhone(order.getCustomer().getPhoneNumber());
         orderInfo.setPrice(1000.0);
         orderInfo.setStatus(order.getStatus());
