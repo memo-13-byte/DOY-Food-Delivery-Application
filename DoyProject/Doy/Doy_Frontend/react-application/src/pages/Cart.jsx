@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
 import doyLogo from "../assets/doylogo.jpeg";
 import {BsMoon} from "react-icons/bs";
+import { useCart } from "../context/CartContext";
+
 
 const iconLinkStyle = (darkMode) => ({
     color: darkMode ? "#ffffff" : "inherit",
@@ -23,12 +25,15 @@ const Cart = () => {
     const [darkMode, setDarkMode] = useState(location.state?.darkMode || false);
 
 
-    const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
+    const { cart, removeFromCart } = useCart();
 
     const [tip, setTip] = useState(0);
 
 
-    const restaurant = location.state?.restaurant || { name: "Restoran" };
+    const restaurant = cart.length > 0
+        ? { name: "Restoran", ...cart[0] }
+        : { name: "Restoran" };
+
     const selectedAddress = location.state?.selectedAddress;
 
     const [form, setForm] = useState({
@@ -49,7 +54,8 @@ const Cart = () => {
 
     const isFormComplete = Object.values(form).every((val) => val.trim() !== "");
 
-    const total = cartItems.reduce((acc, item) => acc + item.price, 0) + tip;
+    const total = cart.reduce((acc, item) => acc + item.price, 0) + tip;
+
 
     const handleSubmit = () => {
         if (isFormComplete) {
@@ -57,17 +63,17 @@ const Cart = () => {
                 state: {
                     address: form.address,
                     total,
-                    cartItems,
                     darkMode,
-                    res :restaurant,
+                    res: restaurant
                 }
             });
         }
     };
 
     const handleRemoveItem = (indexToRemove) => {
-        setCartItems(prev => prev.filter((_, index) => index !== indexToRemove));
+        removeFromCart(indexToRemove);
     };
+
 
 
 
@@ -269,7 +275,7 @@ const Cart = () => {
                 }}>
                     <h3>Siparişinizi Görüntüleyin</h3>
                     <p>{restaurant.name}</p>
-                    {cartItems.map((item,index) => (
+                    {cart.map((item,index) => (
                         <div key={index}
                              style={{display: "flex", alignItems: "center", marginBottom: "1rem", gap: "1rem"}}>
                             <img src={item.image} alt={item.name}

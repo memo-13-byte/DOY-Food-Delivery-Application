@@ -5,6 +5,7 @@ import doyLogo from "../assets/doylogo.jpeg";
 import { BsMoon } from "react-icons/bs";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
 import restaurants  from "../data/restaurants.js";
+import { useCart } from "../context/CartContext";
 
 const statuses = [
     { label: "Hazırlanıyor 🧑‍🍳", delay: 0 },
@@ -33,7 +34,7 @@ const OrderConfirmation = () => {
     const resId = state?.res?.id;
     const restaurant = restaurants.find(r => r.id === resId);
 
-    const cartItems = state?.cartItems || [];
+    const { cart } = useCart();
 
 
     const [darkMode, setDarkMode] = useState(state?.darkMode || false);
@@ -43,7 +44,7 @@ const OrderConfirmation = () => {
     const [showRating, setShowRating] = useState(false);
     const [rating, setRating] = useState(0);
 
-    const totalAmount = cartItems.reduce((acc, item) => acc + item.price, 0);
+    const totalAmount = cart.reduce((acc, item) => acc + item.price, 0);
 
 
     useEffect(() => {
@@ -112,7 +113,7 @@ const OrderConfirmation = () => {
                     <hr/>
                     <h4>Ürünler:</h4>
                     <ul>
-                        {cartItems.map((item, i) => (
+                        {cart.map((item, i) => (
                             <li key={i}>{item.name} - {item.price} TL</li>
                         ))}
                     </ul>

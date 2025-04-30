@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { BsMoon } from "react-icons/bs";
+import { useCart } from "../context/CartContext";
+
 
 const Checkout = () => {
     const navigate = useNavigate();
@@ -11,7 +13,7 @@ const Checkout = () => {
     const total = location.state?.total;
     const [darkMode, setDarkMode] = useState(location.state?.darkMode || false);
 
-    const cartItems = location.state?.cartItems || [];
+    const { cart } = useCart();
     const restaurant = location.state?.res;
 
     const handleAccept = () => {
@@ -24,9 +26,8 @@ const Checkout = () => {
                 success: hasNumber,
                 address: address,
                 total: total,
-                cartItems: cartItems,
                 darkMode: darkMode,
-                restaurant : restaurant
+                restaurant: restaurant
             }
         });
     };

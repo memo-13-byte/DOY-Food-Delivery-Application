@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import doyLogo from "../assets/doylogo.jpeg";
 import { BsMoon } from "react-icons/bs";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
+import { useCart } from "../context/CartContext";
+
 
 const iconLinkStyle = {
     color: "inherit",
@@ -23,7 +25,7 @@ const PaymentResult = () => {
     const address = state?.address;
     const total = state?.total;
     const darkFromCart = state?.darkMode;
-    const cartItems = state?.cartItems || [];
+    const { cart } = useCart();
     const restaurant = state?.restaurant;
 
     const [darkMode, setDarkMode] = useState(darkFromCart || false);
@@ -35,25 +37,24 @@ const PaymentResult = () => {
                     address,
                     total,
                     darkMode,
-                    cartItems,
                     res: restaurant
                 }
             });
+
         } else {
             const timer = setTimeout(() => {
                 navigate("/cart", {
                     state: {
-                        cartItems,
                         address,
                         total,
-                        darkMode,
+                        darkMode
                     }
                 });
             }, 5000);
 
             return () => clearTimeout(timer);
         }
-    }, [success, navigate, address, total, darkMode, cartItems, restaurant]);
+    }, [success, navigate, address, total, darkMode, restaurant]);
 
     return (
         <div style={{ backgroundColor: darkMode ? "#1a1a1a" : "#F2E8D6", minHeight: "100vh", display: "flex", flexDirection: "column" }}>

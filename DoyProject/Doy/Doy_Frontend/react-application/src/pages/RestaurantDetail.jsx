@@ -8,7 +8,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { BsMoon } from "react-icons/bs";
 import doyLogo from "../assets/doylogo.jpeg";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
-
+import { useCart } from "../context/CartContext";
 
 const renderStars = (rating) => {
     const full = Math.floor(rating);
@@ -31,25 +31,29 @@ const iconLinkStyle = {
 };
 
 const RestaurantDetail = () => {
-    const [cart, setCart] = useState([]);
+    const { cart, addToCart } = useCart();
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = useParams();
 
     const menu = restaurantMenu[id];
-
+    const restaurant = restaurants.find((r) => r.id === parseInt(id));
     const [darkMode, setDarkMode] = useState(location.state?.darkMode || false);
     const selectedAddress = location.state?.selectedAddress;
 
-    const restaurant = restaurants.find((r) => r.id === parseInt(id));
+    const handleAddToCart = (item) => {
+        addToCart({
+            ...item,
+            restaurantId: restaurant.id,
+            restaurantName: restaurant.name
+        });
+    };
 
-    const handleAddToCart = (item) => setCart([...cart, item]);
 
     const handleConfirm = () => {
         if (cart.length > 0) {
             navigate("/cart", {
                 state: {
-                    cartItems: cart,
                     restaurant,
                     selectedAddress,
                     darkMode
@@ -60,10 +64,8 @@ const RestaurantDetail = () => {
         }
     };
 
-
     return (
         <div style={{ backgroundColor: darkMode ? "#1c1c1c" : "#F2E8D6", color: darkMode ? "#fff" : "#000" }}>
-
             {/* ÜST BAR */}
             <div style={{
                 backgroundColor: darkMode ? "#333" : "#47300A",
@@ -74,13 +76,8 @@ const RestaurantDetail = () => {
                 alignItems: "center"
             }}>
                 <div style={{ fontWeight: "bold", fontSize: "1.1rem" }}>Doy!</div>
-
-                <div
-                    style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    <div
-                        onClick={() => setDarkMode(!darkMode)}
-                        style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
-                    >
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <div onClick={() => setDarkMode(!darkMode)} style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}>
                         <div style={{
                             width: "34px",
                             height: "18px",
@@ -101,8 +98,6 @@ const RestaurantDetail = () => {
                         </div>
                         <BsMoon color={darkMode ? "#000" : "#fff"} size={18} />
                     </div>
-
-                    {/* Kayıt / Giriş Butonları */}
                     <div style={{
                         display: "flex",
                         backgroundColor: "#F8F5DE",
@@ -115,7 +110,7 @@ const RestaurantDetail = () => {
                 </div>
             </div>
 
-            {/* LOGO BAR (DOY! logosu) */}
+            {/* LOGO BAR */}
             <div style={{
                 backgroundColor: darkMode ? "#2a2a2a" : "#E7DECB",
                 padding: "1.5rem 3rem",
@@ -126,7 +121,6 @@ const RestaurantDetail = () => {
                 <img src={doyLogo} alt="doylogo" style={{ height: "180px", borderRadius: "50%" }} />
             </div>
 
-            {/* ALT GEÇİŞ ŞERİDİ */}
             <div style={{ height: "2px", backgroundColor: "#47300A", width: "100%" }} />
 
             {/* Restoran Bilgisi ve Sepet */}
@@ -141,23 +135,20 @@ const RestaurantDetail = () => {
                             />
                         )}
                         <div>
-                            <h2 style={{color: darkMode ? "#fff" : "#000"}}>{restaurant?.name}</h2>
+                            <h2 style={{ color: darkMode ? "#fff" : "#000" }}>{restaurant?.name}</h2>
                             <div>{renderStars(restaurant?.rating)} {restaurant?.rating}/5</div>
                             <p>{restaurant?.description || "Lezzetli yemekler burada!"}</p>
                             <p>Teslim Süresi: {restaurant?.time} dk | Min. Sipariş: ₺{restaurant?.minPrice}</p>
                         </div>
                     </div>
 
-                    <CartSummary cart={cart} onConfirm={handleConfirm} />
+                    <CartSummary cart={cart} onConfirm={handleConfirm} darkMode={darkMode} />
                 </div>
 
-                {/* Menü Grupları */}
+                {/* Menü */}
                 {menu && menu.categories.map((category, i) => (
                     <div key={i} style={{ marginBottom: "3rem" }}>
-                        <h3 style={{
-                            marginBottom: "1rem",
-                            color: darkMode ? "#fff" : "#000",
-                        }}>
+                        <h3 style={{ marginBottom: "1rem", color: darkMode ? "#fff" : "#000" }}>
                             {category.title}
                         </h3>
                         <div style={{
@@ -171,7 +162,6 @@ const RestaurantDetail = () => {
                         </div>
                     </div>
                 ))}
-
             </div>
 
             {/* Footer */}

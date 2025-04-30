@@ -11,6 +11,9 @@ import { HiOutlineHome } from "react-icons/hi";
 import LocationModal from "../components/LocationModal";
 import { useEffect } from "react";
 
+import { useCart } from "../context/CartContext";
+import CartSummary from "../components/CartSummary";
+
 
 import restaurants from "../data/restaurants";
 
@@ -36,6 +39,8 @@ const Home = () => {
 
     const [touchStartX, setTouchStartX] = useState(null);
     const [touchEndX, setTouchEndX] = useState(null);
+
+    const { cart } = useCart();
 
 
     const [currentPage, setCurrentPage] = useState(0);
@@ -531,6 +536,26 @@ const Home = () => {
                     </a>
                 </div>
             </footer>
+
+            {/* Sabit Global Sepet (sağ üst köşe) */}
+            <div style={{
+                position: "fixed",
+                top: "80px",
+                right: "20px",
+                zIndex: 999
+            }}>
+                <CartSummary
+                    cart={cart}
+                    darkMode={darkMode}
+                    onConfirm={() => navigate("/cart", {
+                        state: {
+                            darkMode,
+                            selectedAddress
+                        }
+                    })}
+                />
+            </div>
+
 
 
             {modalOpen && (
