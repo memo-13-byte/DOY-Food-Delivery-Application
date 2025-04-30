@@ -148,6 +148,7 @@ public class RegistrationService {
         courier.setRole(UserRoles.COURIER);
         courier.setIsEnabled(false);
         courier.setIsBanned(false);
+        courier.setIsAvailable(true);
         District district = districtService.GetDistrict(request.getCity() , request.getName());
         courier.setDistrict(district);
         district.getCouriers().add(courier);

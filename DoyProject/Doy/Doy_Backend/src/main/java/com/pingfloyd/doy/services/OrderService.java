@@ -161,12 +161,15 @@ public class OrderService {
         }
         CustomerOrder customerOrder = CreateCustomerOrder(customer);
         Set<CartItem> set = customer.getCart().getItems();
+        Double price = 0.0;
         for(CartItem item : set){
             OrderItem orderItem = CreateOrderItem(item,customerOrder);
+            price +=  item.getMenuItem().getPrice().doubleValue();
             //orderItemRepository.save(orderItem);
             customerOrder.getItems().add(orderItem);
         }
         set.clear();
+        customerOrder.setPrice(price);
         customerOrderRepository.save(customerOrder);
         paymentRepository.save(CreatePayment(dtoPaymentInformationIU , customer));
         return true;
@@ -310,6 +313,12 @@ public class OrderService {
     public Boolean CourierResponse(Long requestId , Boolean response){
         CourierRequest request = courierRequestService.GetCourierRequestById(requestId);
         CustomerOrder order = request.getOrder();
+        if(order == null){
+            throw new OrderNotFoundException("There are no order associated with this request");
+        }
+        if(order.getCourier() != null){
+            throw new OrderAlreadyTakenException("Order already accepted by another courier");
+        }
         if(response){
             order.setStatus(OrderStatus.AWAITING_PICKUP);
             request.getCourier().setIsAvailable(false);
@@ -321,7 +330,7 @@ public class OrderService {
         }
         request.setRejectedAt(LocalDateTime.now());
         courierRequestService.DeleteRequest(request);
-        return false;
+        return true;
     }
 
     public DtoRestaurantOrders GetCourierActiveOrder(Long id){
@@ -345,7 +354,7 @@ public class OrderService {
         orderInfo.setCreationDate(order.getCreationDate());
         orderInfo.setCustomerName(order.getCustomer().getFirstname() + " " +order.getCustomer().getLastname());
         orderInfo.setCustomerPhone(order.getCustomer().getPhoneNumber());
-        orderInfo.setPrice(1000.0);
+        orderInfo.setPrice(order.getPrice());
         orderInfo.setStatus(order.getStatus());
         dtoRestaurantOrders.getOrderInfoList().add(orderInfo);
     }
@@ -460,6 +469,7 @@ public class OrderService {
             request.setOrderId(order.getOrderId());
             request.setNote("None");
             request.setCustomerEmail(customer.getEmail());
+            request.setCustomerAddress(MapAddress(customer.getCurrent_address()));
             //requestInfo.setCustomerAddress(MapAddress(customer.getCurrent_address()));
             request.setCustomerName(customer.getFirstname() + " " + customer.getLastname());
             request.setCustomerPhone(customer.getPhoneNumber());
