@@ -182,6 +182,9 @@ public class UserService implements UserDetailsService, IUserService {
         }
         DtoCourier dtoCourier  = new DtoCourier();
         BeanUtils.copyProperties(courier.get(), dtoCourier);
+        dtoCourier.setGovernmentId(courier.get().getGovernmentId());
+        dtoCourier.setDistrictName(courier.get().getDistrict().getName());
+        dtoCourier.setDistrictCity(courier.get().getDistrict().getCity().toString());
         return dtoCourier;
     }
 

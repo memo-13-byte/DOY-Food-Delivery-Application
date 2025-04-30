@@ -6,17 +6,13 @@ import { motion } from "framer-motion"
 import { Button } from "../components/ui/button"
 import { Checkbox } from "../components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
-import { getCourierById } from "../services/profileData"
+import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut, Axis3D } from "lucide-react"
+import { getCourierById, getUserById } from "../services/profileData"
 import { useToast } from "../hooks/use-toast"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
+import axios from "axios"
+import { getResponseErrors } from "../services/exceptionUtils"
 
-// Mock function for updating courier data (replace with your actual API call)
-const updateCourier = (courierData) => {
-  // Simulate an API call delay
-  // await new Promise((resolve) => setTimeout(resolve, 500));
-  return { ...courierData }
-}
 
 export default function CourierProfilePage() {
   const navigate = useNavigate()
@@ -25,30 +21,44 @@ export default function CourierProfilePage() {
   const courierId = params.id
   const [darkMode, setDarkMode] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [errorMessages, setErrorMessages] = useState([])
 
   const { toast } = useToast()
-  const [originalCourier, setOriginalCourier] = useState(null)
+  const [originalCourier, setOriginalCourier] = useState({
+    id: 1,
+  firstname: "",
+  lastname: "",
+  email: "",
+  phoneNumber: "",
+  role: "",
+  governmentId: "",
+  districtCity: "",
+  districtName: "",
+  })
 
   // Kurye verilerini ID'ye göre al
-  const [courier, setCourier] = useState(() => getCourierById(courierId))
-
-  // ID değiştiğinde kurye verilerini güncelle
-  useEffect(() => {
-    if (courierId) {
-      const courierData = getCourierById(courierId)
-      setCourier(courierData)
-      setOriginalCourier(JSON.parse(JSON.stringify(courierData)))
-    }
-  }, [courierId])
+  const [courier, setCourier] = useState({
+    id: 1,
+  firstname: "",
+  lastname: "",
+  email: "",
+  phoneNumber: "",
+  role: "",
+  governmentId: "",
+  districtCity: "",
+  districtName: "",
+  })
 
   // If there's no courierId, set the default courier
   useEffect(() => {
-    if (!courierId) {
-      const defaultCourierData = getCourierById()
-      setCourier(defaultCourierData)
-      setOriginalCourier(JSON.parse(JSON.stringify(defaultCourierData)))
+    const getCourier = async () => {
+      const response = await getUserById(courierId)
+
+      setCourier(response)
+      setOriginalCourier(response)
     }
-  }, [])
+    getCourier()
+  }, [courierId])
 
   // Simulate loading state
   useEffect(() => {
@@ -86,31 +96,24 @@ export default function CourierProfilePage() {
     }))
   }
 
-  const handleUpdate = () => {
-    if (!originalCourier) return
+  const handleUpdate = async() => {
+    setErrorMessages([])
+    try {
+        
+      const response = await axios.put(`http://localhost:8080/api/users/couriers/update/${courier.email}`, courier)
+      setOriginalCourier(response.data)
 
-    // Check if there are any changes by comparing the current courier with the original
-    const hasChanges = JSON.stringify(courier) !== JSON.stringify(originalCourier)
-
-    if (hasChanges) {
-      // Update the courier data (in a real app, this would call an API)
-      const updatedCourier = updateCourier(courier)
-
-      // Update the original courier data with the new data
-      setOriginalCourier(JSON.parse(JSON.stringify(updatedCourier)))
-
-      // Show success toast
       toast({
         title: "Profil güncellendi!",
         description: "Kurye bilgileriniz başarıyla güncellendi.",
         variant: "default",
         duration: 3000,
       })
-    } else {
-      // Show info toast that no changes were made
+    } catch (error) {
+      setErrorMessages(getResponseErrors(error))
       toast({
         title: "Değişiklik yok",
-        description: "Herhangi bir değişiklik yapmadınız.",
+        description: "Herhangi bir değişiklik yapılamadı.",
         variant: "destructive",
         duration: 3000,
       })
@@ -194,7 +197,7 @@ export default function CourierProfilePage() {
             className={`flex items-center justify-center rounded-full w-10 h-10 ${darkMode ? "bg-purple-400" : "bg-amber-500"}`}
           >
             <span className="text-white text-sm font-medium">
-              {courier.firstName && courier.lastName ? courier.firstName[0] + courier.lastName[0] : "K"}
+              {courier.firstname && courier.lastname ? courier.firstname[0] + courier.lastname[0] : "K"}
             </span>
           </motion.div>
         </div>
@@ -228,6 +231,36 @@ export default function CourierProfilePage() {
         </motion.div>
       </motion.div>
 
+      {errorMessages.map((message, i) => (
+                        
+                        <motion.div key={i}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+                        >
+                          <div className="flex">
+                            <div className="py-1">
+                              <svg 
+                                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium">{message}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
       {/* Profile Content */}
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
         <motion.div
@@ -245,7 +278,7 @@ export default function CourierProfilePage() {
           </motion.h1>
 
           {/* Performance Statistics */}
-          <motion.div
+          {/*<motion.div
             className={`${darkMode ? "bg-[#333]" : "bg-[#F2E8D6]"} rounded-lg p-6 mb-8 shadow-inner`}
             variants={itemVariants}
           >
@@ -295,27 +328,6 @@ export default function CourierProfilePage() {
 
           {/* Courier Information */}
           <motion.div className="w-full max-w-4xl mx-auto space-y-5 mb-8" variants={itemVariants}>
-            <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                Kullanıcı Adı
-              </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  name="fullName"
-                  value={courier.fullName}
-                  onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                />
-                <motion.button
-                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
-                </motion.button>
-              </div>
-            </motion.div>
 
             <motion.div className="grid grid-cols-2 gap-6" variants={fadeInVariants}>
               <div>
@@ -325,8 +337,8 @@ export default function CourierProfilePage() {
                 <div className="flex">
                   <input
                     type="text"
-                    name="firstName"
-                    value={courier.firstName}
+                    name="firstname"
+                    value={courier.firstname}
                     onChange={handleInputChange}
                     className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
@@ -347,8 +359,8 @@ export default function CourierProfilePage() {
                 <div className="flex">
                   <input
                     type="text"
-                    name="lastName"
-                    value={courier.lastName}
+                    name="lastname"
+                    value={courier.lastname}
                     onChange={handleInputChange}
                     className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
@@ -395,7 +407,7 @@ export default function CourierProfilePage() {
                 <input
                   type="tel"
                   name="phone"
-                  value={courier.phone || ""}
+                  value={courier.phoneNumber || ""}
                   onChange={handleInputChange}
                   className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
@@ -412,13 +424,35 @@ export default function CourierProfilePage() {
             {/* Address field */}
             <motion.div variants={fadeInVariants}>
               <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                Adres
+                İl
               </label>
               <div className="flex">
                 <input
                   type="text"
                   name="address"
-                  value={courier.address}
+                  value={courier.districtCity}
+                  onChange={handleInputChange}
+                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                />
+                <motion.button
+                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
+                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                </motion.button>
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeInVariants}>
+              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
+                İlçe
+              </label>
+              <div className="flex">
+                <input
+                  type="text"
+                  name="address"
+                  value={courier.districtName}
                   onChange={handleInputChange}
                   className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
@@ -441,7 +475,7 @@ export default function CourierProfilePage() {
                 <input
                   type="text"
                   name="idNumber"
-                  value={courier.idNumber}
+                  value={courier.governmentId}
                   onChange={handleInputChange}
                   className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
@@ -456,7 +490,7 @@ export default function CourierProfilePage() {
             </motion.div>
 
             {/* Vehicle Type select */}
-            <motion.div variants={fadeInVariants}>
+            {/*<motion.div variants={fadeInVariants}>
               <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Araç Tipi
               </label>
@@ -477,10 +511,10 @@ export default function CourierProfilePage() {
                   <SelectItem value="Elektrikli Bisiklet">Elektrikli Bisiklet</SelectItem>
                 </SelectContent>
               </Select>
-            </motion.div>
+            </motion.div>*/}
 
             {/* License Plate field */}
-            <motion.div variants={fadeInVariants}>
+            {/*<motion.div variants={fadeInVariants}>
               <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Plaka (Bağımsız Kurye için)
               </label>
@@ -503,7 +537,7 @@ export default function CourierProfilePage() {
             </motion.div>
 
             {/* Work Schedule select */}
-            <motion.div variants={fadeInVariants}>
+            {/*<motion.div variants={fadeInVariants}>
               <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Çalışma Şekli
               </label>
@@ -527,7 +561,7 @@ export default function CourierProfilePage() {
             </motion.div>
 
             {/* Experience field */}
-            <motion.div variants={fadeInVariants}>
+            {/*<motion.div variants={fadeInVariants}>
               <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Deneyim (Yıl)
               </label>
@@ -551,7 +585,7 @@ export default function CourierProfilePage() {
           </motion.div>
 
           {/* Document Upload */}
-          <motion.div className="w-full max-w-4xl mx-auto mb-8" variants={itemVariants}>
+          {/*<motion.div className="w-full max-w-4xl mx-auto mb-8" variants={itemVariants}>
             <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
               Ehliyet
             </label>
@@ -592,7 +626,7 @@ export default function CourierProfilePage() {
           </motion.div>
 
           {/* Working Days and Hours */}
-          <motion.div className="w-full max-w-4xl mx-auto mb-8" variants={itemVariants}>
+          {/*<motion.div className="w-full max-w-4xl mx-auto mb-8" variants={itemVariants}>
             <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
               Çalışma Saatleri
             </label>
@@ -648,7 +682,7 @@ export default function CourierProfilePage() {
                   />
                 </div>
               </div>
-            </motion.div>
+            </motion.div>*/}
           </motion.div>
 
           {/* Update Button */}
