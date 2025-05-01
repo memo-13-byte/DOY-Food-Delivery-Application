@@ -33,7 +33,6 @@ const PendingActionButtons = ({ selected, approveUser, declineUser, addToast, da
         }}>
             {/* Review Button */}
             <Button
-                className="bg-blue-600 hover:bg-blue-700 text-white"
                 onClick={() => {
                     addToast(`👀 Reviewing profile for ${selected.name}`);
                 }}
@@ -43,7 +42,6 @@ const PendingActionButtons = ({ selected, approveUser, declineUser, addToast, da
 
             {/* Approve Button */}
             <Button
-                className="bg-green-600 hover:bg-green-700 text-white"
                 onClick={() => {
                     approveUser(selected.id);
                 }}
@@ -53,7 +51,6 @@ const PendingActionButtons = ({ selected, approveUser, declineUser, addToast, da
 
             {/* Decline Button */}
             <Button
-                className="bg-red-600 hover:bg-red-700 text-white"
                 onClick={() => {
                     declineUser(selected.id);
                 }}
