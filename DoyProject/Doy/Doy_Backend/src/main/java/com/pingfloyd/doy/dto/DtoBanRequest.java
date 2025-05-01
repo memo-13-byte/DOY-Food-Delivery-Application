@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class DtoBanRequest {
-
+    @NotNull(message = "Id cannot be null!")
     private Long id;
     @NotNull(message = "Suspension duration can not be empty!")
     private Integer banDuration;

@@ -275,14 +275,12 @@ public class UserService implements UserDetailsService, IUserService {
         ban.setCreatedAt(time);
         ban.setEndDate(endTime);
         if(u.isPresent()){
-            ban.setUserId(u.get().getId());
             ban.setUser(u.get());
             u.get().setIsBanned(true);
             u.get().setIsEnabled(false);
             courierRepository.save(u.get());
         }
         else{
-            ban.setUserId(r.get().getId());
             ban.setUser(r.get());
             r.get().setIsBanned(true);
             r.get().setIsEnabled(false);
