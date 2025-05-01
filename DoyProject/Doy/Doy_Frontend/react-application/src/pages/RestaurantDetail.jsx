@@ -31,7 +31,7 @@ const iconLinkStyle = {
 };
 
 const RestaurantDetail = () => {
-    const { cart, addToCart } = useCart();
+    const { cart, addToCartWithBackend } = useCart(); // backend fonksiyonunu aldık
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -42,13 +42,12 @@ const RestaurantDetail = () => {
     const selectedAddress = location.state?.selectedAddress;
 
     const handleAddToCart = (item) => {
-        addToCart({
+        addToCartWithBackend({
             ...item,
             restaurantId: restaurant.id,
             restaurantName: restaurant.name
         });
     };
-
 
     const handleConfirm = () => {
         if (cart.length > 0) {
@@ -142,7 +141,7 @@ const RestaurantDetail = () => {
                         </div>
                     </div>
 
-                    <CartSummary cart={cart} onConfirm={handleConfirm} darkMode={darkMode} />
+                    <CartSummary onConfirm={handleConfirm} darkMode={darkMode} />
                 </div>
 
                 {/* Menü */}

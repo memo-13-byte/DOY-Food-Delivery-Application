@@ -25,7 +25,7 @@ const Cart = () => {
     const [darkMode, setDarkMode] = useState(location.state?.darkMode || false);
 
 
-    const { cart, removeFromCart } = useCart();
+    const { cart, removeFromCartWithBackend } = useCart();
 
     const [tip, setTip] = useState(0);
 
@@ -71,7 +71,8 @@ const Cart = () => {
     };
 
     const handleRemoveItem = (indexToRemove) => {
-        removeFromCart(indexToRemove);
+        const itemId = cart[indexToRemove]?.id;
+        removeFromCartWithBackend(indexToRemove, itemId);
     };
 
 

@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { BsMoon } from "react-icons/bs";
 import { useCart } from "../context/CartContext";
 
-
 const Checkout = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -13,21 +12,26 @@ const Checkout = () => {
     const total = location.state?.total;
     const [darkMode, setDarkMode] = useState(location.state?.darkMode || false);
 
-    const { cart } = useCart();
+    const { cart, confirmOrderWithBackend } = useCart(); // ✅ eklendi
     const restaurant = location.state?.res;
 
-    const handleAccept = () => {
+    const handleAccept = async () => {
         if (code.trim() === "") return alert("Lütfen kodu girin");
 
         const hasNumber = /\d/.test(code);
 
+        if (hasNumber) {
+            const success = await confirmOrderWithBackend(); // ✅ Backend sipariş onayı
+            if (!success) return alert("Sipariş backend'e gönderilemedi.");
+        }
+
         navigate("/payment-result", {
             state: {
                 success: hasNumber,
-                address: address,
-                total: total,
-                darkMode: darkMode,
-                restaurant: restaurant
+                address,
+                total,
+                darkMode,
+                restaurant
             }
         });
     };
@@ -36,26 +40,53 @@ const Checkout = () => {
         navigate("/payment-result", {
             state: {
                 success: false,
-                address: address,
-                total: total,
-                darkMode: darkMode
+                address,
+                total,
+                darkMode
             }
         });
     };
 
     return (
-        <div style={{ backgroundColor: darkMode ? "#1c1c1c" : "#F2E8D6", minHeight: "100vh", display: "flex", flexDirection: "column", color: darkMode ? "#fff" : "#000" }}>
+        <div style={{
+            backgroundColor: darkMode ? "#1c1c1c" : "#F2E8D6",
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            color: darkMode ? "#fff" : "#000"
+        }}>
             {/* Üst bar */}
-            <div style={{ backgroundColor: darkMode ? "#333" : "#47300A", padding: "0.6rem 1.5rem", color: darkMode ? "#fff" : "white", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                {/* Sol: Doy! yazısı */}
+            <div style={{
+                backgroundColor: darkMode ? "#333" : "#47300A",
+                padding: "0.6rem 1.5rem",
+                color: darkMode ? "#fff" : "white",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+            }}>
                 <div style={{ fontWeight: "bold", fontSize: "1.1rem" }}>Doy!</div>
-
-                {/* Sağ: Toggle + Kayıt/Giriş */}
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    {/* Dark Mode Toggle */}
-                    <div onClick={() => setDarkMode(!darkMode)} style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}>
-                        <div style={{ width: "34px", height: "18px", borderRadius: "20px", backgroundColor: "#F8F5DE", position: "relative" }}>
-                            <div style={{ width: "16px", height: "16px", borderRadius: "50%", backgroundColor: "#000", position: "absolute", top: "1px", left: darkMode ? "17px" : "1px", transition: "left 0.3s" }} />
+                    <div
+                        onClick={() => setDarkMode(!darkMode)}
+                        style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
+                    >
+                        <div style={{
+                            width: "34px",
+                            height: "18px",
+                            borderRadius: "20px",
+                            backgroundColor: "#F8F5DE",
+                            position: "relative"
+                        }}>
+                            <div style={{
+                                width: "16px",
+                                height: "16px",
+                                borderRadius: "50%",
+                                backgroundColor: "#000",
+                                position: "absolute",
+                                top: "1px",
+                                left: darkMode ? "17px" : "1px",
+                                transition: "left 0.3s"
+                            }} />
                         </div>
                         <BsMoon color={darkMode ? "#000" : "#fff"} size={18} />
                     </div>
@@ -64,7 +95,14 @@ const Checkout = () => {
             </div>
 
             {/* Kod giriş kutusu */}
-            <div style={{ padding: "3rem", maxWidth: "600px", margin: "auto", backgroundColor: darkMode ? "#2c2c2c" : "#fff", borderRadius: "20px", boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
+            <div style={{
+                padding: "3rem",
+                maxWidth: "600px",
+                margin: "auto",
+                backgroundColor: darkMode ? "#2c2c2c" : "#fff",
+                borderRadius: "20px",
+                boxShadow: "0 0 10px rgba(0,0,0,0.1)"
+            }}>
                 <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>Ödeme Kodunu Girin</h2>
                 <p style={{ textAlign: "center" }}>Telefonunuza gelen 6 haneli kodu girerek işlemi onaylayın.</p>
                 <input
