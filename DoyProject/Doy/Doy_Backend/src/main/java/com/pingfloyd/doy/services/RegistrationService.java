@@ -121,7 +121,7 @@ public class RegistrationService {
 
         Address address = CreateAddress(request.getDtoAddress());
         districtService.SaveAddress(address);
-        customer.getAddresses().add(address);
+        customer.setCurrent_address(address);
         return customer;
     }
 

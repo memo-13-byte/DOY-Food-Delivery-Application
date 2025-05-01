@@ -198,6 +198,14 @@ public class UserService implements UserDetailsService, IUserService {
         }
         Customer savedCustomer = customer.get();
         BeanUtils.copyProperties(dtoCustomerIU, savedCustomer);
+
+        BeanUtils.copyProperties(dtoCustomerIU.getCurrent_address(), savedCustomer.getCurrent_address());
+
+        District district = districtService.
+                GetDistrict(dtoCustomerIU.getCurrent_address().getCity(), dtoCustomerIU.getCurrent_address()
+                        .getDistrict());
+
+        savedCustomer.getCurrent_address().setDistrict(district);
         savedCustomer = customerRepository.save(savedCustomer);
         DtoCustomer dtoCustomer = new DtoCustomer();
         BeanUtils.copyProperties(savedCustomer, dtoCustomer);

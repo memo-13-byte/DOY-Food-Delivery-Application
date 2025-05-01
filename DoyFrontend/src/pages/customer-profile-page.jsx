@@ -30,28 +30,27 @@ export default function CustomerProfilePage() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
   const [districts, setDistricts] = useState(DISTRICT_DATA["ISTANBUL"])
-    const [addressInfo, setAddressInfo] = useState(
-      {
-        city:"ISTANBUL",
-        neighborhood:"",
-        district:"Adalar",
-        avenue:"",
-        street:"",
-        buildingNumber:0,
-        apartmentNumber:0,
-      })
+  const [addressInfo, setAddressInfo] = useState({
+    city: "ISTANBUL",
+    district: "Adalar",
+    neighborhood: "",
+    avenue: "",
+    street: "",
+    buildingNumber: 0,
+    apartmentNumber: 0,
+  })
 
   // Fetch customer data by ID
-  const [user, setUser] = useState(
-    {
-      id: 0,
-      firstname: " ",
-      lastname: " ",
-      email: " ",
-      phoneNumber: " ",
-      role: " ",
-      addresses: " ",
-    }) 
+  const [user, setUser] = useState({
+    id: 0,
+    firstname: " ",
+    lastname: " ",
+    email: " ",
+    phoneNumber: " ",
+    role: " ",
+    addresses: " ",
+    name: " "
+  }) 
 
   // Form state for profile update
   const [formData, setFormData] = useState({
@@ -59,10 +58,6 @@ export default function CustomerProfilePage() {
     lastname: user.lastname,
     email: user.email,
     phoneNumber: user.phoneNumber,
-    address: user.address,
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
   })
 
   // State for allergens
@@ -81,36 +76,56 @@ export default function CustomerProfilePage() {
   )
 
   useEffect(() => {
-    let userData
     const loadUser = async () => {
       try {
-        userData = await getUserById(customerId)
-        console.log(userData)
+        const userData = await getUserById(customerId)
         userData.name = userData.firstname + " " + userData.lastname
         setUser(userData)
-        setFormData(userData)
-        setAddressInfo(userData.addresses[0])
+        setFormData({
+          ...formData,
+          firstname: userData.firstname,
+          lastname: userData.lastname,
+          email: userData.email,
+          phoneNumber: userData.phoneNumber,
+        })
+        console.log(userData)
+        if (userData.current_address) {
+          setAddressInfo({
+            city: userData.current_address.district.city,
+            district: userData.current_address.district.name,
+            neighborhood: userData.current_address.neighborhood || "",
+            avenue: userData.current_address.avenue || "",
+            street: userData.current_address.street || "",
+            buildingNumber: userData.current_address.buildingNumber || 0,
+            apartmentNumber: userData.current_address.apartment_number || 0,
+          })
+          setDistricts(DISTRICT_DATA[userData.current_address.district.city] || DISTRICT_DATA["ISTANBUL"])
+        }
       } catch (error) {
         console.error("Error: " + error)
       }
     }
 
     loadUser()
-    
-    
-  }, []);
+  }, [customerId])
 
   const onCityDropdownValueChanged = (event) => {
-      const value = event.target.value
-        setDistricts(DISTRICT_DATA[value])
-        addressInfo.city = value
-        addressInfo.district = DISTRICT_DATA[value][0]
-    }
+    const value = event.target.value
+    setAddressInfo(prev => ({
+      ...prev,
+      city: value,
+      district: DISTRICT_DATA[value][0] // Set first district as default
+    }))
+    setDistricts(DISTRICT_DATA[value])
+  }
   
-    const onDistrictDropdownValueChanged = (event) => {
-      const value = event.target.value
-      addressInfo.district = value
-    }
+  const onDistrictDropdownValueChanged = (event) => {
+    const value = event.target.value
+    setAddressInfo(prev => ({
+      ...prev,
+      district: value
+    }))
+  }
 
   // Animation effect when page loads
   useEffect(() => {
@@ -130,21 +145,22 @@ export default function CustomerProfilePage() {
     setErrorMessages([])
 
     try {
-      let putData = {
+      const putData = {
         ...formData,
-        addresses: [addressInfo]
+        current_address: addressInfo,
+        role: "CUSTOMER"
       }
-      
-      const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
+      console.log("updated: ")
       console.log(putData)
-
+      const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
+      
       setUser({
         ...user,
         firstname: formData.firstname,
         lastname: formData.lastname,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
-        addresses: formData.addresses,
+        current_address: addressInfo,
       })
   
       // Animation for success notification
@@ -160,8 +176,6 @@ export default function CustomerProfilePage() {
       setErrorMessages(getResponseErrors(error))
       console.error("Error: " + error)
     }
-    
-    
   }
 
   const handleAllergenChange = (id) => {
@@ -172,10 +186,11 @@ export default function CustomerProfilePage() {
   }
 
   const handleAddressInfoChange = (e) => {
-    setAddressInfo({
-      ...addressInfo,
-      [e.target.id]: e.target.value
-    })
+    const { id, value } = e.target
+    setAddressInfo(prev => ({
+      ...prev,
+      [id]: id === 'buildingNumber' || id === 'apartmentNumber' ? Number(value) : value
+    }))
   }
 
   const selectedAllergens = Object.entries(allergens)
@@ -183,18 +198,15 @@ export default function CustomerProfilePage() {
     .map(([id]) => Number.parseInt(id))
 
   const handleLogout = () => {
-    // Logout operations - token clearing etc.
     navigate("/")
   }
 
-  // Get user's order history
   const pastOrders = user.orders || [
     { id: "ORD-1234", date: "10.04.2025", restaurantName: "Kebapçı Mehmet", status: "delivered", amount: "120" },
     { id: "ORD-1233", date: "08.04.2025", restaurantName: "Pizza Evi", status: "delivered", amount: "95" },
     { id: "ORD-1232", date: "05.04.2025", restaurantName: "Çiğköfteci Ali", status: "processing", amount: "45" },
   ]
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -215,7 +227,6 @@ export default function CustomerProfilePage() {
     },
   }
 
-  // Toggle dark mode function
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)
   }
@@ -256,7 +267,6 @@ export default function CustomerProfilePage() {
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            {/* Dark mode toggle button */}
             <button
               onClick={toggleDarkMode}
               className={`w-10 h-5 rounded-full flex items-center ${darkMode ? "bg-amber-400 justify-end" : "bg-gray-300 justify-start"} p-1 transition-all duration-300`}
@@ -350,36 +360,36 @@ export default function CustomerProfilePage() {
             </div>
 
             <div className="mt-4">
-                        {errorMessages.map((message, i) => (
-                        
-                        <motion.div key={i}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
-                        >
-                          <div className="flex">
-                            <div className="py-1">
-                              <svg 
-                                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="font-medium">{message}</p>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
+              {errorMessages.map((message, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+                >
+                  <div className="flex">
+                    <div className="py-1">
+                      <svg 
+                        className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-medium">{message}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
               {activeTab === "profile" && (
                 <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
                   {/* Personal Information */}
@@ -428,7 +438,6 @@ export default function CustomerProfilePage() {
                       </div>
                     </div>
 
-
                     <div>
                       <label
                         className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
@@ -474,438 +483,142 @@ export default function CustomerProfilePage() {
                     </div>
 
                     <div className="m-2">
-                                            <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
-                                                İl
-                                            </label>
-                                            <div className="relative">
-                                                <select
-                                                    id="dropdown1"
-                                                    name="dropdown"
-                                                    className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
-                                                    onChange={onCityDropdownValueChanged}
-                                                >
-                                                  
-                                                    {TURKISH_CITIES.map((option) => (
-                                                        <option key={option.value} value={option.value} disabled={option.value === ""}>
-                                                            {option.label}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <svg
-                                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                                </svg>
-                                            </div></div>
-                                            <div className="m-2">
-                                            <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
-                                                İlçe
-                                            </label>
-                                            <div className="relative">
-                                                <select
-                                                    id="dropdown2"
-                                                    name="dropdown"
-                                                    onChange={onDistrictDropdownValueChanged}
-                                                    className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
-                                                >
-                                                    <option value="" disabled>Seçiniz</option>
-                                                    {districts.map((option) => (
-                    
-                                                        <option key={option} value={option} disabled={option.value === ""}>
-                                                          
-                                                            {option}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <svg
-                                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                                </svg>
-                                            </div></div>
-                    
-                                            <div className="space-y-3">
-                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
-                                            Mahalle
-                                          </Label>
-                                          <Input
-                                            id="neighborhood"
-                                            placeholder="Mahalle"
-                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                            value={addressInfo.neighborhood}
-                                            onChange={handleAddressInfoChange}
-                                            required
-                                          />
-                    
-                                          
-                                          
-                                        </div>
-                    
-                                        <div className="space-y-3">
-                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
-                                            Cadde
-                                          </Label>
-                                          <Input
-                                            id="avenue"
-                                            placeholder="Cadde"
-                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                            value={addressInfo.avenue}
-                                            onChange={handleAddressInfoChange}
-                                            required
-                                          />
-                    
-                                          
-                                          
-                                        </div>
-                    
-                                        <div className="space-y-3">
-                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
-                                            Sokak
-                                          </Label>
-                                          <Input
-                                            id="street"
-                                            placeholder="Sokak"
-                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                            value={addressInfo.street}
-                                            onChange={handleAddressInfoChange}
-                                            required
-                                          />
-                    
-                                          
-                                          
-                                        </div>
-                                            
-                    
-                                        <div className="space-y-3">
-                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
-                                            Bina No
-                                          </Label>
-                                          <Input
-                                            id="buildingNumber"
-                                            placeholder="Bina No"
-                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                            value={addressInfo.buildingNumber}
-                                            onChange={handleAddressInfoChange}
-                                            required
-                                          />
-                    
-                                          
-                                          
-                                        </div>
-                                        
-                    
-                                        <div className="space-y-3">
-                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
-                                            Daire No
-                                          </Label>
-                                          <Input
-                                            id="apartmentNumber"
-                                            placeholder="Apartman No"
-                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                            value={addressInfo.apartmentNumber}
-                                            onChange={handleAddressInfoChange}
-                                            required
-                                          />
-                    
-                                          
-                                          
-                                        </div>
-                  </motion.div>
-
-                  {/* Delivery Preference */}
-                  {/*<motion.div variants={itemVariants} className="mb-6">
-                    <label
-                      className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-2 font-medium`}
-                    >
-                      Beslenme Tercihi
-                    </label>
-                    <div className="flex gap-4">
-                      <div
-                        className={`flex items-center space-x-2 p-3 rounded-md ${darkMode ? "hover:bg-gray-700" : "hover:bg-amber-50"} transition-colors duration-200`}
-                      >
-                        <input
-                          type="radio"
-                          id="normal"
-                          name="diet"
-                          value="normal"
-                          defaultChecked
-                          className="text-amber-500 focus:ring-amber-500"
-                        />
-                        <label htmlFor="normal" className="text-sm">
-                          Normal
-                        </label>
-                      </div>
-                      <div
-                        className={`flex items-center space-x-2 p-3 rounded-md ${darkMode ? "hover:bg-gray-700" : "hover:bg-amber-50"} transition-colors duration-200`}
-                      >
-                        <input
-                          type="radio"
-                          id="yasam"
-                          name="diet"
-                          value="yasam"
-                          className="text-amber-500 focus:ring-amber-500"
-                        />
-                        <label htmlFor="yasam" className="text-sm">
-                          Vegan
-                        </label>
-                      </div>
-                    </div>
-                  </motion.div>*/}
-
-                  {/* Allergens */}
-                  {/*<motion.div variants={itemVariants} className="mb-6">
-                    <div className="flex items-center mb-2">
-                      <AlertTriangle className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-500"} mr-2`} />
-                      <label className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} font-medium`}>
-                        Alerjenler (Lütfen alerjik olduğunuz besinleri seçin)
+                      <label htmlFor="cityDropdown" className="block text-base text-gray-800 mb-1">
+                        İl
                       </label>
-                    </div>
-
-                    <div
-                      className={`${darkMode ? "bg-gray-700" : "bg-amber-50"} rounded-lg p-4 transition-colors duration-200`}
-                    >
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
+                      <div className="relative">
+                        <select
+                          id="cityDropdown"
+                          name="city"
+                          value={addressInfo.city}
+                          onChange={onCityDropdownValueChanged}
+                          className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
                         >
-                          <input
-                            type="checkbox"
-                            id="allergen-1"
-                            checked={allergens[1]}
-                            onChange={() => handleAllergenChange(1)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-1" className="text-sm">
-                            Süt ve Süt Ürünleri
-                          </label>
-                        </motion.div>
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
+                          {TURKISH_CITIES.map((option) => (
+                            <option key={option.value} value={option.value} disabled={option.value === ""}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          viewBox="0 0 24 24"
                         >
-                          <input
-                            type="checkbox"
-                            id="allergen-2"
-                            checked={allergens[2]}
-                            onChange={() => handleAllergenChange(2)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-2" className="text-sm">
-                            Yumurta
-                          </label>
-                        </motion.div>
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
-                        >
-                          <input
-                            type="checkbox"
-                            id="allergen-3"
-                            checked={allergens[3]}
-                            onChange={() => handleAllergenChange(3)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-3" className="text-sm">
-                            Fıstık
-                          </label>
-                        </motion.div>
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
-                        >
-                          <input
-                            type="checkbox"
-                            id="allergen-4"
-                            checked={allergens[4]}
-                            onChange={() => handleAllergenChange(4)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-4" className="text-sm">
-                            Kabuklu Deniz Ürünleri
-                          </label>
-                        </motion.div>
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
-                        >
-                          <input
-                            type="checkbox"
-                            id="allergen-5"
-                            checked={allergens[5]}
-                            onChange={() => handleAllergenChange(5)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-5" className="text-sm">
-                            Buğday/Gluten
-                          </label>
-                        </motion.div>
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
-                        >
-                          <input
-                            type="checkbox"
-                            id="allergen-6"
-                            checked={allergens[6]}
-                            onChange={() => handleAllergenChange(6)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-6" className="text-sm">
-                            Soya
-                          </label>
-                        </motion.div>
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
-                        >
-                          <input
-                            type="checkbox"
-                            id="allergen-7"
-                            checked={allergens[7]}
-                            onChange={() => handleAllergenChange(7)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-7" className="text-sm">
-                            Balık
-                          </label>
-                        </motion.div>
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
-                        >
-                          <input
-                            type="checkbox"
-                            id="allergen-8"
-                            checked={allergens[8]}
-                            onChange={() => handleAllergenChange(8)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-8" className="text-sm">
-                            Kereviz
-                          </label>
-                        </motion.div>
-                        <motion.div
-                          className={`flex items-center space-x-2 p-2 rounded-md ${darkMode ? "hover:bg-gray-600" : "hover:bg-amber-100"} transition-colors duration-200`}
-                          whileHover={{ x: 5 }}
-                        >
-                          <input
-                            type="checkbox"
-                            id="allergen-9"
-                            checked={allergens[9]}
-                            onChange={() => handleAllergenChange(9)}
-                            className={`rounded ${darkMode ? "bg-gray-600 border-gray-500" : "bg-amber-50 border-amber-200"} text-amber-500 focus:ring-amber-500`}
-                          />
-                          <label htmlFor="allergen-9" className="text-sm">
-                            Kuruyemiş
-                          </label>
-                        </motion.div>
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                       </div>
-                    </div>*/}
-
-                    {/* Selected Allergens */}
+                    </div>
+                    <div className="m-2">
+                      <label htmlFor="districtDropdown" className="block text-base text-gray-800 mb-1">
+                        İlçe
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="districtDropdown"
+                          name="district"
+                          value={addressInfo.district}
+                          onChange={onDistrictDropdownValueChanged}
+                          className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                        >
+                          {districts.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          viewBox="0 0 24 24"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                    </div>
                     
-                    {/*<div className="flex flex-wrap gap-2 mt-4">
-                      {selectedAllergens.map((id) => (
-                        <motion.div
-                          key={id}
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          exit={{ scale: 0 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                        >
-                          <span
-                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                              darkMode
-                                ? "bg-red-900 text-red-100 border border-red-800"
-                                : "bg-red-100 text-red-800 border border-red-200"
-                            }`}
-                          >
-                            {id === 1 && "Süt ve Süt Ürünleri"}
-                            {id === 2 && "Yumurta"}
-                            {id === 3 && "Fıstık"}
-                            {id === 4 && "Kabuklu Deniz Ürünleri"}
-                            {id === 5 && "Buğday/Gluten"}
-                            {id === 6 && "Soya"}
-                            {id === 7 && "Balık"}
-                            {id === 8 && "Kereviz"}
-                            {id === 9 && "Kuruyemiş"}
-                          </span>
-                        </motion.div>
-                      ))}
-                    </div>}
-                  </motion.div>*/}
-
-                  {/* Password Change */}
-                  
-                  {/*<motion.div variants={itemVariants} className="mb-6">
-                    <div className="border-t pt-4 mb-4">
-                      <h2 className={`text-lg font-medium ${darkMode ? "text-gray-200" : "text-gray-700"} mb-2`}>
-                        Şifre Değiştir
-                      </h2>
+                    <div className="space-y-3">
+                      <Label htmlFor="neighborhood" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Mahalle
+                      </Label>
+                      <Input
+                        id="neighborhood"
+                        placeholder="Mahalle"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.neighborhood}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <label
-                          className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 font-medium`}
-                        >
-                          Mevcut Şifre
-                        </label>
-                        <input
-                          type="password"
-                          name="currentPassword"
-                          value={"formData.currentPassword"}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                          placeholder="Mevcut şifreniz"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 font-medium`}
-                        >
-                          Yeni Şifre
-                        </label>
-                        <input
-                          type="password"
-                          name="newPassword"
-                          value={"formData.newPassword"}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                          placeholder="Yeni şifreniz"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 font-medium`}
-                        >
-                          Şifre Onayı
-                        </label>
-                        <input
-                          type="password"
-                          name="confirmPassword"
-                          value={"formData.confirmPassword"}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                          placeholder="Yeni şifrenizi tekrar girin"
-                        />
-                      </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="avenue" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Cadde
+                      </Label>
+                      <Input
+                        id="avenue"
+                        placeholder="Cadde"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.avenue}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
                     </div>
-                  </motion.div>*/}
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="street" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Sokak
+                      </Label>
+                      <Input
+                        id="street"
+                        placeholder="Sokak"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.street}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="buildingNumber" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Bina No
+                      </Label>
+                      <Input
+                        id="buildingNumber"
+                        placeholder="Bina No"
+                        type="number"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.buildingNumber}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="apartmentNumber" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Daire No
+                      </Label>
+                      <Input
+                        id="apartmentNumber"
+                        placeholder="Apartman No"
+                        type="number"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.apartmentNumber}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+                    </div>
+                  </motion.div>
 
                   {/* Update Button */}
                   <motion.div variants={itemVariants}>
