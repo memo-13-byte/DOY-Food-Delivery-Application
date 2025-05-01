@@ -42,7 +42,7 @@ public class CourierService {
     public Boolean GetCourierAvailability(Long id){
         Optional<Courier> courier = courierRepository.findById(id);
         if(courier.isEmpty()){
-            throw new UserNotFoundException("Courier with given email doesn't exist!");
+            throw new UserNotFoundException("Courier with given id cannot be found!");
         }
         return courier.get().getIsAvailable();
 

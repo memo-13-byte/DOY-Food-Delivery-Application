@@ -249,10 +249,6 @@ public class OrderService {
     }
 
     public DtoCourierRequest GetCourierRequests(Long courierId){
-        Optional<Courier> c = courierService.GetCourierById(courierId);
-        if( c.isEmpty()){
-            throw new UserNotFoundException("Courier with given id cannot be found");
-        }
         List<CourierRequest> requests = courierRequestService.GetCourierRequests(courierId);
         DtoCourierRequest request = new DtoCourierRequest();
         for(CourierRequest req : requests){
