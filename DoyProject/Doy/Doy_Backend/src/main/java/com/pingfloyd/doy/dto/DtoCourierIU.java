@@ -2,6 +2,7 @@ package com.pingfloyd.doy.dto;
 
 import com.pingfloyd.doy.entities.District;
 import com.pingfloyd.doy.entities.GovernmentId;
+import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,6 +10,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class DtoCourierIU extends DtoUserIU{
     private String governmentId;
-    private String districtCity;
-    private String districtName;
+    @Valid
+    private DtoDistrict district;
 }

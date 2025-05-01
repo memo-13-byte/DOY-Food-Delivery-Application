@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 public class DtoCustomerIU extends DtoUserIU{
     //private Set<Restaurant> favoriteRestaurants;
-    //private Set<Address> addresses;
+    private Set<Address> addresses;
     //private Cart cart;
     //private Address current_address;
     //private Set<PaymentInfo> paymentInfos;

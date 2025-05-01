@@ -32,16 +32,18 @@ public class UserService implements UserDetailsService, IUserService {
     private final CourierRepository courierRepository;
     private final RestaurantOwnerRepository restaurantOwnerRepository;
     private final SuspensionService suspensionService;
+    private final DistrictService districtService;
 
     @Autowired
     public UserService(UserRepository userRepository, CustomerRepository customerRepository, BCryptPasswordEncoder bCryptPasswordEncoder
-    , CourierRepository courierRepository, RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService){
+    , CourierRepository courierRepository, RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService, DistrictService districtService){
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.courierRepository = courierRepository;
         this.restaurantOwnerRepository = restaurantOwnerRepository;
         this.suspensionService = suspensionService;
+        this.districtService = districtService;
     }
 
 
@@ -210,6 +212,11 @@ public class UserService implements UserDetailsService, IUserService {
         }
         Courier savedCourier = courier.get();
         BeanUtils.copyProperties(dtoCourierIU, savedCourier);
+
+        District district = districtService.
+                GetDistrict(dtoCourierIU.getDistrict().getCity(), dtoCourierIU.getDistrict().getDistrict());
+        savedCourier.setDistrict(district);
+
         savedCourier = courierRepository.save(savedCourier);
         DtoCourier dtoCourier = new DtoCourier();
         BeanUtils.copyProperties(savedCourier, dtoCourier);

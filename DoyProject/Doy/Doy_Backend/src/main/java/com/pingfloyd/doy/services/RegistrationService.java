@@ -50,20 +50,15 @@ public class RegistrationService {
         if(userService.loadUserByEmail(request.getEmail()).isPresent()){
             throw new UserAlreadyExistException("Customer with given email already exist!") ;
         }
-        Customer user = new Customer(
-                request.getFirstName(),
-                request.getLastName(),
-                request.getEmail(),
-                request.getPassword(),
-                request.getPhoneNumber()
-        );
-        user.setRole(UserRoles.CUSTOMER); //add user roles like this
-        String success = userService.SignUpCustomer(user, UserRoles.CUSTOMER);
-        ConfirmationToken token = confirmationTokenService.GenerateToken(user , 15);
+
+        Customer customer = CreateCustomer(request);
+
+        String success = userService.SignUpCustomer(customer, UserRoles.CUSTOMER);
+        ConfirmationToken token = confirmationTokenService.GenerateToken(customer , 15);
         String link = confirmUrlBase + "/api/registration/confirm?token=" + token.getToken();
-        String emailBody = buildEmail(user.getUsername() , link);
-        emailService.send(user.getEmail() , "Confirm your Email for Food Delivery App", emailBody);
-        return user;
+        String emailBody = buildEmail(customer.getUsername() , link);
+        emailService.send(customer.getEmail() , "Confirm your Email for Food Delivery App", emailBody);
+        return customer;
     }
 
     @Transactional
@@ -111,6 +106,23 @@ public class RegistrationService {
         user.setIsEnabled(true);
         userService.SaveUser(user);
         return "User Has Been Confirmed";
+    }
+
+    private Customer CreateCustomer(RegistrationRequest request) {
+        Customer customer = new Customer(
+                request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getPhoneNumber()
+        );
+
+        customer.setRole(UserRoles.CUSTOMER); //add user roles like this
+
+        Address address = CreateAddress(request.getDtoAddress());
+        districtService.SaveAddress(address);
+        customer.getAddresses().add(address);
+        return customer;
     }
 
     private Address CreateAddress(DtoAddress address){
