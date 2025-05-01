@@ -76,9 +76,12 @@ const handleCancelMinOrderPriceEdit = () => {
 };
   // ID'ye göre restoran verilerini yükle
   useEffect(() => {
+    console.log("wtf")
     const getRestaurantInformation = async () => {
       try {
+        
         const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
+        console.log(response.data)
         setRestaurant(response.data)
         setPhoneNumberInput(response.data.restaurantPhone)
         setMinOrderPriceInput(response.data.minOrderPrice)
@@ -740,9 +743,8 @@ const handleCancelMinOrderPriceEdit = () => {
         </motion.button>
       </div>
     </div>
-  ) : (
-    <h2 className="text-2xl font-semibold">{"Phone Number: " + restaurant.restaurantPhone}</h2>
-  )}
+  ) : (<div className="flex items-center">
+  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Telefon Numarası: " + restaurant.restaurantPhone}</p>
   <motion.button
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.95 }}
@@ -751,6 +753,7 @@ const handleCancelMinOrderPriceEdit = () => {
   >
     <Edit className="h-5 w-5" />
   </motion.button>
+</div>)}
 </div>
 
 {/* MINIMUM ORDER PRICE */}
@@ -800,16 +803,18 @@ const handleCancelMinOrderPriceEdit = () => {
       </div>
     </div>
   ) : (
-    <h2 className="text-2xl font-semibold">{"Min Order Price: " + restaurant.minOrderPrice} ₺</h2>
-  )}
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={handleEditMinOrderPriceClick}
-    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
-  >
-    <Edit className="h-5 w-5" />
-  </motion.button>
+    
+    <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Minimum Sipariş Tutarı: " + restaurant.minOrderPrice}</p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleEditMinOrderPriceClick}
+                    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+                  >
+                    <Edit className="h-5 w-5" />
+                  </motion.button>
+                </div>)}
 </div>
 
               {isEditing ? (
@@ -847,7 +852,7 @@ const handleCancelMinOrderPriceEdit = () => {
                 </div>
               ) : (
                 <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Description: " + restaurant.description}</p>
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Açıklama: " + restaurant.description}</p>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -861,6 +866,48 @@ const handleCancelMinOrderPriceEdit = () => {
             </div>
             
           </div>
+
+          <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "İl: " + restaurant.address?.cityEnum
+                    }</p>
+                </div>
+
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "İlçe: " + restaurant.address?.district.name
+                    }</p>
+                </div>
+
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "Mahalle: " + restaurant.address?.neighborhood
+                    }</p>
+                </div>
+
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "Cadde: " + restaurant.address?.avenue
+                    }</p>
+                </div>
+
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "Sokak: " + restaurant.address?.street
+                    }</p>
+                </div>
+
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "Bina No: " + restaurant.address?.buildingNumber
+                    }</p>
+                </div>
+
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "Apartman No: " + restaurant.address?.apartment_number
+                    }</p>
+                </div>
 
                   
         </motion.div>

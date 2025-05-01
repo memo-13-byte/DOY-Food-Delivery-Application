@@ -4,6 +4,7 @@ import com.pingfloyd.doy.entities.Address;
 import com.pingfloyd.doy.entities.Cart;
 import com.pingfloyd.doy.entities.PaymentInfo;
 import com.pingfloyd.doy.entities.Restaurant;
+import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,8 +13,9 @@ import java.util.Set;
 @Data
 public class DtoCustomerIU extends DtoUserIU{
     //private Set<Restaurant> favoriteRestaurants;
-    private Set<Address> addresses;
+    //private Set<Address> addresses;
     //private Cart cart;
-    //private Address current_address;
+    @Valid
+    private DtoAddress current_address;
     //private Set<PaymentInfo> paymentInfos;
 }
