@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import {useNavigate} from "react-router-dom";
 const UserList = ({ users, setUsers, setSelectedUser, selectedUser, darkMode }) => { // 📌 Artık props'tan users alıyoruz
     const [search, setSearch] = useState("");
     const [showAll, setShowAll] = useState(false);
@@ -11,14 +11,14 @@ const UserList = ({ users, setUsers, setSelectedUser, selectedUser, darkMode }) 
     useEffect( () => {
             const getAllUsers = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/users/get-all`)
+                    const response = await axios.get(`http://localhost:8080/api/users/get-admin-users`)
                     const data = response.data.map((value) => ({
                         id: value.id,
                         name: value.firstname + " " + value.lastname,
                         type: value.role,
-                        banned: false,
-                        suspended: false,
-                        suspendedUntil: null,
+                        banned: (value.isSuspended && (value.suspendedUntil === null)),
+                        suspended: (value.isSuspended && (value.suspendedUntil !== null)),
+                        suspendedUntil: value.suspendedUntil,
                     }));
                     console.log(data)
 

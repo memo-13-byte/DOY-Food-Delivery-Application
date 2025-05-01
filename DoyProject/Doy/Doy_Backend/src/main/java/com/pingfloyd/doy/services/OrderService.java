@@ -322,6 +322,7 @@ public class OrderService {
         if(response){
             order.setStatus(OrderStatus.AWAITING_PICKUP);
             request.getCourier().setIsAvailable(false);
+            request.getCourier().setIsOnDelivery(true);
             order.setCourier(request.getCourier());
             request.setAcceptedAt(LocalDateTime.now());
             customerOrderRepository.save(order);

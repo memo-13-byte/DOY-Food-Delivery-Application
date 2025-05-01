@@ -290,6 +290,39 @@ public class UserService implements UserDetailsService, IUserService {
         return true;
     }
 
+    public List<DtoAdminUserManagement> getAdminManagedUsers(){
+        List<DtoAdminUserManagement> list = new ArrayList<>();
+        List<Courier> couriers = courierRepository.findAll();
+        List<RestaurantOwner> restaurantOwners = restaurantOwnerRepository.findAll();
+        for(Courier c : couriers){
+            DtoAdminUserManagement m = new DtoAdminUserManagement();
+            m.setFirstname(c.getFirstname());
+            m.setLastname(c.getLastname());
+            m.setIsSuspended(c.getIsBanned());
+            if(c.getIsBanned()){
+                Ban ban = suspensionService.isUserBanned(c);
+                m.setSuspendedUntil(ban.getEndDate());
+            }
+            m.setId(c.getId());
+            m.setRole(c.getRole());
+            list.add(m);
+        }
+        for(RestaurantOwner r : restaurantOwners){
+            DtoAdminUserManagement m = new DtoAdminUserManagement();
+            m.setFirstname(r.getFirstname());
+            m.setLastname(r.getLastname());
+            m.setIsSuspended(r.getIsBanned());
+            if(r.getIsBanned()){
+                Ban ban = suspensionService.isUserBanned(r);
+                m.setSuspendedUntil(ban.getEndDate());
+            }
+            m.setId(r.getId());
+            m.setRole(r.getRole());
+            list.add(m);
+        }
+        return list;
+    }
+
 
 
 }

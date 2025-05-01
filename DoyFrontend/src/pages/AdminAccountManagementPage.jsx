@@ -7,6 +7,8 @@ import SelectedItem from "../components/SelectedItem";
 import ActionButtons from "../components/ActionButtons";
 import Toast from "../components/Toast"; // 📌 Toast'ı import ettik
 import axios from "axios";
+
+
 const initialUsers = [
     { id: 1, name: "Customer A", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
     { id: 2, name: "Customer B", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
@@ -26,6 +28,7 @@ const initialRestaurants = [
 ];
 
 export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
+
     const [users, setUsers] = useState([]); // ✨ User datası artık state'te
     const [restaurants, setRestaurants] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -40,9 +43,10 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
         }
 
         try {
+            console.log(banRequest);
             const response = await axios.put(`http://localhost:8080/api/users/suspend`, banRequest)
         } catch (error) {
-            addToast(error)
+            addToast(error?.response?.data?.message || error.message || "An unexpected error occurred.")
         }
     }
 
@@ -51,11 +55,17 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
     // 📌 Kullanıcı güncelleme fonksiyonu
     const updateUserOrRestaurant = async(id, field, value, type) => {
         if (type === "user") {
+            console.log("lalalala412421")
+            console.log(field)
             if (field === "banned") {
+                console.log("zzzzzzzz")
                 await suspendUser(id, "you were banned", -1)
-            } else if (type === "suspended") {
+            } else if (field === "suspended") {
+                console.log("lalalalala56565656")
                 await suspendUser(id, "you were suspended", 20)
-            }/*
+            }
+
+            /*
             setUsers(prevUsers => {
                 const updatedUsers = prevUsers.map(user =>
                     user.id === id ? { ...user, [field]: value } : user
