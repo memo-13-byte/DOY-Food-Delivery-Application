@@ -11,26 +11,31 @@ export const CartProvider = ({ children }) => {
 
     // Kullanıcı girdiğinde cart'ı backend'den çek
     useEffect(() => {
-        axios.get("/api/cart")
-            .then(res => {
-                setCart(res.data.items || []);
-                setRestaurantInfo(res.data.restaurant || null);
-            })
-            .catch(err => {
+        const fetchCart = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/order/cart");
+                setCart(response.data.items || []);
+                setRestaurantInfo(response.data.restaurant || null);
+            } catch (err) {
                 console.error("Cart fetch failed:", err);
-            });
+            }
+        };
+
+        fetchCart();
     }, []);
+
 
     const addToCart = async (item) => {
         if (!restaurantInfo || restaurantInfo.id === item.restaurantId) {
             try {
-                const res = await axios.post("/api/cart", item);
-                setCart(res.data.items);
-                setRestaurantInfo({
-                    id: item.restaurantId,
-                    name: item.restaurantName,
-                });
-                toast.success("Ürün sepete eklendi");
+                const res = await axios.post(`http://localhost:8080/order/add?itemId=${item.id}`);
+                if (res.data === true) {
+                    const cartRes = await axios.get("http://localhost:8080/order/cart");
+                    setCart(cartRes.data.items || []);
+                    setRestaurantInfo({id: cartRes.data.restaurant.id || null,
+                                             name: cartRes.data.restaurant.restaurantName || null,});
+                    toast.success("Ürün sepete eklendi");
+                }
             } catch (err) {
                 console.error("Add to cart failed:", err);
                 toast.error("Sepete eklenemedi");
@@ -45,17 +50,19 @@ export const CartProvider = ({ children }) => {
         if (!itemToRemove) return;
 
         try {
-            const res = await axios.delete(`/api/cart/${itemId}`);
-            const updatedCart = res.data.items || [];
+            const res = await axios.delete(`http://localhost:8080/order/remove?itemId=${itemId}`);
 
-            setCart(updatedCart);
+            if (res.data === true) {
+                const cartRes = await axios.get("http://localhost:8080/order/cart");
+                const updatedCart = cartRes.data.items || [];
+                setCart(updatedCart);
 
-            // Eğer artık hiç ürün kalmadıysa, restaurantInfo'yu da temizle
-            if (updatedCart.length === 0) {
-                setRestaurantInfo(null);
+                if (updatedCart.length === 0) {
+                    setRestaurantInfo(null);
+                }
+                toast.info("Ürün sepetten çıkarıldı");
             }
 
-            toast.info("Ürün sepetten çıkarıldı");
         } catch (err) {
             console.error("Remove failed:", err);
             toast.error("Ürün çıkarılamadı");
