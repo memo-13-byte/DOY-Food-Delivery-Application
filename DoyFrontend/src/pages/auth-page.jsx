@@ -255,6 +255,9 @@ export default function AuthPage() {
          
         navigate(`/courier/profile/${profileId}`)
       } else {
+        if (createdUser.data.role === "ADMIN") {
+          navigate("/admin/complaints")
+        }
         await axios.get(`http://localhost:8080/api/users/customers/get-by-email/${email}`,
           { headers: { Authorization: `Bearer ${response.data.token}` } });
          

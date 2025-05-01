@@ -2,12 +2,15 @@
 package com.pingfloyd.doy.config;
 
 
+import com.pingfloyd.doy.entities.Admin;
 import com.pingfloyd.doy.entities.Customer;
 import com.pingfloyd.doy.entities.User;
+import com.pingfloyd.doy.entities.UserRoles;
 import com.pingfloyd.doy.jwt.JwtAuthFilter;
 import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.repositories.CustomerRepository;
 import com.pingfloyd.doy.repositories.UserRepository;
+import com.pingfloyd.doy.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +31,9 @@ public class AppConfig {
     @Autowired
     UserRepository userRepository;
 
+    final String ADMIN_EMAIL = "baris.byildiz@gmail.com";
+    final String ADMIN_PASSWORD = "By=12341234";
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
@@ -38,6 +44,22 @@ public class AppConfig {
                 return customerOptional.orElse(null);
             }
         };
+    }
+
+    @Bean
+    public User createAdmin() {
+        Optional<User> user =userRepository.findByEmail(ADMIN_EMAIL);
+        if (user.isPresent()) return user.get();
+
+        Admin admin = new Admin();
+        admin.setRole(UserRoles.ADMIN);
+        admin.setEmail(ADMIN_EMAIL);
+        admin.setPasswordHash(bCryptPasswordEncoder().encode(ADMIN_PASSWORD));
+        admin.setFirstname("ADMIN");
+        admin.setLastname("ADMIN");
+        admin.setIsEnabled(true);
+        userRepository.save(admin);
+        return admin;
     }
 
     @Bean

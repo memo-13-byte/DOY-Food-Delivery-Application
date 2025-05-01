@@ -46,7 +46,6 @@ public class UserService implements UserDetailsService, IUserService {
         this.districtService = districtService;
     }
 
-
     public String SignUpCustomer(User user, UserRoles role){
         user.setPasswordHash(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRole(role);
@@ -84,9 +83,12 @@ public class UserService implements UserDetailsService, IUserService {
         List<DtoUser> dtoUsers = new ArrayList<>();
 
         for (User user : dbUsers) {
-            DtoUser dtoUser = new DtoUser();
-            BeanUtils.copyProperties(user, dtoUser);
-            dtoUsers.add(dtoUser);
+            if (user.getRole() != UserRoles.ADMIN) {
+                DtoUser dtoUser = new DtoUser();
+                BeanUtils.copyProperties(user, dtoUser);
+                dtoUsers.add(dtoUser);
+            }
+
         }
         return dtoUsers;
     }
