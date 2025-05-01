@@ -1,11 +1,7 @@
 package com.pingfloyd.doy.entities;
-
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +28,6 @@ public class Customer extends User {
     )
     private Set<Address> addresses = new HashSet<>();
 
-
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Cart cart;
 
@@ -40,15 +35,29 @@ public class Customer extends User {
     @JoinColumn(name = "current_address")
     private Address current_address;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PaymentInfo> paymentInfos = new HashSet<>();
+
     public Customer() {
         super();
     }
 
-    public Customer(String username, String email, String passwordHash) {
-        super(username, email, passwordHash);
+    public void addPaymentInfo(PaymentInfo paymentInfo) {
+        paymentInfos.add(paymentInfo);
+        paymentInfo.setCustomer(this);
     }
 
-    public Customer(String username, String email, String passwordHash, String phoneNumber) {
-        super(username, email, passwordHash, phoneNumber);
+    public Customer(String firstName, String lastName, String email, String passwordHash, String phoneNumber) {
+        super(firstName, lastName, email, passwordHash, phoneNumber);
     }
+
+    public Customer(String firstName, String lastName, String email, String passwordHash) {
+        super(firstName, lastName, email, passwordHash);
+    }
+
+    @Override
+    public String getPassword() {
+        return getPasswordHash();
+    }
+
 }

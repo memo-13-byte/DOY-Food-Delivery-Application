@@ -1,0 +1,185 @@
+import React, { useEffect, useState } from "react";
+import AdminNavbar from "../components/AdminNavbar";
+import Footer from "../components/Footer";
+import UserList from "../components/UserList";
+import RestaurantList from "../components/RestaurantList";
+import SelectedItem from "../components/SelectedItem";
+import ActionButtons from "../components/ActionButtons";
+import Toast from "../components/Toast"; // 📌 Toast'ı import ettik
+import axios from "axios";
+const initialUsers = [
+    { id: 1, name: "Customer A", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
+    { id: 2, name: "Customer B", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
+    { id: 3, name: "Courier A", type: "Courier Account", banned: false, suspended: false, suspendUntil: null },
+    { id: 4, name: "Restaurant Owner A", type: "Restaurant Owner Account", banned: false, suspended: false, suspendUntil: null },
+    { id: 5, name: "Customer C", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
+    { id: 6, name: "Customer D", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
+];
+
+const initialRestaurants = [
+    { id: 1, name: "Restaurant A", type: "Restaurant", banned: false, suspended: false, suspendUntil: null },
+    { id: 2, name: "Restaurant B", type: "Restaurant", banned: false, suspended: false, suspendUntil: null },
+    { id: 3, name: "Restaurant C", type: "Restaurant", banned: false, suspended: false, suspendUntil: null },
+    { id: 4, name: "Restaurant D", type: "Restaurant", banned: false, suspended: false, suspendUntil: null },
+    { id: 5, name: "Restaurant E", type: "Restaurant", banned: true, suspended: false, suspendUntil: null },    // ✨ Banlı
+    { id: 6, name: "Restaurant F", type: "Restaurant", banned: false, suspended: true, suspendUntil: null },    // ✨ Suspendli
+];
+
+export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
+    const [users, setUsers] = useState([]); // ✨ User datası artık state'te
+    const [restaurants, setRestaurants] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+    const [toasts, setToasts] = useState([]); // 📌 Multiple toasts
+    
+    const suspendUser = async(_id, desc, amount) => {
+        const banRequest = {
+            id: _id,
+            banDuration: amount,
+            description: desc
+        }
+
+        try {
+            const response = await axios.put(`http://localhost:8080/api/users/suspend`, banRequest)
+        } catch (error) {
+            addToast(error)
+        }
+    }
+
+
+
+    // 📌 Kullanıcı güncelleme fonksiyonu
+    const updateUserOrRestaurant = async(id, field, value, type) => {
+        if (type === "user") {
+            if (field === "banned") {
+                await suspendUser(id, "you were banned", -1)
+            } else if (type === "suspended") {
+                await suspendUser(id, "you were suspended", 20)
+            }/*
+            setUsers(prevUsers => {
+                const updatedUsers = prevUsers.map(user =>
+                    user.id === id ? { ...user, [field]: value } : user
+                );
+
+                if (selectedUser?.id === id) {
+                    setSelectedUser(updatedUsers.find(user => user.id === id));
+                }
+                
+                return updatedUsers;
+            });*/
+        } else if (type === "restaurant") {
+            setRestaurants(prevRestaurants => {
+                const updatedRestaurants = prevRestaurants.map(restaurant =>
+                    restaurant.id === id ? { ...restaurant, [field]: value } : restaurant
+                );
+
+                if (selectedRestaurant?.id === id) {
+                    setSelectedRestaurant(updatedRestaurants.find(r => r.id === id));
+                }
+
+                return updatedRestaurants;
+            });
+        }
+    };
+
+
+
+    // 📌 Toast ekleme fonksiyonu
+    const addToast = (message) => {
+        setToasts((prev) => [...prev, message]);
+        setTimeout(() => {
+            setToasts((prev) => prev.slice(1));
+        }, 2500);
+    };
+
+    return (
+        <div style={{
+            backgroundColor: darkMode ? "#1c1c1c" : "#F8F5DE",
+            color: darkMode ? "#fff" : "#000",
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative"
+        }}>
+            {/* Navbar */}
+            <AdminNavbar darkMode={darkMode} setDarkMode={setDarkMode} />
+
+            {/* Main Content */}
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "2rem 4rem",
+                gap: "4rem"
+            }}>
+                {/* Manage Users */}
+                <div>
+                    <h2 style={{ marginBottom: "2rem" }}>Manage Users</h2>
+                    <div style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr 1fr",
+                        gap: "2rem",
+                        alignItems: "flex-start"
+                    }}>
+                        <UserList
+                            users={users} // ✨ users arrayini veriyoruz
+                            setUsers={setUsers}
+                            setSelectedUser={setSelectedUser}
+                            selectedUser={selectedUser}
+                            darkMode={darkMode}
+                            updateUserOrRestaurant={updateUserOrRestaurant} // ✨ Kullanıcıyı update edebilmek için veriyoruz
+                        />
+                        <SelectedItem
+                            selected={selectedUser}
+                            type="user"
+                            darkMode={darkMode}
+                        />
+                        <ActionButtons
+                            selected={selectedUser}
+                            type="user"
+                            darkMode={darkMode}
+                            setToast={addToast}
+                            updateUserOrRestaurant={updateUserOrRestaurant} // ✨ Kullanıcı update butonlarından yapılacak
+                        />
+                    </div>
+                </div>
+
+                {/* Manage Restaurants */}
+                <div>
+                    <h2 style={{ marginBottom: "2rem" }}>Manage Restaurants</h2>
+                    <div style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr 1fr",
+                        gap: "2rem",
+                        alignItems: "flex-start"
+                    }}>
+                        <RestaurantList
+                            restaurants={restaurants}
+                            setRestaurants={setRestaurants}
+                            setSelectedRestaurant={setSelectedRestaurant}
+                            selectedRestaurant={selectedRestaurant}
+                            darkMode={darkMode}
+                        />
+                        <SelectedItem
+                            selected={selectedRestaurant}
+                            type="restaurant"
+                            darkMode={darkMode}
+                        />
+                        <ActionButtons
+                            selected={selectedRestaurant}
+                            type="restaurant"
+                            darkMode={darkMode}
+                            setToast={addToast}
+                            updateUserOrRestaurant={updateUserOrRestaurant}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Footer */}
+            <Footer darkMode={darkMode} />
+
+            {/* Toasts */}
+            {toasts.length > 0 && <Toast messages={toasts} darkMode={darkMode} />}
+        </div>
+    );
+}

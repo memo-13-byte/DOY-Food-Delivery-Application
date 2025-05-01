@@ -1,0 +1,666 @@
+GET http://localhost:8080/api/restaurant/search?name=k&sortBy=restaurantName&sortDirection=DESC
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2025-04-12T143531.200.json
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc&sortBy=restaurantName&sortDirection=DESC
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2025-04-12T143411.200.json
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc&sortBy=restaurantName
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2025-04-12T143329.200.json
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc&sortBy=name
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc&sortBy=name
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc&sortBy=name
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc&sortBy=name
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc&sortBy=name&sortDirection=DESC
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc&sortBy=name&sortDirection=ASC
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=abc
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2025-04-12T142050.200.json
+
+###
+
+GET http://localhost:8080/api/restaurant/search?name=a
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2025-04-12T142031.200.json
+
+###
+
+POST http://localhost:8080/api/restaurant/post
+Content-Type: application/json
+Content-Length: 65
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "restaurantName": "klmno",
+  "restaurantPhone": "123456789"
+}
+
+<> 2025-04-12T141934.200.json
+
+###
+
+POST http://localhost:8080/api/restaurant/post
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "restaurantName": "klmn",
+  "restaurantPhone": "123456789"
+}
+
+<> 2025-04-12T141930.200.json
+
+###
+
+POST http://localhost:8080/api/restaurant/post
+Content-Type: application/json
+Content-Length: 66
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "restaurantName": "abcdef",
+  "restaurantPhone": "123456789"
+}
+
+<> 2025-04-12T141924.200.json
+
+###
+
+POST http://localhost:8080/api/restaurant/post
+Content-Type: application/json
+Content-Length: 65
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "restaurantName": "abcde",
+  "restaurantPhone": "123456789"
+}
+
+<> 2025-04-12T141923.200.json
+
+###
+
+POST http://localhost:8080/api/restaurant/post
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "restaurantName": "abcd",
+  "restaurantPhone": "123456789"
+}
+
+<> 2025-04-12T141922.200.json
+
+###
+
+POST http://localhost:8080/api/restaurant/post
+Content-Type: application/json
+Content-Length: 63
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "restaurantName": "abc",
+  "restaurantPhone": "123456789"
+}
+
+<> 2025-04-12T141918.200.json
+
+###
+
+POST http://localhost:8080/api/restaurant/post
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+<> 2025-04-12T141057.200.json
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/registration
+Content-Type: application/json
+Content-Length: 144
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "firstName": "said",
+  "lastName": "cetin",
+  "email": "said562@hotmail.com",
+  "password": "123456789f",
+  "phoneNumber": "+905511361271"
+}
+
+<> 2025-04-12T001128.201.json
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+<> 2025-04-12T000553.200.json
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/registration
+Content-Type: application/json
+Content-Length: 144
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "firstName": "said",
+  "lastName": "cetin",
+  "email": "said562@hotmail.com",
+  "password": "123456789f",
+  "phoneNumber": "+905511361271"
+}
+
+<> 2025-04-12T000521.201.json
+
+###
+
+POST http://localhost:8080/api/registration
+Content-Type: application/json
+Content-Length: 144
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "firstName": "said",
+  "lastName": "cetin",
+  "email": "said562@hotmail.com",
+  "password": "123456789f",
+  "phoneNumber": "+905511361271"
+}
+
+<> 2025-04-12T000205.201.json
+
+###
+
+POST http://localhost:8080/api/registration
+Content-Type: application/json
+Content-Length: 144
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "firstName": "said",
+  "lastName": "cetin",
+  "email": "said562@hotmail.com",
+  "password": "123456789f",
+  "phoneNumber": "+905511361271"
+}
+
+<> 2025-04-12T000036.201.json
+
+###
+
+POST http://localhost:8080/api/registration
+Content-Type: application/json
+Content-Length: 144
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "firstName": "said",
+  "lastName": "cetin",
+  "email": "said562@hotmail.com",
+  "password": "123456789f",
+  "phoneNumber": "+905511361271"
+}
+
+<> 2025-04-11T235903.201.json
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/registration
+Content-Type: application/json
+Content-Length: 144
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "firstName": "said",
+  "lastName": "cetin",
+  "email": "said562@hotmail.com",
+  "password": "123456789f",
+  "phoneNumber": "+905511361271"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 63
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 65
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789fs"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 64
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+<> 2025-04-11T163728.200.json
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+<> 2025-04-11T163727.200.json
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+<> 2025-04-11T163725.200.json
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+<> 2025-04-11T163719.200.json
+
+###
+
+POST http://localhost:8080/api/registration
+Content-Type: application/json
+Content-Length: 144
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "firstName": "said",
+  "lastName": "cetin",
+  "email": "said562@hotmail.com",
+  "password": "123456789f",
+  "phoneNumber": "+905511361271"
+}
+
+<> 2025-04-11T163707.201.json
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+
+POST http://localhost:8080/api/login/auth
+Content-Type: application/json
+Content-Length: 67
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "said562@hotmail.com",
+  "password": "123456789f"
+}
+
+###
+

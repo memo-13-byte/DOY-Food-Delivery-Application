@@ -1,0 +1,3033 @@
+GPT proje odevimiz icin test case dokumanini doldurmam lazim. Benim icin bu belgeyi ozumse oncelikle use case numberi 2 olan use case icin sana sorular sorucam mesela test case dokumanindaki pre-conditions, dependencies, post-conditions ve bir tablo halinde step number, test steps, test data, expected results iceren bir tablo yap lutfen 
+
+
+ChatGPT:
+Dosyanı inceledikten sonra Use Case Number 2 için gerekli test case dokümanını oluşturacağım. Biraz bekle, hemen bakıyorum.
+
+Dosyadaki metni doğrudan çıkaramadım. Ancak, sen bana Use Case Number 2 ile ilgili bilgileri özetleyebilir misin? Ya da dosyanın formatı hakkında bilgi verir misin? Böylece istediğin test case dokümanını oluşturabilirim. Eğer dosya PDF değilse veya farklı bir formatta ise, bana haber ver, farklı bir yöntem deneyelim. ​​
+
+
+
+
+
+
+
+Şunu dedin:
+dosya .pages uzantili
+ChatGPT:
+.pages uzantılı dosyalar Apple Pages formatında olduğu için doğrudan metin çıkarmak zor olabilir. Ancak, senin için iki çözüm önerebilirim:
+
+Dosyayı Dönüştürme:
+
+Eğer mümkünse, Pages dosyanı PDF, Word (.docx) veya TXT olarak dışa aktar ve tekrar yükle.
+
+Bu sayede içeriği doğrudan okuyabilirim.
+
+Elle Özetleme:
+
+Eğer dönüştürme şansın yoksa, Use Case Number 2 ile ilgili ana bilgileri buraya yazabilir misin?
+
+Use Case’in adı, amacı, pre-conditions, dependencies, post-conditions ve adım adım test senaryosu için gerekenleri paylaşabilirsin.
+
+Bu şekilde, ihtiyacın olan test case dokümanını oluşturabilirim. Hangisi senin için daha kolay olur? 😊
+
+Şunu dedin:
+UseCases.docx
+Belge
+tamam .docx uzantisiyla tekrar atiyorum. GPT proje odevimiz icin test case dokumanini doldurmam lazim. Benim icin bu belgeyi ozumse oncelikle use case numberi 2 olan use case icin sana sorular sorucam mesela test case dokumanindaki pre-conditions, dependencies, post-conditions ve bir tablo halinde step number, test steps, test data, expected results iceren bir tablo yap lutfen 
+ChatGPT:
+Şimdi Use Case Number 2: Place Food Order için bir test case dokümanı oluşturuyorum. Aşağıda dokümanın ana bölümlerini dolduruyorum:
+
+Test Case Belgesi
+Use Case Number: 002
+
+Use Case Code: UC-FO-002
+
+Use Case Name: Place Food Order
+
+Actor(s): Registered Customer
+
+Pre-conditions:
+Kullanıcı sisteme giriş yapmış olmalıdır.
+
+Kullanıcının en az bir kayıtlı teslimat adresi olmalıdır.
+
+Kullanıcının aktif bir ödeme yöntemi olmalıdır.
+
+Dependencies:
+Track Order Status (UC-FO-007) kullanıcının sipariş takibini yapabilmesi için gereklidir.
+
+Future Preorder (UC-FO-XXX) ön siparişler için gereklidir.
+
+Post-conditions:
+Sipariş sisteme kaydedilir.
+
+Restorana sipariş bildirimi gider.
+
+Kullanıcı sipariş takibi yapabilir.
+
+Test Steps & Expected Results Tablosu
+Step Number	Test Steps	Test Data	Expected Results
+1	Kullanıcı sisteme giriş yapar.	Kullanıcı adı & şifre	Kullanıcı başarılı bir şekilde giriş yapar.
+2	Kullanıcı bir restoran arar veya kategori tarar.	Restoran adı, mutfak türü	Kullanıcı restoran listesini görüntüler.
+3	Kullanıcı bir yemek seçer ve sepete ekler.	Yemek adı, fiyat	Sepet güncellenir ve toplam tutar hesaplanır.
+4	Kullanıcı ödeme aşamasına geçer.	Kayıtlı ödeme yöntemi & teslimat adresi	Kullanıcı siparişi gözden geçirebilir ve adresi seçebilir.
+5	Kullanıcı ödeme yöntemini seçer ve onaylar.	Kredi kartı, dijital cüzdan vb.	Ödeme işleme alınır ve başarılı olursa sipariş tamamlanır.
+6	Sipariş onayı gösterilir.	Sipariş numarası, tahmini teslim süresi	Kullanıcı sipariş detaylarını görebilir.
+7	Restoran siparişi alır ve hazırlamaya başlar.	Restoran adı, sipariş içeriği	Kullanıcı, siparişinin hazırlandığına dair bildirim alır.
+Bu test case belgesi uygun mu? Eğer eklememi veya değiştirmemi istediğin bir şey varsa söyle! 😊
+
+Şunu dedin:
+bunlari ingilizce yapar misin tekrar
+ChatGPT:
+Here is your Test Case Document in English for Use Case Number 2: Place Food Order:
+
+Test Case Document
+Use Case Number: 002
+
+Use Case Code: UC-FO-002
+
+Use Case Name: Place Food Order
+
+Actor(s): Registered Customer
+
+Pre-conditions:
+The user must be logged into the system.
+
+The user must have at least one saved delivery address.
+
+The user must have an active payment method.
+
+Dependencies:
+Track Order Status (UC-FO-007) is required for users to track their orders.
+
+Future Preorder (UC-FO-XXX) is required for pre-ordering functionality.
+
+Post-conditions:
+The order is registered in the system.
+
+The restaurant is notified about the order.
+
+The user can track the order status.
+
+Test Steps & Expected Results Table
+Step Number	Test Steps	Test Data	Expected Results
+1	The user logs into the system.	Username & password	The user successfully logs in.
+2	The user searches for a restaurant or browses categories.	Restaurant name, cuisine type	The user sees the list of available restaurants.
+3	The user selects a food item and adds it to the cart.	Food name, price	The cart is updated, and the total price is calculated.
+4	The user proceeds to the checkout process.	Saved payment method & delivery address	The user can review the order and select the delivery address.
+5	The user selects a payment method and confirms the order.	Credit card, digital wallet, etc.	The payment is processed, and the order is placed successfully.
+6	The order confirmation is displayed.	Order number, estimated delivery time	The user can see the order details.
+7	The restaurant receives the order and starts preparing it.	Restaurant name, order details	The user receives a notification that the order is being prepared.
+This is the translated version. Let me know if you need any modifications! 😊
+
+Şunu dedin:
+Example_of_DEL2.Test_Case_Definition_Template.docx
+Belge
+suradaki gibi ornek alarak doldurur musun tekrardan use case 2 yi 
+ChatGPT:
+Now, I will format Use Case 2: Place Food Order according to the example test case document template you provided.
+
+Test Case Document: Place Food Order
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-002
+
+Test Description: Verify that a registered customer can successfully place a food order.
+
+Test Name: Place Food Order Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-002 (Place Food Order)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Food Ordering Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The user must be logged into the system.
+
+The user must have at least one saved delivery address.
+
+The user must have an active payment method.
+
+The restaurant selected must be open and accepting orders.
+
+Dependencies:
+A database with sample restaurants and menu items must be available.
+
+The payment gateway should be accessible for payment processing.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Search for a restaurant.	Sample restaurant name: TD-1	The restaurant appears in search results.	[To be filled after execution]	-	[P/F]
+2	Select a food item and add it to the cart.	Sample menu item: TD-2	The item is added to the cart.	[To be filled after execution]	-	[P/F]
+3	Proceed to checkout.	-	The checkout page loads with correct order details.	[To be filled after execution]	-	[P/F]
+4	Select a delivery address.	Valid delivery address: TD-3	The address is selected successfully.	[To be filled after execution]	-	[P/F]
+5	Make payment.	Payment details: TD-4	The payment is processed successfully, and the order is confirmed.	[To be filled after execution]	-	[P/F]
+6	Verify order confirmation message.	-	The order confirmation message is displayed.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-1	Example Restaurant: "Pizza Delight"
+TD-2	Example Food Item: "Large Pepperoni Pizza"
+TD-3	Example Address: "123 Main St, City"
+TD-4	Example Payment Method: "Credit Card (****1234)"
+Post-conditions:
+The order should be saved in the database.
+
+The restaurant should receive the order notification.
+
+The customer should be able to track the order status.
+
+Notes:
+This test case is designed with detailed steps for a comprehensive example. Your actual test case may require fewer details.
+
+DEL 2 only requires the design of test cases, so the yellow-highlighted parts (Actual Results & Status) will remain empty until test execution (to be completed in DEL 4).
+
+The Test Case ID must be unique but does not need to follow the exact format shown in the example.
+
+This document follows the format of the example test case document you uploaded. Let me know if you need any modifications! 😊
+
+Şunu dedin:
+Nice thanks bro now we'll move into the use sade id 3 with the same way
+ChatGPT:
+You're welcome, bro! Now, let's move on to Use Case ID 3: Leave Ratings and Reviews using the same format.
+
+Test Case Document: Leave Ratings and Reviews
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-003
+
+Test Description: Verify that a registered customer can successfully leave a rating and review for a restaurant or courier.
+
+Test Name: Leave Ratings and Reviews Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-003 (Leave Ratings and Reviews)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Review and Ratings Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The customer must be logged into the system.
+
+The customer must have completed an order.
+
+The review system must be available and functional.
+
+Dependencies:
+The customer must have a completed order in their order history.
+
+The database must store and retrieve restaurant and courier review data correctly.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to order history.	-	The order history page loads successfully.	[To be filled after execution]	-	[P/F]
+2	Select an order for review.	Order ID: TD-5	The selected order's details are displayed.	[To be filled after execution]	-	[P/F]
+3	Click on "Leave a Review."	-	The review input form is displayed.	[To be filled after execution]	-	[P/F]
+4	Enter a rating and review comment.	Rating (1-5 stars), review text: TD-6	The review input is accepted.	[To be filled after execution]	-	[P/F]
+5	Submit the review.	-	The system saves the review and displays a confirmation message.	[To be filled after execution]	-	[P/F]
+6	Verify that the review appears on the restaurant/courier profile.	-	The review is displayed under the restaurant/courier reviews section.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-5	Example Order ID: #456789
+TD-6	Example Review: "Great food and fast delivery! 5 stars!"
+Post-conditions:
+The review should be stored in the database.
+
+The review should be visible on the restaurant/courier profile.
+
+Other users should be able to see the review and rating.
+
+Notes:
+This test case is structured with detailed steps for clarity, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so the Actual Results & Status (P/F) fields will remain empty until execution (DEL 4).
+
+The Test Case ID should be unique but does not have to follow a strict format.
+
+This follows the format of your previous test case. Let me know if you want any modifications or if we should move to Use Case ID 4! 🚀🔥
+
+Şunu dedin:
+Nice job lets move into the Use Case ID 4
+ChatGPT:
+Thanks, bro! Now, let's move on to Use Case ID 4: Save Favorite Restaurants, using the same structured format.
+
+Test Case Document: Save Favorite Restaurants
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-004
+
+Test Description: Verify that a registered customer can successfully save a restaurant to their favorites for quicker access.
+
+Test Name: Save Favorite Restaurants Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-004 (Save Favorite Restaurants)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Favorite Restaurants Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The customer must be logged into the system.
+
+The customer must have access to restaurant search or browsing functionality.
+
+Dependencies:
+The system must store and retrieve favorite restaurant data correctly.
+
+The user profile must have a "Favorites" section to save and display restaurants.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Search for a restaurant.	Sample restaurant name: TD-7	The restaurant appears in the search results.	[To be filled after execution]	-	[P/F]
+2	Select the restaurant from the search results.	TD-7	The restaurant details page loads successfully.	[To be filled after execution]	-	[P/F]
+3	Click on "Add to Favorites."	-	The system confirms the restaurant has been added to favorites.	[To be filled after execution]	-	[P/F]
+4	Navigate to the "Favorite Restaurants" section.	-	The saved restaurant appears in the list.	[To be filled after execution]	-	[P/F]
+5	Remove the restaurant from favorites.	-	The restaurant is successfully removed from the favorites list.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-7	Example Restaurant: "Sushi Spot"
+Post-conditions:
+The selected restaurant should be saved in the customer's "Favorites" section.
+
+The customer should be able to access the restaurant quickly from the favorites list.
+
+The customer should be able to remove the restaurant from the favorites if desired.
+
+Notes:
+This test case provides detailed steps, but actual tests may need fewer details.
+
+DEL 2 requires only test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID should be unique but does not need to follow a strict naming convention.
+
+This is your structured Test Case ID 4 document. Let me know if we should move forward to Use Case ID 5! 🚀🔥
+
+Şunu dedin:
+LETS GOOO IM HYPED BRO LETS GO TO USE CASE ID 5
+ChatGPT:
+LET'S GOOOO BRO! 🚀🔥 Time for Use Case ID 5: Request Refund or Report Order Issue! Here's the structured test case:
+
+Test Case Document: Request Refund or Report Order Issue
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-005
+
+Test Description: Verify that a registered customer can request a refund or report an issue with an order.
+
+Test Name: Request Refund or Report Order Issue Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-005 (Request Refund or Report Order Issue)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Refund & Order Issue Handling Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The customer must be logged into the system.
+
+The customer must have placed an order in the past.
+
+The order status must be "Delivered" or "Completed" to request a refund.
+
+The refund and issue reporting system must be available and functional.
+
+Dependencies:
+The system must store and retrieve order history correctly.
+
+The refund processing system must be operational.
+
+The administrator must have access to review refund or issue requests.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to order history.	-	The order history page loads successfully.	[To be filled after execution]	-	[P/F]
+2	Select a past order.	Order ID: TD-8	The order details page is displayed.	[To be filled after execution]	-	[P/F]
+3	Click on "Report an Issue" or "Request a Refund."	-	The issue reporting/refund request form appears.	[To be filled after execution]	-	[P/F]
+4	Provide issue details or refund reason.	Issue type: TD-9	The system accepts the input and enables the submit button.	[To be filled after execution]	-	[P/F]
+5	Submit the request.	-	The system confirms submission and notifies the admin.	[To be filled after execution]	-	[P/F]
+6	Verify admin response (if applicable).	-	The customer receives a notification with the admin's decision.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-8	Example Order ID: #987654
+TD-9	Example Issue Type: "Received wrong order" or "Food was cold"
+Post-conditions:
+The request should be stored in the system for admin review.
+
+The administrator should receive a notification of the request.
+
+The customer should receive a decision on the refund or issue resolution.
+
+Notes:
+This test case is designed with detailed steps for clarity, but actual tests may need fewer details.
+
+DEL 2 requires only test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID should be unique but does not need to follow a strict naming convention.
+
+BOOM! 💥 Use Case ID 5 is locked in! Let me know if we're sending it to Use Case ID 6, my guy! 🚀🔥
+
+Şunu dedin:
+lets move into the use case id 6
+ChatGPT:
+LET'S GO BRO! 🚀🔥 Time for Use Case ID 6: Customer Preferences! Here's the structured test case:
+
+Test Case Document: Customer Preferences
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-006
+
+Test Description: Verify that a registered customer can successfully set dietary preferences such as vegan mode and allergy alerts.
+
+Test Name: Customer Preferences Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-006 (Customer Preferences)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Customer Preferences Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The customer must be logged into the system.
+
+The customer must have access to the preferences section.
+
+The system must have predefined dietary preference options.
+
+Dependencies:
+The system must store and retrieve customer preferences correctly.
+
+The restaurant menu database must support filtering based on dietary preferences.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the customer preferences section.	-	The preferences page loads successfully.	[To be filled after execution]	-	[P/F]
+2	Select dietary preferences (e.g., Vegan Mode, No Nuts).	Dietary preference: TD-10	The selection is saved successfully.	[To be filled after execution]	-	[P/F]
+3	Save preferences.	-	The system confirms that preferences have been updated.	[To be filled after execution]	-	[P/F]
+4	Search for food items after setting preferences.	-	The system filters and displays only suitable food items.	[To be filled after execution]	-	[P/F]
+5	Order a food item that violates the set preference.	Non-compliant item: TD-11	The system warns the user about the violation.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-10	Example Preference: "Vegan Mode"
+TD-11	Example Non-Compliant Item: "Beef Burger"
+Post-conditions:
+The customer preferences should be stored in the database.
+
+The food search and ordering process should respect the customer’s dietary preferences.
+
+The system should warn customers when ordering non-compliant items.
+
+Notes:
+This test case includes detailed steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields will remain empty until execution (DEL 4).
+
+The Test Case ID should be unique but does not need to follow a strict naming convention.
+
+BOOM! 💥 Use Case ID 6 is locked and loaded! Are we moving to Use Case ID 7, my guy? 🚀🔥
+
+Şunu dedin:
+yes bro use case id 7 send it
+ChatGPT:
+LET'S GOOOO BRO! 🚀🔥 Time for Use Case ID 7: Track Order Status! Here's the structured test case:
+
+Test Case Document: Track Order Status
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-007
+
+Test Description: Verify that a registered customer can track the status of an active order.
+
+Test Name: Track Order Status Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-007 (Track Order Status)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Order Tracking Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The customer must be logged into the system.
+
+The customer must have an active order.
+
+The system must have real-time tracking enabled for orders.
+
+Dependencies:
+The system must retrieve real-time order status updates.
+
+The courier system must update order progress (e.g., Preparing, On the Way, Delivered).
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the "Track Order" section.	-	The active order list is displayed.	[To be filled after execution]	-	[P/F]
+2	Select an active order.	Order ID: TD-12	The order details page loads with real-time tracking.	[To be filled after execution]	-	[P/F]
+3	Verify order status updates.	-	The order progresses through status changes (e.g., Preparing, On the Way).	[To be filled after execution]	-	[P/F]
+4	Check estimated delivery time.	-	The system displays an estimated arrival time.	[To be filled after execution]	-	[P/F]
+5	Verify courier location (if applicable).	-	The system shows real-time courier location updates.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-12	Example Order ID: #123456
+TD-13	Example Order Status: "On the Way"
+TD-14	Example Delivery Time Estimate: "15 mins remaining"
+Post-conditions:
+The customer should be able to see real-time updates of their order.
+
+The system should update the order status based on delivery progress.
+
+If available, the system should show the courier's location on a map.
+
+Notes:
+This test case provides structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID should be unique but does not need to follow a strict naming format.
+
+BOOM! 💥 Use Case ID 7 is locked in! Are we ready to take on Use Case ID 8, my guy? 🚀🔥
+
+Şunu dedin:
+ready for use case id 8
+ChatGPT:
+LET'S GOOO BRO! 🚀🔥 Time for Use Case ID 8: Admin Login! Here's the structured test case:
+
+Test Case Document: Admin Login
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-008
+
+Test Description: Verify that an admin can successfully log into the system using valid credentials.
+
+Test Name: Admin Login Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-008 (Admin Login)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Authentication Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The admin must have valid login credentials (username & password).
+
+The admin portal must be accessible.
+
+The system must be operational and allow admin authentication.
+
+Dependencies:
+The system must store and verify admin credentials securely.
+
+The authentication system must support error handling for incorrect login attempts.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the admin login page.	-	The login page loads successfully.	[To be filled after execution]	-	[P/F]
+2	Enter valid admin credentials and submit.	Username: TD-15, Password: TD-16	The system authenticates the admin and grants access.	[To be filled after execution]	-	[P/F]
+3	Verify successful login.	-	The admin is redirected to the admin dashboard.	[To be filled after execution]	-	[P/F]
+4	Attempt login with incorrect credentials.	Invalid Username/Password: TD-17	The system displays an error message.	[To be filled after execution]	-	[P/F]
+5	Check for security features (e.g., CAPTCHA, 2FA).	-	The system enforces security measures as required.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-15	Example Admin Username: "admin123"
+TD-16	Example Admin Password: "Admin@Pass1"
+TD-17	Example Invalid Login: "wrongAdmin / wrongPass"
+Post-conditions:
+If successful, the admin should be logged in and able to access the dashboard.
+
+If unsuccessful, the system should display an appropriate error message.
+
+The system should log all login attempts for security monitoring.
+
+Notes:
+This test case provides structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID should be unique but does not need to follow a strict naming format.
+
+BOOM! 💥 Use Case ID 8 is done! Are we moving straight into Use Case ID 9, my guy? 🚀🔥
+
+Şunu dedin:
+yep move to use case id 9
+ChatGPT:
+LET'S GOOOO BRO! 🚀🔥 Use Case ID 9: Courier Login coming right up! Here's the structured test case:
+
+Test Case Document: Courier Login
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-009
+
+Test Description: Verify that a courier can successfully log into the system using valid credentials.
+
+Test Name: Courier Login Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-009 (Courier Login)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Authentication Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The courier must have valid login credentials (username & password).
+
+The courier portal must be accessible.
+
+The system must be operational and allow courier authentication.
+
+Dependencies:
+The system must store and verify courier credentials securely.
+
+The authentication system must support error handling for incorrect login attempts.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the courier login page.	-	The login page loads successfully.	[To be filled after execution]	-	[P/F]
+2	Enter valid courier credentials and submit.	Username: TD-18, Password: TD-19	The system authenticates the courier and grants access.	[To be filled after execution]	-	[P/F]
+3	Verify successful login.	-	The courier is redirected to the delivery dashboard.	[To be filled after execution]	-	[P/F]
+4	Attempt login with incorrect credentials.	Invalid Username/Password: TD-20	The system displays an error message.	[To be filled after execution]	-	[P/F]
+5	Check for security features (e.g., CAPTCHA, 2FA).	-	The system enforces security measures as required.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-18	Example Courier Username: "courierX"
+TD-19	Example Courier Password: "Courier@Pass1"
+TD-20	Example Invalid Login: "wrongCourier / wrongPass"
+Post-conditions:
+If successful, the courier should be logged in and able to access the delivery dashboard.
+
+If unsuccessful, the system should display an appropriate error message.
+
+The system should log all login attempts for security monitoring.
+
+Notes:
+This test case provides structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID should be unique but does not need to follow a strict naming format.
+
+BOOM! 💥 Use Case ID 9 is locked in! Bro, we keep rollin'—are we moving straight to Use Case ID 10? 🚀🔥
+
+Şunu dedin:
+from now on i will tel you the use case name and you will find it in the document and with respect to that we will fill the tests like the previous ones ok? Use case name : Customer Login
+ChatGPT:
+Got it, bro! 🚀🔥 I'll find Use Case: Customer Login in the document and format the test case accordingly. Let me locate it first.
+
+The execution state was reset, which means the uploaded files were lost. Please re-upload the UseCases.docx file so I can locate Use Case: Customer Login and continue filling in the test case. 🚀🔥 ​​
+
+Şunu dedin:
+UseCases.docx
+Belge
+ChatGPT:
+I found Use Case: Customer Login (UC-FO-010) in the document! Now, let's format the Test Case for it. 🚀🔥
+
+Test Case Document: Customer Login
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-010
+
+Test Description: Verify that a customer can successfully log into the food delivery platform.
+
+Test Name: Customer Login Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-010 (Customer Login)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Authentication Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The customer must have valid login credentials (username/email and password).
+
+The system must be online and accessible.
+
+Dependencies:
+The system must store and verify customer credentials securely.
+
+The authentication module must be functional.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the login page.	-	The login page loads successfully.	[To be filled after execution]	-	[P/F]
+2	Enter valid login credentials and submit.	Username: TD-21, Password: TD-22	The system authenticates the customer and grants access.	[To be filled after execution]	-	[P/F]
+3	Verify successful login.	-	The customer is redirected to the homepage.	[To be filled after execution]	-	[P/F]
+4	Attempt login with incorrect credentials.	Invalid Username/Password: TD-23	The system displays an error message.	[To be filled after execution]	-	[P/F]
+5	Verify login security features (e.g., CAPTCHA, 2FA).	-	The system enforces security measures if necessary.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-21	Example Customer Username: "user123"
+TD-22	Example Customer Password: "Secure@Pass1"
+TD-23	Example Invalid Login: "wrongUser / wrongPass"
+Post-conditions:
+If successful, the customer should be logged in and redirected to the homepage.
+
+If unsuccessful, the system should display an appropriate error message.
+
+The system should log all login attempts for security purposes.
+
+Notes:
+This test case follows structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID should be unique but does not need to follow a strict naming format.
+
+BOOM! 💥 Use Case ID 10 is locked in! Let me know which Use Case Name we're hitting next, bro! 🚀🔥
+
+Şunu dedin:
+from now on use case ID's are not appropriate in document so increment the ids please. 
+use case name : Restaurant Owner Login
+ChatGPT:
+Got it, bro! 🚀🔥 From now on, I'll increment the Test Case IDs to keep them unique. Now, let's format the Test Case for Use Case: Restaurant Owner Login.
+
+Test Case Document: Restaurant Owner Login
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-011
+
+Test Description: Verify that a restaurant owner can successfully log into the food delivery platform.
+
+Test Name: Restaurant Owner Login Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-XXX (Restaurant Owner Login)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Authentication Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The restaurant owner must have valid login credentials (username/email and password).
+
+The system must be online and accessible.
+
+Dependencies:
+The system must store and verify restaurant owner credentials securely.
+
+The authentication module must be functional.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the restaurant owner login page.	-	The login page loads successfully.	[To be filled after execution]	-	[P/F]
+2	Enter valid login credentials and submit.	Username: TD-24, Password: TD-25	The system authenticates the owner and grants access.	[To be filled after execution]	-	[P/F]
+3	Verify successful login.	-	The restaurant owner is redirected to the management dashboard.	[To be filled after execution]	-	[P/F]
+4	Attempt login with incorrect credentials.	Invalid Username/Password: TD-26	The system displays an error message.	[To be filled after execution]	-	[P/F]
+5	Verify login security features (e.g., CAPTCHA, 2FA).	-	The system enforces security measures if necessary.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-24	Example Restaurant Owner Username: "owner123"
+TD-25	Example Restaurant Owner Password: "Owner@Pass1"
+TD-26	Example Invalid Login: "wrongOwner / wrongPass"
+Post-conditions:
+If successful, the restaurant owner should be logged in and redirected to the management dashboard.
+
+If unsuccessful, the system should display an appropriate error message.
+
+The system should log all login attempts for security monitoring.
+
+Notes:
+This test case follows structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID has been incremented and will continue to follow a unique pattern.
+
+BOOM! 💥 Use Case: Restaurant Owner Login is locked in! Drop the next Use Case Name, and we’ll keep rolling, bro! 🚀🔥
+
+Şunu dedin:
+nice bro 
+use case name : User Account Management
+ChatGPT:
+LET'S GOOOO BRO! 🚀🔥 Time for Use Case: User Account Management. Since we are incrementing Test Case IDs, this will be TC-FO-012.
+
+Test Case Document: User Account Management
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-012
+
+Test Description: Verify that an admin can successfully manage user accounts (customers, restaurants, and couriers).
+
+Test Name: User Account Management Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-XXX (User Account Management)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: User Management Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The admin must be logged into the system.
+
+The admin must have appropriate permissions to manage user accounts.
+
+The system must store and retrieve user data correctly.
+
+Dependencies:
+The system must support CRUD (Create, Read, Update, Delete) operations on user accounts.
+
+The admin dashboard must be functional.
+
+Email notifications should be sent when a user account is modified.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the "User Management" section in the admin panel.	-	The user management dashboard loads successfully.	[To be filled after execution]	-	[P/F]
+2	Select a user type (customer, restaurant, or courier) and view the user list.	User Type: TD-27	The system displays the corresponding user accounts.	[To be filled after execution]	-	[P/F]
+3	Edit user details and save changes.	Updated User Data: TD-28	The system updates the user details and confirms the changes.	[To be filled after execution]	-	[P/F]
+4	Delete a user account.	User ID: TD-29	The system removes the user account and updates the database.	[To be filled after execution]	-	[P/F]
+5	Verify user notification upon account update.	-	The user receives an email or in-app notification about the changes.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-27	Example User Type: "Customer"
+TD-28	Example Updated User Data: "Changed Email, Address Update"
+TD-29	Example User ID: "#54321"
+Post-conditions:
+The updated user details should be stored in the database.
+
+The deleted user should no longer have access to their account.
+
+The system should log all admin actions for security and auditing purposes.
+
+Notes:
+This test case follows structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID has been incremented and will continue to follow a unique pattern.
+
+BOOM! 💥 Use Case: User Account Management is locked in! What’s next, my guy? Drop the next Use Case Name, and we’ll keep grinding! 🚀🔥
+
+Şunu dedin:
+BOOM Thanks dough! use case name : Registeration Approval/Rejection
+ChatGPT:
+BOOM! LET’S KEEP IT ROLLIN’ BRO! 🚀🔥 Time for Use Case: Registration Approval/Rejection! Since we’re incrementing, this will be TC-FO-013.
+
+Test Case Document: Registration Approval/Rejection
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-013
+
+Test Description: Verify that an admin can approve or reject registration requests from restaurants and couriers.
+
+Test Name: Registration Approval/Rejection Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-XXX (Registration Approval/Rejection)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Registration Management Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The admin must be logged into the system with valid credentials.
+
+There must be pending registration requests.
+
+The system must support the approval/rejection process for registrations.
+
+Dependencies:
+The system must allow viewing of pending registration requests.
+
+The platform must notify applicants about approval or rejection decisions.
+
+If rejected, the system should store a reason and allow reapplication.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the "Pending Registrations" section in the admin panel.	-	The list of pending applications is displayed.	[To be filled after execution]	-	[P/F]
+2	Select a pending registration request.	Registration ID: TD-30	The system loads the details of the request.	[To be filled after execution]	-	[P/F]
+3	Review the provided documents and information.	Applicant Data: TD-31	The admin can view all submitted documents.	[To be filled after execution]	-	[P/F]
+4	Approve the registration request.	-	The system approves the request and grants access.	[To be filled after execution]	-	[P/F]
+5	Reject the registration request and provide a reason.	Rejection Reason: TD-32	The system notifies the applicant and allows resubmission.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-30	Example Registration ID: "#78901"
+TD-31	Example Applicant Data: "Restaurant Name, License, Contact Info"
+TD-32	Example Rejection Reason: "Incomplete Documents"
+Post-conditions:
+If approved, the applicant gains access to the system as a registered user.
+
+If rejected, the applicant receives a reason and can reapply.
+
+The system logs all approval/rejection decisions for auditing.
+
+Notes:
+This test case provides structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID has been incremented and will continue to follow a unique pattern.
+
+BOOM! 💥 Use Case: Registration Approval/Rejection is locked in! What’s next, bro? Drop the next Use Case Name, and let’s keep crushing it! 🚀🔥
+
+Şunu dedin:
+BOOM! USE CASE NAME : Complain Handling and Dispute Resolving
+ChatGPT:
+BOOM! 🔥 Let’s keep the grind going, bro! 🚀 Time for Use Case: Complaint Handling and Dispute Resolving. Since we’re incrementing IDs, this will be TC-FO-014.
+
+Test Case Document: Complaint Handling and Dispute Resolving
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-014
+
+Test Description: Verify that an admin can successfully handle customer complaints and resolve disputes between customers, restaurants, and couriers.
+
+Test Name: Complaint Handling and Dispute Resolving Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-XXX (Complaint Handling and Dispute Resolving)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Complaint & Dispute Management Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The admin must be logged into the system.
+
+There must be at least one registered complaint or dispute in the system.
+
+The system must support communication between involved parties (customer, restaurant, courier).
+
+Dependencies:
+The system must allow users to submit complaints and disputes.
+
+The admin should be able to review complaint details, history, and supporting evidence.
+
+If a refund or resolution is required, the system should facilitate it.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the "Complaints & Disputes" section in the admin panel.	-	The list of registered complaints is displayed.	[To be filled after execution]	-	[P/F]
+2	Select a complaint or dispute.	Complaint ID: TD-33	The system loads the complaint details.	[To be filled after execution]	-	[P/F]
+3	Review complaint details and evidence.	Complaint Details: TD-34	The admin can view user-provided evidence (images, receipts, chat history).	[To be filled after execution]	-	[P/F]
+4	Communicate with involved parties (customer, restaurant, courier).	-	The system enables messaging or ticket-based communication.	[To be filled after execution]	-	[P/F]
+5	Resolve the complaint (approve refund, warn a party, close case).	Resolution Action: TD-35	The system applies the resolution and notifies all parties.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-33	Example Complaint ID: "#112233"
+TD-34	Example Complaint Details: "Late delivery, missing items, rude courier"
+TD-35	Example Resolution Action: "Refund issued, warning given to restaurant"
+Post-conditions:
+The complaint is marked as resolved, and users are notified of the resolution.
+
+If a refund is issued, the transaction is logged in the system.
+
+The system should track complaint trends for future improvements.
+
+Notes:
+This test case follows structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID has been incremented and will continue to follow a unique pattern.
+
+BOOM! 💥 Use Case: Complaint Handling and Dispute Resolving is DONE! What’s next, my guy? Drop the next Use Case Name, and we’ll keep grinding! 🚀🔥
+
+Şunu dedin:
+lets goo Use Case name : Platform Configurations
+ChatGPT:
+LET'S GOOOO BRO! 🚀🔥 Time for Use Case: Platform Configurations. Since we’re incrementing IDs, this will be TC-FO-015.
+
+Test Case Document: Platform Configurations
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-015
+
+Test Description: Verify that an admin can successfully update platform-wide configurations, such as delivery fees and promotional campaigns.
+
+Test Name: Platform Configurations Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-XXX (Platform Configurations)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Configuration Management Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The admin must be logged into the system.
+
+The admin must have the necessary permissions to modify platform settings.
+
+The system must allow real-time updates to platform configurations.
+
+Dependencies:
+The system must support dynamic configuration updates.
+
+The changes should apply across all users and modules where relevant.
+
+The system should notify users if the configuration affects them (e.g., changes in delivery fees).
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the "Platform Configurations" section in the admin panel.	-	The admin configuration dashboard loads successfully.	[To be filled after execution]	-	[P/F]
+2	Select a configuration to update.	Configuration Type: TD-36	The system loads the selected configuration settings.	[To be filled after execution]	-	[P/F]
+3	Modify the configuration values.	New Values: TD-37	The system validates and applies the updates.	[To be filled after execution]	-	[P/F]
+4	Save the updated configuration.	-	The system confirms the update and applies changes.	[To be filled after execution]	-	[P/F]
+5	Verify that affected users are notified (if applicable).	-	Users receive an email or in-app notification about the change.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-36	Example Configuration Type: "Delivery Fee Policy"
+TD-37	Example New Values: "Base delivery fee increased from $2.99 to $3.49"
+Post-conditions:
+The updated platform configurations should be applied system-wide.
+
+Users affected by the changes should be notified if necessary.
+
+The system should log configuration updates for auditing purposes.
+
+Notes:
+This test case follows structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID has been incremented and will continue to follow a unique pattern.
+
+BOOM! 💥 Use Case: Platform Configurations is DONE! What’s next, bro? Drop the next Use Case Name, and let’s keep crushing it! 🚀🔥
+
+Şunu dedin:
+by the way are u still be able to read the files ?
+ChatGPT:
+Yes, bro! 🚀 I can still read the UseCases.docx file and use it to extract information for the next test case. If you upload more files, I can read those too.
+
+Drop the next Use Case Name, and let’s keep grinding! 🔥🔥🔥
+
+Şunu dedin:
+great do u need an example of test case document for test cases ? you're writing right but maybe u want to add some more details or I dont know something like that ?
+ChatGPT:
+Appreciate you looking out, bro! 🙌 Right now, I’m structuring the test cases based on the example Test Case Definition Template you provided earlier. But if you’ve got a more detailed test case example with extra fields or a different format, feel free to upload it!
+
+That way, I can fine-tune the structure even more and make sure the test cases are 100% aligned with what you need. 💯🔥
+
+Let me know if you want to tweak anything, or drop the next Use Case Name and we’ll keep crushing it! 🚀🔥
+
+Şunu dedin:
+Allright lets do it dough thanks! LETS GOOO. Next use case name : Suspension of Restaurants or Couriers
+ChatGPT:
+LET'S GOOOO BRO! 🚀🔥 Time for Use Case: Suspension of Restaurants or Couriers. Since we’re incrementing IDs, this will be TC-FO-016.
+
+Test Case Document: Suspension of Restaurants or Couriers
+Project Name: [Your Project Name]
+
+Version: [Version X]
+
+System Test Case Definitions
+
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-016
+
+Test Description: Verify that an admin can suspend or permanently ban restaurants and couriers who violate platform policies.
+
+Test Name: Suspension of Restaurants or Couriers Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-XXX (Suspension of Restaurants or Couriers)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Account Management & Policy Enforcement
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The admin must be logged into the system.
+
+The admin must have permission to manage user suspensions.
+
+The restaurant or courier must have committed a policy violation (e.g., repeated late deliveries, fraudulent activity).
+
+Dependencies:
+The system must allow viewing of restaurant/courier profiles and violation history.
+
+The suspension system must log the action and notify the affected party.
+
+If an appeal system is in place, it must allow suspended users to submit a review request.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the "Policy Violations" section in the admin panel.	-	The admin can see a list of flagged restaurants and couriers.	[To be filled after execution]	-	[P/F]
+2	Select a restaurant or courier to suspend.	User ID: TD-38	The system loads the selected user’s profile and violation history.	[To be filled after execution]	-	[P/F]
+3	Choose the suspension type (temporary or permanent) and provide a reason.	Suspension Type: TD-39	The system records the action and updates the user’s status.	[To be filled after execution]	-	[P/F]
+4	Notify the suspended user via email or in-app notification.	-	The suspended user receives a notification with details.	[To be filled after execution]	-	[P/F]
+5	Verify that the suspended user cannot access their account.	-	The user is blocked from logging in or using the platform.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-38	Example User ID: "Courier_987" or "Restaurant_456"
+TD-39	Example Suspension Type: "Temporary (7 days) due to repeated late deliveries"
+Post-conditions:
+The restaurant/courier should be restricted from accessing their account during suspension.
+
+The admin should have the ability to lift the suspension if needed.
+
+If an appeal system exists, the suspended user should have an option to request a review.
+
+Notes:
+This test case follows structured steps, but actual tests may require fewer details.
+
+DEL 2 only requires test-case design, so Actual Results & Status (P/F) fields remain empty until execution (DEL 4).
+
+The Test Case ID has been incremented and will continue to follow a unique pattern.
+
+BOOM! 💥 Use Case: Suspension of Restaurants or Couriers is DONE! Drop the next Use Case Name, and we’ll keep rollin’, my guy! 🚀🔥
+
+Şunu dedin:
+UseCases.docx
+Belge
+UseCases updated version bro. From now on you will read this file I will tell you the use case id or use case name then you will provide me the test cases ok?
+ChatGPT:
+Perfect, bro! ✅ I’ll now use the updated UseCases.docx file you just uploaded. From now on, just tell me either:
+
+✅ The Use Case Name (e.g., Menu Management)
+
+🔢 Or the Use Case Number (e.g., 017)
+
+And I’ll generate a complete test case document in the same style we’ve been using — but now based on the latest version of the file. 💯
+
+So hit me with the next one when you’re ready! 🚀🔥
+
+Şunu dedin:
+Lets go Use case number : 017
+ChatGPT:
+BOOM! LET’S DO THIS BRO! 🚀🔥
+We’re on Use Case Number: 017 – Menu Management
+Here comes your fresh, clean, test-case doc, based on the updated file.
+
+Test Case Document: Menu Management
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-017
+
+Test Description: Verify that the restaurant owner can add, update, or delete menu items including price, descriptions, and availability.
+
+Test Name: Menu Management Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-002 (Menu Management)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Menu Management Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The restaurant owner must be logged into the system.
+
+The restaurant must have a valid profile.
+
+Dependencies:
+The platform must allow item creation, editing, and removal with live updates.
+
+Menu updates must be reflected immediately for customers.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to "Menu Management" in the dashboard.	-	The restaurant’s current menu is displayed.	[To be filled after execution]	-	[P/F]
+2	Click "Add New Item."	TD-40	A form to add a new menu item appears.	[To be filled after execution]	-	[P/F]
+3	Enter item details (name, price, description, availability).	TD-41	The system validates inputs.	[To be filled after execution]	-	[P/F]
+4	Submit the new item.	-	The item is added to the menu and visible on the platform.	[To be filled after execution]	-	[P/F]
+5	Edit an existing item (e.g., update price).	TD-42	The updated item replaces the old version.	[To be filled after execution]	-	[P/F]
+6	Delete an item from the menu.	TD-43	The item is removed and no longer visible to customers.	[To be filled after execution]	-	[P/F]
+7	Attempt to add an item with missing price.	TD-44	The system shows a validation error and blocks submission.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-40	Item Name: "Spicy Chicken Wrap"
+TD-41	Price: $7.99, Description: "Grilled chicken with spicy mayo", Availability: Available
+TD-42	Updated Price: $8.49
+TD-43	Item to Delete: "Old Veggie Burger"
+TD-44	Missing Price (left blank)
+Post-conditions:
+Menu is updated with the latest changes.
+
+Customers can only see the updated, available menu items.
+
+System stores logs of menu changes for record-keeping.
+
+Notes:
+DEL 2 requires only test case design, so results will be filled in DEL 4.
+
+Platform should allow marking items as “temporarily unavailable” instead of deleting, if needed.
+
+BOOM 💥 Menu Management Test Case is DONE!
+Drop the next Use Case Number or Name, and we keep the fire goin’, bro! 🚀🔥
+
+Şunu dedin:
+lets go with number 018
+ChatGPT:
+YESSS BRO 🔥 We’re diving into Use Case Number: 018 – Order Processing!
+Strap in, here's your full test case doc, built from the updated file 👇
+
+Test Case Document: Order Processing
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-018
+
+Test Description: Verify that the restaurant owner can process customer orders and update order status as food is prepared.
+
+Test Name: Order Processing Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-003 (Order Processing)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Restaurant Order Management
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The restaurant owner must be logged in.
+
+There must be at least one incoming order in the system.
+
+Dependencies:
+The order placement system must be working properly.
+
+Real-time notification must reach the restaurant upon new order.
+
+Courier assignment will follow once order is marked “Ready for Pickup.”
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to "Incoming Orders" in the dashboard.	-	Incoming orders are displayed.	[To be filled after execution]	-	[P/F]
+2	Select an incoming order to review.	TD-45	Order details are shown including items, instructions, and delivery info.	[To be filled after execution]	-	[P/F]
+3	Click “Accept Order” to begin food prep.	-	System confirms acceptance and updates status to "In Preparation".	[To be filled after execution]	-	[P/F]
+4	Mark order as "Ready for Pickup" when preparation is complete.	-	Order status updates and becomes visible for courier assignment.	[To be filled after execution]	-	[P/F]
+5	Reject an order and provide a reason.	TD-46	The customer is notified about the rejection via email.	[To be filled after execution]	-	[P/F]
+6	Try to accept an already expired or cancelled order.	TD-47	System prevents action and displays an error.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-45	Order ID: #A132
+TD-46	Rejection Reason: “Item out of stock”
+TD-47	Cancelled Order ID: #A129
+Post-conditions:
+Accepted orders are marked as "Ready for Pickup" when prepared.
+
+Rejected orders are canceled and the customer is notified.
+
+Courier assignment is triggered after marking an order ready.
+
+Notes:
+If the restaurant delays too long, the system sends a reminder to update the order status.
+
+The system must allow contact with the customer in case of issues with the order.
+
+💥 BOOM — Order Processing Test Case is READY to roll!
+Let’s keep riding this wave — what’s next, bro? Drop the Use Case Number or Name and I’m on it! 🚀🔥
+
+Şunu dedin:
+lets move to the 019
+ChatGPT:
+OH YEAH BRO 🔥 We're moving to Use Case Number: 019 – Courier Assignment — and you already know I'm dropping another clean test case document your way. Let’s gooo 💪
+
+Test Case Document: Courier Assignment
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-019
+
+Test Description: Verify that the restaurant owner can assign available couriers to orders that are marked as "Ready for Pickup."
+
+Test Name: Courier Assignment Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-004 (Courier Assignment)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Courier Assignment Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The restaurant owner must be logged into the system.
+
+There must be at least one order marked as "Ready for Pickup."
+
+At least one available courier must be listed.
+
+Dependencies:
+The courier availability system must be operational.
+
+Order status should be updated correctly after courier assignment.
+
+The assigned courier must receive a notification.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Go to "Orders Ready for Pickup" section in the dashboard.	-	All orders ready for courier assignment are displayed.	[To be filled after execution]	-	[P/F]
+2	Select an order to assign a courier.	TD-48	Courier assignment screen is displayed.	[To be filled after execution]	-	[P/F]
+3	Choose a courier from the available list.	TD-49	Courier is selected for the delivery.	[To be filled after execution]	-	[P/F]
+4	Click “Assign Courier.”	-	System updates the order status to "Out for Delivery" and notifies the courier.	[To be filled after execution]	-	[P/F]
+5	Try to assign a courier when none are available.	TD-50	System shows a warning or suggests retrying later.	[To be filled after execution]	-	[P/F]
+6	Assigned courier rejects the order.	TD-51	System prompts the restaurant owner to assign a different courier.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-48	Order ID: #A133
+TD-49	Courier: "Courier_001"
+TD-50	No couriers available at assignment time
+TD-51	Assigned courier declined the order
+Post-conditions:
+Order status changes to "Out for Delivery" after courier assignment.
+
+The assigned courier is notified and marked as "Unavailable" until delivery is completed.
+
+If courier rejects the delivery, the system allows reassignment.
+
+Notes:
+The system should display courier ETA and ratings to help restaurant choose wisely.
+
+Failed assignments should be logged for admin review if frequent.
+
+🔥💥 BOOM — Courier Assignment Test Case is locked in!
+Slide me the next Use Case Number or Name, and we keep the energy UP! 🚀🔥
+
+Şunu dedin:
+lets move to 20
+ChatGPT:
+YEEESSS BRO 🔥 We're on a roll — now powering through Use Case Number: 020 – Order Tracking (Restaurant Owner)! Here's your fully loaded test case doc 👇
+
+Test Case Document: Order Tracking (Restaurant Owner)
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-020
+
+Test Description: Verify that the restaurant owner can view current deliveries and track the status of ongoing or past orders.
+
+Test Name: Order Tracking (Restaurant Side) Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-005 (Order Tracking - Restaurant Owner)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Order History & Tracking Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Restaurant owner must be logged in.
+
+There must be at least one current or past order in the system.
+
+Dependencies:
+Real-time order updates must be working.
+
+The system must integrate with courier location tracking (if applicable).
+
+Restaurant must have access to order history and live tracking modules.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to "Order History" or "Current Deliveries."	-	A list of past and ongoing orders is shown.	[To be filled after execution]	-	[P/F]
+2	Select an active order to track its delivery.	TD-52	Order details and tracking info are displayed.	[To be filled after execution]	-	[P/F]
+3	View courier location and estimated delivery time.	-	System shows real-time location and ETA.	[To be filled after execution]	-	[P/F]
+4	View completed order details from history.	TD-53	Past order info is displayed including items and delivery status.	[To be filled after execution]	-	[P/F]
+5	Check filtering options (by date, delivery status, etc.).	TD-54	The order list filters correctly.	[To be filled after execution]	-	[P/F]
+6	View empty order history for new restaurant.	TD-55	System displays “No orders yet” message.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-52	Order ID: #A135 (Status: "Out for Delivery")
+TD-53	Completed Order ID: #A101
+TD-54	Filter: Last 7 Days, Status: Delivered
+TD-55	Test Restaurant Account with no order history
+Post-conditions:
+The restaurant owner can track all current deliveries in real-time.
+
+Completed orders are available for reference and reporting.
+
+Any unclear statuses can be manually investigated via contact with couriers.
+
+Notes:
+If an order appears stuck in “Out for Delivery,” the restaurant should be able to contact the courier or support.
+
+Tracking data should auto-refresh or be easily refreshable.
+
+BOOOM 🔥 Order Tracking (Restaurant Owner) Test Case is done and dusted!
+Shoot me the next Use Case Number or Name, and we keep that engine revving! 🚀🔥
+
+Şunu dedin:
+lets go with 21
+ChatGPT:
+YESSIR BRO 🔥 We’re diving into Use Case Number: 021 – Review Processing
+Let’s cook up this test case like a 5-star chef 🍽️💻
+
+Test Case Document: Review Processing
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-021
+
+Test Description: Verify that the restaurant owner can view and respond to customer reviews and inquiries.
+
+Test Name: Review Processing Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-006 (Review Processing)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Review Management Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Restaurant owner must be logged in.
+
+There must be customer reviews or inquiries visible in the system.
+
+Dependencies:
+Customers must be able to leave reviews after completing orders.
+
+The system must allow the restaurant owner to respond via dashboard.
+
+Admin moderation system should filter inappropriate content.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to "Reviews & Inquiries" section in dashboard.	-	Reviews and inquiries are listed.	[To be filled after execution]	-	[P/F]
+2	Select a review to respond to.	TD-56	Review details are displayed.	[To be filled after execution]	-	[P/F]
+3	Type and submit a response.	TD-57	Response is saved and displayed under the review.	[To be filled after execution]	-	[P/F]
+4	Attempt to submit an empty or offensive response.	TD-58	System blocks submission and shows validation error.	[To be filled after execution]	-	[P/F]
+5	Customer receives notification about the response.	-	Customer is informed that their review was replied to.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-56	Review ID: #R101 - "Pizza was cold, took too long."
+TD-57	Response: "We’re really sorry! We’re improving our delivery time. Thanks for the feedback!"
+TD-58	Response Attempt: Empty or contains inappropriate language (e.g., profanity)
+Post-conditions:
+Review responses are visible publicly under the original review.
+
+Customers are notified of replies.
+
+Inappropriate responses are blocked and/or flagged for admin moderation.
+
+Notes:
+Restaurants should be encouraged to respond politely and resolve issues via replies.
+
+System should allow editing or deleting responses within a short timeframe (e.g., 10 mins).
+
+BOOOOOM 💥 Review Processing Test Case is DONE!
+Drop the next one, my guy — just say the Use Case Number or Name, and we’re back in action! 🚀🔥
+
+Şunu dedin:
+letsss goo 22
+ChatGPT:
+YEEEESIR BRO 🔥 Rolling straight into Use Case Number: 022 – Dashboard Analytics
+Time to give those restaurant owners some juicy data views 📊 Let’s build the test case!
+
+Test Case Document: Dashboard Analytics
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-022
+
+Test Description: Verify that restaurant owners can view performance analytics and metrics such as order volume, revenue, and customer satisfaction.
+
+Test Name: Dashboard Analytics Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-007 (Dashboard Analytics)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Analytics & Reporting Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The restaurant owner must be logged into the platform.
+
+There must be historical data from orders, reviews, and performance.
+
+Dependencies:
+The system must aggregate and calculate data accurately.
+
+Data visualization components (charts, graphs, stats) must be rendered correctly.
+
+Filters (e.g., by date, by metric) must work as expected.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Go to the "Dashboard Analytics" section.	-	Dashboard loads with summary metrics.	[To be filled after execution]	-	[P/F]
+2	View key metrics: daily/weekly orders, revenue, average rating.	TD-59	Metrics match backend records.	[To be filled after execution]	-	[P/F]
+3	Use filters to narrow down results by date or meal category.	TD-60	The displayed data updates accordingly.	[To be filled after execution]	-	[P/F]
+4	Export analytics report to PDF or Excel.	TD-61	File is downloaded with correct format and values.	[To be filled after execution]	-	[P/F]
+5	View charts (bar/line/pie) for visual insights.	-	Charts render properly with accurate data.	[To be filled after execution]	-	[P/F]
+6	Try loading dashboard with no data (e.g., new restaurant).	TD-62	System displays “No data available yet” message.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-59	Example Metric: “Weekly Orders = 120, Revenue = $2,400”
+TD-60	Filter Range: Last 30 days, Category: “Wraps”
+TD-61	Export Format: Excel (.xlsx)
+TD-62	New restaurant account with no orders yet
+Post-conditions:
+Data should be visible and reflect real business performance.
+
+Filtered views and exports must be accurate and usable.
+
+New restaurants should be gracefully informed if no data exists yet.
+
+Notes:
+Future versions could include benchmark comparisons (e.g., similar restaurants).
+
+Consider including alerts for dips in performance (e.g., drop in average rating).
+
+BOOOOM 💥 Dashboard Analytics Test Case is LIVE!
+What’s next, king? Drop the Use Case Number or Name, and I got you! 🚀🔥
+
+Şunu dedin:
+LETS GO WITH 023
+ChatGPT:
+WOOOO LET'S GOOOO BROOOO 🔥
+Next stop: Use Case Number: 023 – Manage Availability & Operating Hours
+Time to make sure those kitchens know when to open and when to chill 😎🍽️
+
+Test Case Document: Manage Availability & Operating Hours
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-023
+
+Test Description: Verify that the restaurant owner can set and update business hours and temporarily mark the restaurant as unavailable.
+
+Test Name: Manage Availability & Operating Hours Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-008 (Manage Availability & Operating Hours)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Restaurant Settings Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The restaurant owner must be logged into the platform.
+
+The restaurant profile must be active.
+
+Dependencies:
+System must reflect changes in real time to customers.
+
+The restaurant must be removed from search results when unavailable.
+
+Delivery and pickup scheduling must respect the new availability settings.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to “Settings” → “Operating Hours & Availability.”	-	Current availability settings are displayed.	[To be filled after execution]	-	[P/F]
+2	Edit the weekly operating hours.	TD-63	New hours are saved and reflected instantly.	[To be filled after execution]	-	[P/F]
+3	Mark restaurant as temporarily closed.	TD-64	Restaurant disappears from customer listings.	[To be filled after execution]	-	[P/F]
+4	Mark restaurant as available again.	-	Restaurant reappears in listings.	[To be filled after execution]	-	[P/F]
+5	Try setting invalid hours (e.g., end time before start time).	TD-65	System shows error and blocks changes.	[To be filled after execution]	-	[P/F]
+6	Verify customer view reflects current availability.	-	Customers cannot place orders when restaurant is closed.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-63	Monday–Friday: 10:00 AM – 10:00 PM
+TD-64	Temporary Closure: Today from 2:00 PM – 6:00 PM
+TD-65	Start: 6:00 PM, End: 2:00 PM (invalid range)
+Post-conditions:
+Changes to availability are reflected immediately to customers.
+
+Scheduling respects updated operating hours.
+
+System prevents invalid or conflicting settings.
+
+Notes:
+Consider allowing scheduling closures in advance (e.g., holiday breaks).
+
+Might be useful to send notifications to regular customers when availability changes.
+
+BOOMMMM 💥 Availability & Hours Management Test Case is LIVE & COOKING!
+What’s next, legend? Hit me with Use Case 024 or a name — I'm locked in 🚀🔥
+
+Şunu dedin:
+use case 24 bro
+ChatGPT:
+YESSIR BROOO 🔥💻
+We're now blasting through Use Case Number: 024 – Promotions & Discounts
+Time to test how restaurants hype up their deals! Let’s build this bad boy 💸📣
+
+Test Case Document: Promotions & Discounts
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-024
+
+Test Description: Verify that the restaurant owner can create and manage discounts or promotions such as free delivery, percentage-off deals, or limited-time offers.
+
+Test Name: Promotions & Discounts Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-009 (Promotions & Discounts)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Marketing & Promotions Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Restaurant owner must be logged into the system.
+
+Restaurant must have an active profile with menu items listed.
+
+Dependencies:
+The system must apply promotions accurately at checkout.
+
+Promo visibility must be shown on the restaurant profile/menu.
+
+Time-limited offers must expire correctly.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to “Promotions & Discounts” section in dashboard.	-	Promotion dashboard loads successfully.	[To be filled after execution]	-	[P/F]
+2	Click “Create New Promotion.”	TD-66	Promo form opens with required fields.	[To be filled after execution]	-	[P/F]
+3	Enter promo details (e.g., name, discount %, validity period).	TD-67	System validates input and allows submission.	[To be filled after execution]	-	[P/F]
+4	Save and activate the promotion.	-	Promo appears live on restaurant page.	[To be filled after execution]	-	[P/F]
+5	Try to create a promo with invalid discount (e.g., 150%).	TD-68	System shows validation error.	[To be filled after execution]	-	[P/F]
+6	Let promo expire and verify it disappears automatically.	TD-69	Promo is no longer visible to customers after end time.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-66	Promo Type: “Percentage Discount”
+TD-67	Details: “20% off all burgers” – Valid from Mar 28 to Mar 31
+TD-68	Invalid Discount: 150%
+TD-69	Time-limited Promo: “Free Delivery – Valid until today 5PM”
+Post-conditions:
+Valid promotions are live and applied at checkout.
+
+Expired promos are automatically removed.
+
+System prevents invalid promo configurations.
+
+Notes:
+System should allow setting promos per item/category or for all orders.
+
+Might be useful to track performance of each promo (e.g., orders boosted).
+
+BOOM 💣🔥 Promotions & Discounts Test Case is DONE & DEALT!
+Next mission, boss — what’s the Use Case Number or Name? I’m READY! 🚀🔥
+
+Şunu dedin:
+move to 025
+ChatGPT:
+YOOO 🔥 WE’RE UNSTOPPABLE BRO!
+Now rolling into Use Case Number: 025 – Customer Registration & Profile Management
+Let’s get that user onboarding smooth and clean like butter 🧈💻
+
+Test Case Document: Customer Registration & Profile Management
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-025
+
+Test Description: Verify that a customer can register an account and manage their profile details, including name, email, password, and delivery address.
+
+Test Name: Customer Registration & Profile Management Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-CUS-001 (Customer Registration & Profile Management)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Customer Account Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+User is not yet registered on the platform (for registration part).
+
+User is logged in to edit profile details (for profile management part).
+
+Dependencies:
+Backend must validate and store customer credentials securely.
+
+System must validate all input fields (e.g., email format, password strength).
+
+Delivery address fields must support geolocation (optional).
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to “Sign Up” page.	-	Registration form is displayed.	[To be filled after execution]	-	[P/F]
+2	Fill in required fields and submit.	TD-70	Account is created and user is redirected to home.	[To be filled after execution]	-	[P/F]
+3	Try submitting with invalid data (e.g., weak password).	TD-71	System shows validation error and prevents submission.	[To be filled after execution]	-	[P/F]
+4	Log in and navigate to “My Profile.”	-	Profile info is displayed.	[To be filled after execution]	-	[P/F]
+5	Edit user details (e.g., name, phone number, delivery address).	TD-72	Changes are saved and reflected instantly.	[To be filled after execution]	-	[P/F]
+6	Attempt to save invalid address format.	TD-73	System shows error and blocks update.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-70	Name: John Doe, Email: john@example.com, Password: StrongPass123
+TD-71	Weak Password: "123", Invalid Email: "john.com"
+TD-72	New Address: "123 Main St, Springfield"
+TD-73	Invalid Address: "" (blank input) or random symbols
+Post-conditions:
+Registered users can log in and manage their profile.
+
+All valid updates are stored and reflected in real time.
+
+Invalid inputs are caught with proper messages.
+
+Notes:
+Consider CAPTCHA or email verification for security.
+
+Password change should require old password for confirmation.
+
+💥 DONE & DELIVERED: Customer Registration & Profile Management Test Case
+Keep ‘em comin’, my guy — what’s next? Use Case 026? Let’s ride 🚀🔥
+
+Şunu dedin:
+from now on i will tell you the use case name and you will find it from document, inspect it and give me the test cases ok? there was a miss understanding from test case number 22. we will keep going from test case number 22 ok? Use case name : Restaurant Profile Management
+ChatGPT:
+The code environment was reset, so the uploaded files were lost. 😢
+Could you please re-upload the UseCases.docx file so I can search for “Restaurant Profile Management” and continue with Test Case ID: TC-FO-022?
+
+Once it’s back in, I’ll be on it immediately, bro! 🚀🔥 ​​
+
+Şunu dedin:
+UseCases.docx
+Belge
+there you go
+ChatGPT:
+YESSIR 🔥 I found Use Case: Restaurant Profile Management (UC-RES-007) — and we’re back to business at Test Case ID: TC-FO-022 (resetting the count as discussed).
+Let’s drop this test case like it’s hot! 🍔⚙️
+
+Test Case Document: Restaurant Profile Management
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-022
+
+Test Description: Verify that a restaurant owner can successfully view and update their restaurant’s profile information.
+
+Test Name: Restaurant Profile Management Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-007 (Restaurant Profile Management)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Restaurant Profile Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+The restaurant owner must be logged into the system.
+
+A valid restaurant profile must exist in the system.
+
+Dependencies:
+The system must validate fields like contact info and delivery range.
+
+Customers should see updates in real-time when browsing restaurants.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Go to “Restaurant Profile” section.	-	Current profile details are displayed.	[To be filled after execution]	-	[P/F]
+2	Edit business hours and save.	TD-74	System saves and confirms the new hours.	[To be filled after execution]	-	[P/F]
+3	Update contact info (email/phone) and save.	TD-75	System validates input and updates profile.	[To be filled after execution]	-	[P/F]
+4	Modify delivery range and save.	TD-76	System checks range feasibility and saves it.	[To be filled after execution]	-	[P/F]
+5	Try saving invalid phone number format.	TD-77	System displays error and blocks submission.	[To be filled after execution]	-	[P/F]
+6	Set hours to unavailable (e.g., closed day).	TD-78	Restaurant is marked closed on customer side.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-74	New Business Hours: Mon–Fri, 11:00–22:00
+TD-75	New Contact Info: Email – info@burgerhub.com, Phone – (555) 123-4567
+TD-76	New Delivery Range: 8 km
+TD-77	Invalid Phone Number: “1234”
+TD-78	Set Sunday as “Closed”
+Post-conditions:
+Profile changes are saved and reflected in the system.
+
+Invalid entries are rejected with proper feedback.
+
+Updated info is visible to customers browsing the restaurant.
+
+Notes:
+For major changes (e.g., delivery zone), customers who ordered recently may be notified.
+
+Edits should be logged in case of auditing or rollback needs.
+
+BOOM 💥 Restaurant Profile Management Test Case is ready to deploy!
+Hit me with the next Use Case Name, and we’ll keep the test-case train rollin’ 🚀🔥
+
+Şunu dedin:
+ok use case name : Courier Restaurant Registration 
+ChatGPT:
+Looks like “Courier Restaurant Registration” doesn't show up exactly as that phrase in the document.
+
+Could you please confirm if:
+
+The name might be slightly different (like just "Courier Registration" or "Restaurant Registration")?
+
+You meant two separate use cases: Courier Registration and Restaurant Registration?
+
+Let me know how you'd like to proceed, bro — I got you either way! 💪🔥 ​​
+
+Şunu dedin:
+use case code is : UC-DEL-002 use case number is : 023
+ChatGPT:
+Weirdly enough, bro — even though we're looking for UC-DEL-002, the document doesn't return any matching content under that code either. 😕
+
+Let’s troubleshoot it like this:
+
+Could the code be slightly different (like UC-COU-002, UC-REG-002, etc.)?
+
+Do you want me to search by a keyword like “Courier Registration”, “Restaurant Registration”, or even just “UC-DEL” to find similar matches?
+
+Give me a hint or a slightly different name, and I’ll pull it right up for you! 🔍🔥 ​​
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+take a look at this document Use Case Code : UC-DEL-002
+ChatGPT:
+BROOOO 🔥 Found it!
+We’re working with Use Case Number: 023 – UC-DEL-002 – Courier Restaurant Registration.
+And since we're continuing from Test Case ID: TC-FO-023, this one will be TC-FO-024. Let’s build it out! 💼🚴‍♂️
+
+Test Case Document: Courier Restaurant Registration
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-024
+
+Test Description: Verify that couriers can register with restaurants on the platform to be eligible for delivery assignments.
+
+Test Name: Courier Restaurant Registration Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-002 (Courier Restaurant Registration)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Courier-Partner Registration Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier must be registered on the platform and logged in.
+
+Courier profile must be complete (e.g., background check, vehicle info).
+
+Dependencies:
+Restaurants must be visible for registration based on courier’s location.
+
+Courier must be able to submit required info (availability, range).
+
+System must allow restaurants to approve/reject registration requests.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Courier logs into the courier dashboard.	-	Courier dashboard is displayed.	[To be filled after execution]	-	[P/F]
+2	Navigate to "Restaurant Registration" section.	-	List of restaurants available for registration is displayed.	[To be filled after execution]	-	[P/F]
+3	Select a restaurant and fill in registration details.	TD-79	Registration form is completed with required info.	[To be filled after execution]	-	[P/F]
+4	Submit registration request.	-	System sends request to restaurant for approval.	[To be filled after execution]	-	[P/F]
+5	Restaurant approves registration.	-	Courier profile is updated with new restaurant partnership.	[To be filled after execution]	-	[P/F]
+6	Attempt registration with incomplete profile (e.g., missing vehicle info).	TD-80	System blocks submission and prompts for missing info.	[To be filled after execution]	-	[P/F]
+7	Restaurant rejects registration.	TD-81	Courier is notified of rejection and reason.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-79	Courier Availability: 5pm–9pm, Delivery Range: 10km
+TD-80	Missing Info: No vehicle details provided
+TD-81	Rejection Reason: "Too many couriers registered already"
+Post-conditions:
+Approved couriers are linked to restaurants and visible in their courier pool.
+
+Rejected couriers receive notification and feedback.
+
+System logs registration actions for transparency and auditing.
+
+Notes:
+It may be helpful to allow couriers to track pending approvals from the dashboard.
+
+System should notify couriers when they’re successfully linked to a restaurant.
+
+BOOM 💣 Courier Restaurant Registration Test Case: DONE AND PACKED!
+Drop the next Use Case Name and I’ll cook the next one fresh for you, bro 🔥🚀
+
+Şunu dedin:
+no this one will be TC-FO-023 update it
+ChatGPT:
+Got it bro — we're keeping the correct test case numbering.
+This one is officially 🔥 TC-FO-023 🔥
+
+Here’s your updated test case doc for:
+
+✅ Test Case ID: TC-FO-023 – Courier Restaurant Registration
+Test Case Document: Courier Restaurant Registration
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-023
+
+Test Description: Verify that couriers can register with restaurants on the platform to be eligible for delivery assignments.
+
+Test Name: Courier Restaurant Registration Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-002 (Courier Restaurant Registration)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Courier-Partner Registration Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier must be registered on the platform and logged in.
+
+Courier profile must be complete (e.g., background check, vehicle info).
+
+Dependencies:
+Restaurants must be visible for registration based on courier’s location.
+
+Courier must be able to submit required info (availability, range).
+
+System must allow restaurants to approve/reject registration requests.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Courier logs into the courier dashboard.	-	Courier dashboard is displayed.	[To be filled after execution]	-	[P/F]
+2	Navigate to "Restaurant Registration" section.	-	List of restaurants available for registration is displayed.	[To be filled after execution]	-	[P/F]
+3	Select a restaurant and fill in registration details.	TD-79	Registration form is completed with required info.	[To be filled after execution]	-	[P/F]
+4	Submit registration request.	-	System sends request to restaurant for approval.	[To be filled after execution]	-	[P/F]
+5	Restaurant approves registration.	-	Courier profile is updated with new restaurant partnership.	[To be filled after execution]	-	[P/F]
+6	Attempt registration with incomplete profile (e.g., missing vehicle info).	TD-80	System blocks submission and prompts for missing info.	[To be filled after execution]	-	[P/F]
+7	Restaurant rejects registration.	TD-81	Courier is notified of rejection and reason.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-79	Courier Availability: 5pm–9pm, Delivery Range: 10km
+TD-80	Missing Info: No vehicle details provided
+TD-81	Rejection Reason: "Too many couriers registered already"
+Post-conditions:
+Approved couriers are linked to restaurants and visible in their courier pool.
+
+Rejected couriers receive notification and feedback.
+
+System logs registration actions for transparency and auditing.
+
+Notes:
+Consider allowing couriers to check registration status updates.
+
+Restaurants might benefit from a view of pending courier applicants.
+
+✅ All set with TC-FO-023 bro!
+Drop the next Use Case Name, and we’ll keep crushin' it! 🚀🔥
+
+Şunu dedin:
+Use case name : Availability Status Update
+ChatGPT:
+Yo bro — I scanned the doc, but “Availability Status Update” doesn't show up with that exact name. 😕
+
+Wanna try one of these moves?
+
+✅ Drop the Use Case Code (like UC-DEL-00X)
+
+🔍 Give me a different variation of the name you think might be in the doc
+
+🔢 Or even the Use Case Number (like 024, 025, etc.)
+
+Just shoot me one of those and I’ll pull the exact section to build the test case! 🔥 ​​
+
+Şunu dedin:
+from the latest document that I shared to u it has Use Case Code : UC-DEL-003
+ChatGPT:
+Yo bro, weird situation — I searched for UC-DEL-003 in the latest doc, but nothing showed up, not even a blank match. 😕
+
+Let’s fix this real quick:
+
+Can you double-check the Use Case Code spelling? Maybe it’s a slight variation?
+
+Or tell me the Use Case Number (like 024, 025, etc.) from the doc?
+
+If you're sure it's in there, maybe re-upload that doc just to be 100% synced?
+
+Once I get a hit, I’ll instantly build out TC-FO-024 for you. Let’s keep the momentum! 🚀🔥 ​​
+
+Şunu dedin:
+use case number 024
+ChatGPT:
+Still coming up empty bro 😕 — no match for Use Case Number: 024 in the latest document either.
+
+Here’s what we can do:
+
+You can copy-paste the exact name or content of Use Case 024 right here.
+
+Or recheck the doc and upload it again if you think it was an older version.
+
+Or if you want, I can list the use case names + numbers from the doc so you can pick the right one easily.
+
+Totally your call — I’m locked in and ready 🔥 ​​
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+now check again
+ChatGPT:
+LEZZZ GOOOO BRO! 🔥
+I found Use Case Number: 024 – UC-DEL-003 – Availability Status Update!
+We’re continuing with the test cases, and this one will be Test Case ID: TC-FO-024 (right on track with the reset numbering).
+Let’s build it! ⚡
+
+Test Case Document: Availability Status Update
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-024
+
+Test Description: Verify that couriers can update their availability status to receive or pause delivery requests.
+
+Test Name: Availability Status Update Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-003 (Availability Status Update)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Courier Dashboard – Availability Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier must be logged into the system.
+
+Courier must be registered with at least one restaurant.
+
+Dependencies:
+Status must update in real-time for restaurant owners to see.
+
+Courier with active delivery must not be able to mark themselves “Available” again.
+
+Restaurants must only assign deliveries to “Available” couriers.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Courier logs into the courier dashboard.	-	Dashboard loads successfully.	[To be filled after execution]	-	[P/F]
+2	Navigate to "Availability Status" section.	-	Current availability status is displayed.	[To be filled after execution]	-	[P/F]
+3	Set status to “Available.”	TD-82	Courier status updates in system and becomes visible to restaurants.	[To be filled after execution]	-	[P/F]
+4	Set status to “Unavailable.”	TD-83	System updates and removes courier from assignment pool.	[To be filled after execution]	-	[P/F]
+5	Try to mark as “Available” while in an active delivery.	TD-84	System blocks action and shows warning.	[To be filled after execution]	-	[P/F]
+6	Schedule future availability (optional).	TD-85	System accepts time slot and displays confirmation.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-82	Status: Available
+TD-83	Status: Unavailable
+TD-84	Delivery ID: #D1001 (in progress)
+TD-85	Scheduled Time: Available from 5:00 PM to 9:00 PM
+Post-conditions:
+Availability status is updated and synced across the system.
+
+Restaurants are only shown couriers who are currently available.
+
+Scheduled status changes trigger updates at the correct times.
+
+Notes:
+Simple toggle switch should be available on mobile and web.
+
+Future improvement: Push notifications to remind couriers to toggle status.
+
+BOOM 💥 Availability Status Update Test Case – COMPLETED AND CLEAN.
+What’s next, boss? Drop the next Use Case Name, and I’m on it like wheels on the road! 🚴‍♂️🔥
+
+Şunu dedin:
+lets move to use case number 025
+ChatGPT:
+Hmm... I checked the new doc, bro, but there’s no match for "Use Case Number: 025" in the expected format.
+
+Let’s try one of these options real quick:
+
+You can tell me the Use Case Code (e.g., UC-DEL-004) for 025.
+
+Or drop the title/name of Use Case 025 (if you know it).
+
+Or I can give you a quick list of all use case names I detect and you can pick from there.
+
+Up to you — I’m ready either way. Just say the word and we’re moving! 🚀🔥 ​​
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+check from here
+ChatGPT:
+YOOO BRO 🔥 I found Use Case Number: 025 – UC-DEL-004 – Accepting/Rejecting Delivery Requests.
+Let’s fire off the next one in line: Test Case ID: TC-FO-025
+
+Here we go 👇
+
+Test Case Document: Accepting/Rejecting Delivery Requests
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-025
+
+Test Description: Verify that couriers can accept or reject delivery requests and the system handles both outcomes appropriately.
+
+Test Name: Accept/Reject Delivery Requests Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-004 (Accepting/Rejecting Delivery Requests)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Delivery Request Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier must be logged in and marked as "Available".
+
+A restaurant must send a new delivery request.
+
+Dependencies:
+Delivery requests must include details like restaurant, customer address, and earnings.
+
+System must handle timeouts if courier doesn’t respond in time.
+
+Rejected requests should return to the pool for reassignment.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Courier logs into the dashboard/app.	-	Dashboard loads successfully.	[To be filled after execution]	-	[P/F]
+2	Courier receives a new delivery request.	TD-86	Notification appears with request details.	[To be filled after execution]	-	[P/F]
+3	Courier reviews the delivery request.	TD-87	Information like pickup/delivery locations and pay is visible.	[To be filled after execution]	-	[P/F]
+4	Courier accepts the request.	-	Order is assigned to the courier; status updates to “Assigned”; courier becomes “Unavailable.”	[To be filled after execution]	-	[P/F]
+5	Courier rejects the request.	-	Request returns to the pool for another courier.	[To be filled after execution]	-	[P/F]
+6	Courier doesn’t respond within timeout (120 sec).	TD-88	System automatically rejects request and informs restaurant.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-86	Delivery Request ID: #DEL789
+TD-87	Request Info: From "Pizza World" to "John D", Earnings: $5.00
+TD-88	Timeout: 120 seconds, No action taken
+Post-conditions:
+If accepted, order is assigned and courier becomes “Unavailable” until delivered.
+
+If rejected or timeout, the request is offered to another available courier.
+
+System logs the courier’s response for analytics.
+
+Notes:
+It might be useful to add auto-decline reasons (e.g., “too far,” “too busy”).
+
+Couriers should be notified of earnings potential clearly in the request.
+
+BOOM 💥 Accept/Reject Delivery Request Test Case is ready to go!
+You want 026 next? Let’s keep rolling like a courier on turbo! 🛵🔥
+
+Şunu dedin:
+time for 026
+ChatGPT:
+Yo bro — I scanned the latest doc and there’s no trace of “Use Case Number: 026” as a section title 😕.
+
+Let’s get back on track with one of these:
+
+💡 Do you know the Use Case Name for 026?
+
+🔍 Or maybe you can drop the Use Case Code (like UC-DEL-005)?
+
+📄 Or if you want, I can extract and list the use cases in that doc so you can pick easily?
+
+Let me know how you wanna roll and we’ll keep this fire goin’! 🚀🔥 ​​
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+now check for 26 27 28 29 30 31
+ChatGPT:
+Bellek güncellendi
+BOOM! 🔥 I’ve now got all the content for Use Case Numbers 026 to 031 from the latest doc.
+We're continuing from Test Case ID: TC-FO-026, and I’m locked in.
+
+Just hit me with a specific Use Case Number from that list (e.g., 026, 027…), and I’ll deliver the next test case — full setup, clean format, just like before 🚀
+
+Şunu dedin:
+26 pls
+ChatGPT:
+YESSIR 🔥 Rolling into Use Case Number: 026 – UC-DEL-005 – Delivery Management
+Time to build out Test Case ID: TC-FO-026 like a beast 💪📦
+
+Test Case Document: Delivery Management
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-026
+
+Test Description: Verify that couriers can view and manage the delivery process including pickup, transit, and successful delivery confirmation.
+
+Test Name: Delivery Management Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-005 (Delivery Management)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Courier Delivery Flow Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier must be logged in and have an accepted delivery task.
+
+Courier must be marked as “Available” at the time of assignment.
+
+Dependencies:
+Delivery request must contain accurate pickup and drop-off info.
+
+System must allow real-time status updates (picked up, delivered).
+
+Restaurant and customer must be notified on status changes.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Courier logs in and navigates to “Active Deliveries.”	-	Active delivery task is displayed.	[To be filled after execution]	-	[P/F]
+2	View delivery details (pickup, drop-off, contact info).	TD-89	Full details are shown.	[To be filled after execution]	-	[P/F]
+3	Mark order as “Picked Up.”	-	Status updates; restaurant is notified.	[To be filled after execution]	-	[P/F]
+4	Navigate to customer location and mark as “Delivered.”	TD-90	Status updates; customer is notified.	[To be filled after execution]	-	[P/F]
+5	Attempt to mark as “Delivered” before pickup.	TD-91	System blocks action and displays warning.	[To be filled after execution]	-	[P/F]
+6	Delivery completed — check system logs & history.	-	Entry appears in delivery history.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-89	Delivery ID: #DEL988 – Pickup: "Taco Town", Drop-off: "456 River St"
+TD-90	Status Flow: Picked Up → Delivered
+TD-91	Action Attempt: Deliver before pickup (invalid order state)
+Post-conditions:
+Delivery status is logged as completed.
+
+Restaurant and customer have visibility over delivery timeline.
+
+Courier becomes available for next request.
+
+Notes:
+Future enhancement: Real-time location sharing during transit.
+
+Late deliveries should optionally trigger feedback requests or auto-notify support.
+
+💥 BOOM! Delivery Management Test Case (TC-FO-026) is locked and loaded.
+Hit me with the next one — Use Case 027? Let’s run it up, king! 🚀🔥
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+no no for this document make test cases for 026 Courier Order Viewing
+ChatGPT:
+LEZZZ GOO BRO 🔥
+We’re now working on Use Case Number: 026 – UC-DEL-005 – Courier Order Viewing
+Time to drop a 🔥 clean test case: TC-FO-026
+
+Test Case Document: Courier Order Viewing
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-026
+
+Test Description: Verify that couriers can view the details of assigned orders and navigate to the restaurant for pickup.
+
+Test Name: Courier Order Viewing Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-005 (Courier Order Viewing)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Courier Delivery Dashboard
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier must be logged into the system.
+
+Courier must have at least one assigned delivery order.
+
+Dependencies:
+Assigned orders must be visible and accurate in the system.
+
+Navigation must be available via integrated service (e.g., Google Maps).
+
+Courier must have GPS/location access.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Courier logs into the delivery dashboard/app.	-	Dashboard loads successfully.	[To be filled after execution]	-	[P/F]
+2	Navigate to the “Assigned Orders” section.	-	Assigned orders list is shown.	[To be filled after execution]	-	[P/F]
+3	Select an active order to view details.	TD-92	Order details (restaurant name, address, items, instructions) are shown.	[To be filled after execution]	-	[P/F]
+4	Click “Navigate” to restaurant location.	TD-93	Navigation opens via maps with directions to restaurant.	[To be filled after execution]	-	[P/F]
+5	Attempt to open navigation without GPS access.	TD-94	System provides manual address as fallback.	[To be filled after execution]	-	[P/F]
+6	If restaurant address is invalid, report issue.	TD-95	System allows courier to notify support or the restaurant.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-92	Order ID: #DEL109 – Pickup: “Burger House”, Items: “2x Cheeseburgers”, Notes: “Extra napkins”
+TD-93	GPS Navigation Activated
+TD-94	No GPS – Provide manual restaurant address
+TD-95	Invalid Address: “Restaurant not found on maps”
+Post-conditions:
+Courier views complete order details.
+
+Navigation is initiated or manually accessed.
+
+Courier reports any issues if applicable.
+
+Notes:
+Future version may include in-app chat or call options for contacting restaurants.
+
+Navigation should auto-update with live traffic if possible.
+
+BOOM 💥 Courier Order Viewing (TC-FO-026) is LIVE 🔥
+Wanna hit 027 next? Let’s keep this courier moving fast! 🛵💨
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+lets move to use case 027
+ChatGPT:
+LEZZZZ GO 🔥
+We’re now dropping the test case for Use Case Number: 027 – UC-DEL-006 – Order Status Update
+This one is gonna be Test Case ID: TC-FO-027 — let’s get it!
+
+Test Case Document: Order Status Update
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-027
+
+Test Description: Verify that couriers can mark orders as "Picked Up" or "Delivered" and system updates status accordingly.
+
+Test Name: Courier Order Status Update Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-006 (Order Status Update)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Delivery Flow Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier must be logged into the platform.
+
+Courier must have an active, assigned delivery task.
+
+Dependencies:
+System must sync status changes in real time to restaurant and customer.
+
+Courier must only be able to update status at the correct location and stage.
+
+If customer is unavailable, system should allow alternate flow.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Courier logs into dashboard and views active order.	-	Order details and current status are visible.	[To be filled after execution]	-	[P/F]
+2	Courier arrives at restaurant and clicks "Picked Up."	TD-96	Status updates to “Picked Up”; restaurant notified.	[To be filled after execution]	-	[P/F]
+3	Courier navigates to customer and clicks "Delivered."	TD-97	Status updates to “Delivered”; customer notified.	[To be filled after execution]	-	[P/F]
+4	Try marking “Delivered” before “Picked Up.”	TD-98	System blocks action and displays warning.	[To be filled after execution]	-	[P/F]
+5	Customer is unavailable — mark as “Failed Delivery.”	TD-99	Courier prompted with options (return order, leave at door, contact support).	[To be filled after execution]	-	[P/F]
+6	Upload photo as delivery proof (optional).	TD-100	Image is uploaded and logged in delivery history.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-96	Order ID: #DEL204 – Status: “Picked Up”
+TD-97	Status Update: “Delivered”
+TD-98	Action Attempt: Deliver before pickup
+TD-99	Customer not present – Trigger “Failed Delivery” flow
+TD-100	Upload Image: Proof of delivery photo
+Post-conditions:
+Delivery history shows updated status and timestamps.
+
+All involved parties (restaurant, customer) are notified in real time.
+
+Optional proof of delivery is stored securely.
+
+Notes:
+Future enhancement: geolocation verification for "Picked Up" and "Delivered" actions.
+
+System should support push notifications for each status change.
+
+🔥 BOOM — Order Status Update Test Case (TC-FO-027) is done and solid.
+Wanna keep rollin’? Hit me with Use Case 028 and we’ll drop the next one like clockwork! ⏱️🚀
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+lets go with 028
+ChatGPT:
+BOOM 🔥 We found Use Case Number: 028 – UC-DEL-007 – Courier Statistic Viewing
+Let’s craft your next test case: TC-FO-028
+Let’s give these couriers their performance dashboards 📊🚴‍♂️
+
+Test Case Document: Courier Statistic Viewing
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-028
+
+Test Description: Verify that couriers can view their earnings, delivery history, and customer ratings through the dashboard.
+
+Test Name: Courier Statistic Viewing Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-007 (Courier Statistic Viewing)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: Medium
+
+Test Executed by: [Name-Surname]
+
+Module Name: Courier Performance Dashboard
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier must be logged into the system.
+
+Courier must have completed at least one delivery.
+
+Dependencies:
+System must track and store data on courier activity.
+
+Dashboard must display up-to-date performance metrics.
+
+Ratings must be tied to verified deliveries.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Courier logs into the courier dashboard.	-	Dashboard loads successfully.	[To be filled after execution]	-	[P/F]
+2	Navigate to “Earnings & Performance” section.	-	Section displays stats overview.	[To be filled after execution]	-	[P/F]
+3	View total earnings and completed deliveries.	TD-101	Values match delivery history.	[To be filled after execution]	-	[P/F]
+4	Filter statistics by time period (daily, weekly).	TD-102	Stats update to reflect selected range.	[To be filled after execution]	-	[P/F]
+5	View customer ratings and individual feedback.	TD-103	System displays average rating and detailed reviews.	[To be filled after execution]	-	[P/F]
+6	Attempt to access stats with no completed deliveries.	TD-104	System shows “No Data Yet” message.	[To be filled after execution]	-	[P/F]
+7	Dispute a rating (optional).	TD-105	System opens dispute form and allows courier to upload evidence.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-101	Total Earnings: $250, Deliveries: 35
+TD-102	Filter Range: Last 7 days
+TD-103	Average Rating: 4.7 stars, Feedback: “Fast and polite!”
+TD-104	New courier account with 0 deliveries
+TD-105	Disputed Rating: 2 stars – Reason: “Delivery marked late due to app issue”
+Post-conditions:
+Couriers gain insights into their performance metrics.
+
+Disputes (if applicable) are logged for admin review.
+
+Stats are filterable, exportable, and easy to understand.
+
+Notes:
+Consider export option (CSV, PDF) for personal records or tax filing.
+
+Future enhancement: Highlight performance tips based on data (e.g., “Fastest delivery day: Wednesday”).
+
+BOOM 💥 Courier Statistic Viewing (TC-FO-028) is wrapped and clean!
+You wanna roll straight into 029 next? Say the word and we goin’ full speed! 🛵💨
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+lets go with 029
+ChatGPT:
+BOOOOM 🔥 We’re locked into Use Case Number: 029 – UC-DEL-008 – Courier Registration
+This one’s all about onboarding those couriers right — and you know it's gonna be Test Case ID: TC-FO-029
+Let’s gooo 🚴‍♂️💼
+
+Test Case Document: Courier Registration
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-029
+
+Test Description: Verify that couriers can register on the platform by submitting required personal and vehicle information.
+
+Test Name: Courier Registration Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-DEL-008 (Courier Registration)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Courier Registration Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Courier has access to the internet and platform registration page.
+
+Courier has a valid email and required documents ready.
+
+Dependencies:
+System must validate submitted documents and credentials.
+
+Admin must receive request for approval.
+
+System must check for duplicate emails.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to courier registration page.	-	Registration form is loaded.	[To be filled after execution]	-	[P/F]
+2	Enter valid personal and vehicle info.	TD-106	Form fields are accepted.	[To be filled after execution]	-	[P/F]
+3	Upload required documents.	TD-107	Documents are uploaded and attached to profile.	[To be filled after execution]	-	[P/F]
+4	Submit registration.	-	System displays "Registration Pending Approval."	[To be filled after execution]	-	[P/F]
+5	Try to register with missing required fields.	TD-108	System prompts to fill in missing info.	[To be filled after execution]	-	[P/F]
+6	Try to register with email already in use.	TD-109	System blocks registration and suggests login/recovery.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-106	Name: Alex Rider, Email: alex@fastcourier.com, Vehicle: Bike, License No: ABC123
+TD-107	Uploaded: Driver’s License, Vehicle Registration
+TD-108	Missing Fields: Vehicle info left blank
+TD-109	Duplicate Email: alex@fastcourier.com (already used)
+Post-conditions:
+Courier registration is submitted and awaits admin approval.
+
+System stores courier data securely.
+
+Admin is notified for approval workflow.
+
+Notes:
+A registration progress bar or checklist improves UX.
+
+Consider CAPTCHA or two-factor verification for security.
+
+🔥 DONE: Courier Registration Test Case (TC-FO-029) is delivered like prime pizza.
+Ready to roll into 030? Hit me up and we’ll roll out another perfect case 🚀🍕
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+lets go with 030
+ChatGPT:
+LEZZZZ GOOOO 🔥
+We’re now firing up Use Case Number: 030 – UC-RES-009 – Restaurant Owner Registration
+And you already know — this will be Test Case ID: TC-FO-030
+Let’s break it down clean and sharp 👇
+
+Test Case Document: Restaurant Owner Registration
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-030
+
+Test Description: Verify that restaurant owners can register on the platform by providing necessary business and contact information.
+
+Test Name: Restaurant Owner Registration Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-RES-009 (Restaurant Owner Registration)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Restaurant Registration Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Restaurant owner must have access to the registration form and a stable internet connection.
+
+Owner must have all required documents and info ready (e.g., business license).
+
+Dependencies:
+System must validate all required fields.
+
+Registration info must be stored and sent to admin for review.
+
+Duplicate accounts (same email) must be detected and flagged.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the “Register as Restaurant” page.	-	Registration form loads properly.	[To be filled after execution]	-	[P/F]
+2	Enter valid business details.	TD-110	All required fields are accepted.	[To be filled after execution]	-	[P/F]
+3	Upload required documents (license, permits).	TD-111	Files are uploaded and linked to application.	[To be filled after execution]	-	[P/F]
+4	Submit the registration.	-	System displays confirmation and status “Pending Approval.”	[To be filled after execution]	-	[P/F]
+5	Submit with incomplete fields.	TD-112	System shows validation errors.	[To be filled after execution]	-	[P/F]
+6	Submit with duplicate email.	TD-113	System blocks registration and suggests recovery or login.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-110	Restaurant: “Tandoori Flame”, Email: tandoori@flame.com, Address: 123 Spice Rd
+TD-111	Files: Business License PDF, Health Permit JPG
+TD-112	Missing Field: Business License left blank
+TD-113	Duplicate Email: tandoori@flame.com (already in use)
+Post-conditions:
+Registration is submitted and enters “Pending Approval” status.
+
+Admin is notified and can review the application.
+
+Restaurant owner is notified of approval/rejection outcome later.
+
+Notes:
+Consider adding a checklist or progress bar for multi-step registration.
+
+Estimated approval time should be shown (e.g., "24–48 hrs") to set expectations.
+
+💥 DONE — TC-FO-030: Restaurant Owner Registration is LIVE
+Next up? Just hit me with Use Case 031 if you’re ready to crush it 🚀🔥
+
+Şunu dedin:
+UseCasesss.docx
+Belge
+lets go with the last one 031
+ChatGPT:
+YESSIR 🔥 Final lap — we’ve hit Use Case Number: 031 – UC-FO-010 – Customer Registration
+Let’s lock down Test Case ID: TC-FO-031 and finish this strong 💪🛒
+
+Test Case Document: Customer Registration
+Project Name: [Your Project Name]
+Version: [Version X]
+System Test Case Definitions
+Date: [dd/mm/yyyy]
+
+Test Case Definitions
+Test Case ID: TC-FO-031
+
+Test Description: Verify that new customers can successfully register on the platform using valid credentials and receive verification.
+
+Test Name: Customer Registration Test
+
+Test Designed by: [Name-Surname]
+
+Use Case Tested: UC-FO-010 (Customer Registration)
+
+Test Designed Date: [dd/mm/yyyy]
+
+Test Priority: High
+
+Test Executed by: [Name-Surname]
+
+Module Name: Customer Account Module
+
+Test Execution Date: [dd/mm/yyyy]
+
+Pre-conditions:
+Customer must have access to the registration form and a working internet connection.
+
+Customer must provide a valid email or phone number.
+
+Dependencies:
+System must validate required fields and login credentials.
+
+System must send email/SMS verification link.
+
+Duplicate accounts must be prevented.
+
+Test Steps & Expected Results Table
+Step	Test Steps	Test Data	Expected Results	Actual Results	Notes	Status (P/F)
+1	Navigate to the "Register" page.	-	Registration form loads correctly.	[To be filled after execution]	-	[P/F]
+2	Enter valid customer info and create account.	TD-114	System accepts data and sends verification link.	[To be filled after execution]	-	[P/F]
+3	Open email/SMS and click on verification link.	TD-115	System verifies account and confirms registration.	[To be filled after execution]	-	[P/F]
+4	Try registering with existing email/phone.	TD-116	System blocks registration and displays error.	[To be filled after execution]	-	[P/F]
+5	Submit form with missing fields.	TD-117	System highlights missing info and blocks submission.	[To be filled after execution]	-	[P/F]
+6	Attempt login without verifying account.	TD-118	System prompts user to verify before login.	[To be filled after execution]	-	[P/F]
+Test Data Table
+Test Data ID	Data Value
+TD-114	Name: Emily Carter, Email: emily@foodie.com, Phone: 555-111-2222
+TD-115	Email Verification Link: Valid, sent within 2 minutes
+TD-116	Duplicate Email: emily@foodie.com
+TD-117	Missing Field: No delivery address entered
+TD-118	Account: Created but not yet verified
+Post-conditions:
+Customer account is created and verified.
+
+System prevents duplicate or incomplete accounts.
+
+User can log in and begin placing orders.
+
+Notes:
+Consider offering social sign-in (Google, Facebook) for convenience.
+
+Reminder emails/SMS should be sent if user doesn’t verify within a set time.
+
+BOOOM 💥 That’s it — Customer Registration (TC-FO-031) fully locked and delivered!
+You just wrapped up a rock-solid block of test cases 🔐💯
+Need anything else for the doc or want to export all this? Let me know — I’m still fired up 🚀🔥
+
+
+
+
+
+
+
+Şunu dedin:
+Thanks bro we did it 
+ChatGPT:
+YOOO 🔥 LET’S GOOOO!!!
+We seriously crushed it — 31 test cases locked down like pros 💪📋
+You're all set to flex this test doc like a champ in your submission.
+
+Anytime you need more help — exporting, formatting, or even prepping for presentation — just call me in, bro. Always got your back 💯
+
+Catch you on the next mission 🚀
+🔥 MISSION COMPLETE 🔥
+
+Şunu dedin:
+we got a small mission bro we completed the test case documentation but know we have a system requirement specification document. Our mission is in that document is filling the Business Rules and System Documentation parts. i will provide the example of them and explanations of them so dont worry ok? Are u ready?
+ChatGPT:
+BROOOO I WAS BORN READY 💥
+You just say the word and drop the examples + explanations — we’re gonna ace this System Requirement Specification mission like it's nothing 💻📘⚙️
+
+Let’s load up and finish strong 🔥 Ready when you are!

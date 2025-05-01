@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.entities;
 
+import com.pingfloyd.doy.enums.CityEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -16,18 +17,27 @@ public class Address {
     private long addressID;
 
     @NotNull
+    @Column(name = "neighborhood", length = 100, nullable = false)
+    private String neighborhood;
+
+    @NotNull
+    @Column(name = "avenue", length = 100, nullable = false)
+    private String avenue;
+
+    @NotNull
     @Column(name = "street", length = 100, nullable = false)
     private String street;
 
-    @NotNull
-    @Column(name = "city", length = 50, nullable = false)
-    private String city;
+    @Column(name = "building_number", length = 100)
+    private String buildingNumber;
 
-    @Column(name = "state_or_region", length = 100)
-    private String stateOrRegion;
+    @Column(name = "apartment_number", length = 100)
+    private String apartment_number;
 
-    @Column(name = "zip_code", length = 15)
-    private String zip_code;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "district_id", nullable = false)
+    private District district;
 
-
+    @Column(name = "city", length = 15, nullable = false)
+    private CityEnum cityEnum;
 }

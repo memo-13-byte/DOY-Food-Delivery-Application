@@ -14,9 +14,13 @@ import java.util.Set;
 @Setter
 public class Restaurant {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "restaurant_id")
     private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "owner_id")
+    private RestaurantOwner restaurantOwner;
 
     @NotNull
     @Column(name = "restaurant_name", nullable = false, length = 100)
@@ -27,6 +31,12 @@ public class Restaurant {
 
     @Column(name = "restaurant_phone")
     private String restaurantPhone;
+
+    @Column(name = "min_order_price")
+    private Integer minOrderPrice;
+
+    @Column(name = "rating")
+    private Double rating;
 
     @NotNull
     @Enumerated(EnumType.STRING)

@@ -30,6 +30,14 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<CartItem> items = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id",
+            referencedColumnName = "restaurant_id",
+            nullable = false)
+    private Restaurant restaurant;
+
+
+
     // Helper method to add an item to cart
     public void addItem(MenuItem menuItem, int quantity) {
         CartItem item = new CartItem();
