@@ -7,6 +7,8 @@ import { BsMoon } from "react-icons/bs";
 import doyLogo from "../assets/doylogo.jpeg";               // Assuming path is correct
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
 import axios from "axios";
+import { useCart } from "../context/CartContext";
+
 
 // Helper function to render star ratings
 const renderStars = (rating) => {
@@ -33,7 +35,8 @@ const iconLinkStyle = (darkMode) => ({
 
 const RestaurantDetail = () => {
     // --- State ---
-    const [cart, setCart] = useState([]); // Local frontend cart state
+    const { cart, setCart, addToCart, removeFromCart, restaurantInfo, setRestaurantInfo } = useCart();
+
     const location = useLocation();
     const navigate = useNavigate();
     const { id: restaurantIdParam } = useParams(); // Get restaurant ID string from URL
@@ -70,6 +73,7 @@ const RestaurantDetail = () => {
     }, [restaurantIdParam]);
 
 
+
     // Effect to fetch restaurant details (Kept as provided by user)
     useEffect(() => {
         const getRestaurant = async () => {
@@ -85,6 +89,7 @@ const RestaurantDetail = () => {
                 // Use the exact endpoint structure from user's code
                 const response = await axios.get(`http://localhost:8080/api/restaurant/get/${currentRestaurantId}`);
                 setRestaurant(response.data);
+                setRestaurantInfo(response.data); // Global CartContext'e restoranı kaydet
             } catch (error) {
                 console.error("Error fetching restaurant details:", error);
                 setRestaurant(null); // Reset on error
@@ -221,32 +226,34 @@ const RestaurantDetail = () => {
     // --- Event Handlers (Kept as provided by user) ---
 
     // Handler to add item to cart via API
+
     const handleAddToCart = async (item) => {
         if (!item || item.id === undefined) {
             console.error("Attempted to add invalid item:", item);
             alert("Bu öğe sepete eklenemedi (geçersiz ürün).");
             return;
         }
-        console.log("Attempting to add item:", item); // Calls user's existing endpoint
+
+        const itemWithRestaurantInfo = {
+            ...item,
+            restaurantId: restaurant.id,
+            restaurantName: restaurant.restaurantName,
+        };
+
         try {
-            // *** This uses the endpoint structure from YOUR provided code ***
             const url = `http://localhost:8080/order/add?itemId=${item.id}`;
-            const response = await axios.get(url); // Assumes GET is correct for your endpoint
+            const response = await axios.get(url);
 
             if (response.data === true) {
-                // NOTE: This simple update might cause inconsistencies if multiple
-                // users modify the same backend cart. Re-fetching after add is safer.
-                setCart(prevCart => [...prevCart, item]);
-                console.log("Item added to cart state (optimistic):", item.id);
+                addToCart(itemWithRestaurantInfo);
             } else {
-                console.warn("Backend did not approve adding the item:", item.id);
                 alert(`${item.name} şu anda sepete eklenemiyor (backend).`);
             }
         } catch (error) {
-            console.error("Error adding item ID via API:", item.id, error);
             alert("Sepete eklerken bir sunucu hatası oluştu.");
         }
     };
+
 
     // Handler to remove item from cart via API
     const handleRemoveFromCart = async (itemIdToRemove) => {
@@ -262,17 +269,7 @@ const RestaurantDetail = () => {
 
             if (response.data === true) {
                 // NOTE: This simple update might cause inconsistencies. Re-fetching is safer.
-                setCart(prevCart => {
-                    const itemIndex = prevCart.findIndex(cartItem => cartItem.id === itemIdToRemove);
-                    if (itemIndex > -1) {
-                        console.log("Removing item from cart state (optimistic):", itemIdToRemove);
-                        return [
-                            ...prevCart.slice(0, itemIndex),
-                            ...prevCart.slice(itemIndex + 1)
-                        ];
-                    }
-                    return prevCart;
-                });
+                removeFromCart(itemIdToRemove);
             } else {
                 console.warn("Backend did not approve removing the item ID:", itemIdToRemove);
                 alert("Bu öğe sepetten çıkarılamadı (backend).");
@@ -372,7 +369,13 @@ const RestaurantDetail = () => {
                     {/* Right Side: Cart Summary */}
                     <div style={{ minWidth: '280px', flexShrink: 0, flexBasis: '300px' }}>
                         {/* CartSummary now displays the 'cart' state potentially populated by the new useEffect */}
-                        <CartSummary cart={cart} onConfirm={handleConfirm} onRemove={handleRemoveFromCart} darkMode={darkMode} />
+                        <CartSummary
+                            cart={cart}
+                            onConfirm={handleConfirm}
+                            onRemove={handleRemoveFromCart}
+                            darkMode={darkMode}
+                        />
+
                     </div>
                 </div>
                 {/* Menu Sections */}

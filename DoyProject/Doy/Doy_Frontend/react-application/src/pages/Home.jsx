@@ -11,6 +11,8 @@ import { HiOutlineHome } from "react-icons/hi";
 import LocationModal from "../components/LocationModal";
 import { useEffect } from "react";
 import axios from "axios";
+import { useCart } from "../context/CartContext";
+
 
 
 import restaurants from "../data/restaurants";
@@ -37,6 +39,7 @@ const Home = () => {
 
     const [touchStartX, setTouchStartX] = useState(null);
     const [touchEndX, setTouchEndX] = useState(null);
+    const { cart, restaurantInfo, removeFromCart } = useCart();
 
 
     const [currentPage, setCurrentPage] = useState(0);
@@ -260,7 +263,6 @@ const Home = () => {
             }}/>
 
 
-
             <div style={{padding: "2rem 1rem", textAlign: "center", position: "relative"}}>
                 <div style={{
                     position: "relative",
@@ -449,10 +451,10 @@ const Home = () => {
                         handleSwipe();
                     }}
                     style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                    gap: "2rem"
-                }}>
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                        gap: "2rem"
+                    }}>
                     {paginatedRestaurants.map((res) => (
                         <div key={res.id} style={{
                             backgroundColor: darkMode ? "#3b3b3b" : "#ffffff",
@@ -493,7 +495,7 @@ const Home = () => {
                     ))}
                 </div>
                 {filteredRestaurants.length === 0 && (
-                    <p style={{ textAlign: "center", marginTop: "2rem", fontWeight: "bold" }}>
+                    <p style={{textAlign: "center", marginTop: "2rem", fontWeight: "bold"}}>
                         Uygun restoran bulunamadı.
                     </p>
                 )}
@@ -545,7 +547,110 @@ const Home = () => {
                     </a>
                 </div>
             </footer>
+            <div
+                style={{
+                    position: "fixed",
+                    top: "25%",
+                    right: "2%",
+                    zIndex: 999,
+                    backgroundColor: darkMode ? "#2a2a2a" : "#fff",
+                    color: darkMode ? "#fff" : "#000",
+                    padding: "1rem",
+                    borderRadius: "12px",
+                    boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+                    minWidth: "240px",
+                    maxWidth: "280px",
+                    transition: "all 0.3s ease-in-out",
+                }}
+            >
+                {cart.length > 0 ? (
+                    <>
+                        <h4
+                            style={{
+                                cursor: restaurantInfo?.id ? "pointer" : "default",
+                                color: "#E63946",
+                                marginBottom: "0.75rem"
+                            }}
+                            onClick={() => {
+                                if (restaurantInfo?.id) {
+                                    navigate(`/restaurant/${restaurantInfo.id}`, {
+                                        state: {
+                                            restaurant: restaurantInfo,
+                                            selectedAddress,
+                                            darkMode
+                                        }
+                                    });
+                                }
+                            }}
+                        >
+                            {restaurantInfo?.name}
+                        </h4>
+                        <ul style={{listStyle: "none", padding: 0, margin: 0}}>
+                            {cart.map((item, index) => (
+                                <li
+                                    key={index}
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        marginBottom: "0.5rem"
+                                    }}
+                                >
+                                    <span>{item.name}</span>
+                                    <button
+                                        onClick={() => removeFromCart(item.id)}
+                                        style={{
+                                            border: "none",
+                                            background: "transparent",
+                                            cursor: "pointer",
+                                            color: "#FF6B6B",
+                                            fontWeight: "bold",
+                                            fontSize: "1rem"
+                                        }}
+                                    >
+                                        ✖
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        <hr style={{margin: "1rem 0", borderColor: darkMode ? "#444" : "#ccc"}}/>
 
+                        <div style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            fontWeight: "bold",
+                            marginBottom: "0.5rem"
+                        }}>
+                            <span>Toplam:</span>
+                            <span>
+        {cart.reduce((total, item) => total + item.price, 0).toFixed(2)}₺
+    </span>
+                        </div>
+
+                        <button
+                            onClick={() => navigate("/checkout", {
+                                state: {cart, restaurantInfo, selectedAddress, darkMode}
+                            })}
+                            style={{
+                                width: "100%",
+                                padding: "0.6rem 1rem",
+                                backgroundColor: "#7A0000",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "8px",
+                                fontWeight: "bold",
+                                cursor: "pointer"
+                            }}
+                        >
+                            Sepeti Onayla
+                        </button>
+
+                    </>
+                ) : (
+                    <p style={{fontStyle: "italic", opacity: 0.75}}>Sepetiniz boş.</p>
+                )}
+            </div>
 
             {modalOpen && (
                 <LocationModal
