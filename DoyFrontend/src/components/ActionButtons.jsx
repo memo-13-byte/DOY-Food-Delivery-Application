@@ -49,13 +49,14 @@ const ActionButtons = ({ selected, type, darkMode, setToast, updateUserOrRestaur
             updateUserOrRestaurant(selected.id, "banned", true, type);
             setToast(`❌ ${type === "user" ? "User" : "Restaurant"} banned: ${selected.name}`);
         } else if (actionType === "unban") {
-            updateUserOrRestaurant(selected.id, "banned", false, type);
+            updateUserOrRestaurant(selected.id, "unban", false, type);
             setToast(`✅ ${type === "user" ? "User" : "Restaurant"} unbanned: ${selected.name}`);
         } else if (actionType === "suspend") {
             setShowSuspendModal(true);
         } else if (actionType === "unsuspend") {
-            updateUserOrRestaurant(selected.id, "suspended", false, type);
-            updateUserOrRestaurant(selected.id, "suspendUntil", null, type);
+            updateUserOrRestaurant(selected.id, "unsuspended", false, type);
+            //updateUserOrRestaurant(selected.id, "suspended", false, type);
+            //updateUserOrRestaurant(selected.id, "suspendUntil", null, type);
             setToast(`✅ ${type === "user" ? "User" : "Restaurant"} unsuspended: ${selected.name}`);
         }
     };
@@ -64,7 +65,7 @@ const ActionButtons = ({ selected, type, darkMode, setToast, updateUserOrRestaur
         //const now = new Date();
         //const suspendUntil = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
         console.log("zazzaaaaaaa")
-        updateUserOrRestaurant(selected.id, "suspended", true, type);
+        updateUserOrRestaurant(selected.id, "suspended", days, type);
         //updateUserOrRestaurant(selected.id, "suspendUntil", suspendUntil.toISOString(), type);
         setToast(`⚠️ ${type === "user" ? "User" : "Restaurant"} suspended for ${days} days: ${selected.name}`);
         setShowSuspendModal(false);

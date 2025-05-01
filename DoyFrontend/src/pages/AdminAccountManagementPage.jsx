@@ -46,7 +46,8 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
             console.log(banRequest);
             const response = await axios.put(`http://localhost:8080/api/users/suspend`, banRequest)
         } catch (error) {
-            addToast(error?.response?.data?.message || error.message || "An unexpected error occurred.")
+            console.log(error)
+            addToast(error?.response?.data?.errors || error.message || "An unexpected error occurred.")
         }
     }
 
@@ -56,13 +57,16 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
     const updateUserOrRestaurant = async(id, field, value, type) => {
         if (type === "user") {
             console.log("lalalala412421")
-            console.log(field)
+            console.log(id +" " +field +" " + value + " " + type )
             if (field === "banned") {
                 console.log("zzzzzzzz")
                 await suspendUser(id, "you were banned", -1)
             } else if (field === "suspended") {
                 console.log("lalalalala56565656")
-                await suspendUser(id, "you were suspended", 20)
+                await suspendUser(id, "you were suspended", value)
+            }
+            else if(field === "unban" || field === "unsuspended") {
+                await suspendUser(id, "you were unsuspended", -2);
             }
 
             /*

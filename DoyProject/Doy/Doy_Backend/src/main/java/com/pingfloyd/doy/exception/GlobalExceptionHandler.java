@@ -32,6 +32,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleItemNotFoundException(ItemNotFoundException ex) {
         return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
     }
+    @ExceptionHandler(value = UserIsAlreadySuspendedException.class)
+    public ResponseEntity<ApiError> handleUserIsAlreadySuspendedException(UserIsAlreadySuspendedException ex) {
+        return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
+    }
     @ExceptionHandler(value = OrderAlreadyTakenException.class)
     public ResponseEntity<ApiError> handleItemNotFoundException(OrderAlreadyTakenException ex) {
         return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
