@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.dto;
 
+import com.pingfloyd.doy.entities.Address;
 import com.pingfloyd.doy.enums.RestaurantCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,4 +18,6 @@ public class DtoRestaurant {
     private RestaurantCategory restaurantCategory;
     private Double rating;
     private Integer minOrderPrice;
+
+    private Address address;
 }
