@@ -1,12 +1,10 @@
 package com.pingfloyd.doy.controllers;
 
+import com.pingfloyd.doy.exception.StorageFileNotFoundException;
 import com.pingfloyd.doy.services.ImageService;
 import com.pingfloyd.doy.storage.IStorageService;
-
-import com.pingfloyd.doy.exception.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,10 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/upload")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class FileUploadController {
-    private final IStorageService storageService;
     private final ImageService imageService;
-    @Autowired FileUploadController(IStorageService storageService, ImageService imageService) {
-        this.storageService = storageService;
+    @Autowired FileUploadController(ImageService imageService) {
         this.imageService = imageService;
     }
 

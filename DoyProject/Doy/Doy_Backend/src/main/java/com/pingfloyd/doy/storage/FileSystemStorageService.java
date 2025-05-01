@@ -3,15 +3,7 @@ package com.pingfloyd.doy.storage;
 import com.pingfloyd.doy.entities.Image;
 import com.pingfloyd.doy.exception.StorageException;
 import com.pingfloyd.doy.exception.StorageFileNotFoundException;
-import com.pingfloyd.doy.repositories.CartRepository;
 import com.pingfloyd.doy.repositories.ImageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -20,13 +12,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileSystemStorageService implements IStorageService{
     private final Path rootLocation;
 
     @Autowired
-    public FileSystemStorageService(StorageProperties properties, ImageRepository imageRepository) {
+    public FileSystemStorageService(StorageProperties properties) {
         if(properties.getLocation().trim().isEmpty()) {
             throw new StorageException("File upload location can not be empty.");
         }
