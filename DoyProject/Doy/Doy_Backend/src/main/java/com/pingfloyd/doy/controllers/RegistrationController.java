@@ -23,33 +23,19 @@ public class RegistrationController {
 
     @PostMapping()
     public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest request){
-        try {
-            User createdRestaurant = registrationService.CustomerRegister(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdRestaurant);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        User createdRestaurant = registrationService.CustomerRegister(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdRestaurant);
     }
     @PostMapping("/restaurant")
     public ResponseEntity<?> restourantOwnerRegister(@Valid @RequestBody RestaurantOwnerFullDto request){
-        try{
-            User createdUser = registrationService.RestaurantOwnerRegister(request.getUserInfo() , request.getRestaurantInfo() , request.getAddressInfo());
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-        }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        User createdUser = registrationService.RestaurantOwnerRegister(request.getUserInfo() , request.getRestaurantInfo() , request.getAddressInfo());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PostMapping("/courier")
     public ResponseEntity<?> CourierRegister(@Valid @RequestBody CourierRegistrationRequest request){
-        try{
-            User createdUser = registrationService.CourierRegister(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-        }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        User createdUser = registrationService.CourierRegister(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/pending/{id}-{accept}")

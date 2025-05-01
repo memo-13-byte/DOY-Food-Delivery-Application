@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DtoCourier extends DtoUser{
-    private GovernmentId governmentId;
-    private District district;
-    private Boolean isAvailable;
+    private String governmentId;
+    private String districtCity;
+    private String districtName;
 }

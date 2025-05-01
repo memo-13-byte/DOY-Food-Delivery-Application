@@ -19,8 +19,9 @@ import java.time.LocalDateTime;
 public class Ban {
 
     @Id
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "ban_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long banId;
 
     @OneToOne
     @MapsId

@@ -9,6 +9,9 @@ import axios from "axios"
 import CustomerService from "../services/CustomerService"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import { getResponseErrors } from "../services/exceptionUtils"
+import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
+import { add } from "date-fns"
+
 
 // Since we're having issues with the UI component imports, let's create simplified versions
 const Button = ({ className, children, ...props }) => (
@@ -163,6 +166,19 @@ export default function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [isRegisterLoading, setIsRegisterLoading] = useState(false)
+  const [districts, setDistricts] = useState(DISTRICT_DATA["ISTANBUL"])
+  const [addressInfo, setAddressInfo] = useState(
+    {
+      city:"ISTANBUL",
+      neighborhood:"",
+      district:"Adalar",
+      avenue:"",
+      street:"",
+      buildingNumber:0,
+      apartmentNumber:0
+    }
+  )
+
 
   // Alertify state
   const [alertify, setAlertify] = useState({ show: false, message: "", type: "success" })
@@ -172,6 +188,13 @@ export default function AuthPage() {
     setActiveTab(tab)
     setUserType(type)
   }, [tab, type])
+
+  const handleAddressInfoChange = (e) => {
+    setAddressInfo({
+      ...addressInfo,
+      [e.target.id]: e.target.value
+    })
+  }
 
   // Update URL when tabs change
   const handleTabChange = (value) => {
@@ -275,10 +298,11 @@ export default function AuthPage() {
         lastName: registerLastName,
         email: registerEmail,
         password: registerPassword,
-        phoneNumber: registerPhone
+        phoneNumber: registerPhone,
+        dtoAddress: addressInfo
       }
 
-      console.log(registrationInfo)
+      console.log(addressInfo)
 
       await CustomerService.RegisterCustomer(registrationInfo);
 
@@ -307,6 +331,9 @@ export default function AuthPage() {
       setIsRegisterLoading(false)
     }
   }
+  const getLabelClassName = (darkMode) => `${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`
+  const getInputClassName = (darkMode) => `${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`
+
 
   // Helper function to change user type
   const changeUserType = (newType) => {
@@ -338,6 +365,18 @@ export default function AuthPage() {
       document.documentElement.classList.remove("dark")
       localStorage.setItem("darkMode", "false")
     }
+  }
+
+  const onCityDropdownValueChanged = (event) => {
+    const value = event.target.value
+      setDistricts(DISTRICT_DATA[value])
+      addressInfo.city = value
+      addressInfo.district = DISTRICT_DATA[value][0]
+  }
+
+  const onDistrictDropdownValueChanged = (event) => {
+    const value = event.target.value
+    addressInfo.district = value
   }
 
   // Initialize dark mode from localStorage
@@ -682,7 +721,160 @@ export default function AuthPage() {
                         onChange={(e) => setRegisterPhone(e.target.value.toString())}
                         required
                       />
+                      
                     </div>
+                        <div className="m-2">
+                        <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
+                            İl
+                        </label>
+                        <div className="relative">
+                            <select
+                                id="dropdown"
+                                name="dropdown1"
+                                className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                                onChange={onCityDropdownValueChanged}
+                            >
+                              
+                                {TURKISH_CITIES.map((option) => (
+                                    <option key={option.value} value={option.value} disabled={option.value === ""}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                            <svg
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                viewBox="0 0 24 24"
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div></div>
+                        <div className="m-2">
+                        <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
+                            İlçe
+                        </label>
+                        <div className="relative">
+                            <select
+                                id="dropdown2"
+                                name="dropdown"
+                                onChange={onDistrictDropdownValueChanged}
+                                className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                            >
+                                <option value="" disabled>Seçiniz</option>
+                                {districts.map((option) => (
+
+                                    <option key={option} value={option} disabled={option.value === ""}>
+                                      
+                                        {option}
+                                    </option>
+                                ))}
+                            </select>
+                            <svg
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                viewBox="0 0 24 24"
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div></div>
+
+                        <div className="space-y-3">
+                      <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Mahalle
+                      </Label>
+                      <Input
+                        id="neighborhood"
+                        placeholder="Mahalle"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.neighborhood}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+
+                      
+                      
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Cadde
+                      </Label>
+                      <Input
+                        id="avenue"
+                        placeholder="Cadde"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.avenue}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+
+                      
+                      
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Sokak
+                      </Label>
+                      <Input
+                        id="street"
+                        placeholder="Sokak"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.street}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+
+                      
+                      
+                    </div>
+                        
+
+                    <div className="space-y-3">
+                      <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Bina No
+                      </Label>
+                      <Input
+                        id="buildingNumber"
+                        placeholder="Bina No"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.buildingNumber}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+
+                      
+                      
+                    </div>
+                    
+
+                    <div className="space-y-3">
+                      <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Daire No
+                      </Label>
+                      <Input
+                        id="apartmentNumber"
+                        placeholder="Apartman No"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.apartmentNumber}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+
+                      
+                      
+                    </div>
+                  
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-gray-700 dark:text-gray-300 font-medium">
                         Şifre
@@ -697,6 +889,8 @@ export default function AuthPage() {
                         required
                       />
                     </div>
+
+                    
                     <div className="space-y-2">
                       <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300 font-medium">
                         Şifre Tekrar

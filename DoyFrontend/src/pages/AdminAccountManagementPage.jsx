@@ -32,10 +32,30 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
     const [selectedRestaurant, setSelectedRestaurant] = useState(null);
     const [toasts, setToasts] = useState([]); // 📌 Multiple toasts
     
+    const suspendUser = async(_id, desc, amount) => {
+        const banRequest = {
+            id: _id,
+            banDuration: amount,
+            description: desc
+        }
+
+        try {
+            const response = await axios.put(`http://localhost:8080/api/users/suspend`, banRequest)
+        } catch (error) {
+            addToast(error)
+        }
+    }
+
+
 
     // 📌 Kullanıcı güncelleme fonksiyonu
-    const updateUserOrRestaurant = (id, field, value, type) => {
+    const updateUserOrRestaurant = async(id, field, value, type) => {
         if (type === "user") {
+            if (field === "banned") {
+                await suspendUser(id, "you were banned", -1)
+            } else if (type === "suspended") {
+                await suspendUser(id, "you were suspended", 20)
+            }/*
             setUsers(prevUsers => {
                 const updatedUsers = prevUsers.map(user =>
                     user.id === id ? { ...user, [field]: value } : user
@@ -46,7 +66,7 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
                 }
                 
                 return updatedUsers;
-            });
+            });*/
         } else if (type === "restaurant") {
             setRestaurants(prevRestaurants => {
                 const updatedRestaurants = prevRestaurants.map(restaurant =>

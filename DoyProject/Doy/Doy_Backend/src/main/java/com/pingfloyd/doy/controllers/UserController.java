@@ -81,7 +81,7 @@ public class UserController implements IUserController{
 
     @Override
     @PutMapping("/couriers/update/{email}")
-    public ResponseEntity<DtoCourier> putCourier(@PathVariable(name = "email") String email,@RequestBody DtoCourierIU dtoCourierIU) {
+    public ResponseEntity<DtoCourier> putCourier(@PathVariable(name = "email") String email,@RequestBody @Valid DtoCourierIU dtoCourierIU) {
         return ResponseEntity.ok(userService.putCourier(email, dtoCourierIU));
     }
 

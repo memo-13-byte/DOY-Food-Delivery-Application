@@ -8,6 +8,17 @@ import { getCustomerById, getUserById } from "../services/profileData"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import axios from "axios"
 import { getResponseErrors } from "../services/exceptionUtils"
+import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
+
+const Input = ({ className, ...props }) => (
+  <input className={`w-full px-3 py-2 border rounded-lg ${className}`} {...props} />
+)
+
+const Label = ({ className, htmlFor, children }) => (
+  <label className={`block text-sm font-medium mb-1 ${className}`} htmlFor={htmlFor}>
+    {children}
+  </label>
+)
 
 export default function CustomerProfilePage() {
   const location = useLocation()
@@ -18,6 +29,17 @@ export default function CustomerProfilePage() {
   const [activeTab, setActiveTab] = useState("profile")
   const [isLoaded, setIsLoaded] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
+  const [districts, setDistricts] = useState(DISTRICT_DATA["ISTANBUL"])
+    const [addressInfo, setAddressInfo] = useState(
+      {
+        city:"ISTANBUL",
+        neighborhood:"",
+        district:"Adalar",
+        avenue:"",
+        street:"",
+        buildingNumber:0,
+        apartmentNumber:0,
+      })
 
   // Fetch customer data by ID
   const [user, setUser] = useState(
@@ -28,7 +50,7 @@ export default function CustomerProfilePage() {
       email: " ",
       phoneNumber: " ",
       role: " ",
-      address: "",
+      addresses: " ",
     }) 
 
   // Form state for profile update
@@ -63,9 +85,11 @@ export default function CustomerProfilePage() {
     const loadUser = async () => {
       try {
         userData = await getUserById(customerId)
+        console.log(userData)
         userData.name = userData.firstname + " " + userData.lastname
         setUser(userData)
         setFormData(userData)
+        setAddressInfo(userData.addresses[0])
       } catch (error) {
         console.error("Error: " + error)
       }
@@ -75,6 +99,18 @@ export default function CustomerProfilePage() {
     
     
   }, []);
+
+  const onCityDropdownValueChanged = (event) => {
+      const value = event.target.value
+        setDistricts(DISTRICT_DATA[value])
+        addressInfo.city = value
+        addressInfo.district = DISTRICT_DATA[value][0]
+    }
+  
+    const onDistrictDropdownValueChanged = (event) => {
+      const value = event.target.value
+      addressInfo.district = value
+    }
 
   // Animation effect when page loads
   useEffect(() => {
@@ -94,8 +130,13 @@ export default function CustomerProfilePage() {
     setErrorMessages([])
 
     try {
-      const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, formData)
-      console.log(response)
+      let putData = {
+        ...formData,
+        addresses: [addressInfo]
+      }
+      
+      const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
+      console.log(putData)
 
       setUser({
         ...user,
@@ -103,7 +144,7 @@ export default function CustomerProfilePage() {
         lastname: formData.lastname,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
-        address: formData.address,
+        addresses: formData.addresses,
       })
   
       // Animation for success notification
@@ -128,6 +169,13 @@ export default function CustomerProfilePage() {
       ...prev,
       [id]: !prev[id],
     }))
+  }
+
+  const handleAddressInfoChange = (e) => {
+    setAddressInfo({
+      ...addressInfo,
+      [e.target.id]: e.target.value
+    })
   }
 
   const selectedAllergens = Object.entries(allergens)
@@ -425,27 +473,157 @@ export default function CustomerProfilePage() {
                       </div>
                     </div>
 
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <MapPin className="h-4 w-4 mr-2" /> Adres
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="text"
-                          name="address"
-                          value={"user.address"}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
-                        >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
-                      </div>
-                    </div>
+                    <div className="m-2">
+                                            <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
+                                                İl
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    id="dropdown1"
+                                                    name="dropdown"
+                                                    className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                                                    onChange={onCityDropdownValueChanged}
+                                                >
+                                                  
+                                                    {TURKISH_CITIES.map((option) => (
+                                                        <option key={option.value} value={option.value} disabled={option.value === ""}>
+                                                            {option.label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <svg
+                                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+                                            </div></div>
+                                            <div className="m-2">
+                                            <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
+                                                İlçe
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    id="dropdown2"
+                                                    name="dropdown"
+                                                    onChange={onDistrictDropdownValueChanged}
+                                                    className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                                                >
+                                                    <option value="" disabled>Seçiniz</option>
+                                                    {districts.map((option) => (
+                    
+                                                        <option key={option} value={option} disabled={option.value === ""}>
+                                                          
+                                                            {option}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <svg
+                                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+                                            </div></div>
+                    
+                                            <div className="space-y-3">
+                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                                            Mahalle
+                                          </Label>
+                                          <Input
+                                            id="neighborhood"
+                                            placeholder="Mahalle"
+                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                            value={addressInfo.neighborhood}
+                                            onChange={handleAddressInfoChange}
+                                            required
+                                          />
+                    
+                                          
+                                          
+                                        </div>
+                    
+                                        <div className="space-y-3">
+                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                                            Cadde
+                                          </Label>
+                                          <Input
+                                            id="avenue"
+                                            placeholder="Cadde"
+                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                            value={addressInfo.avenue}
+                                            onChange={handleAddressInfoChange}
+                                            required
+                                          />
+                    
+                                          
+                                          
+                                        </div>
+                    
+                                        <div className="space-y-3">
+                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                                            Sokak
+                                          </Label>
+                                          <Input
+                                            id="street"
+                                            placeholder="Sokak"
+                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                            value={addressInfo.street}
+                                            onChange={handleAddressInfoChange}
+                                            required
+                                          />
+                    
+                                          
+                                          
+                                        </div>
+                                            
+                    
+                                        <div className="space-y-3">
+                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                                            Bina No
+                                          </Label>
+                                          <Input
+                                            id="buildingNumber"
+                                            placeholder="Bina No"
+                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                            value={addressInfo.buildingNumber}
+                                            onChange={handleAddressInfoChange}
+                                            required
+                                          />
+                    
+                                          
+                                          
+                                        </div>
+                                        
+                    
+                                        <div className="space-y-3">
+                                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
+                                            Daire No
+                                          </Label>
+                                          <Input
+                                            id="apartmentNumber"
+                                            placeholder="Apartman No"
+                                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                            value={addressInfo.apartmentNumber}
+                                            onChange={handleAddressInfoChange}
+                                            required
+                                          />
+                    
+                                          
+                                          
+                                        </div>
                   </motion.div>
 
                   {/* Delivery Preference */}

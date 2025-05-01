@@ -1,4 +1,5 @@
 package com.pingfloyd.doy.dto;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import lombok.*;
@@ -33,4 +34,7 @@ public class RegistrationRequest {
     @NotBlank(message = "Phone number must not be blank")
     @Size(min = 7, max = 20, message = "Invalid phone number")
     private final String phoneNumber;
+
+    @Valid
+    private DtoAddress dtoAddress;
 }

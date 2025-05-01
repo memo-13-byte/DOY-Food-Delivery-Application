@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pingfloyd.doy.enums.CityEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class District {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
