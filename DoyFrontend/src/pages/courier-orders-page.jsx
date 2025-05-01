@@ -71,7 +71,11 @@ export default function CourierOrdersPage() {
         } catch (err) {
             console.error(`Failed to fetch courier data for ID ${courierId}:`, err);
             let fetchErrorMsg = "Veriler yüklenirken bir hata oluştu.";
-            if (err.response) {
+            console.log(err)
+            if(err.response.data.errors){
+                fetchErrorMsg = (err.response.data.errors);
+            }
+            else if (err.response) {
                 fetchErrorMsg = `Veriler yüklenemedi (${err.response.status}): ${err.response.data?.message || err.response.data || 'Bilinmeyen sunucu hatası'}`;
             }
             else if (err.request) { fetchErrorMsg = "Sunucuya ulaşılamadı."; }
@@ -154,7 +158,10 @@ export default function CourierOrdersPage() {
         } catch (err) {
             console.error(`Failed to accept task #${requestId}:`, err);
             let errorMsg = `Görevi #${requestId} kabul ederken bir hata oluştu.`;
-            if (err.response) { errorMsg = `Görev #${requestId} kabul edilemedi (${err.response.status}): ${err.response.data?.message || err.response.data || 'Bilinmeyen sunucu hatası'}`; }
+            if(err.response.data.errors){
+                errorMsg = err.response.data.errors;
+            }
+            else if (err.response) { errorMsg = `Görev #${requestId} kabul edilemedi (${err.response.status}): ${err.response.data?.message || err.response.data || 'Bilinmeyen sunucu hatası'}`; }
             else if (err.request) { errorMsg = "Sunucuya ulaşılamadı."; }
             else { errorMsg = err.message || errorMsg; }
             alert(errorMsg);
@@ -180,7 +187,10 @@ export default function CourierOrdersPage() {
         } catch (err) {
             console.error(`Failed to reject task #${requestId}:`, err);
             let errorMsg = `Görevi #${requestId} reddederken bir hata oluştu.`;
-            if (err.response) { errorMsg = `Görev #${requestId} reddedilemedi (${err.response.status}): ${err.response.data?.message || err.response.data || 'Bilinmeyen sunucu hatası'}`; }
+            if(err.response.data.errors){
+                errorMsg = err.response.data.errors;
+            }
+            else if (err.response) { errorMsg = `Görev #${requestId} reddedilemedi (${err.response.status}): ${err.response.data?.message || err.response.data || 'Bilinmeyen sunucu hatası'}`; }
             else if (err.request) { errorMsg = "Sunucuya ulaşılamadı."; }
             else { errorMsg = err.message || errorMsg; }
             alert(errorMsg);

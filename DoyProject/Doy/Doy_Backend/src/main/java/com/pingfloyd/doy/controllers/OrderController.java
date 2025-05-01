@@ -80,6 +80,13 @@ public class OrderController {
     public ResponseEntity<DtoRestaurantOrders> GetRestaurantOrders(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(orderService.GetRestaurantOrders(restaurantId));
     }
+
+    @GetMapping("/courier/{courierId}/order")
+    public ResponseEntity<DtoRestaurantOrders> GetCourierOrders(@PathVariable Long courierId){
+        return ResponseEntity.ok(orderService.GetCourierOrders(courierId));
+    }
+
+
     @GetMapping("/restaurant/{restaurantId}/couriers")
     public ResponseEntity<List<DtoCourierForOrder>> GetActiveCouriers(@PathVariable Long restaurantId){
         return ResponseEntity.ok(orderService.GetAvailableCouriersByDistrict(restaurantId));

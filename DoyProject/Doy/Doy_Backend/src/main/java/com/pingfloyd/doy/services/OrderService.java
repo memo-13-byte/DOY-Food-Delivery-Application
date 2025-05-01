@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -208,6 +209,14 @@ public class OrderService {
         List<CustomerOrder> orders = customerOrderRepository.findCustomerOrdersByRestaurant(restaurant);
         return MapOrders(orders);
     }
+    public DtoRestaurantOrders GetCourierOrders(Long id){
+        Optional<Courier> courier = courierService.GetCourierById(id);
+        if(courier.isEmpty()){
+            throw new UserNotFoundException("Courier with given id cannot be found");
+        }
+        List<CustomerOrder> orders = customerOrderRepository.findCustomerOrdersByCourier(courier.get());
+        return MapOrders(orders);
+    }
 
     public List<DtoCourierForOrder> GetAvailableCouriersByDistrict(Long restaurantId){
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
@@ -240,6 +249,10 @@ public class OrderService {
     }
 
     public DtoCourierRequest GetCourierRequests(Long courierId){
+        Optional<Courier> c = courierService.GetCourierById(courierId);
+        if( c.isEmpty()){
+            throw new UserNotFoundException("Courier with given id cannot be found");
+        }
         List<CourierRequest> requests = courierRequestService.GetCourierRequests(courierId);
         DtoCourierRequest request = new DtoCourierRequest();
         for(CourierRequest req : requests){
@@ -317,6 +330,8 @@ public class OrderService {
             throw new OrderNotFoundException("There are no order associated with this request");
         }
         if(order.getCourier() != null){
+            courierRequestService.DeleteRequest(request);
+
             throw new OrderAlreadyTakenException("Order already accepted by another courier");
         }
         if(response){
@@ -378,6 +393,12 @@ public class OrderService {
         CustomerOrder customerOrder = order.get();
         if(status.getAccept()){
             customerOrder.setStatus(status.getStatus());
+            if(status.getStatus() == OrderStatus.DELIVERED){
+                customerOrder.getCourier().setIsOnDelivery(false);
+                customerOrder.getCourier().setIsAvailable(true);
+                customerOrder.setDeliveryDate(LocalDate.now());
+                courierService.SaveCourier(customerOrder.getCourier());
+            }
         }
         else{
             customerOrder.setStatus(OrderStatus.REJECTED);

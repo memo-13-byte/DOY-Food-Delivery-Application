@@ -72,21 +72,38 @@ function OrderDetailModal({ orderDetails, onClose, isLoading, error, darkMode })
                             <p><strong>İsim:</strong> {orderDetails.customerName || 'N/A'}</p>
                             <p><strong>Telefon:</strong> {orderDetails.customerPhone || 'N/A'}</p>
                             <p><strong>Email:</strong> {orderDetails.customerEmail || 'N/A'}</p>
-                            <p><strong>Adres:</strong> {orderDetails.customerAddress || 'N/A'}</p>
+                            <p><strong>Adres:</strong> {
+                                orderDetails.customerAddress
+                                    ? [
+                                        orderDetails.customerAddress.street,
+                                        orderDetails.customerAddress.buildingNumber,
+                                        `Daire ${orderDetails.customerAddress.apartmentNumber}`,
+                                        orderDetails.customerAddress.avenue,
+                                        orderDetails.customerAddress.neighborhood,
+                                        orderDetails.customerAddress.district,
+                                        orderDetails.customerAddress.city
+                                    ].filter(Boolean).join(', ')
+                                    : 'N/A'
+                            }</p>
                             <p><strong>Not:</strong> {orderDetails.note || 'Yok'}</p>
                         </div>
 
                         {/* Restaurant Info */}
-                        <div style={{ marginBottom: '1.5rem', borderBottom: `1px solid ${borderColor}`, paddingBottom: '1rem' }}>
-                            <h4 style={{ marginBottom: '0.75rem', color: darkMode ? '#bbb' : '#555' }}>Restoran</h4>
+                        <div style={{
+                            marginBottom: '1.5rem',
+                            borderBottom: `1px solid ${borderColor}`,
+                            paddingBottom: '1rem'
+                        }}>
+                            <h4 style={{marginBottom: '0.75rem', color: darkMode ? '#bbb' : '#555'}}>Restoran</h4>
                             <p><strong>Adı:</strong> {orderDetails.restaurantName || 'N/A'}</p>
                         </div>
 
                         {/* Menu Items */}
                         <div>
-                            <h4 style={{ marginBottom: '0.75rem', color: darkMode ? '#bbb' : '#555' }}>Sipariş İçeriği</h4>
+                            <h4 style={{marginBottom: '0.75rem', color: darkMode ? '#bbb' : '#555'}}>Sipariş
+                                İçeriği</h4>
                             {orderDetails.menuItems && orderDetails.menuItems.length > 0 ? (
-                                <ul style={{ listStyle: 'none', padding: 0 }}>
+                                <ul style={{listStyle: 'none', padding: 0 }}>
                                     {orderDetails.menuItems.map(item => (
                                         <li key={item.id} style={{
                                             border: `1px solid ${borderColor}`, borderRadius: '8px',
@@ -180,8 +197,12 @@ export default function OrderTrackingPage() {
                 setError("Siparişler yüklenirken beklenmedik bir formatla karşılaşıldı.");
             }
         } catch (err) {
-            console.error(`WorkspaceOrders: Error fetching orders for restaurant ${restaurantId}:`, err.response || err.message || err); // Kept existing log prefix
-            if (err.response && err.response.status === 404) {
+            console.error(`WorkspaceOrders: Error fetching orders for restaurant ${restaurantId}:`, err.response || err.message || err);
+            console.log(err);
+            if(err.response.data.errors){
+                setError(err.response.data.errors);
+            }
+            else if (err.response && err.response.status === 404) {
                 setError(`Restoran ID ${restaurantId} için sipariş bulunamadı.`);
             } else {
                 setError(`Siparişler yüklenirken bir hata oluştu (${err.message || 'Bilinmeyen Hata'}).`);
