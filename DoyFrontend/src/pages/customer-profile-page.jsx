@@ -391,270 +391,281 @@ export default function CustomerProfilePage() {
                 </motion.div>
               ))}
               {activeTab === "profile" && (
-                <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
-                  {/* Personal Information */}
-                  <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <User className="h-4 w-4 mr-2" /> Ad
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="text"
-                          name="firstname"
-                          value={formData.firstname}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                  <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
+                    {/* Personal Information */}
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <label
+                            className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                         >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
+                          <User className="h-4 w-4 mr-2"/> Ad
+                        </label>
+                        <div className="flex">
+                          <input
+                              type="text"
+                              name="firstname"
+                              value={formData.firstname}
+                              onChange={handleInputChange}
+                              className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          />
+                          <button
+                              className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                          >
+                            <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`}/>
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <User className="h-4 w-4 mr-2" /> Soyad
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="text"
-                          name="lastname"
-                          value={formData.lastname}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                      <div>
+                        <label
+                            className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                         >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
+                          <User className="h-4 w-4 mr-2"/> Soyad
+                        </label>
+                        <div className="flex">
+                          <input
+                              type="text"
+                              name="lastname"
+                              value={formData.lastname}
+                              onChange={handleInputChange}
+                              className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          />
+                          <button
+                              className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                          >
+                            <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`}/>
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <Phone className="h-4 w-4 mr-2" /> Telefon
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="text"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                      <div>
+                        <label
+                            className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                         >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
+                          <Phone className="h-4 w-4 mr-2"/> Telefon
+                        </label>
+                        <div className="flex">
+                          <input
+                              type="text"
+                              name="phoneNumber"
+                              value={formData.phoneNumber}
+                              onChange={handleInputChange}
+                              className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          />
+                          <button
+                              className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                          >
+                            <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`}/>
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <Mail className="h-4 w-4 mr-2" /> Email
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                      <div>
+                        <label
+                            className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                         >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
+                          <Mail className="h-4 w-4 mr-2"/> Email
+                        </label>
+                        <div className="flex">
+                          <input
+                              type="email"
+                              name="email"
+                              value={formData.email}
+                              onChange={handleInputChange}
+                              className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          />
+                          <button
+                              className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                          >
+                            <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`}/>
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="m-2">
-                      <label htmlFor="cityDropdown" className="block text-base text-gray-800 mb-1">
-                        İl
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="cityDropdown"
-                          name="city"
-                          value={addressInfo.city}
-                          onChange={onCityDropdownValueChanged}
-                          className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
-                        >
-                          {TURKISH_CITIES.map((option) => (
-                            <option key={option.value} value={option.value} disabled={option.value === ""}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                        <svg
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          viewBox="0 0 24 24"
-                        >
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
+                      <div className="m-2">
+                        <label htmlFor="cityDropdown" className="block text-base text-gray-800 mb-1">
+                          İl
+                        </label>
+                        <div className="relative">
+                          <select
+                              id="cityDropdown"
+                              name="city"
+                              value={addressInfo.city}
+                              onChange={onCityDropdownValueChanged}
+                              className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                          >
+                            {TURKISH_CITIES.map((option) => (
+                                <option key={option.value} value={option.value} disabled={option.value === ""}>
+                                  {option.label}
+                                </option>
+                            ))}
+                          </select>
+                          <svg
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              viewBox="0 0 24 24"
+                          >
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </div>
                       </div>
-                    </div>
-                    <div className="m-2">
-                      <label htmlFor="districtDropdown" className="block text-base text-gray-800 mb-1">
-                        İlçe
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="districtDropdown"
-                          name="district"
-                          value={addressInfo.district}
-                          onChange={onDistrictDropdownValueChanged}
-                          className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
-                        >
-                          {districts.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                        <svg
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          viewBox="0 0 24 24"
-                        >
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
+                      <div className="m-2">
+                        <label htmlFor="districtDropdown" className="block text-base text-gray-800 mb-1">
+                          İlçe
+                        </label>
+                        <div className="relative">
+                          <select
+                              id="districtDropdown"
+                              name="district"
+                              value={addressInfo.district}
+                              onChange={onDistrictDropdownValueChanged}
+                              className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                          >
+                            {districts.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                            ))}
+                          </select>
+                          <svg
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              viewBox="0 0 24 24"
+                          >
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <Label htmlFor="neighborhood" className="text-gray-700 dark:text-gray-300 font-medium">
-                        Mahalle
-                      </Label>
-                      <Input
-                        id="neighborhood"
-                        placeholder="Mahalle"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        value={addressInfo.neighborhood}
-                        onChange={handleAddressInfoChange}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <Label htmlFor="avenue" className="text-gray-700 dark:text-gray-300 font-medium">
-                        Cadde
-                      </Label>
-                      <Input
-                        id="avenue"
-                        placeholder="Cadde"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        value={addressInfo.avenue}
-                        onChange={handleAddressInfoChange}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <Label htmlFor="street" className="text-gray-700 dark:text-gray-300 font-medium">
-                        Sokak
-                      </Label>
-                      <Input
-                        id="street"
-                        placeholder="Sokak"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        value={addressInfo.street}
-                        onChange={handleAddressInfoChange}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <Label htmlFor="buildingNumber" className="text-gray-700 dark:text-gray-300 font-medium">
-                        Bina No
-                      </Label>
-                      <Input
-                        id="buildingNumber"
-                        placeholder="Bina No"
-                        type="number"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        value={addressInfo.buildingNumber}
-                        onChange={handleAddressInfoChange}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <Label htmlFor="apartmentNumber" className="text-gray-700 dark:text-gray-300 font-medium">
-                        Daire No
-                      </Label>
-                      <Input
-                        id="apartmentNumber"
-                        placeholder="Apartman No"
-                        type="number"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        value={addressInfo.apartmentNumber}
-                        onChange={handleAddressInfoChange}
-                        required
-                      />
-                    </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="neighborhood" className="text-gray-700 dark:text-gray-300 font-medium">
+                          Mahalle
+                        </Label>
+                        <Input
+                            id="neighborhood"
+                            placeholder="Mahalle"
+                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            value={addressInfo.neighborhood}
+                            onChange={handleAddressInfoChange}
+                            required
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="avenue" className="text-gray-700 dark:text-gray-300 font-medium">
+                          Cadde
+                        </Label>
+                        <Input
+                            id="avenue"
+                            placeholder="Cadde"
+                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            value={addressInfo.avenue}
+                            onChange={handleAddressInfoChange}
+                            required
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="street" className="text-gray-700 dark:text-gray-300 font-medium">
+                          Sokak
+                        </Label>
+                        <Input
+                            id="street"
+                            placeholder="Sokak"
+                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            value={addressInfo.street}
+                            onChange={handleAddressInfoChange}
+                            required
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="buildingNumber" className="text-gray-700 dark:text-gray-300 font-medium">
+                          Bina No
+                        </Label>
+                        <Input
+                            id="buildingNumber"
+                            placeholder="Bina No"
+                            type="number"
+                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            value={addressInfo.buildingNumber}
+                            onChange={handleAddressInfoChange}
+                            required
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="apartmentNumber" className="text-gray-700 dark:text-gray-300 font-medium">
+                          Daire No
+                        </Label>
+                        <Input
+                            id="apartmentNumber"
+                            placeholder="Apartman No"
+                            type="number"
+                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            value={addressInfo.apartmentNumber}
+                            onChange={handleAddressInfoChange}
+                            required
+                        />
+                      </div>
+                    </motion.div>
+
+                    {/* Update Button */}
+                    <motion.div variants={itemVariants}>
+                      <button
+                          onClick={handleProfileUpdate}
+                          className={`w-full py-2 px-4 rounded-md font-medium mb-4 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
+                              darkMode
+                                  ? "bg-amber-500 hover:bg-amber-600 text-gray-900"
+                                  : "bg-amber-400 hover:bg-amber-500 text-amber-900"
+                          }`}
+                      >
+                        Güncelle
+                      </button>
+                    </motion.div>
+
+                    {/* Logout Link */}
+                    <motion.div variants={itemVariants}>
+                      <button
+                          onClick={handleLogout}
+                          className={`w-full text-center py-2 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-gray-700" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200 flex items-center justify-center gap-2`}
+                      >
+                        <LogOut className="h-4 w-4"/>
+                        Hesabımdan Çıkış Yap
+                      </button>
+                    </motion.div>
+                    <motion.div variants={itemVariants}>
+                      <button
+                          onClick={() => navigate("/restaurants/browse")}
+                          className={`w-full text-center py-2 border mt-2 ${
+                              darkMode ? "border-gray-600 text-amber-300 hover:bg-gray-700" : "border-gray-300 text-amber-800 hover:bg-amber-100"
+                          } rounded-md transition-colors duration-200 flex items-center justify-center gap-2`}
+                      >
+                        🍽️ Restoranları Keşfet
+                      </button>
+                    </motion.div>
+
                   </motion.div>
-
-                  {/* Update Button */}
-                  <motion.div variants={itemVariants}>
-                    <button
-                      onClick={handleProfileUpdate}
-                      className={`w-full py-2 px-4 rounded-md font-medium mb-4 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
-                        darkMode
-                          ? "bg-amber-500 hover:bg-amber-600 text-gray-900"
-                          : "bg-amber-400 hover:bg-amber-500 text-amber-900"
-                      }`}
-                    >
-                      Güncelle
-                    </button>
-                  </motion.div>
-
-                  {/* Logout Link */}
-                  <motion.div variants={itemVariants}>
-                    <button
-                      onClick={handleLogout}
-                      className={`w-full text-center py-2 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-gray-700" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200 flex items-center justify-center gap-2`}
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Hesabımdan Çıkış Yap
-                    </button>
-                  </motion.div>
-                </motion.div>
               )}
 
               {activeTab === "orders" && (
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate={isLoaded ? "visible" : "hidden"}
-                  className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow p-4`}
-                >
-                  <h2 className={`text-lg font-semibold ${darkMode ? "text-amber-400" : "text-amber-800"} mb-4`}>
+                  <motion.div
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate={isLoaded ? "visible" : "hidden"}
+                      className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow p-4`}
+                  >
+                    <h2 className={`text-lg font-semibold ${darkMode ? "text-amber-400" : "text-amber-800"} mb-4`}>
                     Sipariş Geçmişim
                   </h2>
 

@@ -242,13 +242,29 @@ export default function RestaurantOwnerProfilePage() {
 
                     {/* Tabs (Only Profile active) */}
                     <div className="mb-6">
-                        <div className={`grid w-full grid-cols-2 rounded-lg overflow-hidden ${darkMode ? "bg-gray-700" : "bg-amber-100"}`} > <button onClick={() => setActiveTab("profile")} className={`py-2 px-4 text-center font-medium transition-colors duration-200 ${ activeTab === "profile" ? (darkMode ? "bg-gray-600 text-amber-400" : "bg-amber-300 text-amber-900") : (darkMode ? "text-gray-400 hover:bg-gray-600" : "text-gray-600 hover:bg-amber-200") }`} > Profil </button> <button disabled onClick={() => setActiveTab("orders")} className={`py-2 px-4 text-center font-medium transition-colors duration-200 ${ activeTab === "orders" ? (darkMode ? "bg-gray-600 text-amber-400" : "bg-amber-300 text-amber-900") : (darkMode ? "text-gray-500 cursor-not-allowed" : "text-gray-400 cursor-not-allowed") }`} > Siparişler (Pasif) </button> </div>
+                        <div
+                            className={`grid w-full grid-cols-2 rounded-lg overflow-hidden ${darkMode ? "bg-gray-700" : "bg-amber-100"}`}>
+                            <button onClick={() => setActiveTab("profile")}
+                                    className={`py-2 px-4 text-center font-medium transition-colors duration-200 ${activeTab === "profile" ? (darkMode ? "bg-gray-600 text-amber-400" : "bg-amber-300 text-amber-900") : (darkMode ? "text-gray-400 hover:bg-gray-600" : "text-gray-600 hover:bg-amber-200")}`}> Profil
+                            </button>
+                            <button
+                                onClick={() => navigate(`/restaurant/profile/${ownerId}/orders-status`)}
+                                className={`py-2 px-4 text-center font-medium transition-colors duration-200 ${
+                                    darkMode
+                                        ? "text-amber-300 hover:bg-gray-600"
+                                        : "text-amber-800 hover:bg-amber-200"
+                                }`}
+                            >
+                                 Siparişlerim
+                            </button>
+                        </div>
 
                         <div className="mt-4">
                             {activeTab === "profile" && (
-                                <motion.form onSubmit={handleProfileUpdate} variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
+                                <motion.form onSubmit={handleProfileUpdate} variants={containerVariants}
+                                             initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
 
-                                    {/* --- Owner Information (TC First, Restaurant Name Last) --- */}
+                                {/* --- Owner Information (TC First, Restaurant Name Last) --- */}
                                     <motion.div variants={itemVariants} className="mb-6 border-b pb-4">
                                         <h2 className={`text-lg font-semibold ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-3`}>Sahip & Restoran Temel Bilgileri</h2>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

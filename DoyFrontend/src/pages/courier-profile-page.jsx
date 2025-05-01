@@ -314,14 +314,14 @@ export default function CourierProfilePage() {
 
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
         <motion.div
-          className={`w-full max-w-5xl ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} rounded-lg p-8 shadow-md`}
-          variants={containerVariants}
-          initial="hidden"
-          animate={isLoaded ? "visible" : "hidden"}
+            className={`w-full max-w-5xl ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} rounded-lg p-8 shadow-md`}
+            variants={containerVariants}
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
         >
           <motion.h1
-            className={`text-xl font-bold ${darkMode ? "text-purple-400" : "text-[#6b4b10]"} text-center mb-8`}
-            variants={itemVariants}
+              className={`text-xl font-bold ${darkMode ? "text-purple-400" : "text-[#6b4b10]"} text-center mb-8`}
+              variants={itemVariants}
           >
             Hesap Profilim - Kurye
             <span className="ml-2 text-sm font-normal text-gray-500">(ID: {courierId || "Varsayılan"})</span>
@@ -335,18 +335,18 @@ export default function CourierProfilePage() {
                 </label>
                 <div className="flex">
                   <input
-                    type="text"
-                    name="firstname"
-                    value={courier.firstname}
-                    onChange={handleInputChange}
-                    className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                      type="text"
+                      name="firstname"
+                      value={courier.firstname}
+                      onChange={handleInputChange}
+                      className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
                   <motion.button
-                    className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                    whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                    whileTap={{ scale: 0.95 }}
+                      className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
+                      whileHover={{backgroundColor: darkMode ? "#4b5563" : "#fef3c7"}}
+                      whileTap={{scale: 0.95}}
                   >
-                    <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                    <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`}/>
                   </motion.button>
                 </div>
               </div>
@@ -357,18 +357,18 @@ export default function CourierProfilePage() {
                 </label>
                 <div className="flex">
                   <input
-                    type="text"
-                    name="lastname"
-                    value={courier.lastname}
-                    onChange={handleInputChange}
-                    className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                      type="text"
+                      name="lastname"
+                      value={courier.lastname}
+                      onChange={handleInputChange}
+                      className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
                   <motion.button
-                    className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                    whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                    whileTap={{ scale: 0.95 }}
+                      className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
+                      whileHover={{backgroundColor: darkMode ? "#4b5563" : "#fef3c7"}}
+                      whileTap={{scale: 0.95}}
                   >
-                    <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                    <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`}/>
                   </motion.button>
                 </div>
               </div>
@@ -380,18 +380,18 @@ export default function CourierProfilePage() {
               </label>
               <div className="flex">
                 <input
-                  type="email"
-                  name="email"
-                  value={courier.email}
-                  onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                    type="email"
+                    name="email"
+                    value={courier.email}
+                    onChange={handleInputChange}
+                    className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                  whileTap={{ scale: 0.95 }}
+                    className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
+                    whileHover={{backgroundColor: darkMode ? "#4b5563" : "#fef3c7"}}
+                    whileTap={{scale: 0.95}}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`}/>
                 </motion.button>
               </div>
             </motion.div>
@@ -402,18 +402,18 @@ export default function CourierProfilePage() {
               </label>
               <div className="flex">
                 <input
-                  type="tel"
-                  name="phoneNumber"
-                  value={courier.phoneNumber}
-                  onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                    type="tel"
+                    name="phoneNumber"
+                    value={courier.phoneNumber}
+                    onChange={handleInputChange}
+                    className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                  whileTap={{ scale: 0.95 }}
+                    className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
+                    whileHover={{backgroundColor: darkMode ? "#4b5563" : "#fef3c7"}}
+                    whileTap={{scale: 0.95}}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`}/>
                 </motion.button>
               </div>
             </motion.div>
@@ -425,27 +425,27 @@ export default function CourierProfilePage() {
                 </label>
                 <div className="relative">
                   <select
-                    id="cityDropdown"
-                    name="districtCity"
-                    value={courier.districtCity}
-                    onChange={onCityDropdownValueChanged}
-                    className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                      id="cityDropdown"
+                      name="districtCity"
+                      value={courier.districtCity}
+                      onChange={onCityDropdownValueChanged}
+                      className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
                   >
                     {TURKISH_CITIES.map((option) => (
-                      <option key={option.value} value={option.value} disabled={option.value === ""}>
-                        {option.label}
-                      </option>
+                        <option key={option.value} value={option.value} disabled={option.value === ""}>
+                          {option.label}
+                        </option>
                     ))}
                   </select>
                   <svg
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    viewBox="0 0 24 24"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      viewBox="0 0 24 24"
                   >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
@@ -457,27 +457,27 @@ export default function CourierProfilePage() {
                 </label>
                 <div className="relative">
                   <select
-                    id="districtDropdown"
-                    name="districtName"
-                    value={courier.districtName}
-                    onChange={onDistrictDropdownValueChanged}
-                    className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                      id="districtDropdown"
+                      name="districtName"
+                      value={courier.districtName}
+                      onChange={onDistrictDropdownValueChanged}
+                      className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
                   >
                     {districts.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
                     ))}
                   </select>
                   <svg
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    viewBox="0 0 24 24"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      viewBox="0 0 24 24"
                   >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
@@ -491,45 +491,60 @@ export default function CourierProfilePage() {
               </label>
               <div className="flex">
                 <input
-                  type="text"
-                  name="governmentId"
-                  value={courier.governmentId}
-                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
+                    type="text"
+                    name="governmentId"
+                    value={courier.governmentId}
+                    className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
-                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                  whileTap={{ scale: 0.95 }}
+                    className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
+                    whileHover={{backgroundColor: darkMode ? "#4b5563" : "#fef3c7"}}
+                    whileTap={{scale: 0.95}}
                 >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
+                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`}/>
                 </motion.button>
               </div>
             </motion.div>
           </motion.div>
 
           <motion.div
-            className="w-full max-w-4xl mx-auto"
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+              className="w-full max-w-4xl mx-auto"
+              variants={itemVariants}
+              whileHover={{scale: 1.02}}
+              whileTap={{scale: 0.98}}
           >
             <Button
-              onClick={handleUpdate}
-              className={`w-full py-3 ${darkMode ? "bg-purple-500 hover:bg-purple-600" : "bg-amber-400 hover:bg-amber-500"} text-white font-medium mb-4 shadow-md hover:shadow-lg transition-all duration-200`}
+                onClick={handleUpdate}
+                className={`w-full py-3 ${darkMode ? "bg-purple-500 hover:bg-purple-600" : "bg-amber-400 hover:bg-amber-500"} text-white font-medium mb-4 shadow-md hover:shadow-lg transition-all duration-200`}
             >
               Güncelle
             </Button>
           </motion.div>
-
           <motion.button
-            onClick={handleLogout}
-            className={`w-full max-w-4xl mx-auto block text-center py-3 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-[#333]" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
-            variants={itemVariants}
-            whileHover={{ scale: 1.02, backgroundColor: darkMode ? "#374151" : "#f9fafb" }}
-            whileTap={{ scale: 0.98 }}
+              onClick={() => navigate(`/courier/requests/${courierId}`)}
+              className={`w-full max-w-4xl mx-auto block text-center py-3 border mt-4 ${
+                  darkMode
+                      ? "border-purple-500 text-purple-300 hover:bg-[#333]"
+                      : "border-purple-300 text-purple-800 hover:bg-purple-50"
+              } rounded-md transition-colors duration-200`}
+              variants={itemVariants}
+              whileHover={{scale: 1.02}}
+              whileTap={{scale: 0.98}}
           >
             <div className="flex items-center justify-center gap-2">
-              <LogOut className="h-4 w-4" />
+              📦 Teslimat Taleplerim
+            </div>
+          </motion.button>
+
+          <motion.button
+              onClick={handleLogout}
+              className={`w-full max-w-4xl mx-auto block text-center py-3 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-[#333]" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
+              variants={itemVariants}
+              whileHover={{scale: 1.02, backgroundColor: darkMode ? "#374151" : "#f9fafb"}}
+              whileTap={{scale: 0.98}}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <LogOut className="h-4 w-4"/>
               Hesabımdan Çıkış Yap
             </div>
           </motion.button>
@@ -537,15 +552,15 @@ export default function CourierProfilePage() {
       </div>
 
       <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
+          className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
       >
-        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
+        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover"/>
         <div className="flex gap-6">
           <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <Twitter size={24} />
           </a>
