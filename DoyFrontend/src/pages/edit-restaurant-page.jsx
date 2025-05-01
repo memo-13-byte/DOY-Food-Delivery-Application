@@ -85,6 +85,20 @@ const handleCancelMinOrderPriceEdit = () => {
         setRestaurant(response.data)
         setPhoneNumberInput(response.data.restaurantPhone)
         setMinOrderPriceInput(response.data.minOrderPrice)
+        
+        if(response.data.imageId != null) {
+          const imageResponse = await axios.get(`http://localhost:8080/api/upload/image/${response.data.imageId}`, {
+            responseType: 'blob',
+          });
+          
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setRestaurantImage(reader.result); // base64 string to display in <img src=...>
+          };
+          reader.readAsDataURL(imageResponse.data);
+        
+        }
+        
       } catch (error) {
         alert("Error fetching restaurant information:", error)
       }
@@ -426,26 +440,33 @@ const handleCancelMinOrderPriceEdit = () => {
   }
 
   // Add a function to handle the file upload
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      // Sadece resim dosyalarını kabul et
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader()
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/api/upload/image/restaurant/${restaurantId}`,
+          formData // Axios sets headers automatically
+        );
+  
+        const reader = new FileReader();
         reader.onload = (event) => {
-          setRestaurantImage(event.target.result)
-          // Başarılı yükleme bildirimi
-          showUploadSuccess(file.name)
-          // Here you would typically upload the file to your server
-          console.log("File selected:", file.name)
-        }
-        reader.readAsDataURL(file)
-      } else {
-        // Resim olmayan dosyalar için uyarı
-        alert("Lütfen sadece resim dosyaları yükleyin (JPG, PNG, GIF, vb.)")
+          setRestaurantImage(event.target.result);
+          showUploadSuccess(file.name);
+          console.log("File selected:", file.name);
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Upload failed:", error);
       }
+    } else {
+      alert("Lütfen sadece resim dosyaları yükleyin (JPG, PNG, GIF, vb.)");
     }
-  }
+  };
+  
 
   const handleDragOver = (e) => {
     e.preventDefault()
