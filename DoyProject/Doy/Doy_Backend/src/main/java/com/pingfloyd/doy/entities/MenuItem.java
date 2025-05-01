@@ -42,7 +42,7 @@ public class MenuItem {
     @Column(name = "menu_item_type", length = 30, nullable = false)
     private MenuItemType menuItemType;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "image_id")
     private Image image;
 

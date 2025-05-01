@@ -18,4 +18,5 @@ public class DtoMenuItem {
     private BigDecimal price;
     private Long restaurantId;
     private MenuItemType menuItemType;
+    private Long imageId;
 }

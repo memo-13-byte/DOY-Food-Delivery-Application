@@ -62,16 +62,16 @@ public class FileSystemStorageService implements IStorageService{
     }
 
     @Override
-    public void storeImage(MultipartFile file, Long imageId, String extension) {
+    public void storeImage(MultipartFile file, Image image) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
 
             Path imagesDir = this.rootLocation.resolve("images");
-            Files.createDirectories(imagesDir); // Ensure 'images/' exists
+            Files.createDirectories(imagesDir);
 
-            Path destinationFile = imagesDir.resolve(imageId + "." + extension)
+            Path destinationFile = imagesDir.resolve(image.getId() + "." + image.getImageType().toString().toLowerCase())
                     .normalize().toAbsolutePath();
 
             if (!destinationFile.getParent().equals(imagesDir.toAbsolutePath())) {
@@ -103,6 +103,20 @@ public class FileSystemStorageService implements IStorageService{
         return rootLocation.resolve(filename);
     }
 
+    @Override
+    public Resource loadImage(Image image) {
+        String path = Paths.get("images").resolve(image.getId() + "." + image.getImageType().getExtension()).toString();
+        return loadAsResource(path);
+    }
+
+    public void deleteImage(Image image) {
+        Path file = load(Paths.get("images").resolve(image.getId() + "." + image.getImageType().getExtension()).toString());
+        try {
+            Files.deleteIfExists(file);
+        } catch (IOException exc) {
+            exc.printStackTrace();
+        }
+    }
     @Override
     public Resource loadAsResource(String filename) {
         try {

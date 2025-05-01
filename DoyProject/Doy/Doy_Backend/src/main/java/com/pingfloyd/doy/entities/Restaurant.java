@@ -54,6 +54,10 @@ public class Restaurant {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "image_id")
+    private Image image;
+
     public Restaurant() {
 
     }

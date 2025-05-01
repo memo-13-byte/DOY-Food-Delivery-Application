@@ -30,4 +30,6 @@ public class DtoMenuItemIU {
 
     @NotNull
     private MenuItemType menuItemType;
+
+    private Long imageId;
 }

@@ -2,11 +2,13 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.DtoMenuItem;
 import com.pingfloyd.doy.dto.DtoMenuItemIU;
+import com.pingfloyd.doy.entities.Image;
 import com.pingfloyd.doy.entities.MenuItem;
 import com.pingfloyd.doy.entities.Restaurant;
 import com.pingfloyd.doy.exception.ItemNotFoundException;
 import com.pingfloyd.doy.exception.RestaurantNotFoundException;
 import com.pingfloyd.doy.repositories.ItemRepository;
+import com.pingfloyd.doy.storage.IStorageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ public class ItemService implements IItemService {
 
     @Autowired
     RestaurantService restaurantService;
+
+    @Autowired
+    IStorageService storageService;
 
     public MenuItem getItemById(Long id) throws ItemNotFoundException {
         Optional<MenuItem> item = itemRepository.findById(id);
@@ -67,10 +72,14 @@ public class ItemService implements IItemService {
         return dtoMenuItem;
     }
 
+
     @Override
     public DtoMenuItem deleteItem(Long itemId) throws ItemNotFoundException {
         MenuItem item = getItemById(itemId);
-
+        if (item.getImage() != null) {
+            Image image = item.getImage();
+            storageService.deleteImage(image);
+        }
         itemRepository.delete(item);
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(item, dtoMenuItem);
@@ -103,7 +112,7 @@ public class ItemService implements IItemService {
             DtoMenuItem dtoMenuItem = new DtoMenuItem();
             BeanUtils.copyProperties(menuItem, dtoMenuItem);
             dtoMenuItem.setRestaurantId(restaurantId);
-
+            dtoMenuItem.setImageId(menuItem.getImage() == null ? null : menuItem.getImage().getId());
             dtoMenuItems.add(dtoMenuItem);
         }
 

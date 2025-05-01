@@ -284,8 +284,9 @@ const handleCancelMinOrderPriceEdit = () => {
           name: responseItems[i].name,
           description: responseItems[i].description,
           price: responseItems[i].price,
-          // Sadece image alanını ekledik
-          image: `/placeholder.svg?height=112&width=112&query=${encodeURIComponent(placeholderQuery)}`,
+          image: responseItems[i].imageId 
+            ? `http://localhost:8080/api/upload/image/${responseItems[i].imageId}`
+            : `https://source.unsplash.com/400x300/?${placeholderQuery}`,
         })
         console.log("asasda")
       }
