@@ -46,7 +46,6 @@ public class UserService implements UserDetailsService, IUserService {
         this.districtService = districtService;
     }
 
-
     public String SignUpCustomer(User user, UserRoles role){
         user.setPasswordHash(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRole(role);
@@ -84,9 +83,12 @@ public class UserService implements UserDetailsService, IUserService {
         List<DtoUser> dtoUsers = new ArrayList<>();
 
         for (User user : dbUsers) {
-            DtoUser dtoUser = new DtoUser();
-            BeanUtils.copyProperties(user, dtoUser);
-            dtoUsers.add(dtoUser);
+            if (user.getRole() != UserRoles.ADMIN) {
+                DtoUser dtoUser = new DtoUser();
+                BeanUtils.copyProperties(user, dtoUser);
+                dtoUsers.add(dtoUser);
+            }
+
         }
         return dtoUsers;
     }
@@ -198,6 +200,14 @@ public class UserService implements UserDetailsService, IUserService {
         }
         Customer savedCustomer = customer.get();
         BeanUtils.copyProperties(dtoCustomerIU, savedCustomer);
+
+        BeanUtils.copyProperties(dtoCustomerIU.getCurrent_address(), savedCustomer.getCurrent_address());
+
+        District district = districtService.
+                GetDistrict(dtoCustomerIU.getCurrent_address().getCity(), dtoCustomerIU.getCurrent_address()
+                        .getDistrict());
+
+        savedCustomer.getCurrent_address().setDistrict(district);
         savedCustomer = customerRepository.save(savedCustomer);
         DtoCustomer dtoCustomer = new DtoCustomer();
         BeanUtils.copyProperties(savedCustomer, dtoCustomer);
