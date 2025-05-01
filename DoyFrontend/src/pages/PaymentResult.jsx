@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-// Changed from wouter to react-router-dom
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import doyLogo from "../assets/doylogo.jpeg";
 import { BsMoon } from "react-icons/bs";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
@@ -18,51 +17,38 @@ const iconLinkStyle = {
 };
 
 const PaymentResult = () => {
-    // Replace wouter's useLocation with react-router-dom's useNavigate
     const navigate = useNavigate();
-    
-    // Ödeme sonuç verilerini localStorage'dan alıyoruz
-    const paymentResult = (() => {
-        const result = localStorage.getItem("paymentResult");
-        return result ? JSON.parse(result) : {};
-    })();
-    
-    const success = paymentResult.success;
-    const address = paymentResult.address;
-    const total = paymentResult.total;
-    const darkFromCart = paymentResult.darkMode;
-    const cartItems = paymentResult.cartItems || [];
-    const restaurant = paymentResult.restaurant;
+    const { state } = useLocation();
+    const success = state?.success;
+    const address = state?.address;
+    const total = state?.total;
+    const darkFromCart = state?.darkMode;
+    const cartItems = state?.cartItems || [];
+    const restaurant = state?.restaurant;
 
     const [darkMode, setDarkMode] = useState(darkFromCart || false);
-    
-    // darkMode değiştiğinde localStorage'a kaydediyoruz
-    useEffect(() => {
-        localStorage.setItem("darkMode", JSON.stringify(darkMode));
-    }, [darkMode]);
 
     useEffect(() => {
         if (success) {
-            // Sipariş onayı verilerini localStorage'a kaydediyoruz
-            localStorage.setItem("orderConfirmation", JSON.stringify({
-                address,
-                total,
-                darkMode,
-                cartItems,
-                res: restaurant
-            }));
-            
-            // react-router-dom ile sipariş onay sayfasına yönlendirme
-            navigate("/order-confirmation");
+            navigate("/order-confirmation", {
+                state: {
+                    address,
+                    total,
+                    darkMode,
+                    cartItems,
+                    res: restaurant
+                }
+            });
         } else {
-            // Başarısız olursa, sepet bilgilerini localStorage'a kaydediyoruz
-            localStorage.setItem("cartItems", JSON.stringify(cartItems || []));
-            localStorage.setItem("selectedAddress", JSON.stringify(address || ""));
-            localStorage.setItem("darkMode", JSON.stringify(darkMode));
-            
             const timer = setTimeout(() => {
-                // react-router-dom ile sepet sayfasına geri dönme
-                navigate("/cart");
+                navigate("/cart", {
+                    state: {
+                        cartItems,
+                        address,
+                        total,
+                        darkMode,
+                    }
+                });
             }, 5000);
 
             return () => clearTimeout(timer);
@@ -134,7 +120,7 @@ const PaymentResult = () => {
                 alignItems: "center",
                 backgroundColor: darkMode ? "#1a1a1a" : "#ffffff"
             }}>
-                <img src={doyLogo || "/placeholder.svg"} alt="Logo alt" style={{
+                <img src={doyLogo} alt="Logo alt" style={{
                     height: "50px",
                     width: "50px",
                     borderRadius: "50%",

@@ -142,3 +142,4 @@ const getMapContainerStyle = (darkMode) => ({
 });
 
 export default LocationModal;
+

@@ -26,6 +26,7 @@ import UpdateItemPage from './pages/update-item-page';
 import AddItemPage from './pages/add-item-page';
 import RestaurantOwnerProfilePage from "./pages/restaurant-owner-profile-page";
 import CourierOrdersPage from "./pages/courier-orders-page";
+import { CartProvider } from "./context/CartContext";
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -37,6 +38,7 @@ const LoadingSpinner = () => (
 
 function App() {
   return (
+   <CartProvider>  
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
@@ -69,6 +71,7 @@ function App() {
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>
+   </CartProvider>  
   );
 }
 
