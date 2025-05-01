@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -114,6 +115,16 @@ public class OrderController {
     @GetMapping("/courier/status/{id}")
     public ResponseEntity<Boolean> GetCourierAvailability(@PathVariable Long id){
         return ResponseEntity.ok(orderService.GetCourierAvailability(id));
+    }
+
+    @DeleteMapping("/cart/empty/{id}")
+    public ResponseEntity<Boolean> ClearCartByRestaurant(@PathVariable Long id){
+        return ResponseEntity.ok(orderService.ClearCartByRestaurant(id));
+    }
+
+    @GetMapping("/details/{orderId}")
+    public ResponseEntity<DtoOrderDetails> GetOrderDetails(@PathVariable Long orderId){
+        return ResponseEntity.ok(orderService.GetOrderDetails(orderId));
     }
 
 

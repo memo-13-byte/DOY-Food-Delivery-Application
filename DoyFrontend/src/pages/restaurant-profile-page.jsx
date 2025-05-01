@@ -20,32 +20,66 @@ import {
   Linkedin,
 } from "lucide-react"
 import { motion } from "framer-motion"
-import { getRestaurantById } from "../services/profileData"
+import { getUserById } from "../services/profileData"
+import axios from "axios"
+import { getResponseErrors } from "../services/exceptionUtils"
 
 export default function RestaurantProfilePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
-  const restaurantId = params.id || "1" // Default to ID 1 if no ID is provided
+  const restaurantId = params.id
   const [darkMode, setDarkMode] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [governmentId, setGovernmentId] = useState("")
+  const [ownersRestaurant, setOwnersRestaurant] = useState("")
+  const [errorMessages, setErrorMessages] = useState([])
 
   // Restoran verilerini ID'ye göre al
-  const [restaurant, setRestaurant] = useState(() => getRestaurantById(restaurantId))
+  const [restaurant, setRestaurant] = useState({
+    firstname: "",
+    lastname: "",
+    phoneNumber: "",
+    email: "",
+    governmentId: "",
+    restaurantId: "",
+  })
   const [editableData, setEditableData] = useState({
-    name: restaurant.name,
-    phone: restaurant.phone,
-    email: restaurant.email,
-    address: restaurant.address,
-    workingHours: { ...restaurant.workingHours },
+    firstname: "",
+    lastname: "",
+    phoneNumber: "",
+    email: "",
   })
   const [showAlert, setShowAlert] = useState(false)
+
+  useEffect(() => {
+    console.log("yetr")
+    const loadRestaurantOwnerById = async () => {
+      const response = await getUserById(restaurantId);
+
+      const data = {
+        firstname: response.firstname,
+        lastname: response.lastname,
+        phoneNumber: response.phoneNumber,
+        email: response.email
+      }
+      console.log(data)
+      setRestaurant(data)
+      setEditableData(data)
+      setGovernmentId(response.governmentId)
+      
+      const response2 = await axios.get(`http://localhost:8080/api/restaurant/get/${response.restaurantId}`)
+      setOwnersRestaurant(response2.data.restaurantName)
+    }
+
+    loadRestaurantOwnerById()
+  }, [])
 
   // ID değiştiğinde restoran verilerini güncelle
   useEffect(() => {
     if (restaurantId) {
-      setRestaurant(getRestaurantById(restaurantId))
+      setRestaurant(getUserById(restaurantId))
     }
   }, [restaurantId])
 
@@ -62,25 +96,19 @@ export default function RestaurantProfilePage() {
     navigate(`/restaurants/manage/${restaurantId}`)
   }
 
-  const handleUpdateProfile = () => {
-    // Check if any changes were made
-    const hasChanges =
-      editableData.name !== restaurant.name ||
-      editableData.phone !== restaurant.phone ||
-      editableData.email !== restaurant.email ||
-      editableData.address !== restaurant.address ||
-      JSON.stringify(editableData.workingHours) !== JSON.stringify(restaurant.workingHours)
-
-    if (hasChanges) {
-      // In a real application, this would send the updated data to an API
-      setRestaurant({
-        ...restaurant,
-        name: editableData.name,
-        phone: editableData.phone,
-        email: editableData.email,
-        address: editableData.address,
-        workingHours: editableData.workingHours,
+  const handleUpdateProfile = async() => {
+    setErrorMessages([])
+    try {
+      console.log(editableData)
+      await axios.put(`http://localhost:8080/api/users/restaurant-owners/update/${restaurant.email}`, {
+        ...editableData,
+        role: "RESTAURANT_OWNER"
       })
+    } catch (error) {
+      setErrorMessages(getResponseErrors(error))
+    }
+    if (true) {
+      // In a real application, this would send the updated data to an API
 
       // Show alertify notification
       setShowAlert(true)
@@ -177,7 +205,7 @@ export default function RestaurantProfilePage() {
           <div className="relative w-24 h-24 flex flex-col items-center">
             <img
               src={restaurant.profileImage || "/image1.png"}
-              alt={`${restaurant.name} logo`}
+              alt={`${ownersRestaurant} logo`}
               className="w-full h-full object-cover rounded-full"
             />
             <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
@@ -187,6 +215,36 @@ export default function RestaurantProfilePage() {
         </motion.div>
       </motion.div>
 
+      {errorMessages.map((message, i) => (
+                        
+                        <motion.div key={i}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+                        >
+                          <div className="flex">
+                            <div className="py-1">
+                              <svg 
+                                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium">{message}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
       {/* Profile Content */}
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
         <motion.div
@@ -209,7 +267,7 @@ export default function RestaurantProfilePage() {
             transition={{ duration: 0.5, delay: 0.5 }}
             className={`text-xl ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} text-center mb-6`}
           >
-            {restaurant.name}
+            {ownersRestaurant}
           </motion.h2>
 
           {/* Manage Menu Button */}
@@ -223,7 +281,7 @@ export default function RestaurantProfilePage() {
           </motion.div>
 
           {/* Cuisine Types */}
-          <motion.div variants={container} initial="hidden" animate={isLoaded ? "show" : "hidden"} className="mb-6">
+          {/*<motion.div variants={container} initial="hidden" animate={isLoaded ? "show" : "hidden"} className="mb-6">
             <motion.label
               variants={item}
               className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}
@@ -248,10 +306,10 @@ export default function RestaurantProfilePage() {
                 </motion.div>
               ))}
             </motion.div>
-          </motion.div>
+          </motion.div>*/}
 
           {/* Performance Statistics */}
-          <motion.div
+          {/*<motion.div
             variants={container}
             initial="hidden"
             animate={isLoaded ? "show" : "hidden"}
@@ -301,7 +359,7 @@ export default function RestaurantProfilePage() {
                 <div className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Ort. Hazırlama Süresi</div>
               </motion.div>
             </div>
-          </motion.div>
+          </motion.div>*/}
 
           {/* Restaurant Information */}
           <motion.div
@@ -312,13 +370,13 @@ export default function RestaurantProfilePage() {
           >
             <motion.div variants={item}>
               <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
-                Restoran Adı
+                Restoran Sahibinin Adı
               </label>
               <div className="flex group">
                 <input
                   type="text"
-                  value={editableData.name}
-                  onChange={(e) => setEditableData({ ...editableData, name: e.target.value })}
+                  value={editableData.firstname}
+                  onChange={(e) => setEditableData({ ...editableData, firstname: e.target.value })}
                   className={`w-full ${
                     darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-[#F2E8D6] border-amber-100"
                   } border rounded-md py-3 px-4 text-sm transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
@@ -328,7 +386,23 @@ export default function RestaurantProfilePage() {
 
             <motion.div variants={item}>
               <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
-                Telefon
+                Restoran Sahibinin Soyadı
+              </label>
+              <div className="flex group">
+                <input
+                  type="text"
+                  value={editableData.lastname}
+                  onChange={(e) => setEditableData({ ...editableData, lastname: e.target.value })}
+                  className={`w-full ${
+                    darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-[#F2E8D6] border-amber-100"
+                  } border rounded-md py-3 px-4 text-sm transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
+                />
+              </div>
+            </motion.div>
+
+            <motion.div variants={item}>
+              <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
+                Restoran Sahibinin Telefonu
               </label>
               <div className="flex group">
                 <div
@@ -340,8 +414,8 @@ export default function RestaurantProfilePage() {
                 </div>
                 <input
                   type="text"
-                  value={editableData.phone}
-                  onChange={(e) => setEditableData({ ...editableData, phone: e.target.value })}
+                  value={editableData.phoneNumber}
+                  onChange={(e) => setEditableData({ ...editableData, phoneNumber: e.target.value })}
                   className={`w-full ${
                     darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-[#F2E8D6] border-amber-100"
                   } border-y border-r py-3 px-4 text-sm rounded-r-md transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
@@ -351,7 +425,7 @@ export default function RestaurantProfilePage() {
 
             <motion.div variants={item}>
               <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
-                Email
+                Restoran Sahibinin Email Adresi
               </label>
               <div className="flex group">
                 <div
@@ -374,7 +448,7 @@ export default function RestaurantProfilePage() {
 
             <motion.div variants={item}>
               <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
-                Adres
+                Restoran Sahibinin TC Kimlik Numarası
               </label>
               <div className="flex group">
                 <div
@@ -386,8 +460,8 @@ export default function RestaurantProfilePage() {
                 </div>
                 <input
                   type="text"
-                  value={editableData.address}
-                  onChange={(e) => setEditableData({ ...editableData, address: e.target.value })}
+                  readOnly
+                  value={governmentId}
                   className={`w-full ${
                     darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-[#F2E8D6] border-amber-100"
                   } border-y border-r py-3 px-4 text-sm rounded-r-md transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500`}
@@ -411,7 +485,7 @@ export default function RestaurantProfilePage() {
           </motion.div>
 
           {/* Working Hours */}
-          <motion.div
+          {/*<motion.div
             variants={container}
             initial="hidden"
             animate={isLoaded ? "show" : "hidden"}
@@ -468,7 +542,7 @@ export default function RestaurantProfilePage() {
                 </div>
               ))}
             </motion.div>
-          </motion.div>
+          </motion.div>*/}
 
           {/* Buttons */}
           <motion.div
@@ -572,7 +646,7 @@ export default function RestaurantProfilePage() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span>Profil başarıyla güncellendi!</span>
+              <span>{errorMessages.length === 0? "Profil başarıyla güncellendi!" : "Hata!"} </span>
             </div>
             <button onClick={() => setShowAlert(false)} className="text-white hover:text-gray-200">
               <svg

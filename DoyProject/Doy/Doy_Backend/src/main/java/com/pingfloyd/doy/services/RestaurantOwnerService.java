@@ -24,6 +24,9 @@ public class RestaurantOwnerService{
         return restaurantOwnerRepository.findByGovernmentId(governmentId);
     }
     public Set<RestaurantOwner> GetPendingRestaurantOwners(){
-        return restaurantOwnerRepository.findRestaurantOwnersByIsEnabledFalse();
+        return restaurantOwnerRepository.findRestaurantOwnersByIsEnabledFalseAndIsBannedFalse();
+    }
+    public Optional<RestaurantOwner> GetOwnerById(Long id ){
+        return restaurantOwnerRepository.findById(id);
     }
 }

@@ -18,7 +18,7 @@ const initialUsers = [
 ];
 
 export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
-    const [users, setUsers] = useState(initialUsers);
+    const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [filterStatus, setFilterStatus] = useState("pending"); // ✨ artık burada
     const [toasts, setToasts] = useState([]);
@@ -34,22 +34,40 @@ export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
         }
     }
 
-    useEffect( () => {getRegistrationRequests()}, [])
+    useEffect( () => {getRegistrationRequests()}, [selectedUser])
 
     const addToast = (message) => {
         setToasts(prev => [...prev, message]);
         setTimeout(() => setToasts(prev => prev.slice(1)), 2500);
     };
+
+    const putPendingRequest = async(id, state) => {
+        try {
+            await axios.put(`http://localhost:8080/api/registration/pending/${id}-${state}`)
+            return true
+        } catch (error) {
+            console.log("Error: " + error)
+            return false
+        }
+    }
     const approveUser = (id) => {
-        setUsers(prev => prev.map(user => user.id === id ? { ...user, status: "approved" } : user));
-        setSelectedUser(null);
-        addToast("✅ User approved successfully!");
+        
+        putPendingRequest(id, true).then((response) => {
+            if (response) {
+                setSelectedUser(null)
+                addToast("✅ User approved successfully!")
+            }
+        })
+        
     };
 
     const declineUser = (id) => {
-        setUsers(prev => prev.map(user => user.id === id ? { ...user, status: "declined" } : user));
-        setSelectedUser(null);
-        addToast("❌ User declined.");
+        putPendingRequest(id, false).then((response) => {
+            if (response) {
+                setSelectedUser(null)
+                addToast("❌ User declined.");
+            }
+        })
     };
 
     return (

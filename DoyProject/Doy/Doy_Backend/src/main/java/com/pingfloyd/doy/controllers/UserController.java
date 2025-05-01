@@ -81,19 +81,24 @@ public class UserController implements IUserController{
 
     @Override
     @PutMapping("/couriers/update/{email}")
-    public ResponseEntity<DtoCourier> putCourier(@PathVariable(name = "email") String email,@RequestBody DtoCourierIU dtoCourierIU) {
+    public ResponseEntity<DtoCourier> putCourier(@PathVariable(name = "email") String email,@RequestBody @Valid DtoCourierIU dtoCourierIU) {
         return ResponseEntity.ok(userService.putCourier(email, dtoCourierIU));
     }
 
     @Override
     @PutMapping("/restaurant-owners/update/{email}")
-    public ResponseEntity<DtoRestaurantOwner> putRestaurantOwner(@PathVariable(name = "email") String email,@RequestBody DtoRestaurantOwnerIU dtoRestaurantOwnerIU) {
+    public ResponseEntity<DtoRestaurantOwner> putRestaurantOwner(@PathVariable(name = "email") String email,@RequestBody @Valid DtoRestaurantOwnerIU dtoRestaurantOwnerIU) {
         return ResponseEntity.ok(userService.putRestaurantOwner(email, dtoRestaurantOwnerIU));
     }
 
     @GetMapping("/pendings")
     public ResponseEntity<DtoPendingRegister> GetPendingRegisters(){
         return ResponseEntity.ok(userService.GetPendingRegisters());
+    }
+
+    @PutMapping("/suspend")
+    public ResponseEntity<Boolean> SuspendUser(@RequestBody @Valid DtoBanRequest request){
+        return ResponseEntity.ok(userService.SuspendUser(request));
     }
 
 

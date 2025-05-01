@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DtoRestaurantOwner extends DtoUser{
-    private GovernmentId governmentId;
-    private Restaurant restaurant;
+    private String governmentId;
+    private Long restaurantId;
 }

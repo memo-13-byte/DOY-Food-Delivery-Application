@@ -10,6 +10,7 @@ import com.pingfloyd.doy.repositories.CustomerOrderRepository;
 import com.pingfloyd.doy.repositories.OrderItemRepository;
 import com.pingfloyd.doy.repositories.PaymentRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,10 @@ public class OrderService {
         this.emailService = emailService;
     }
 
+    public Boolean ClearCartByRestaurant(Long id){
+        cartService.CleanCartRestaurant(id);
+        return true;
+    }
 
     @Transactional
     public Boolean AddItemToCart(String username, Long itemId) throws UserNotFoundException, ItemNotFoundException, CartIsNotEmptyException {
@@ -131,7 +136,10 @@ public class OrderService {
             for(CartItem item : set){
                 price += item.getQuantity()*item.getMenuItem().getPrice().intValue();
             }
-            return price >= cart.getRestaurant().getMinOrderPrice();
+            if(price < cart.getRestaurant().getMinOrderPrice()){
+                throw new MinOrderPriceNotMeetException("Price of current cart is lower than minimum order price!");
+            }
+            return true;
         }
         return false;
     }
@@ -302,9 +310,9 @@ public class OrderService {
     public Boolean CourierResponse(Long requestId , Boolean response){
         CourierRequest request = courierRequestService.GetCourierRequestById(requestId);
         CustomerOrder order = request.getOrder();
-
         if(response){
             order.setStatus(OrderStatus.AWAITING_PICKUP);
+            order.setCourier(request.getCourier());
             request.setAcceptedAt(LocalDateTime.now());
             customerOrderRepository.save(order);
             return true;
@@ -432,6 +440,29 @@ public class OrderService {
         }
 
         return cartDto;
+    }
+
+    public DtoOrderDetails GetOrderDetails(Long orderId){
+        Optional<CustomerOrder> order1 = customerOrderRepository.findCustomerOrderByOrderId(orderId);
+        if(order1.isEmpty()){
+            throw new OrderNotFoundException("Order with given id cannot be found");
+        }
+        CustomerOrder order = order1.get();
+        DtoOrderDetails request = new DtoOrderDetails();
+        Customer customer = order.getCustomer();
+        //DtoCourierRequest.RequestInfo requestInfo = new DtoCourierRequest.RequestInfo();
+        for(OrderItem item : order.getItems()){
+            DtoMenuItem dtoMenuItem = MapMenuItem(item.getMenuItem());
+            request.getMenuItems().add(dtoMenuItem);
+        }
+            request.setOrderId(order.getOrderId());
+            request.setNote("None");
+            request.setCustomerEmail(customer.getEmail());
+            //requestInfo.setCustomerAddress(MapAddress(customer.getCurrent_address()));
+            request.setCustomerName(customer.getFirstname() + " " + customer.getLastname());
+            request.setCustomerPhone(customer.getPhoneNumber());
+            request.setRestaurantName(order.getRestaurant().getRestaurantName());
+        return request;
     }
 
 

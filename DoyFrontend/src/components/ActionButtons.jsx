@@ -25,6 +25,7 @@ const ActionButtons = ({ selected, type, darkMode, setToast, updateUserOrRestaur
         if (actionType === "see") {
             setToast(`👀 Viewing ${type === "user" ? "profile" : "restaurant"}: ${selected.name}`);
         } else if (actionType === "ban") {
+            console.log(selected)
             updateUserOrRestaurant(selected.id, "banned", true, type);
             setToast(`❌ ${type === "user" ? "User" : "Restaurant"} banned: ${selected.name}`);
         } else if (actionType === "unban") {
@@ -39,7 +40,7 @@ const ActionButtons = ({ selected, type, darkMode, setToast, updateUserOrRestaur
         }
     };
 
-    const handleSuspendConfirm = (days) => {
+    const handleSuspendConfirm = async(days) => {
         const now = new Date();
         const suspendUntil = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
         updateUserOrRestaurant(selected.id, "suspended", true, type);

@@ -7,16 +7,22 @@ import { Button } from "../components/ui/button"
 import { Checkbox } from "../components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
-import { getCourierById } from "../services/profileData"
+import { getCourierById, getUserById } from "../services/profileData"
 import { useToast } from "../hooks/use-toast"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
+import axios from "axios"
+import { getResponseErrors } from "../services/exceptionUtils"
+import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 
-// Mock function for updating courier data (replace with your actual API call)
-const updateCourier = (courierData) => {
-  // Simulate an API call delay
-  // await new Promise((resolve) => setTimeout(resolve, 500));
-  return { ...courierData }
-}
+const Input = ({ className, ...props }) => (
+  <input className={`w-full px-3 py-2 border rounded-lg ${className}`} {...props} />
+)
+
+const Label = ({ className, htmlFor, children }) => (
+  <label className={`block text-sm font-medium mb-1 ${className}`} htmlFor={htmlFor}>
+    {children}
+  </label>
+)
 
 export default function CourierProfilePage() {
   const navigate = useNavigate()
@@ -25,37 +31,89 @@ export default function CourierProfilePage() {
   const courierId = params.id
   const [darkMode, setDarkMode] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
-
+  const [errorMessages, setErrorMessages] = useState([])
   const { toast } = useToast()
-  const [originalCourier, setOriginalCourier] = useState(null)
+  const [originalCourier, setOriginalCourier] = useState({
+    id: 1,
+    firstname: "",
+    lastname: "",
+    email: "",
+    phoneNumber: "",
+    role: "",
+    governmentId: "",
+    districtCity: "",
+    districtName: "",
+  })
 
-  // Kurye verilerini ID'ye göre al
-  const [courier, setCourier] = useState(() => getCourierById(courierId))
+  const [courier, setCourier] = useState({
+    id: 1,
+    firstname: "",
+    lastname: "",
+    email: "",
+    phoneNumber: "",
+    role: "",
+    governmentId: "",
+    districtCity: "",
+    districtName: "",
+  })
 
-  // ID değiştiğinde kurye verilerini güncelle
+  const [districts, setDistricts] = useState(courier.districtCity ? DISTRICT_DATA[courier.districtCity] || [] : DISTRICT_DATA["ISTANBUL"])
+
+  // Load courier data
   useEffect(() => {
-    if (courierId) {
-      const courierData = getCourierById(courierId)
-      setCourier(courierData)
-      setOriginalCourier(JSON.parse(JSON.stringify(courierData)))
+    const getCourier = async () => {
+      try {
+        const response = await getUserById(courierId)
+        setCourier(response)
+        setOriginalCourier(response)
+        // Set districts based on the loaded city
+        if (response.districtCity && DISTRICT_DATA[response.districtCity]) {
+          setDistricts(DISTRICT_DATA[response.districtCity])
+        }
+      } catch (error) {
+        console.error("Error fetching courier:", error)
+      }
     }
+    getCourier()
   }, [courierId])
 
-  // If there's no courierId, set the default courier
+  // Update districts when districtCity changes
   useEffect(() => {
-    if (!courierId) {
-      const defaultCourierData = getCourierById()
-      setCourier(defaultCourierData)
-      setOriginalCourier(JSON.parse(JSON.stringify(defaultCourierData)))
+    if (courier.districtCity && DISTRICT_DATA[courier.districtCity]) {
+      setDistricts(DISTRICT_DATA[courier.districtCity])
+      // Ensure districtName is valid for the new city
+      if (!DISTRICT_DATA[courier.districtCity].includes(courier.districtName)) {
+        setCourier((prev) => ({
+          ...prev,
+          districtName: DISTRICT_DATA[courier.districtCity][0] || "",
+        }))
+      }
     }
-  }, [])
+  }, [courier.districtCity])
+
+  const onCityDropdownValueChanged = (e) => {
+    const value = e.target.value
+    setCourier((prev) => ({
+      ...prev,
+      districtCity: value,
+      districtName: DISTRICT_DATA[value]?.[0] || "", // Reset district to first available
+    }))
+    setDistricts(DISTRICT_DATA[value] || [])
+  }
+
+  const onDistrictDropdownValueChanged = (e) => {
+    const value = e.target.value
+    setCourier((prev) => ({
+      ...prev,
+      districtName: value,
+    }))
+  }
 
   // Simulate loading state
   useEffect(() => {
     setIsLoaded(true)
   }, [])
 
-  // Add this handler function to update courier state
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setCourier((prev) => ({
@@ -64,7 +122,6 @@ export default function CourierProfilePage() {
     }))
   }
 
-  // Add this handler function to update nested properties
   const handleNestedChange = (category, field, value) => {
     setCourier((prev) => ({
       ...prev,
@@ -75,7 +132,6 @@ export default function CourierProfilePage() {
     }))
   }
 
-  // Add this handler function to update working days
   const handleWorkingDayChange = (day) => {
     setCourier((prev) => ({
       ...prev,
@@ -86,31 +142,32 @@ export default function CourierProfilePage() {
     }))
   }
 
-  const handleUpdate = () => {
-    if (!originalCourier) return
-
-    // Check if there are any changes by comparing the current courier with the original
-    const hasChanges = JSON.stringify(courier) !== JSON.stringify(originalCourier)
-
-    if (hasChanges) {
-      // Update the courier data (in a real app, this would call an API)
-      const updatedCourier = updateCourier(courier)
-
-      // Update the original courier data with the new data
-      setOriginalCourier(JSON.parse(JSON.stringify(updatedCourier)))
-
-      // Show success toast
+  const handleUpdate = async () => {
+    setErrorMessages([])
+    try {
+      let data = {
+        governmentId: courier.governmentId,
+  district: {city: courier.districtCity, district: courier.districtName},
+  firstname: courier.firstname,
+  lastname: courier.lastname,
+  email: courier.email,
+  phoneNumber: courier.phoneNumber,
+  role: "COURIER"
+      }
+      const response = await axios.put(`http://localhost:8080/api/users/couriers/update/${courier.email}`, data)
+      setOriginalCourier(response.data)
+      console.log(response)
       toast({
         title: "Profil güncellendi!",
         description: "Kurye bilgileriniz başarıyla güncellendi.",
         variant: "default",
         duration: 3000,
       })
-    } else {
-      // Show info toast that no changes were made
+    } catch (error) {
+      setErrorMessages(getResponseErrors(error))
       toast({
         title: "Değişiklik yok",
-        description: "Herhangi bir değişiklik yapmadınız.",
+        description: "Herhangi bir değişiklik yapılamadı.",
         variant: "destructive",
         duration: 3000,
       })
@@ -118,11 +175,9 @@ export default function CourierProfilePage() {
   }
 
   const handleLogout = () => {
-    // Handle logout logic here
     navigate("/")
   }
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -159,7 +214,6 @@ export default function CourierProfilePage() {
     <div
       className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
-      {/* Header section */}
       <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -194,13 +248,12 @@ export default function CourierProfilePage() {
             className={`flex items-center justify-center rounded-full w-10 h-10 ${darkMode ? "bg-purple-400" : "bg-amber-500"}`}
           >
             <span className="text-white text-sm font-medium">
-              {courier.firstName && courier.lastName ? courier.firstName[0] + courier.lastName[0] : "K"}
+              {courier.firstname && courier.lastname ? courier.firstname[0] + courier.lastname[0] : "K"}
             </span>
           </motion.div>
         </div>
       </motion.header>
 
-      {/* Logo section */}
       <motion.div
         className="flex justify-center py-8"
         initial={{ scale: 0, opacity: 0 }}
@@ -228,7 +281,37 @@ export default function CourierProfilePage() {
         </motion.div>
       </motion.div>
 
-      {/* Profile Content */}
+      {errorMessages.map((message, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+        >
+          <div className="flex">
+            <div className="py-1">
+              <svg
+                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p className="font-medium">{message}</p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
         <motion.div
           className={`w-full max-w-5xl ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} rounded-lg p-8 shadow-md`}
@@ -244,79 +327,7 @@ export default function CourierProfilePage() {
             <span className="ml-2 text-sm font-normal text-gray-500">(ID: {courierId || "Varsayılan"})</span>
           </motion.h1>
 
-          {/* Performance Statistics */}
-          <motion.div
-            className={`${darkMode ? "bg-[#333]" : "bg-[#F2E8D6]"} rounded-lg p-6 mb-8 shadow-inner`}
-            variants={itemVariants}
-          >
-            <div className="flex items-center mb-4">
-              <motion.div
-                className="w-3 h-3 bg-amber-500 rounded-full mr-2"
-                animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
-                transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-              ></motion.div>
-              <span className={`text-sm font-medium ${darkMode ? "text-gray-200" : "text-[#6b4b10]"}`}>
-                Performans İstatistikleri
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              {Object.entries(courier.stats).map(([key, value], index) => (
-                <motion.div
-                  key={key}
-                  className={`${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 rounded-md flex flex-col items-center justify-center shadow-sm`}
-                  whileHover={{
-                    y: -5,
-                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * index }}
-                >
-                  {statsIcons[key]}
-                  <motion.div
-                    className={`text-2xl font-bold ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 100, delay: 0.3 + 0.1 * index }}
-                  >
-                    {value}
-                  </motion.div>
-                  <div className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"} text-center`}>
-                    {key === "onTimeDelivery" && "Zamanında Teslimat"}
-                    {key === "customerRating" && "Müşteri Puanı"}
-                    {key === "weeklyOrders" && "Haftalık Sipariş"}
-                    {key === "avgDeliveryTime" && "Ort. Teslimat Süresi"}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Courier Information */}
           <motion.div className="w-full max-w-4xl mx-auto space-y-5 mb-8" variants={itemVariants}>
-            <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                Kullanıcı Adı
-              </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  name="fullName"
-                  value={courier.fullName}
-                  onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                />
-                <motion.button
-                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
-                </motion.button>
-              </div>
-            </motion.div>
-
             <motion.div className="grid grid-cols-2 gap-6" variants={fadeInVariants}>
               <div>
                 <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
@@ -325,8 +336,8 @@ export default function CourierProfilePage() {
                 <div className="flex">
                   <input
                     type="text"
-                    name="firstName"
-                    value={courier.firstName}
+                    name="firstname"
+                    value={courier.firstname}
                     onChange={handleInputChange}
                     className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
@@ -347,8 +358,8 @@ export default function CourierProfilePage() {
                 <div className="flex">
                   <input
                     type="text"
-                    name="lastName"
-                    value={courier.lastName}
+                    name="lastname"
+                    value={courier.lastname}
                     onChange={handleInputChange}
                     className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                   />
@@ -363,7 +374,6 @@ export default function CourierProfilePage() {
               </div>
             </motion.div>
 
-            {/* Email field */}
             <motion.div variants={fadeInVariants}>
               <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Email
@@ -386,7 +396,6 @@ export default function CourierProfilePage() {
               </div>
             </motion.div>
 
-            {/* Phone field */}
             <motion.div variants={fadeInVariants}>
               <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 Telefon
@@ -394,8 +403,8 @@ export default function CourierProfilePage() {
               <div className="flex">
                 <input
                   type="tel"
-                  name="phone"
-                  value={courier.phone || ""}
+                  name="phoneNumber"
+                  value={courier.phoneNumber}
                   onChange={handleInputChange}
                   className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
@@ -409,30 +418,73 @@ export default function CourierProfilePage() {
               </div>
             </motion.div>
 
-            {/* Address field */}
-            <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                Adres
-              </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  name="address"
-                  value={courier.address}
-                  onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                />
-                <motion.button
-                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
-                </motion.button>
+            <motion.div variants={fadeInVariants} className="grid grid-cols-2 gap-6">
+              <div className="m-2">
+                <label htmlFor="cityDropdown" className="block text-base text-gray-800 mb-1">
+                  İl
+                </label>
+                <div className="relative">
+                  <select
+                    id="cityDropdown"
+                    name="districtCity"
+                    value={courier.districtCity}
+                    onChange={onCityDropdownValueChanged}
+                    className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                  >
+                    {TURKISH_CITIES.map((option) => (
+                      <option key={option.value} value={option.value} disabled={option.value === ""}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    viewBox="0 0 24 24"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div className="m-2">
+                <label htmlFor="districtDropdown" className="block text-base text-gray-800 mb-1">
+                  İlçe
+                </label>
+                <div className="relative">
+                  <select
+                    id="districtDropdown"
+                    name="districtName"
+                    value={courier.districtName}
+                    onChange={onDistrictDropdownValueChanged}
+                    className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                  >
+                    {districts.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    viewBox="0 0 24 24"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
               </div>
             </motion.div>
 
-            {/* ID Number field */}
             <motion.div variants={fadeInVariants}>
               <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
                 T.C. Kimlik No
@@ -440,103 +492,8 @@ export default function CourierProfilePage() {
               <div className="flex">
                 <input
                   type="text"
-                  name="idNumber"
-                  value={courier.idNumber}
-                  onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                />
-                <motion.button
-                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
-                </motion.button>
-              </div>
-            </motion.div>
-
-            {/* Vehicle Type select */}
-            <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                Araç Tipi
-              </label>
-              <Select
-                value={courier.vehicleType}
-                onValueChange={(value) => setCourier((prev) => ({ ...prev, vehicleType: value }))}
-              >
-                <SelectTrigger
-                  className={`${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} py-3 px-4 transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className={darkMode ? "bg-[#2c2c2c] text-white border-gray-600" : ""}>
-                  <SelectItem value="Motorsiklet">Motorsiklet</SelectItem>
-                  <SelectItem value="Araba">Araba</SelectItem>
-                  <SelectItem value="Bisiklet">Bisiklet</SelectItem>
-                  <SelectItem value="Scooter">Scooter</SelectItem>
-                  <SelectItem value="Elektrikli Bisiklet">Elektrikli Bisiklet</SelectItem>
-                </SelectContent>
-              </Select>
-            </motion.div>
-
-            {/* License Plate field */}
-            <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                Plaka (Bağımsız Kurye için)
-              </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  name="licensePlate"
-                  value={courier.licensePlate}
-                  onChange={handleInputChange}
-                  className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                />
-                <motion.button
-                  className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border border-l-0 rounded-r-md px-3`}
-                  whileHover={{ backgroundColor: darkMode ? "#4b5563" : "#fef3c7" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Edit2 className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
-                </motion.button>
-              </div>
-            </motion.div>
-
-            {/* Work Schedule select */}
-            <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                Çalışma Şekli
-              </label>
-              <Select
-                value={courier.workSchedule}
-                onValueChange={(value) => setCourier((prev) => ({ ...prev, workSchedule: value }))}
-              >
-                <SelectTrigger
-                  className={`${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} py-3 px-4 transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className={darkMode ? "bg-[#2c2c2c] text-white border-gray-600" : ""}>
-                  <SelectItem value="Tam Zamanlı">Tam Zamanlı</SelectItem>
-                  <SelectItem value="Yarı Zamanlı">Yarı Zamanlı</SelectItem>
-                  <SelectItem value="Hafta Sonu">Hafta Sonu</SelectItem>
-                  <SelectItem value="Esnek Çalışma">Esnek Çalışma</SelectItem>
-                  <SelectItem value="Serbest Zamanlı">Serbest Zamanlı</SelectItem>
-                </SelectContent>
-              </Select>
-            </motion.div>
-
-            {/* Experience field */}
-            <motion.div variants={fadeInVariants}>
-              <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                Deneyim (Yıl)
-              </label>
-              <div className="flex">
-                <input
-                  type="number"
-                  name="experience"
-                  value={courier.experience}
-                  onChange={handleInputChange}
+                  name="governmentId"
+                  value={courier.governmentId}
                   className={`w-full ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-l-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
                 />
                 <motion.button
@@ -550,108 +507,6 @@ export default function CourierProfilePage() {
             </motion.div>
           </motion.div>
 
-          {/* Document Upload */}
-          <motion.div className="w-full max-w-4xl mx-auto mb-8" variants={itemVariants}>
-            <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-              Ehliyet
-            </label>
-            <motion.div
-              className={`${darkMode ? "bg-[#333] border-gray-600" : "bg-[#F2E8D6] border-amber-100"} border rounded-md p-10 flex flex-col items-center justify-center`}
-              whileHover={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" }}
-            >
-              <motion.div
-                className={`w-20 h-24 ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} border ${darkMode ? "border-gray-600" : "border-gray-200"} rounded-md flex items-center justify-center mb-3`}
-                whileHover={{ y: -5 }}
-                animate={{
-                  boxShadow: ["0px 0px 0px rgba(0,0,0,0)", "0px 4px 8px rgba(0,0,0,0.1)", "0px 0px 0px rgba(0,0,0,0)"],
-                }}
-                transition={{
-                  repeat: Number.POSITIVE_INFINITY,
-                  duration: 2,
-                }}
-              >
-                <Upload className={`h-10 w-10 ${darkMode ? "text-gray-400" : "text-gray-400"}`} />
-              </motion.div>
-              <p className={`text-sm font-medium text-center ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}>
-                Kuryenin Ehliyeti
-              </p>
-              <p className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"} text-center mt-1`}>
-                PDF, JPG veya PNG formatında
-              </p>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className={`mt-4 ${darkMode ? "bg-[#2c2c2c] border-purple-400 text-purple-400 hover:bg-[#333]" : "bg-white border-amber-200 text-[#6b4b10] hover:bg-amber-100"}`}
-                >
-                  Dosya Seç
-                </Button>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          {/* Working Days and Hours */}
-          <motion.div className="w-full max-w-4xl mx-auto mb-8" variants={itemVariants}>
-            <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-              Çalışma Saatleri
-            </label>
-            <motion.div
-              className={`${darkMode ? "bg-[#333]" : "bg-[#F2E8D6]"} rounded-lg p-6`}
-              whileHover={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" }}
-            >
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                {Object.entries(courier.workingDays).map(([day, isWorking], index) => (
-                  <motion.div
-                    key={day}
-                    className="flex items-center space-x-2"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 * index }}
-                  >
-                    <Checkbox
-                      id={`day-${day}`}
-                      checked={isWorking}
-                      onCheckedChange={() => handleWorkingDayChange(day)}
-                    />
-                    <label
-                      htmlFor={`day-${day}`}
-                      className={`text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}
-                    >
-                      {day}
-                    </label>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                    Başlangıç Saati
-                  </label>
-                  <input
-                    type="time"
-                    value={courier.workingHours.start}
-                    onChange={(e) => handleNestedChange("workingHours", "start", e.target.value)}
-                    className={`w-full ${darkMode ? "bg-[#2c2c2c] text-white border-gray-600" : "bg-white border-amber-100"} border rounded-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                  />
-                </div>
-                <div>
-                  <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>
-                    Bitiş Saati
-                  </label>
-                  <input
-                    type="time"
-                    value={courier.workingHours.end}
-                    onChange={(e) => handleNestedChange("workingHours", "end", e.target.value)}
-                    className={`w-full ${darkMode ? "bg-[#2c2c2c] text-white border-gray-600" : "bg-white border-amber-100"} border rounded-md py-3 px-4 text-sm transition-all duration-200 focus:ring-2 focus:ring-amber-300 focus:outline-none`}
-                  />
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Update Button */}
           <motion.div
             className="w-full max-w-4xl mx-auto"
             variants={itemVariants}
@@ -666,7 +521,6 @@ export default function CourierProfilePage() {
             </Button>
           </motion.div>
 
-          {/* Logout Link */}
           <motion.button
             onClick={handleLogout}
             className={`w-full max-w-4xl mx-auto block text-center py-3 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-[#333]" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
@@ -682,12 +536,10 @@ export default function CourierProfilePage() {
         </motion.div>
       </div>
 
-      {/* Footer */}
       <footer
         className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
       >
         <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-
         <div className="flex gap-6">
           <a
             href="https://twitter.com"

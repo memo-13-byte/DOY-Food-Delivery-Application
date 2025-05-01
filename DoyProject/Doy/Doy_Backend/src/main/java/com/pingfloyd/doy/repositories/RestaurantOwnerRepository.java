@@ -10,7 +10,7 @@ import java.util.Set;
 public interface RestaurantOwnerRepository extends JpaRepository<RestaurantOwner , Long> {
     Optional<RestaurantOwner> findByEmail(String email);
     Optional<RestaurantOwner> findByGovernmentId(String governmentId);
-    Set<RestaurantOwner> findRestaurantOwnersByIsEnabledFalse();
+    Set<RestaurantOwner> findRestaurantOwnersByIsEnabledFalseAndIsBannedFalse();
 
 
 }
