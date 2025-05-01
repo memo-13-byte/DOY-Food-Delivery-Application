@@ -1,7 +1,10 @@
 package com.pingfloyd.doy.storage;
 
+import com.pingfloyd.doy.entities.Image;
 import com.pingfloyd.doy.exception.StorageException;
 import com.pingfloyd.doy.exception.StorageFileNotFoundException;
+import com.pingfloyd.doy.repositories.CartRepository;
+import com.pingfloyd.doy.repositories.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,7 +26,7 @@ public class FileSystemStorageService implements IStorageService{
     private final Path rootLocation;
 
     @Autowired
-    public FileSystemStorageService(StorageProperties properties) {
+    public FileSystemStorageService(StorageProperties properties, ImageRepository imageRepository) {
         if(properties.getLocation().trim().isEmpty()) {
             throw new StorageException("File upload location can not be empty.");
         }
@@ -57,6 +60,32 @@ public class FileSystemStorageService implements IStorageService{
             throw new StorageException("Failed to store file.", e);
         }
     }
+
+    @Override
+    public void storeImage(MultipartFile file, Long imageId, String extension) {
+        try {
+            if (file.isEmpty()) {
+                throw new StorageException("Failed to store empty file.");
+            }
+
+            Path imagesDir = this.rootLocation.resolve("images");
+            Files.createDirectories(imagesDir); // Ensure 'images/' exists
+
+            Path destinationFile = imagesDir.resolve(imageId + "." + extension)
+                    .normalize().toAbsolutePath();
+
+            if (!destinationFile.getParent().equals(imagesDir.toAbsolutePath())) {
+                throw new StorageException("Cannot store file outside current directory");
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            throw new StorageException("Failed to store file.", e);
+        }
+    }
+
 
     @Override
     public Stream<Path> loadAll() {

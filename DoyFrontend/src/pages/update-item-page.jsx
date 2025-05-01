@@ -124,22 +124,34 @@ export default function UpdateItemPage() {
   }
 
   // Handle image upload
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
     if (file) {
+      const validExtensions = ["jpg", "jpeg", "png"];
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+  
+      if (!validExtensions.includes(fileExtension)) {
+        alert("Lütfen sadece JPG, JPEG veya PNG formatında bir görsel yükleyin.");
+        setFormData((prev) => ({
+          ...prev,
+          image: null,
+        }));
+        setImagePreview(null);
+              return;
+      }
+  
       setFormData((prev) => ({
         ...prev,
         image: file,
-      }))
-
-      // Create preview
-      const reader = new FileReader()
+      }));
+  
+      const reader = new FileReader();  
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   // Handle drag over for image upload
   const handleDragOver = (e) => {

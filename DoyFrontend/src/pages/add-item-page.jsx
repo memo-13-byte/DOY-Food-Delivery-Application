@@ -184,22 +184,35 @@ export default function AddItemPage() {
   }
 
   // Handle image upload
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
     if (file) {
+      const validExtensions = ["jpg", "jpeg", "png"];
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+  
+      if (!validExtensions.includes(fileExtension)) {
+        alert("Lütfen sadece JPG, JPEG veya PNG formatında bir görsel yükleyin.");
+        setFormData((prev) => ({
+          ...prev,
+          image: null,
+        }));
+        setImagePreview(null);
+              return;
+      }
+  
       setFormData((prev) => ({
         ...prev,
         image: file,
-      }))
-
-      // Create preview
-      const reader = new FileReader()
+      }));
+  
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
+  
 
   // Handle drag over for image upload
   const handleDragOver = (e) => {
@@ -245,66 +258,109 @@ export default function AddItemPage() {
   }
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+// Handle form submission
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Set validation attempted to true
-    setValidationAttempted(true)
+  setValidationAttempted(true);
+  const allTouched = Object.keys(formData).reduce((acc, key) => {
+    acc[key] = true;
+    return acc;
+  }, {});
+  setTouched(allTouched);
 
-    // Mark all fields as touched
-    const allTouched = Object.keys(formData).reduce((acc, key) => {
-      acc[key] = true
-      return acc
-    }, {})
-    setTouched(allTouched)
-
-    // Validate form
-    const isValid = validateForm()
-
-    if (!isValid) {
-      // Shake the form to indicate validation errors
-      setFormShake(true)
-      setTimeout(() => setFormShake(false), 500)
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      const formDataToSend = {
-        name: formData.name,
-        description: formData.description,
-        price: Number.parseFloat(formData.price),
-        restaurantId: restaurantId,
-        menuItemType: reversemenuItemTypeMap[Number.parseInt(formData.menuItemType)],
-      }
-      console.log(formDataToSend)
-      /*
-            if (formData.image) {
-              formDataToSend.append("image", formData.image)
-            }*/
-      
-      let response
-      if (isEditMode) {
-        // Update existing item
-        
-        response = await axios.put(`http://localhost:8080/api/item/update/${itemId}`, formDataToSend)
-      } else {
-        // Create new item
-        response = await axios.post("http://localhost:8080/api/item/post", formDataToSend)
-      }
-
-      // Show success animation before redirecting
-      setShowSuccess(true)
-      setTimeout(() => {
-        // Redirect back to management page on success with restaurant ID
-        navigate(`/restaurants/manage/${restaurantId}`)
-      }, 1500)
-    } catch (error) {
-      setErrors(getResponseErrors(error))
-      setIsLoading(false)
-    }
+  const isValid = validateForm();
+  if (!isValid) {
+    setFormShake(true);
+    setTimeout(() => setFormShake(false), 500);
+    return;
   }
+
+  setIsLoading(true);
+
+  // Prepare item data (excluding the image file itself)
+  const itemDataToSend = {
+    name: formData.name,
+    description: formData.description,
+    price: Number.parseFloat(formData.price),
+    restaurantId: restaurantId,
+    menuItemType: reversemenuItemTypeMap[Number.parseInt(formData.menuItemType)],
+  };
+  console.log("Sending item data:", itemDataToSend);
+
+  try {
+    let newItemId = itemId; // Use existing itemId if in edit mode
+
+    // --- Step 1: Create or Update Item ---
+    if (isEditMode) {
+      // Update existing item (logic remains similar, maybe update image separately too)
+      console.log(`Updating item ${itemId}`);
+      await axios.put(`http://localhost:8080/api/item/update/${itemId}`, itemDataToSend);
+      console.log(`Item ${itemId} updated successfully.`);
+      // Decide if image needs re-uploading on edit
+      // For now, let's assume image upload only happens on create or if a *new* image is selected in edit mode
+    } else {
+      // Create new item
+      console.log("Creating new item...");
+      const response = await axios.post("http://localhost:8080/api/item/post", itemDataToSend);
+      console.log("Item creation response:", response.data);
+      // --- Step 2: Get the new Item ID ---
+      if (response.data && response.data.id) {
+        newItemId = response.data.id; // Get the ID from the response
+        console.log(`New item created with ID: ${newItemId}`);
+      } else {
+        throw new Error("Failed to get new item ID from response.");
+      }
+    }
+
+    // --- Step 3: Upload Image if available and we have an ID ---
+    if (formData.image && newItemId) {
+       console.log(`Uploading image for item ID: ${newItemId}`);
+       const imageFormData = new FormData();
+       imageFormData.append("file", formData.image); // 'file' should match backend @RequestParam("file")
+
+       try {
+         // Use the newItemId in the URL
+         const imageResponse = await axios.post(
+           `http://localhost:8080/api/upload/image/${newItemId}`, // <--- MODIFIED URL
+           imageFormData,
+           {
+             headers: {
+               "Content-Type": "multipart/form-data",
+             },
+           }
+         );
+         console.log("Image upload success:", imageResponse.data);
+         // Optionally update item with image URL returned from image upload endpoint
+         // Example: await axios.patch(`/api/item/update-image-url/${newItemId}`, { imageUrl: imageResponse.data.imageUrl });
+
+       } catch (imageError) {
+         console.error("Image upload error:", imageError);
+         // Decide how to handle image upload failure. Maybe show a specific error.
+         // You might want to alert the user that the item was created but the image failed to upload.
+         setErrors(prev => ({ ...prev, image: "Görsel yüklenemedi: " + (getResponseErrors(imageError)?.message || "Sunucu hatası") }));
+         setIsLoading(false);
+         return; // Stop further execution if image upload fails
+       }
+    } else if (formData.image && !newItemId) {
+        console.warn("Image selected but no Item ID available for upload.");
+        // This case shouldn't happen with the logic above unless item creation failed unexpectedly without throwing an error.
+    }
+
+    // Show success animation and redirect
+    setShowSuccess(true);
+    setTimeout(() => {
+      navigate(`/restaurants/manage/${restaurantId}`);
+    }, 1500);
+
+  } catch (error) {
+    console.error("Error during form submission:", error);
+    // Extract and set errors from the item creation/update phase
+    const extractedErrors = getResponseErrors(error);
+    setErrors(prev => ({ ...prev, ...extractedErrors })); // Merge errors
+    setIsLoading(false);
+  }
+};
 
   // Update the back button click handler
   const handleBackClick = () => {

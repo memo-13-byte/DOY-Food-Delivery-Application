@@ -42,6 +42,10 @@ public class MenuItem {
     @Column(name = "menu_item_type", length = 30, nullable = false)
     private MenuItemType menuItemType;
 
+    @OneToOne
+    @JoinColumn(name = "image_id", referencedColumnName = "image_id")
+    private Image image;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)

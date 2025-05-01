@@ -2,6 +2,7 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.DtoMenuItem;
 import com.pingfloyd.doy.dto.DtoMenuItemIU;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
