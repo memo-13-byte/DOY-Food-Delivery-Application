@@ -35,6 +35,7 @@ public class RestaurantService implements IRestaurantService {
         Restaurant restaurant = findRestaurantById(id);
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(restaurant, dtoRestaurant);
+        dtoRestaurant.setImageId(restaurant.getImage() == null ? null : restaurant.getImage().getId());
         return dtoRestaurant;
     }
 
@@ -49,6 +50,7 @@ public class RestaurantService implements IRestaurantService {
 
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(savedRestaurant, dtoRestaurant);
+        dtoRestaurant.setImageId(restaurant.getImage() == null ? null : restaurant.getImage().getId());
         return dtoRestaurant;
     }
 
@@ -64,6 +66,7 @@ public class RestaurantService implements IRestaurantService {
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(savedRestaurant, dtoRestaurant);
+        dtoRestaurant.setImageId(restaurant.getImage() == null ? null : restaurant.getImage().getId());
         return dtoRestaurant;
     }
 
@@ -74,6 +77,7 @@ public class RestaurantService implements IRestaurantService {
         restaurantRepository.delete(restaurant);
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(restaurant, dtoRestaurant);
+        dtoRestaurant.setImageId(restaurant.getImage() == null ? null : restaurant.getImage().getId());
         return dtoRestaurant;
     }
 
@@ -84,6 +88,7 @@ public class RestaurantService implements IRestaurantService {
         for (Restaurant restaurant : restaurantList) {
             DtoRestaurant dtoRestaurant = new DtoRestaurant();
             BeanUtils.copyProperties(restaurant, dtoRestaurant);
+            dtoRestaurant.setImageId(restaurant.getImage() == null ? null : restaurant.getImage().getId());
             dtoRestaurantList.add(dtoRestaurant);
         }
 

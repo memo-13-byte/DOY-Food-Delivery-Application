@@ -20,4 +20,5 @@ public class DtoRestaurant {
     private Integer minOrderPrice;
 
     private Address address;
+    private Long imageId;
 }

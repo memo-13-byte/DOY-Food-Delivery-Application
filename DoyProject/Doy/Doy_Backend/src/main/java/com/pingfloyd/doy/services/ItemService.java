@@ -51,7 +51,7 @@ public class ItemService implements IItemService {
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(savedItem, dtoMenuItem);
         dtoMenuItem.setRestaurantId(savedItem.getRestaurant().getId());
-
+        dtoMenuItem.setImageId(item.getImage() == null ? null : item.getImage().getId());
         return dtoMenuItem;
     }
 
@@ -68,7 +68,7 @@ public class ItemService implements IItemService {
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(savedItem, dtoMenuItem);
         dtoMenuItem.setRestaurantId(savedItem.getRestaurant().getId());
-
+        dtoMenuItem.setImageId(item.getImage() == null ? null : item.getImage().getId());
         return dtoMenuItem;
     }
 
@@ -84,7 +84,7 @@ public class ItemService implements IItemService {
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(item, dtoMenuItem);
         dtoMenuItem.setRestaurantId(item.getRestaurant().getId());
-
+        dtoMenuItem.setImageId(item.getImage() == null ? null : item.getImage().getId());
         return dtoMenuItem;
     }
 
@@ -95,7 +95,7 @@ public class ItemService implements IItemService {
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(item, dtoMenuItem);
         dtoMenuItem.setRestaurantId(item.getRestaurant().getId());
-
+        dtoMenuItem.setImageId(item.getImage() == null ? null : item.getImage().getId());
         return dtoMenuItem;
     }
 

@@ -32,5 +32,5 @@ public class DtoRestaurantIU {
     @Min(value = 0, message = "Minimum order price cannot be negative.")
     private Integer minOrderPrice;
 
-
+    private Long imageId;
 }
