@@ -62,7 +62,7 @@ const DISTRICT_DATA = {
 
 
 // --- Constants (Categories, Cities) remain the same ---
-const RESTAURANT_CATEGORIES = [ /* ...categories */ { value: "", label: "Kategori Seçin" }, { value: "KEBAP", label: "Kebap" }, { value: "BURGER", label: "Burger" }, { value: "PIZZA", label: "Pizza" }, { value: "EV_YEMEKLERI", label: "Ev Yemekleri" }, { value: "DENIZ_URUNLERI", label: "Deniz Ürünleri" }, { value: "TATLI", label: "Tatlı" }, { value: "CAFE", label: "Kafe" }, { value: "OTHER", label: "Diğer" } ];
+const RESTAURANT_CATEGORIES = [ /* ...categories */ { value: "", label: "Kategori Seçin" }, { value: "KEBAB", label: "Kebap" }, { value: "BURGER", label: "Burger" }, { value: "PIZZA", label: "Pizza" }, { value: "HOME_COOKING", label: "Ev Yemekleri" }, { value: "SEA_FOOD", label: "Deniz Ürünleri" }, { value: "DESERT", label: "Tatlı" }, { value: "COFFEE", label: "Kafe" }, { value: "OTHER", label: "Diğer" } ];
 const TURKISH_CITIES = [ /* ...cities */ { value: "", label: "Şehir Seçin" }, { value: "ISTANBUL", label: "İstanbul" }, { value: "ANKARA", label: "Ankara" }, { value: "IZMIR", label: "İzmir" }, { value: "BURSA", label: "Bursa" }, { value: "ANTALYA", label: "Antalya" } ];
 
 

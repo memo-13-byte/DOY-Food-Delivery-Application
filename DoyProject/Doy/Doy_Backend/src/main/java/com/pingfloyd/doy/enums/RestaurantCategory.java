@@ -4,5 +4,13 @@ public enum RestaurantCategory {
     BURGER,
     PIZZA,
     KEBAB,
-    CASUAL_DINING
+    CASUAL_DINING,
+    HOME_COOKING,
+    SEA_FOOD,
+    DESERT,
+    COFFEE,
+    OTHER
+
+
+
 }

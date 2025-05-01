@@ -24,6 +24,7 @@ const RestaurantList = ({ restaurants, setRestaurants, setSelectedRestaurant, se
                 }));
                 setRestaurants(data)
                 const filtered = data
+                    /*
                 .filter(restaurant => {
                     const matchesSearch = restaurant.name.toLowerCase().includes(search.toLowerCase());
                     const matchesFilter =
@@ -32,7 +33,7 @@ const RestaurantList = ({ restaurants, setRestaurants, setSelectedRestaurant, se
                         (filter === "banned" && restaurant.banned) ||
                         (filter === "suspended" && restaurant.suspended);
                     return matchesSearch && matchesFilter;
-                });
+                });*/
                 setFilteredRestaurants(filtered)
                 setRestaurantsToDisplay(showAll ? filtered : filtered.slice(0, 4))
             } catch (error) {
@@ -87,9 +88,10 @@ const RestaurantList = ({ restaurants, setRestaurants, setSelectedRestaurant, se
                 }}
             >
                 <option value="all">All Restaurants</option>
-                <option value="active">Active Restaurants</option>
-                <option value="banned">Banned Restaurants</option>
-                <option value="suspended">Suspended Restaurants</option>
+
+                {/*<option value="active">Active Restaurants</option>*/}
+                {/*<option value="banned">Banned Restaurants</option>*/}
+                {/*<option value="suspended">Suspended Restaurants</option>*/}
             </select>
 
             {/* Restaurant Listesi */}

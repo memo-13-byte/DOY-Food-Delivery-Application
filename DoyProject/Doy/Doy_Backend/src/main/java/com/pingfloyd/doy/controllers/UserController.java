@@ -31,6 +31,13 @@ public class UserController implements IUserController{
         return ResponseEntity.ok(userService.getAllRestaurantOwners());
     }
 
+    @GetMapping("/get-admin-users")
+    public ResponseEntity<List<DtoAdminUserManagement>> getAdminManagementUsers(){
+        return ResponseEntity.ok(userService.getAdminManagedUsers());
+    }
+
+
+
     @Override
     @GetMapping("/get-all-couriers")
     public ResponseEntity<List<DtoCourier>> getAllCouriers() {

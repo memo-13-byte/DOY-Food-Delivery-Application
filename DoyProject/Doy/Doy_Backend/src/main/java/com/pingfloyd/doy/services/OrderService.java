@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -161,12 +162,15 @@ public class OrderService {
         }
         CustomerOrder customerOrder = CreateCustomerOrder(customer);
         Set<CartItem> set = customer.getCart().getItems();
+        Double price = 0.0;
         for(CartItem item : set){
             OrderItem orderItem = CreateOrderItem(item,customerOrder);
+            price +=  item.getMenuItem().getPrice().doubleValue();
             //orderItemRepository.save(orderItem);
             customerOrder.getItems().add(orderItem);
         }
         set.clear();
+        customerOrder.setPrice(price);
         customerOrderRepository.save(customerOrder);
         paymentRepository.save(CreatePayment(dtoPaymentInformationIU , customer));
         return true;
@@ -203,6 +207,14 @@ public class OrderService {
             throw new RestaurantNotFoundException("Restaurant with given id doesn't exist!");
         }
         List<CustomerOrder> orders = customerOrderRepository.findCustomerOrdersByRestaurant(restaurant);
+        return MapOrders(orders);
+    }
+    public DtoRestaurantOrders GetCourierOrders(Long id){
+        Optional<Courier> courier = courierService.GetCourierById(id);
+        if(courier.isEmpty()){
+            throw new UserNotFoundException("Courier with given id cannot be found");
+        }
+        List<CustomerOrder> orders = customerOrderRepository.findCustomerOrdersByCourier(courier.get());
         return MapOrders(orders);
     }
 
@@ -310,16 +322,27 @@ public class OrderService {
     public Boolean CourierResponse(Long requestId , Boolean response){
         CourierRequest request = courierRequestService.GetCourierRequestById(requestId);
         CustomerOrder order = request.getOrder();
+        if(order == null){
+            throw new OrderNotFoundException("There are no order associated with this request");
+        }
+        if(order.getCourier() != null){
+            courierRequestService.DeleteRequest(request);
+
+            throw new OrderAlreadyTakenException("Order already accepted by another courier");
+        }
         if(response){
             order.setStatus(OrderStatus.AWAITING_PICKUP);
+            request.getCourier().setIsAvailable(false);
+            request.getCourier().setIsOnDelivery(true);
             order.setCourier(request.getCourier());
             request.setAcceptedAt(LocalDateTime.now());
             customerOrderRepository.save(order);
+            courierService.SaveCourier(request.getCourier());
             return true;
         }
         request.setRejectedAt(LocalDateTime.now());
         courierRequestService.DeleteRequest(request);
-        return false;
+        return true;
     }
 
     public DtoRestaurantOrders GetCourierActiveOrder(Long id){
@@ -341,9 +364,9 @@ public class OrderService {
         DtoRestaurantOrders.OrderInfo orderInfo = new DtoRestaurantOrders.OrderInfo();
         orderInfo.setOrderId(order.getOrderId());
         orderInfo.setCreationDate(order.getCreationDate());
-        orderInfo.setCustomerName(order.getCustomer().getEmail());
+        orderInfo.setCustomerName(order.getCustomer().getFirstname() + " " +order.getCustomer().getLastname());
         orderInfo.setCustomerPhone(order.getCustomer().getPhoneNumber());
-        orderInfo.setPrice(1000.0);
+        orderInfo.setPrice(order.getPrice());
         orderInfo.setStatus(order.getStatus());
         dtoRestaurantOrders.getOrderInfoList().add(orderInfo);
     }
@@ -366,6 +389,12 @@ public class OrderService {
         CustomerOrder customerOrder = order.get();
         if(status.getAccept()){
             customerOrder.setStatus(status.getStatus());
+            if(status.getStatus() == OrderStatus.DELIVERED){
+                customerOrder.getCourier().setIsOnDelivery(false);
+                customerOrder.getCourier().setIsAvailable(true);
+                customerOrder.setDeliveryDate(LocalDate.now());
+                courierService.SaveCourier(customerOrder.getCourier());
+            }
         }
         else{
             customerOrder.setStatus(OrderStatus.REJECTED);
@@ -458,6 +487,7 @@ public class OrderService {
             request.setOrderId(order.getOrderId());
             request.setNote("None");
             request.setCustomerEmail(customer.getEmail());
+            request.setCustomerAddress(MapAddress(customer.getCurrent_address()));
             //requestInfo.setCustomerAddress(MapAddress(customer.getCurrent_address()));
             request.setCustomerName(customer.getFirstname() + " " + customer.getLastname());
             request.setCustomerPhone(customer.getPhoneNumber());

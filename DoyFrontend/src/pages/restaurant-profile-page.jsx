@@ -102,6 +102,7 @@ export default function RestaurantProfilePage() {
       console.log(editableData)
       await axios.put(`http://localhost:8080/api/users/restaurant-owners/update/${restaurant.email}`, {
         ...editableData,
+        governmentId: governmentId,
         role: "RESTAURANT_OWNER"
       })
     } catch (error) {

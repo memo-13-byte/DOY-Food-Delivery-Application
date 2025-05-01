@@ -3,6 +3,7 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.entities.Courier;
 import com.pingfloyd.doy.entities.District;
+import com.pingfloyd.doy.exception.CourierIsNotAvailableException;
 import com.pingfloyd.doy.exception.UserNotFoundException;
 import com.pingfloyd.doy.repositories.CourierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class CourierService {
     public Boolean GetCourierAvailability(Long id){
         Optional<Courier> courier = courierRepository.findById(id);
         if(courier.isEmpty()){
-            throw new UserNotFoundException("Courier with given email doesn't exist!");
+            throw new UserNotFoundException("Courier with given id cannot be found!");
         }
         return courier.get().getIsAvailable();
 
@@ -51,9 +52,15 @@ public class CourierService {
         if(courier.isEmpty()){
             throw new UserNotFoundException("Courier with given id doesn't exist!");
         }
+        if(availability && courier.get().getIsOnDelivery()){
+            throw new CourierIsNotAvailableException("Courier has already accepted another order!");
+        }
         Courier c = courier.get();
         c.setIsAvailable(availability);
         courierRepository.save(c);
+    }
+    public void SaveCourier(Courier courier){
+        courierRepository.save(courier);
     }
 
 }

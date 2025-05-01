@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.exception.ApiError;
+import com.pingfloyd.doy.exception.UserIsAlreadySuspendedException;
 import com.pingfloyd.doy.exception.UserNotFoundException;
 import com.pingfloyd.doy.repositories.CourierRepository;
 import com.pingfloyd.doy.repositories.CustomerRepository;
@@ -276,6 +277,29 @@ public class UserService implements UserDetailsService, IUserService {
         if(u.isEmpty() && r.isEmpty()){
             throw new UserNotFoundException("Courier or Restaurant Owner with given id cannot be found!");
         }
+        if(request.getBanDuration() == -2){
+            if(u.isPresent()){
+                Ban ban = suspensionService.findBanByUser(u.get());
+                if(ban == null){
+                    throw new UserNotFoundException("Courier or Restaurant Owner with given id cannot be found!");
+                }
+                u.get().setIsBanned(false);
+                u.get().setIsEnabled(true);
+                suspensionService.RemoveBan(ban);
+                courierRepository.save(u.get());
+            }
+            else{
+                Ban ban = suspensionService.findBanByUser(r.get());
+                if(ban == null){
+                    throw new UserNotFoundException("Courier or Restaurant Owner with given id cannot be found!");
+                }
+                r.get().setIsBanned(false);
+                r.get().setIsEnabled(true);
+                suspensionService.RemoveBan(ban);
+                restaurantOwnerRepository.save(r.get());
+            }
+            return true;
+        }
         LocalDateTime time = LocalDateTime.now();
         LocalDateTime endTime = null;
         if(request.getBanDuration() != -1){
@@ -284,13 +308,22 @@ public class UserService implements UserDetailsService, IUserService {
         Ban ban = new Ban();
         ban.setCreatedAt(time);
         ban.setEndDate(endTime);
+        ban.setDescription(request.getDescription());
         if(u.isPresent()){
+            Ban banTest = suspensionService.findBanByUser(u.get());
+            if(banTest != null){
+                throw new UserIsAlreadySuspendedException("Courier is already suspended!");
+            }
             ban.setUser(u.get());
             u.get().setIsBanned(true);
             u.get().setIsEnabled(false);
             courierRepository.save(u.get());
         }
         else{
+            Ban banTest = suspensionService.findBanByUser(r.get());
+            if(banTest != null){
+                throw new UserIsAlreadySuspendedException("Restaurant Owner is already suspended!");
+            }
             ban.setUser(r.get());
             r.get().setIsBanned(true);
             r.get().setIsEnabled(false);
@@ -298,6 +331,39 @@ public class UserService implements UserDetailsService, IUserService {
         }
         suspensionService.SaveBanRequest(ban);
         return true;
+    }
+
+    public List<DtoAdminUserManagement> getAdminManagedUsers(){
+        List<DtoAdminUserManagement> list = new ArrayList<>();
+        List<Courier> couriers = courierRepository.findAll();
+        List<RestaurantOwner> restaurantOwners = restaurantOwnerRepository.findAll();
+        for(Courier c : couriers){
+            DtoAdminUserManagement m = new DtoAdminUserManagement();
+            m.setFirstname(c.getFirstname());
+            m.setLastname(c.getLastname());
+            m.setIsSuspended(c.getIsBanned());
+            if(c.getIsBanned()){
+                Ban ban = suspensionService.isUserBanned(c);
+                m.setSuspendedUntil(ban.getEndDate());
+            }
+            m.setId(c.getId());
+            m.setRole(c.getRole());
+            list.add(m);
+        }
+        for(RestaurantOwner r : restaurantOwners){
+            DtoAdminUserManagement m = new DtoAdminUserManagement();
+            m.setFirstname(r.getFirstname());
+            m.setLastname(r.getLastname());
+            m.setIsSuspended(r.getIsBanned());
+            if(r.getIsBanned()){
+                Ban ban = suspensionService.isUserBanned(r);
+                m.setSuspendedUntil(ban.getEndDate());
+            }
+            m.setId(r.getId());
+            m.setRole(r.getRole());
+            list.add(m);
+        }
+        return list;
     }
 
 

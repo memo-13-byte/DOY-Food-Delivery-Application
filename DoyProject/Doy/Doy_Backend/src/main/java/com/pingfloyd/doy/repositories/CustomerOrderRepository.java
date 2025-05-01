@@ -13,6 +13,7 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder,Lon
     List<CustomerOrder> findByCourierAndStatus(Courier courier, OrderStatus status);
     List<CustomerOrder> findCustomerOrdersByRestaurant(Restaurant restaurant);
     Optional<CustomerOrder> findCustomerOrderByCourier(Courier courier);
+    List<CustomerOrder> findCustomerOrdersByCourier(Courier courier);
     Optional<CustomerOrder> findCustomerOrderByOrderId(Long id);
 
 }
