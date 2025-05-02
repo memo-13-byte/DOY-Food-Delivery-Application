@@ -205,7 +205,10 @@ const RestaurantDetail = () => {
               name: item.name || "İsimsiz Ürün",
               description: item.description || "",
               price: isNaN(price) ? 0 : price,
+              imageId: item.imageId,
+              image: `http://localhost:8080/api/upload/image/${item.imageId}`
             })
+            
           } else {
             console.warn(`Unknown menu item type: ${item.menuItemType} for item ID: ${item.id}`)
           }
@@ -257,10 +260,6 @@ const RestaurantDetail = () => {
         const userCartDto = response.data // Expecting UserCartDTO format defined before
 
         console.log("Received UserCartDTO:", userCartDto)
-
-        // Check if the fetched cart belongs to the CURRENT restaurant being viewed
-        
-        console.log(`Cart matches current restaurant (${currentRestaurantId}). Populating frontend cart.`)
 
         // --- Process UserCartDTO ---
         const formattedCartItems = []
@@ -654,9 +653,9 @@ const RestaurantDetail = () => {
               minWidth: isMobile ? "100%" : "300px",
             }}
           >
-            {restaurant.imageUrl ? (
+            {restaurant.imageId ? (
               <img
-                src={restaurant.imageUrl || "/placeholder.svg"}
+                src={`http://localhost:8080/api/upload/image/${restaurant.imageId}` || "/placeholder.svg"}
                 alt={restaurant.restaurantName}
                 style={{
                   width: isMobile ? "120px" : "160px",
