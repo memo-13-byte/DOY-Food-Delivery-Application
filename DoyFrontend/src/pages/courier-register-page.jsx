@@ -238,7 +238,11 @@ export default function CourierRegisterPage() {
           const { data, status } = error.response;
           console.error("API Error Response Data:", data); console.error("API Error Status:", status);
           if (data && typeof data === 'object' && data.errors && typeof data.errors === 'object' && Object.keys(data.errors).length > 0) { setBackendErrors(data.errors); }
-          else if (data && typeof data === 'string' && data.trim() !== '') { setBackendErrors([data]); }
+          else if (data && typeof data === 'string' && data.trim() !== '') { const translated = data.includes("Email is already in use")
+              ? "Bu e-posta adresiyle zaten bir hesap oluşturulmuş."
+              : data;
+
+            setBackendErrors([translated]); }
           else if (data && typeof data === 'object' && data.message) { setBackendErrors([data.message]); }
           else { setSubmitStatus({ success: false, error: `Sunucu hatası (${status}). Lütfen tekrar deneyin.` }); setBackendErrors(null); }
         } else if (error.request) { setSubmitStatus({ success: false, error: "Sunucuya ulaşılamadı. İnternet bağlantınızı kontrol edin." }); setBackendErrors(null);

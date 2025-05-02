@@ -264,7 +264,12 @@ export default function RestaurantRegisterPage() {
           else if (data && typeof data === 'string' && data.trim() !== '') {
             console.log("Setting backend error from string data:", data);
             // Treat the string as a list with one item for display below button
-            setBackendErrors([data]); // <--- MODIFIED: Put string into backendErrors array
+            const translated = data.includes("Email is already in use")
+                ? "Bu e-posta adresiyle zaten bir hesap oluşturulmuş."
+                : data;
+
+            setBackendErrors([translated]);
+            // <--- MODIFIED: Put string into backendErrors array
           }
           // 3. Check if data is an OBJECT with a 'message' property (treat as error below button)
           else if (data && typeof data === 'object' && data.message) {
