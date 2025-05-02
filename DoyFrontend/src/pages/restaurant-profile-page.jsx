@@ -281,6 +281,24 @@ export default function RestaurantProfilePage() {
             </Button>
           </motion.div>
 
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/orders`)}}
+              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+            >
+              See Given Orders
+            </Button>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/orders-status`)}}
+              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+            >
+              See Prepared Order Status
+            </Button>
+          </motion.div>
+
           {/* Cuisine Types */}
           {/*<motion.div variants={container} initial="hidden" animate={isLoaded ? "show" : "hidden"} className="mb-6">
             <motion.label

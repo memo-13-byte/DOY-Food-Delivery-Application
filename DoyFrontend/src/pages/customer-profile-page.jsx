@@ -9,6 +9,7 @@ import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import axios from "axios"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
+import { Button } from "../components/Button"
 
 const Input = ({ className, ...props }) => (
   <input className={`w-full px-3 py-2 border rounded-lg ${className}`} {...props} />
@@ -390,6 +391,16 @@ export default function CustomerProfilePage() {
                   </div>
                 </motion.div>
               ))}
+
+<motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={() => {navigate("/restaurants/browse")}}
+              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+            >
+              Browse Restaurants
+            </Button>
+          </motion.div>
+
               {activeTab === "profile" && (
                 <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
                   {/* Personal Information */}
