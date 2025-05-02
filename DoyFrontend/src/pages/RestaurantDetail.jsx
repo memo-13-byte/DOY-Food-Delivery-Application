@@ -259,48 +259,38 @@ const RestaurantDetail = () => {
         console.log("Received UserCartDTO:", userCartDto)
 
         // Check if the fetched cart belongs to the CURRENT restaurant being viewed
-        if (userCartDto && userCartDto.restaurantId === currentRestaurantId) {
-          console.log(`Cart matches current restaurant (${currentRestaurantId}). Populating frontend cart.`)
+        
+        console.log(`Cart matches current restaurant (${currentRestaurantId}). Populating frontend cart.`)
 
-          // --- Process UserCartDTO ---
-          const formattedCartItems = []
-          if (Array.isArray(userCartDto.items)) {
-            userCartDto.items.forEach((itemInfo) => {
-              // itemInfo is UserCartDTO.ItemInfo
-              if (
-                itemInfo &&
-                typeof itemInfo.quantity === "number" &&
-                itemInfo.quantity > 0 &&
-                itemInfo.menuItemId != null
-              ) {
-                for (let i = 0; i < itemInfo.quantity; i++) {
-                  const price =
-                    typeof itemInfo.price === "number" ? itemInfo.price : Number.parseFloat(itemInfo.price || 0)
-                  formattedCartItems.push({
-                    id: itemInfo.menuItemId, // Use menuItemId from DTO
-                    name: itemInfo.name || "İsimsiz Ürün",
-                    price: isNaN(price) ? 0 : price,
-                    description: itemInfo.description || "",
-                    // image: itemInfo.imageUrl // If available in DTO
-                  })
-                }
+        // --- Process UserCartDTO ---
+        const formattedCartItems = []
+        if (Array.isArray(userCartDto.items)) {
+          userCartDto.items.forEach((itemInfo) => {
+            // itemInfo is UserCartDTO.ItemInfo
+            if (
+              itemInfo &&
+              typeof itemInfo.quantity === "number" &&
+              itemInfo.quantity > 0 &&
+              itemInfo.menuItemId != null
+            ) {
+              for (let i = 0; i < itemInfo.quantity; i++) {
+                const price =
+                  typeof itemInfo.price === "number" ? itemInfo.price : Number.parseFloat(itemInfo.price || 0)
+                formattedCartItems.push({
+                  id: itemInfo.menuItemId, // Use menuItemId from DTO
+                  name: itemInfo.name || "İsimsiz Ürün",
+                  price: isNaN(price) ? 0 : price,
+                  description: itemInfo.description || "",
+                  // image: itemInfo.imageUrl // If available in DTO
+                })
               }
-            })
-          }
-          setCart(formattedCartItems)
-          console.log("Frontend cart populated:", formattedCartItems)
-          // --- End Processing ---
-        } else {
-          // Cart doesn't match or doesn't exist
-          if (userCartDto && userCartDto.restaurantId) {
-            console.log(
-              `User cart is for restaurant ${userCartDto.restaurantId}, not the current one (${currentRestaurantId}). Keeping cart empty.`,
-            )
-          } else {
-            console.log("User has no active cart or cart is not linked to any restaurant. Keeping cart empty.")
-          }
-          setCart([]) // Ensure local cart is empty if no match
+            }
+          })
         }
+        setCart(formattedCartItems)
+        console.log("Frontend cart populated:", formattedCartItems)
+        // --- End Processing ---
+      
       } catch (error) {
         console.error("Error fetching user cart:", error)
         if (error.response?.status === 401) {
