@@ -341,7 +341,13 @@ const RestaurantDetail = () => {
       }
 
       const url = `http://localhost:8080/order/add?itemId=${item.id}`
-      const response = await axios.get(url)
+      const header = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+      console.log(header)
+      const response = await axios.get(url, header)
 
       if (response.data === true) {
         // Optimistic update - add to cart immediately
@@ -398,7 +404,12 @@ const RestaurantDetail = () => {
     console.log("Attempting to remove item ID:", itemIdToRemove)
     try {
       const url = `http://localhost:8080/order/remove?itemId=${itemIdToRemove}`
-      const response = await axios.get(url)
+      const header = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+      const response = await axios.get(url, header)
 
       if (response.data === true) {
         setCart((prevCart) => {
@@ -427,7 +438,13 @@ const RestaurantDetail = () => {
     }
     console.log("Confirming order via API...")
     try {
-      const response = await axios.get("http://localhost:8080/order/confirm")
+      const header = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+      const response = await axios.get("http://localhost:8080/order/confirm", header)
+      
 
       console.log("Order confirmation response:", response.data)
       if (response.data === true) {

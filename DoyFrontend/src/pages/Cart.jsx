@@ -126,7 +126,12 @@ const Cart = () => {
 
         try {
             // *** Ensure Axios sends authentication headers (JWT etc.) ***
-            const response = await axios.post('http://localhost:8080/order/payment', payload); // Send flat payload
+            const header = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+              }
+            const response = await axios.post('http://localhost:8080/order/payment', payload, header); // Send flat payload
 
             console.log("Payment API Response:", response.data);
 
