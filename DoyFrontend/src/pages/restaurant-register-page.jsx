@@ -9,6 +9,7 @@ import {
   EyeOff, Building, Home, BookText, Tag, DollarSign, Navigation, Loader2,
   ListChecks // Icon for backend errors list
 } from "lucide-react"
+import { getResponseErrors } from "../services/exceptionUtils";
 
 // --- Custom UI components (Button, Input, Label, Checkbox, Switch, Textarea, Select) ---
 // Assume these components are defined as in the previous examples
@@ -255,6 +256,9 @@ export default function RestaurantRegisterPage() {
           console.error("API Error Response Data:", data);
           console.error("API Error Status:", status);
 
+
+          setBackendErrors(getResponseErrors(error))
+/*
           // 1. Check for SPECIFIC field errors object
           if (data && typeof data === 'object' && data.errors && typeof data.errors === 'object' && Object.keys(data.errors).length > 0) {
             console.log("Setting backend field errors (object):", data.errors);
@@ -277,7 +281,7 @@ export default function RestaurantRegisterPage() {
             console.log("Setting fallback GENERAL error message for status:", status);
             setSubmitStatus({ success: false, error: `Sunucu hatası (${status}). Lütfen tekrar deneyin.` });
             setBackendErrors(null); // Ensure backendErrors is null for fallback
-          }
+          }*/
         } else if (error.request) {
           // Network error (Shows ABOVE form)
           console.error("Network Error (No Response):", error.request);

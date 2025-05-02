@@ -64,10 +64,10 @@ public class RegistrationService {
     @Transactional
     public RestaurantOwner RestaurantOwnerRegister(RestaurantOwnerRegistrationRequest request , DtoRestaurantIU restaurant , DtoAddress address) throws UserAlreadyExistException{
         if(userService.loadUserByEmail(request.getEmail()).isPresent()){
-            throw new UserAlreadyExistException("Restaurant owner with given email already exist!") ;
+            throw new UserAlreadyExistException("User with given email already exists!") ;
         }
         if(restaurantOwnerService.GetByGovernmentId(request.getGovernmentId()).isPresent()){
-            throw new UserAlreadyExistException("Restaurant owner with given government id already exist!");
+            throw new UserAlreadyExistException("Restaurant owner with given government id already exists!");
         }
         RestaurantOwner restaurantOwner = CreateRestaurantOwner(request);
         Restaurant restaurantDb = CreateRestaurant(restaurant , restaurantOwner);
@@ -87,10 +87,10 @@ public class RegistrationService {
     @Transactional
     public Courier CourierRegister(CourierRegistrationRequest request){
         if(userService.loadUserByEmail(request.getEmail()).isPresent()){
-            throw new UserAlreadyExistException("Restaurant owner with given email already exist!") ;
+            throw new UserAlreadyExistException("User with given email already exists!") ;
         }
         if(courierService.GetByGovernmentId(request.getGovernmentId()).isPresent()){
-            throw new UserAlreadyExistException("Restaurant owner with given government id already exist!");
+            throw new UserAlreadyExistException("Courier with given government id already exists!");
         }
         Courier courier = CreateCourier(request);
         userService.SignUpCustomer(courier, UserRoles.COURIER);
