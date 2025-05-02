@@ -74,6 +74,12 @@ const Home = () => {
           .filter(
             (res) => res.restaurantName.toLowerCase().includes(searchText.toLowerCase()) && res.rating >= minRating,
           )
+          .map((res) => ({
+            ...res,
+            image: res.imageId
+              ? `http://localhost:8080/api/upload/image/${res.imageId}`
+              : "/placeholder.svg", 
+          }))
           .sort((a, b) => b.rating - a.rating) // ⭐️ büyükten küçüğe sırala
         console.log("results" + results)
         setFilteredRestaurants(results)
@@ -484,22 +490,25 @@ const Home = () => {
                 transition: "all 0.3s ease-in-out",
               }}
             >
-              <HiOutlineHome size={48} style={{ opacity: 0.4 }} />
+              <img
+                src={res.image}
+                alt={res.restaurantName}
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "12px",
+                  objectFit: "cover",
+                  marginRight: "1rem",
+                }}
+              />
               <div style={{ flexGrow: 1, marginLeft: "1rem" }}>
                 <h3 style={{ margin: 0 }}>{res.restaurantName}</h3>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                  }}
-                >
+                <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                   {renderStars(res.rating)}
                 </div>
               </div>
               <button
                 onClick={() =>
-                  // Changed from setLocation to navigate with state
                   navigate(`/restaurant/${res.id}`, {
                     state: { restaurant: res, selectedAddress, darkMode },
                   })
@@ -516,6 +525,7 @@ const Home = () => {
                 Sipariş Ver
               </button>
             </div>
+
           ))}
         </div>
         {filteredRestaurants.length === 0 && (

@@ -16,6 +16,7 @@ public class RestaurantRequest {
     private Double rating;
     private RestaurantCategory restaurantCategory;
     private Integer minOrderPrice;
+    private Long imageId;
 
     public RestaurantRequest(Restaurant restaurant) {
         this.id = restaurant.getId();
@@ -24,5 +25,6 @@ public class RestaurantRequest {
         this.rating = restaurant.getRating();
         this.restaurantCategory = restaurant.getRestaurantCategory();
         this.minOrderPrice = restaurant.getMinOrderPrice();
+        this.imageId = restaurant.getImage() == null ? null : restaurant.getImage().getId();
     }
 }
