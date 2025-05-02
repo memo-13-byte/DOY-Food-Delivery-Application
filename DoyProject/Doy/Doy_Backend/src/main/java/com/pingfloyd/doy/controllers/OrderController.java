@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
@@ -25,10 +26,12 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final User user;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, User user) {
         this.orderService = orderService;
+        this.user = user;
     }
     @GetMapping("/me")
     public String testUser(){
@@ -46,28 +49,29 @@ public class OrderController {
     }
     @GetMapping("/add")
     public ResponseEntity<Boolean> AddItemToCart(@RequestParam Long itemId){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(orderService.AddItemToCart("said562@hotmail.com" ,itemId));
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return ResponseEntity.ok(orderService.AddItemToCart(username ,itemId));
     }
     @GetMapping("/remove")
     public ResponseEntity<Boolean> RemoveItemFromCart(@RequestParam Long itemId){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(orderService.RemoveItemFromCart("said562@hotmail.com", itemId));
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return ResponseEntity.ok(orderService.RemoveItemFromCart(username, itemId));
     }
     @GetMapping("/confirm")
     public ResponseEntity<Boolean>  ConfirmCart(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(orderService.ConfirmCart("said562@hotmail.com"));
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return ResponseEntity.ok(orderService.ConfirmCart(username));
     }
     @PostMapping("/payment")
     public ResponseEntity<Boolean> ConfirmOrder(@Valid @RequestBody DtoPaymentInformationIU dtoPaymentInformationIU){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(orderService.ConfirmOrder(dtoPaymentInformationIU , "said562@hotmail.com"));
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return ResponseEntity.ok(orderService.ConfirmOrder(dtoPaymentInformationIU , username));
     }
     @GetMapping("/cart")
     public ResponseEntity<UserCartDTO> getCustomerCart() {
         try {
-            UserCartDTO cartDto = orderService.getCurrentUserCart("said562@hotmail.com");
+            String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            UserCartDTO cartDto = orderService.getCurrentUserCart(username);
             return ResponseEntity.ok(cartDto);
         }
         catch (Exception e) {
