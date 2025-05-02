@@ -328,6 +328,24 @@ export default function CourierProfilePage() {
           </motion.h1>
 
           <motion.div className="w-full max-w-4xl mx-auto space-y-5 mb-8" variants={itemVariants}>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={() => {navigate(`/courier/requests/${courierId}`)}}
+              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+            >
+              Manage Status
+            </Button>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={() => {navigate(`/courier/profile/${courierId}/orders`)}}
+              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+            >
+              See All Assigned Orders
+            </Button>
+          </motion.div>
+
             <motion.div className="grid grid-cols-2 gap-6" variants={fadeInVariants}>
               <div>
                 <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}>

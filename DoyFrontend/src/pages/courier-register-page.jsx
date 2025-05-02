@@ -8,6 +8,7 @@ import {
   Instagram, Twitter, Youtube, Linkedin, AlertCircle, CheckCircle, Lock, Eye,
   EyeOff, Loader2, ListChecks // Removed Bike, kept MapPin
 } from "lucide-react"
+import { getResponseErrors } from "../services/exceptionUtils";
 
 // --- Custom UI components (Button, Input, Label, Checkbox, Switch, Select) ---
 // Assume these components are defined as in the previous examples
@@ -237,10 +238,12 @@ export default function CourierRegisterPage() {
         if (error.response) { // --- Error handling logic (same as before) ---
           const { data, status } = error.response;
           console.error("API Error Response Data:", data); console.error("API Error Status:", status);
+          setBackendErrors(getResponseErrors(error))
+          /*
           if (data && typeof data === 'object' && data.errors && typeof data.errors === 'object' && Object.keys(data.errors).length > 0) { setBackendErrors(data.errors); }
           else if (data && typeof data === 'string' && data.trim() !== '') { setBackendErrors([data]); }
           else if (data && typeof data === 'object' && data.message) { setBackendErrors([data.message]); }
-          else { setSubmitStatus({ success: false, error: `Sunucu hatası (${status}). Lütfen tekrar deneyin.` }); setBackendErrors(null); }
+          else { setSubmitStatus({ success: false, error: `Sunucu hatası (${status}). Lütfen tekrar deneyin.` }); setBackendErrors(null); }*/
         } else if (error.request) { setSubmitStatus({ success: false, error: "Sunucuya ulaşılamadı. İnternet bağlantınızı kontrol edin." }); setBackendErrors(null);
         } else { setSubmitStatus({ success: false, error: `Bir hata oluştu: ${error.message}` }); setBackendErrors(null); }
       } finally {
