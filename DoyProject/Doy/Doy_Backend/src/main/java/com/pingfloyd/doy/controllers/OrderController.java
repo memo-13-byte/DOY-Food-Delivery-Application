@@ -2,22 +2,15 @@ package com.pingfloyd.doy.controllers;
 
 
 import com.pingfloyd.doy.dto.*;
-import com.pingfloyd.doy.entities.Cart;
 import com.pingfloyd.doy.entities.User;
 import com.pingfloyd.doy.services.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -137,6 +130,12 @@ public class OrderController {
     public ResponseEntity<DtoOrderDetails> GetOrderDetails(@PathVariable Long orderId){
         return ResponseEntity.ok(orderService.GetOrderDetails(orderId));
     }
+
+    @GetMapping("/details/get-user-info/{id}")
+    public ResponseEntity<DtoOrderUserInformation> GetOrderUserInformation(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(orderService.GetOrderUserInformation(id));
+    }
+
 
 
 

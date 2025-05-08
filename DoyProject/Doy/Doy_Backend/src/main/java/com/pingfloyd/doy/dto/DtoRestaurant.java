@@ -17,6 +17,7 @@ public class DtoRestaurant {
 
     private RestaurantCategory restaurantCategory;
     private Double rating;
+    private Long ratingCount;
     private Integer minOrderPrice;
 
     private Address address;

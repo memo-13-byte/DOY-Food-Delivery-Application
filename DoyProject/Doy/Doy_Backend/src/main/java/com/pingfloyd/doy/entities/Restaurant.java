@@ -35,8 +35,11 @@ public class Restaurant {
     @Column(name = "min_order_price")
     private Integer minOrderPrice;
 
-    @Column(name = "rating")
-    private Double rating;
+    @Column(name="rating")
+    private Double rating = 0.0;
+
+    @Column(name="rating_count")
+    private Long ratingCount = 0L;
 
     @NotNull
     @Enumerated(EnumType.STRING)

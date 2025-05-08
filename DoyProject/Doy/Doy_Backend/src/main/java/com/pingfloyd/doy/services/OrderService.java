@@ -10,7 +10,6 @@ import com.pingfloyd.doy.repositories.CustomerOrderRepository;
 import com.pingfloyd.doy.repositories.OrderItemRepository;
 import com.pingfloyd.doy.repositories.PaymentRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +35,7 @@ public class OrderService {
     private final DistrictService districtService;
     private final OrderItemRepository orderItemRepository;
     private final EmailService emailService;
+
 
     @Autowired
     public OrderService(ItemService itemService, UserService userService, CourierService courierService, RestaurantService restaurantService, CartService cartService, PaymentRepository paymentRepository, CustomerOrderRepository customerOrderRepository, CourierRequestService courierRequestService, DistrictService districtService, OrderItemRepository orderItemRepository, EmailService emailService){
@@ -493,6 +493,21 @@ public class OrderService {
             request.setCustomerPhone(customer.getPhoneNumber());
             request.setRestaurantName(order.getRestaurant().getRestaurantName());
         return request;
+    }
+
+    public DtoOrderUserInformation GetOrderUserInformation(Long id) {
+        Optional<CustomerOrder> optionalCustomerOrder = customerOrderRepository.findCustomerOrderByOrderId(id);
+        if (optionalCustomerOrder.isEmpty()) {
+            throw new OrderNotFoundException("Order with given id cannot be found");
+        }
+
+        CustomerOrder customerOrder = optionalCustomerOrder.get();
+        DtoOrderUserInformation dtoOrderUserInformation = new DtoOrderUserInformation();
+        dtoOrderUserInformation.setCourierId(customerOrder.getCourier().getId());
+        dtoOrderUserInformation.setRestaurantId(customerOrder.getRestaurant().getId());
+        dtoOrderUserInformation.setCustomerId(customerOrder.getCustomer().getId());
+
+        return dtoOrderUserInformation;
     }
 
 
