@@ -74,6 +74,14 @@ const CommentSection = ({ title, comments, darkMode, onReply, _rating, activeRep
       {comments.map((comment) => (
         <div key={comment.id}>
           <Comment comment={comment} darkMode={darkMode} onReply={onReply} />
+          
+          {comment.replies && (
+            <div className="mt-2 space-y-2">
+              {comment.replies.map((reply) => (
+                <Comment key={reply.id} comment={reply} isReply={true} darkMode={darkMode} onReply={onReply} />
+              ))}
+            </div>
+          )}
           {activeReplyId === comment.id && (
             <ReplyBox
               commentId={comment.id}
@@ -81,13 +89,6 @@ const CommentSection = ({ title, comments, darkMode, onReply, _rating, activeRep
               onCancel={onCancelReply}
               darkMode={darkMode}
             />
-          )}
-          {comment.replies && (
-            <div className="mt-2 space-y-2">
-              {comment.replies.map((reply) => (
-                <Comment key={reply.id} comment={reply} isReply={true} darkMode={darkMode} onReply={onReply} />
-              ))}
-            </div>
           )}
         </div>
       ))}
