@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react" // Added useCallback
 import { Link, useNavigate, useParams } from "react-router-dom"
-import axios from 'axios';
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import {
     Moon, Sun, Utensils, User, Mail, Phone, MapPin, CheckCircle, XCircle, Send, CheckCheck,
     StickyNote, Package, ImageIcon, Loader2, AlertTriangle, Wifi, WifiOff, // Added Wifi icons for status
@@ -55,8 +55,8 @@ export default function CourierOrdersPage() {
         setError(null);
         try {
             const [ordersResponse, statusResponse] = await Promise.all([
-                axios.get(`${API_BASE_URL}/order/courier/${courierId}/requests`),
-                axios.get(`${API_BASE_URL}/order/courier/status/${courierId}`) // Fetch status
+                AuthorizedRequest.getRequest(`${API_BASE_URL}/order/courier/${courierId}/requests`),
+                AuthorizedRequest.getRequest(`${API_BASE_URL}/order/courier/status/${courierId}`) // Fetch status
             ]);
 
             setOrdersData(ordersResponse.data.requestInfos || []);
@@ -109,7 +109,7 @@ export default function CourierOrdersPage() {
 
         try {
             const url = `${API_BASE_URL}/order/courier/update/status/${courierId}-${newStatus}`;
-            const response = await axios.put(url);
+            const response = await AuthorizedRequest.putRequest(url);
             console.log(url + " here is url")
 
             // Check if the status returned by the backend matches the intended new status
@@ -146,7 +146,7 @@ export default function CourierOrdersPage() {
         setActionLoading(requestId);
         try {
             const url = `${API_BASE_URL}/order/courier/request${requestId}-true`;
-            const response = await axios.put(url);
+            const response = await AuthorizedRequest.putRequest(url);
             if (response.data === true) {
                 console.log(`Task #${requestId} accepted successfully.`);
                 alert(`Görev #${requestId} başarıyla kabul edildi.`);
@@ -175,7 +175,7 @@ export default function CourierOrdersPage() {
         setActionLoading(requestId);
         try {
             const url = `${API_BASE_URL}/order/courier/request${requestId}-false`;
-            const response = await axios.put(url);
+            const response = await AuthorizedRequest.putRequest(url);
             if (response.data === true) {
                 console.log(`Task #${requestId} rejected successfully.`);
                 alert(`Görev #${requestId} başarıyla reddedildi.`);

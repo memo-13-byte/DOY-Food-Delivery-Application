@@ -6,7 +6,7 @@ import RestaurantList from "../components/RestaurantList";
 import SelectedItem from "../components/SelectedItem";
 import ActionButtons from "../components/ActionButtons";
 import Toast from "../components/Toast"; // 📌 Toast'ı import ettik
-import axios from "axios";
+import AuthorizedRequest from "../services/AuthorizedRequest";
 
 
 const initialUsers = [
@@ -44,7 +44,7 @@ export default function AdminAccountManagementPage({ darkMode, setDarkMode }) {
 
         try {
             console.log(banRequest);
-            const response = await axios.put(`http://localhost:8080/api/users/suspend`, banRequest)
+            const response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/suspend`, banRequest)
         } catch (error) {
             console.log(error)
             addToast(error?.response?.data?.errors || error.message || "An unexpected error occurred.")

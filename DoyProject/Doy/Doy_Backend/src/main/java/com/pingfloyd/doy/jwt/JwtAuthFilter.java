@@ -29,7 +29,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         //Get Bearer Token : Format: Bearer <token>
 
 
-
         String header, token, username;
         String requestStr = request.getHeader("Authorization");
 

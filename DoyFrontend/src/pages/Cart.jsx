@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6";
 import doyLogo from "../assets/doylogo.jpeg"; // Assuming path is correct
 import { BsMoon } from "react-icons/bs";
-import axios from "axios"; // <-- Import Axios
+import AuthorizedRequest from "../services/AuthorizedRequest"; // <-- Import Axios
 
 const iconLinkStyle = (darkMode) => ({
     color: darkMode ? "#ffffff" : "inherit",
@@ -131,7 +131,7 @@ const Cart = () => {
                   Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
               }
-            const response = await axios.post('http://localhost:8080/order/payment', payload, header); // Send flat payload
+            const response = await AuthorizedRequest.postRequest('http://localhost:8080/order/payment', payload, header); // Send flat payload
 
             console.log("Payment API Response:", response.data);
 

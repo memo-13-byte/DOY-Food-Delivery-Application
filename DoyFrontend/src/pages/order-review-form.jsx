@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
-import axios from 'axios'
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import {
   Moon, Sun, Utensils, Star, MessageSquare, ChevronRight, 
   Instagram, Twitter, Youtube, Linkedin, AlertCircle, CheckCircle,
@@ -153,7 +153,7 @@ export default function OrderReviewPage() {
 
   useEffect(() => {
     const getOrderIdInformation = async () => {
-      const response = await axios.get(`http://localhost:8080/order/details/get-user-info/${orderId}`);
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/order/details/get-user-info/${orderId}`);
       setOrderIdInformation(response.data)
       console.log(response.data)
       console.log(localStorage.getItem("token"))
@@ -179,7 +179,7 @@ export default function OrderReviewPage() {
     console.log(selectedOrderDetail)
     try {
       
-      const response = await axios.get(url)
+      const response = await AuthorizedRequest.getRequest(url)
       if (response.data) {
         setSelectedOrderDetail(response.data)
         
@@ -321,7 +321,7 @@ export default function OrderReviewPage() {
       console.log(payload)
 
       try {
-        await axios.post(`http://localhost:8080/api/order-review/post`, payload)
+        await AuthorizedRequest.postRequest(`http://localhost:8080/api/order-review/post`, payload)
         setSubmitStatus({ success: true, error: null })
         alert("Yorumlarınız başarıyla gönderildi!")
         navigate("/");

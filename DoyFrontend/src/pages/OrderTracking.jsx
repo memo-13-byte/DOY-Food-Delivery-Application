@@ -1,7 +1,7 @@
 // OrderTrackingPage.js
 
 import React, { useState, useEffect,useRef } from "react";
-import axios from 'axios';
+import AuthorizedRequest from "../services/AuthorizedRequest";
 // Import useParams to access URL parameters
 import { useParams } from 'react-router-dom';
 
@@ -179,7 +179,7 @@ export default function OrderTrackingPage() {
         setError(null);
         const url = `http://localhost:8080/order/restaurant/${restaurantId}/order`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             console.log("fetchOrders: API Response (Orders):", response.data);
             if (response.data && Array.isArray(response.data.orderInfoList)) {
                 // Filter out orders that shouldn't be displayed (e.g., REJECTED, or AWAITING_PICKUP if handled by backend status change)
@@ -222,7 +222,7 @@ export default function OrderTrackingPage() {
         console.log(`updateOrderStatus: Sending PATCH to ${url} with payload:`, payload);
 
         try {
-            const patchResponse = await axios.patch(url, payload);
+            const patchResponse = await AuthorizedRequest.patchRequest(url, payload);
             console.log(`updateOrderStatus: PATCH successful for Order ID: ${orderId}. Status: ${patchResponse.status}`);
 
             // Re-fetch orders to reflect the change accurately
@@ -246,7 +246,7 @@ export default function OrderTrackingPage() {
         setShowDetailModal(true);
         const url = `http://localhost:8080/order/details/${orderId}`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             console.log("fetchOrderDetails: API Response (Details):", response.data);
             if (response.data) {
                 setSelectedOrderDetail(response.data);
@@ -285,7 +285,7 @@ export default function OrderTrackingPage() {
 
         const url = `http://localhost:8080/order/restaurant/${restaurantId}/couriers`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             // Keep any existing success logs you have
             console.log("fetchAvailableCouriers: API Response (Couriers):", response.data);
             if (response.data && Array.isArray(response.data)) {
@@ -434,7 +434,7 @@ export default function OrderTrackingPage() {
 
         try {
             // Make the actual API call
-            const response = await axios.post(requestUrl);
+            const response = await AuthorizedRequest.postRequest(requestUrl);
             console.log(`handleCourierAssign: POST request successful for Courier ID: ${courierId}, Order ID: ${orderId}. Status: ${response.status}`);
             // Success! The UI already shows "pending". No further action needed here.
             // The order card will automatically disappear from this view if the backend

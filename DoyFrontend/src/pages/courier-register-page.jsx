@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import axios from 'axios';
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import {
   Moon, Sun, Utensils, User, Mail, Phone, CreditCard, MapPin, ChevronRight,
   Instagram, Twitter, Youtube, Linkedin, AlertCircle, CheckCircle, Lock, Eye,
@@ -221,7 +221,7 @@ export default function CourierRegisterPage() {
 
       // --- API Call ---
       try {
-        const response = await axios.post("http://localhost:8080/api/registration/courier", payload, {
+        const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/registration/courier", payload, {
           headers: { "Content-Type": "application/json", }
         });
 

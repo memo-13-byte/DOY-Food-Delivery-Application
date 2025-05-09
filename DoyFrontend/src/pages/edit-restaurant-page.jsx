@@ -18,7 +18,7 @@ import {
   Axis3D,
 } from "lucide-react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 
 export default function RestaurantManagePage() {
@@ -76,18 +76,17 @@ const handleCancelMinOrderPriceEdit = () => {
 };
   // ID'ye göre restoran verilerini yükle
   useEffect(() => {
-    console.log("wtf")
     const getRestaurantInformation = async () => {
       try {
         
-        const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
         console.log(response.data)
         setRestaurant(response.data)
         setPhoneNumberInput(response.data.restaurantPhone)
         setMinOrderPriceInput(response.data.minOrderPrice)
         
         if(response.data.imageId != null) {
-          const imageResponse = await axios.get(`http://localhost:8080/api/upload/image/${response.data.imageId}`, {
+          const imageResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/upload/image/${response.data.imageId}`, {
             responseType: 'blob',
           });
           
@@ -142,7 +141,7 @@ const handleCancelMinOrderPriceEdit = () => {
 
   // Function to delete a menu item
   const deleteMenuItem = (categoryId, itemId) => {
-    axios.delete(`http://localhost:8080/api/item/delete/${itemId}`).then(
+    AuthorizedRequest.deleteRequest(`http://localhost:8080/api/item/delete/${itemId}`).then(
       setMenuCategories(
         menuCategories.map((category) => {
           if (category.id === categoryId) {
@@ -261,7 +260,7 @@ const handleCancelMinOrderPriceEdit = () => {
     setErrorMessages([])
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/item/get-items/${restaurantId}`)
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/item/get-items/${restaurantId}`)
       const itemData = [
         {
           id: 1,
@@ -336,7 +335,7 @@ const handleCancelMinOrderPriceEdit = () => {
 
       try {
         console.log(restaurant)
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
+        await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
         restaurant.description = descriptionInput
       } catch (error) {
         console.log(error)
@@ -358,7 +357,7 @@ const handleCancelMinOrderPriceEdit = () => {
   
       try {
         console.log(restaurant);
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+        await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
       } catch (error) {
         setErrorMessages(getResponseErrors(error));
       }
@@ -375,7 +374,7 @@ const handleCancelMinOrderPriceEdit = () => {
   
       try {
         console.log(restaurant);
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+        await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
         restaurant.minOrderPrice = minOrderPriceInput;
       } catch (error) {
         console.log(error);
@@ -420,7 +419,7 @@ const handleCancelMinOrderPriceEdit = () => {
 
       try {
         console.log(restaurant)
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
+        await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
         restaurant.restaurantName = nameInput
       } catch (error) {
         console.log(error)
@@ -447,9 +446,9 @@ const handleCancelMinOrderPriceEdit = () => {
       formData.append("file", file);
   
       try {
-        const response = await axios.post(
+        const response = await AuthorizedRequest.postRequest(
           `http://localhost:8080/api/upload/image/restaurant/${restaurantId}`,
-          formData // Axios sets headers automatically
+          formData 
         );
   
         const reader = new FileReader();

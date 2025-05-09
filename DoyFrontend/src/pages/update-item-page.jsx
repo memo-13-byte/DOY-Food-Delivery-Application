@@ -26,7 +26,7 @@ import { Input } from "../components/ui/input"
 import { Textarea } from "../components/ui/textarea"
 import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 
 export default function UpdateItemPage() {
@@ -80,10 +80,11 @@ export default function UpdateItemPage() {
 
       setIsLoading(true)
       // In a real app, fetch the item data from API
-      axios
-        .get(`http://localhost:8080/api/item/get/${itemId}`)
+      AuthorizedRequest
+        .getRequest(`http://localhost:8080/api/item/get/${itemId}`)
         .then((response) => {
           const item = response.data
+          console.log(item)
           setFormData({
             name: item.name,
             description: item.description,
@@ -94,6 +95,8 @@ export default function UpdateItemPage() {
           // If there's an image URL in the response
           if(item.imageId != null) {
             setImagePreview(`http://localhost:8080/api/upload/image/${item.imageId}`)
+          } else {
+            setImagePreview("/placeholder.svg?height=200&width=200")
           }
           setIsLoading(false)
         })
@@ -293,9 +296,9 @@ const handleSubmit = async (e) => {
     let newItemId = itemId; // Use existing itemId if in edit mode
 
     if (isEditMode) {
-      await axios.put(`http://localhost:8080/api/item/update/${itemId}`, itemDataToSend);
+      await AuthorizedRequest.putRequest(`http://localhost:8080/api/item/update/${itemId}`, itemDataToSend);
     } else {
-      const response = await axios.post("http://localhost:8080/api/item/post", itemDataToSend);
+      const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/item/post", itemDataToSend);
       if (response.data && response.data.id) {
         newItemId = response.data.id; 
       } else {
@@ -308,7 +311,7 @@ const handleSubmit = async (e) => {
        imageFormData.append("file", formData.image); 
 
        try {
-         const imageResponse = await axios.post(
+         const imageResponse = await AuthorizedRequest.postRequest(
            `http://localhost:8080/api/upload/image/item/${newItemId}`, 
            imageFormData,
            {

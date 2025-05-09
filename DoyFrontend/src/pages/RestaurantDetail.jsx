@@ -10,7 +10,8 @@ import { FiShoppingCart } from "react-icons/fi" // Added for cart icon
 import doyLogo from "../assets/doylogo.jpeg"
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6"
 import { FiChevronDown, FiChevronUp } from "react-icons/fi"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
+import { getResponseErrors } from "../services/exceptionUtils"
 
 // Helper function to render star ratings
 const renderStars = (rating) => {
@@ -149,7 +150,7 @@ const RestaurantDetail = () => {
       setRestaurant(null) // Reset
       try {
         // Use the exact endpoint structure from user's code
-        const response = await axios.get(`http://localhost:8080/api/restaurant/get/${currentRestaurantId}`)
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${currentRestaurantId}`)
         console.log("Restaurant API response:", response.data)
         setRestaurant(response.data)
       } catch (error) {
@@ -181,7 +182,7 @@ const RestaurantDetail = () => {
       setMenu({ categories: [] }) // Reset
       try {
         // Use the exact endpoint structure from user's code
-        const response = await axios.get(`http://localhost:8080/api/item/get-items/${currentRestaurantId}`)
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/item/get-items/${currentRestaurantId}`)
         console.log("Menu API response:", response.data)
         const responseItems = response.data || []
 
@@ -206,7 +207,7 @@ const RestaurantDetail = () => {
               description: item.description || "",
               price: isNaN(price) ? 0 : price,
               imageId: item.imageId,
-              image: `http://localhost:8080/api/upload/image/${item.imageId}`
+              image: item.imageId? `http://localhost:8080/api/upload/image/${item.imageId}`: "/placeholder.svg"
             })
             
           } else {
@@ -224,8 +225,8 @@ const RestaurantDetail = () => {
         })
         setExpandedCategories(initialExpandedState)
       } catch (error) {
-        console.error("Error fetching restaurant menu:", error)
-        setMenu({ categories: [] }) // Reset on error
+        alert(getResponseErrors(error))
+        setMenu({ categories: [] }) 
       } finally {
         setLoadingMenu(false)
       }
@@ -256,7 +257,7 @@ const RestaurantDetail = () => {
 
       try {
         // *** Ensure Axios sends authentication (e.g., JWT token via interceptors) ***
-        const response = await axios.get(`http://localhost:8080/order/cart`) // Your single endpoint
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/order/cart`) // Your single endpoint
         const userCartDto = response.data // Expecting UserCartDTO format defined before
 
         console.log("Received UserCartDTO:", userCartDto)
@@ -346,7 +347,7 @@ const RestaurantDetail = () => {
         }
       }
       console.log(header)
-      const response = await axios.get(url, header)
+      const response = await AuthorizedRequest.getRequest(url, header)
 
       if (response.data === true) {
         // Optimistic update - add to cart immediately
@@ -408,7 +409,7 @@ const RestaurantDetail = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       }
-      const response = await axios.get(url, header)
+      const response = await AuthorizedRequest.getRequest(url, header)
 
       if (response.data === true) {
         setCart((prevCart) => {
@@ -442,7 +443,7 @@ const RestaurantDetail = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       }
-      const response = await axios.get("http://localhost:8080/order/confirm", header)
+      const response = await AuthorizedRequest.getRequest("http://localhost:8080/order/confirm", header)
       
 
       console.log("Order confirmation response:", response.data)

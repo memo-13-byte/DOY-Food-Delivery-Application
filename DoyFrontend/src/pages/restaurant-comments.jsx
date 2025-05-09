@@ -16,7 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-import axios from "axios";
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from "react-router-dom";
 import { CommentSection } from "../components/CommentSection";
 
@@ -75,16 +75,16 @@ export default function RestaurantCommentPage() {
 
   useEffect(() => {
     const getComments = async () => {
-        const ratingResponse = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`);
+        const ratingResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${restaurantId}`);
 
         setRating(ratingResponse.data.rating)
         setRatingCount(ratingResponse.data.ratingCount)
 
 
-        const reviewResponse = await axios.get(`http://localhost:8080/api/comment/get/for-restaurant/${restaurantId}`);
+        const reviewResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get/for-restaurant/${restaurantId}`);
         const comments = reviewResponse.data;
         let commentsData = await Promise.all( comments.map(async (element) => {
-            const replies = await axios.get(`http://localhost:8080/api/comment/get-replies/${element.id}`);
+            const replies = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get-replies/${element.id}`);
             return {
                     id: element.id,
                     author: element.user.firstname + " " + element.user.lastname,
@@ -118,7 +118,7 @@ export default function RestaurantCommentPage() {
       userId: restaurantId
     }
 
-    const response = await axios.post("http://localhost:8080/api/comment/post-reply", payload)
+    const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/comment/post-reply", payload)
     alert(`Reply to comment ID: ${commentId} with text: ${replyText}`);
     setActiveReplyId(null);
   };

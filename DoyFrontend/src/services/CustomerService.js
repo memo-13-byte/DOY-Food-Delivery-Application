@@ -7,7 +7,7 @@ import axios from 'axios';
 export default class CustomerService {
 
   static async RegisterCustomer(registrationInfo) {
-    const response = await axios.post('http://localhost:8080/api/registration',
+    const response = await AuthorizedRequest.postRequest('http://localhost:8080/api/registration',
       registrationInfo);
   }
 

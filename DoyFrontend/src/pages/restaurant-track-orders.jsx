@@ -1,7 +1,7 @@
 // OrderStatusRestaurant.js (Simplified + Pagination + Card Alignment Fix)
 
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from 'react-router-dom';
 
 // Assuming these components exist in the specified paths
@@ -176,7 +176,7 @@ export default function OrderStatusRestaurant() {
         });
         const url = `http://localhost:8080/order/restaurant/${restaurantId}/order`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             if (response.data && Array.isArray(response.data.orderInfoList)) {
                 const relevantOrders = response.data.orderInfoList.filter(
                     order => displayableStatuses.includes(order.status)
@@ -206,7 +206,7 @@ export default function OrderStatusRestaurant() {
         setDetailLoading(true); setDetailError(null); setSelectedOrderDetail(null);
         const url = `http://localhost:8080/order/details/${orderId}`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             if (response.data) { setSelectedOrderDetail(response.data); }
             else { setDetailError("Sipariş detayları bulunamadı."); setSelectedOrderDetail({ orderId }); }
         } catch (err) {

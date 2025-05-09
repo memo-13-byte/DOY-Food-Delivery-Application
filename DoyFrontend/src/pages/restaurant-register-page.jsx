@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import axios from 'axios';
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import {
   Moon, Sun, Utensils, User, Mail, Phone, CreditCard, MapPin, ChevronRight,
   Instagram, Twitter, Youtube, Linkedin, AlertCircle, CheckCircle, Lock, Eye,
@@ -237,16 +237,12 @@ export default function RestaurantRegisterPage() {
         addressInfo: { city: formData.city, neighborhood: formData.neighborhood, district: formData.district, avenue: formData.avenue, street: formData.street, buildingNumber: formData.buildingNumber, apartmentNumber: formData.apartmentNumber, },
       };
 
-      // --- API Call ---
-      try {
-        const response = await axios.post("http://localhost:8080/api/registration/restaurant", payload, {
-          headers: { "Content-Type": "application/json", }
-        });
-        setSubmitStatus({ success: true, error: null });
-        setBackendErrors(null); // Clear backend errors on success
-        alert("Restoran kaydı başarıyla oluşturuldu!");
-        // navigate('/login'); // Optional redirect
 
+      try {
+        AuthorizedRequest.postRequest("http://localhost:8080/api/registration/restaurant", payload)
+        setSubmitStatus({ success: true, error: null });
+        setBackendErrors(null); 
+        alert("Restoran kaydı başarıyla oluşturuldu!");
       } catch (error) {
         console.error("Registration error details:", error);
         setSubmitStatus({ success: false, error: null }); // Clear general errors first

@@ -21,7 +21,7 @@ import {
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { getUserById } from "../services/profileData"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 
 export default function RestaurantProfilePage() {
@@ -69,7 +69,7 @@ export default function RestaurantProfilePage() {
       setEditableData(data)
       setGovernmentId(response.governmentId)
       
-      const response2 = await axios.get(`http://localhost:8080/api/restaurant/get/${response.restaurantId}`)
+      const response2 = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${response.restaurantId}`)
       setOwnersRestaurant(response2.data.restaurantName)
     }
 
@@ -100,7 +100,7 @@ export default function RestaurantProfilePage() {
     setErrorMessages([])
     try {
       console.log(editableData)
-      await axios.put(`http://localhost:8080/api/users/restaurant-owners/update/${restaurant.email}`, {
+      await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/restaurant-owners/update/${restaurant.email}`, {
         ...editableData,
         governmentId: governmentId,
         role: "RESTAURANT_OWNER"

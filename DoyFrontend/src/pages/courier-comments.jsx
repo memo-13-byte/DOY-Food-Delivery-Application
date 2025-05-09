@@ -16,7 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-import axios from "axios";
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from "react-router-dom";
 import { CommentSection } from "../components/CommentSection";
 import { getUserById } from "../services/profileData";
@@ -79,10 +79,10 @@ export default function CourierCommentPage() {
         setRating(ratingResponse.rating)
         setRatingCount(ratingResponse.ratingCount)
 
-        const reviewResponse = await axios.get(`http://localhost:8080/api/comment/get/for-courier/${courierId}`);
+        const reviewResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get/for-courier/${courierId}`);
         const comments = reviewResponse.data;
         let commentsData = await Promise.all( comments.map(async (element) => {
-            const replies = await axios.get(`http://localhost:8080/api/comment/get-replies/${element.id}`);
+            const replies = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get-replies/${element.id}`);
             return {
                     id: element.id,
                     author: element.user.firstname + " " + element.user.lastname,
@@ -115,7 +115,7 @@ export default function CourierCommentPage() {
       content: replyText,
       userId: courierId
     }
-    const response = await axios.post("http://localhost:8080/api/comment/post-reply", payload)
+    const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/comment/post-reply", payload)
 
     alert(`Reply to comment ID: ${commentId} with text: ${replyText}`);
     setActiveReplyId(null);

@@ -6,7 +6,7 @@ import { Moon, Edit2, AlertTriangle, User, Phone, Mail, MapPin, LogOut, Check, C
 import { motion } from "framer-motion"
 import { getCustomerById, getUserById } from "../services/profileData"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 import { Button } from "../components/Button"
@@ -153,7 +153,7 @@ export default function CustomerProfilePage() {
       }
       console.log("updated: ")
       console.log(putData)
-      const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
+      const response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
       
       setUser({
         ...user,

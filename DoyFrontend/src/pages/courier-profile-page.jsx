@@ -10,7 +10,7 @@ import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut } from "l
 import { getCourierById, getUserById } from "../services/profileData"
 import { useToast } from "../hooks/use-toast"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 
@@ -154,7 +154,7 @@ export default function CourierProfilePage() {
   phoneNumber: courier.phoneNumber,
   role: "COURIER"
       }
-      const response = await axios.put(`http://localhost:8080/api/users/couriers/update/${courier.email}`, data)
+      const response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/couriers/update/${courier.email}`, data)
       setOriginalCourier(response.data)
       console.log(response)
       toast({

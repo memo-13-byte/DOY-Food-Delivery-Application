@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios" 
+import AuthorizedRequest from "../services/AuthorizedRequest" 
 
 
 const RestaurantList = ({ restaurants, setRestaurants, setSelectedRestaurant, selectedRestaurant, darkMode }) => {
@@ -13,7 +13,7 @@ const RestaurantList = ({ restaurants, setRestaurants, setSelectedRestaurant, se
     useEffect( () => {
         const getAllRestaurants = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/restaurant/get-all`)
+                const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get-all`)
                 const data = response.data.map((value) => ({
                     id: value.id,
                     name: value.restaurantName,
