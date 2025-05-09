@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.dto;
 
+import java.time.LocalTime;
 import com.pingfloyd.doy.entities.Restaurant;
 import com.pingfloyd.doy.enums.RestaurantCategory;
 import lombok.Data;
@@ -17,6 +18,8 @@ public class RestaurantRequest {
     private RestaurantCategory restaurantCategory;
     private Integer minOrderPrice;
     private Long imageId;
+    private LocalTime openingHour;
+    private LocalTime closingHour;
 
     public RestaurantRequest(Restaurant restaurant) {
         this.id = restaurant.getId();
@@ -26,5 +29,9 @@ public class RestaurantRequest {
         this.restaurantCategory = restaurant.getRestaurantCategory();
         this.minOrderPrice = restaurant.getMinOrderPrice();
         this.imageId = restaurant.getImage() == null ? null : restaurant.getImage().getId();
+
+        this.openingHour = restaurant.getOpeningHour();
+        this.closingHour = restaurant.getClosingHour();
+
     }
 }

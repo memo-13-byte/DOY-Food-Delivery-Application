@@ -33,7 +33,12 @@ export default function RestaurantProfilePage() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [governmentId, setGovernmentId] = useState("")
-  const [ownersRestaurant, setOwnersRestaurant] = useState("")
+
+  const [restaurantName, setRestaurantName] = useState("");
+  const [openingHour, setOpeningHour] = useState("");
+  const [closingHour, setClosingHour] = useState("");
+
+
   const [errorMessages, setErrorMessages] = useState([])
 
   // Restoran verilerini ID'ye göre al
@@ -70,7 +75,9 @@ export default function RestaurantProfilePage() {
       setGovernmentId(response.governmentId)
       
       const response2 = await axios.get(`http://localhost:8080/api/restaurant/get/${response.restaurantId}`)
-      setOwnersRestaurant(response2.data.restaurantName)
+      setRestaurantName(response2.data.restaurantName);
+      setOpeningHour(response2.data.openingHour);
+      setClosingHour(response2.data.closingHour);
     }
 
     loadRestaurantOwnerById()
@@ -105,6 +112,30 @@ export default function RestaurantProfilePage() {
         governmentId: governmentId,
         role: "RESTAURANT_OWNER"
       })
+
+
+      const response2 = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
+      const res = response2.data;
+
+      let data = {
+        restaurantName: restaurantName || res.restaurantName,
+        restaurantPhone: restaurant.phoneNumber || res.restaurantPhone,
+        description: res.description || "",
+        restaurantCategory: res.restaurantCategory || "FAST_FOOD",
+        rating: res.rating || 0.0,
+        minOrderPrice: res.minOrderPrice || 0,
+        imageId: res.imageId || null,
+        openingHour: `${openingHour}:00`,  // örnek: "09:00:00"
+        closingHour: `${closingHour}:00`   // örnek: "22:00:00"
+      };
+
+      await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+
     } catch (error) {
       setErrorMessages(getResponseErrors(error))
     }
@@ -206,7 +237,7 @@ export default function RestaurantProfilePage() {
           <div className="relative w-24 h-24 flex flex-col items-center">
             <img
               src={restaurant.profileImage || "/image1.png"}
-              alt={`${ownersRestaurant} logo`}
+              alt={`${restaurantName} logo`}
               className="w-full h-full object-cover rounded-full"
             />
             <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
@@ -263,28 +294,50 @@ export default function RestaurantProfilePage() {
             Hesap Profilim - Restoran
           </motion.h1>
           <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className={`text-xl ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} text-center mb-6`}
+              initial={{opacity: 0}}
+              animate={{opacity: 1}}
+              transition={{duration: 0.5, delay: 0.5}}
+              className={`text-xl ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} text-center mb-6`}
           >
-            {ownersRestaurant}
+            <motion.div variants={item} className="flex gap-4 items-center justify-center">
+              <label className={`text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}>
+                Açılış Saati:
+              </label>
+              <input
+                  type="time"
+                  value={openingHour}
+                  onChange={(e) => setOpeningHour(e.target.value)}
+                  className={`border rounded-md px-2 py-1 ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-white border-amber-100"}`}
+              />
+              <label className={`text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}>
+                Kapanış Saati:
+              </label>
+              <input
+                  type="time"
+                  value={closingHour}
+                  onChange={(e) => setClosingHour(e.target.value)}
+                  className={`border rounded-md px-2 py-1 ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-white border-amber-100"}`}
+              />
+            </motion.div>
+
           </motion.h2>
 
           {/* Manage Menu Button */}
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <motion.div whileHover={{scale: 1.02}} whileTap={{scale: 0.98}}>
             <Button
-              onClick={handleManageMenu}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+                onClick={handleManageMenu}
+                className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               Menüyü Yönet
             </Button>
           </motion.div>
 
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <motion.div whileHover={{scale: 1.02}} whileTap={{scale: 0.98}}>
             <Button
-              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/orders`)}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+                onClick={() => {
+                  navigate(`/restaurant/profile/${restaurantId}/orders`)
+                }}
+                className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See Given Orders
             </Button>
@@ -502,6 +555,7 @@ export default function RestaurantProfilePage() {
               </motion.div>
             )}
           </motion.div>
+
 
           {/* Working Hours */}
           {/*<motion.div

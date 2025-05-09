@@ -46,6 +46,10 @@ public class RestaurantService implements IRestaurantService {
 
         Restaurant restaurant = new Restaurant();
         BeanUtils.copyProperties(dtoRestaurantIU, restaurant);
+
+        restaurant.setOpeningHour(dtoRestaurantIU.getOpeningHour());
+        restaurant.setClosingHour(dtoRestaurantIU.getClosingHour());
+
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
@@ -63,6 +67,10 @@ public class RestaurantService implements IRestaurantService {
         Restaurant restaurant = findRestaurantById(id);
 
         BeanUtils.copyProperties(dtoRestaurantIU, restaurant);
+
+        restaurant.setOpeningHour(dtoRestaurantIU.getOpeningHour());
+        restaurant.setClosingHour(dtoRestaurantIU.getClosingHour());
+
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
         DtoRestaurant dtoRestaurant = new DtoRestaurant();
         BeanUtils.copyProperties(savedRestaurant, dtoRestaurant);
