@@ -3,7 +3,6 @@ package com.pingfloyd.doy.storage;
 import com.pingfloyd.doy.entities.Image;
 import com.pingfloyd.doy.exception.StorageException;
 import com.pingfloyd.doy.exception.StorageFileNotFoundException;
-import com.pingfloyd.doy.repositories.ImageRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -69,7 +68,7 @@ public class FileSystemStorageService implements IStorageService{
             Path imagesDir = this.rootLocation.resolve("images");
             Files.createDirectories(imagesDir);
 
-            Path destinationFile = imagesDir.resolve(image.getId() + "." + image.getImageType().toString().toLowerCase())
+            Path destinationFile = imagesDir.resolve(image.getId() + "." + image.getImageType().getExtension())
                     .normalize().toAbsolutePath();
 
             if (!destinationFile.getParent().equals(imagesDir.toAbsolutePath())) {
