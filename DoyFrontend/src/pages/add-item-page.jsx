@@ -185,34 +185,33 @@ export default function AddItemPage() {
 
   // Handle image upload
   const handleImageChange = async (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file) {
-      const validExtensions = ["jpg", "jpeg", "png"];
-      const fileExtension = file.name.split(".").pop().toLowerCase();
-  
+      const validExtensions = ["jpg", "jpeg", "png"]
+      const fileExtension = file.name.split(".").pop().toLowerCase()
+
       if (!validExtensions.includes(fileExtension)) {
-        alert("Lütfen sadece JPG, JPEG veya PNG formatında bir görsel yükleyin.");
+        alert("Lütfen sadece JPG, JPEG veya PNG formatında bir görsel yükleyin.")
         setFormData((prev) => ({
           ...prev,
           image: null,
-        }));
-        setImagePreview(null);
-              return;
+        }))
+        setImagePreview(null)
+        return
       }
-  
+
       setFormData((prev) => ({
         ...prev,
         image: file,
-      }));
-  
-      const reader = new FileReader();
+      }))
+
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
     }
-  };
-  
+  }
 
   // Handle drag over for image upload
   const handleDragOver = (e) => {
@@ -258,87 +257,89 @@ export default function AddItemPage() {
   }
 
   // Handle form submission
-// Handle form submission
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault()
 
-  setValidationAttempted(true);
-  const allTouched = Object.keys(formData).reduce((acc, key) => {
-    acc[key] = true;
-    return acc;
-  }, {});
-  setTouched(allTouched);
+    setValidationAttempted(true)
+    const allTouched = Object.keys(formData).reduce((acc, key) => {
+      acc[key] = true
+      return acc
+    }, {})
+    setTouched(allTouched)
 
-  const isValid = validateForm();
-  if (!isValid) {
-    setFormShake(true);
-    setTimeout(() => setFormShake(false), 500);
-    return;
-  }
+    const isValid = validateForm()
+    if (!isValid) {
+      setFormShake(true)
+      setTimeout(() => setFormShake(false), 500)
+      return
+    }
 
-  setIsLoading(true);
+    setIsLoading(true)
 
-  // Prepare item data (excluding the image file itself)
-  const itemDataToSend = {
-    name: formData.name,
-    description: formData.description,
-    price: Number.parseFloat(formData.price),
-    restaurantId: restaurantId,
-    menuItemType: reversemenuItemTypeMap[Number.parseInt(formData.menuItemType)],
-  };
-  console.log("Sending item data:", itemDataToSend);
+    // Prepare item data (excluding the image file itself)
+    const itemDataToSend = {
+      name: formData.name,
+      description: formData.description,
+      price: Number.parseFloat(formData.price),
+      restaurantId: restaurantId,
+      menuItemType: reversemenuItemTypeMap[Number.parseInt(formData.menuItemType)],
+    }
+    console.log("Sending item data:", itemDataToSend)
 
-  try {
-    let newItemId = itemId; // Use existing itemId if in edit mode
+    try {
+      let newItemId = itemId // Use existing itemId if in edit mode
 
-    if (isEditMode) {
-      await axios.put(`http://localhost:8080/api/item/update/${itemId}`, itemDataToSend);
-    } else {
-      const response = await axios.post("http://localhost:8080/api/item/post", itemDataToSend);
-      if (response.data && response.data.id) {
-        newItemId = response.data.id; 
+      if (isEditMode) {
+        await axios.put(`http://localhost:8080/api/item/update/${itemId}`, itemDataToSend)
       } else {
-        throw new Error("Failed to get new item ID from response.");
+        const response = await axios.post("http://localhost:8080/api/item/post", itemDataToSend)
+        if (response.data && response.data.id) {
+          newItemId = response.data.id
+        } else {
+          throw new Error("Failed to get new item ID from response.")
+        }
       }
+
+      if (formData.image && newItemId) {
+        const imageFormData = new FormData()
+        imageFormData.append("file", formData.image)
+
+        try {
+          const imageResponse = await axios.post(
+            `http://localhost:8080/api/upload/image/item/${newItemId}`,
+            imageFormData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            },
+          )
+          console.log("Image upload success:", imageResponse.data)
+        } catch (imageError) {
+          console.error("Image upload error:", imageError)
+          setErrors((prev) => ({
+            ...prev,
+            image: "Görsel yüklenemedi: " + (getResponseErrors(imageError)?.message || "Sunucu hatası"),
+          }))
+          setIsLoading(false)
+          return
+        }
+      } else if (formData.image && !newItemId) {
+        console.warn("Image selected but no Item ID available for upload.")
+      }
+
+      setShowSuccess(true)
+      setTimeout(() => {
+        navigate(`/restaurants/manage/${restaurantId}`)
+      }, 1500)
+    } catch (error) {
+      console.error("Error during form submission:", error)
+      const extractedErrors = getResponseErrors(error)
+      setErrors((prev) => ({ ...prev, ...extractedErrors }))
+      setIsLoading(false)
     }
-
-    if (formData.image && newItemId) {
-       const imageFormData = new FormData();
-       imageFormData.append("file", formData.image); 
-
-       try {
-         const imageResponse = await axios.post(
-           `http://localhost:8080/api/upload/image/item/${newItemId}`, 
-           imageFormData,
-           {
-             headers: {
-               "Content-Type": "multipart/form-data",
-             },
-           }
-         );
-         console.log("Image upload success:", imageResponse.data);
-       } catch (imageError) {
-         console.error("Image upload error:", imageError);
-         setErrors(prev => ({ ...prev, image: "Görsel yüklenemedi: " + (getResponseErrors(imageError)?.message || "Sunucu hatası") }));
-         setIsLoading(false);
-         return; 
-       }
-    } else if (formData.image && !newItemId) {
-        console.warn("Image selected but no Item ID available for upload.");
-    }
-
-    setShowSuccess(true);
-    setTimeout(() => {
-      navigate(`/restaurants/manage/${restaurantId}`);
-    }, 1500);
-
-  } catch (error) {
-    console.error("Error during form submission:", error);
-    const extractedErrors = getResponseErrors(error);
-    setErrors(prev => ({ ...prev, ...extractedErrors })); 
-    setIsLoading(false);
   }
-};
 
   // Update the back button click handler
   const handleBackClick = () => {
@@ -459,6 +460,11 @@ const handleSubmit = async (e) => {
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"}`}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
     >
       {/* Header */}
       <motion.header
@@ -498,7 +504,7 @@ const handleSubmit = async (e) => {
       </motion.header>
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-3xl px-6 py-8">
+      <main className="container mx-auto max-w-[75%] px-6 py-8" style={{ flex: "1 0 auto" }}>
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -1083,13 +1089,15 @@ const handleSubmit = async (e) => {
       {/* Footer */}
       <footer
         style={{
-          marginTop: "2rem",
           padding: "2rem",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
           transition: "all 0.3s ease-in-out",
+          marginTop: "auto",
+          width: "100%",
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.1)",
         }}
       >
         <img

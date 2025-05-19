@@ -10,7 +10,6 @@ import doyLogo from "../assets/doylogo.jpeg"
 import { useNavigate, useLocation } from "react-router-dom"
 import { FaLocationDot } from "react-icons/fa6"
 import { FaSearch } from "react-icons/fa"
-import { HiOutlineHome } from "react-icons/hi"
 import LocationModal from "../components/ui/LocationModal"
 import { useEffect } from "react"
 import axios from "axios"
@@ -76,9 +75,7 @@ const Home = () => {
           )
           .map((res) => ({
             ...res,
-            image: res.imageId
-              ? `http://localhost:8080/api/upload/image/${res.imageId}`
-              : "/placeholder.svg", 
+            image: res.imageId ? `http://localhost:8080/api/upload/image/${res.imageId}` : "/placeholder.svg",
           }))
           .sort((a, b) => b.rating - a.rating) // ⭐️ büyükten küçüğe sırala
         console.log("results" + results)
@@ -113,6 +110,7 @@ const Home = () => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
+        position: "relative",
       }}
     >
       {/* ÜST BAR */}
@@ -491,7 +489,7 @@ const Home = () => {
               }}
             >
               <img
-                src={res.image}
+                src={res.image || "/placeholder.svg"}
                 alt={res.restaurantName}
                 style={{
                   width: "60px",
@@ -503,9 +501,7 @@ const Home = () => {
               />
               <div style={{ flexGrow: 1, marginLeft: "1rem" }}>
                 <h3 style={{ margin: 0 }}>{res.restaurantName}</h3>
-                <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                  {renderStars(res.rating)}
-                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>{renderStars(res.rating)}</div>
               </div>
               <button
                 onClick={() =>
@@ -525,7 +521,6 @@ const Home = () => {
                 Sipariş Ver
               </button>
             </div>
-
           ))}
         </div>
         {filteredRestaurants.length === 0 && (
@@ -536,13 +531,18 @@ const Home = () => {
       {/* Footer */}
       <footer
         style={{
-          marginTop: "2rem",
           padding: "2rem",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
           transition: "all 0.3s ease-in-out",
+          marginTop: "auto",
+          width: "100%",
+          position: "sticky",
+          bottom: 0,
+          left: 0,
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.1)",
         }}
       >
         <img

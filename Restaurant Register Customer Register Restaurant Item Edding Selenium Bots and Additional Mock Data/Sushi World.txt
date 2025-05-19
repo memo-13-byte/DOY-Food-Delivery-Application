@@ -1,0 +1,26 @@
+Sending payload: {
+  "userInfo": {
+    "firstName": "Ali",
+    "lastName": "Öztürk",
+    "email": "ali@gmail.com",
+    "governmentId": "45678901234",
+    "password": "Sus.2024!",
+    "phoneNumber": "5550000004"
+  },
+  "restaurantInfo": {
+    "restaurantName": "Sushi World",
+    "description": "Uzakdoğu mutfağının en lezzetli örnekleri, taze sushi çeşitleri ve özel soslar eşliğinde.",
+    "restaurantPhone": "5550000004",
+    "restaurantCategory": "HOME_COOKING",
+    "minOrderPrice": 120
+  },
+  "addressInfo": {
+    "city": "ISTANBUL",
+    "district": "Şişli",
+    "neighborhood": "Mecidiyeköy Mahallesi",
+    "avenue": "Büyükdere Caddesi",
+    "street": "Çiçek Sokak",
+    "buildingNumber": 24,
+    "apartmentNumber": 8
+  }
+}

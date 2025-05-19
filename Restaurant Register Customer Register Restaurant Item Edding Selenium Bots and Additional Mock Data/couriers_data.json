@@ -1,0 +1,327 @@
+[
+  {
+    "courier": {
+      "firstName": "Mehmet",
+      "lastName": "Yıldız",
+      "email": "mehmet.yildiz@eposta.com",
+      "phoneNumber": "555 123 4567",
+      "governmentId": "12345678910",
+      "city": "İstanbul",
+      "district": "Kadıköy",
+      "password": "Kurye123!",
+      "passwordConfirm": "Kurye123!"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Ali",
+      "lastName": "Demir",
+      "email": "ali.demir@eposta.com",
+      "phoneNumber": "532 456 7890",
+      "governmentId": "24681357912",
+      "city": "Ankara",
+      "district": "Çankaya",
+      "password": "AliDemir456!",
+      "passwordConfirm": "AliDemir456!"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Ayşe",
+      "lastName": "Kara",
+      "email": "ayse.kara@eposta.com",
+      "phoneNumber": "542 789 1234",
+      "governmentId": "98765432198",
+      "city": "İzmir",
+      "district": "Konak",
+      "password": "Ayse2023?",
+      "passwordConfirm": "Ayse2023?"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Mustafa",
+      "lastName": "Şahin",
+      "email": "mustafa.sahin@eposta.com",
+      "phoneNumber": "536 852 9630",
+      "governmentId": "13579246810",
+      "city": "Bursa",
+      "district": "Nilüfer",
+      "password": "Mst2023+",
+      "passwordConfirm": "Mst2023+"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Zeynep",
+      "lastName": "Öztürk",
+      "email": "zeynep.ozturk@eposta.com",
+      "phoneNumber": "553 741 8520",
+      "governmentId": "20304050607",
+      "city": "Antalya",
+      "district": "Muratpaşa",
+      "password": "Zeynep789$",
+      "passwordConfirm": "Zeynep789$"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Ahmet",
+      "lastName": "Yılmaz",
+      "email": "ahmet.yilmaz@eposta.com",
+      "phoneNumber": "505 678 9012",
+      "governmentId": "10293847560",
+      "city": "İstanbul",
+      "district": "Beşiktaş",
+      "password": "Ahmet2023*",
+      "passwordConfirm": "Ahmet2023*"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Fatma",
+      "lastName": "Çelik",
+      "email": "fatma.celik@eposta.com",
+      "phoneNumber": "543 210 9876",
+      "governmentId": "12309876543",
+      "city": "İstanbul",
+      "district": "Üsküdar",
+      "password": "FCelik456#",
+      "passwordConfirm": "FCelik456#"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Osman",
+      "lastName": "Aydın",
+      "email": "osman.aydin@eposta.com",
+      "phoneNumber": "533 456 7890",
+      "governmentId": "56789012345",
+      "city": "Ankara",
+      "district": "Keçiören",
+      "password": "Osman789!",
+      "passwordConfirm": "Osman789!"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Sevgi",
+      "lastName": "Kılıç",
+      "email": "sevgi.kilic@eposta.com",
+      "phoneNumber": "535 987 6543",
+      "governmentId": "34567890123",
+      "city": "İzmir",
+      "district": "Bornova",
+      "password": "Sevgi456@",
+      "passwordConfirm": "Sevgi456@"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Hakan",
+      "lastName": "Koç",
+      "email": "hakan.koc@eposta.com",
+      "phoneNumber": "554 321 7890",
+      "governmentId": "87654321098",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "password": "HakanK123?",
+      "passwordConfirm": "HakanK123?"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Gizem",
+      "lastName": "Arslan",
+      "email": "gizem.arslan@eposta.com",
+      "phoneNumber": "537 654 3210",
+      "governmentId": "65432109876",
+      "city": "Antalya",
+      "district": "Konyaaltı",
+      "password": "GArslan21!",
+      "passwordConfirm": "GArslan21!"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Emre",
+      "lastName": "Kaya",
+      "email": "emre.kaya@eposta.com",
+      "phoneNumber": "506 789 0123",
+      "governmentId": "23456789012",
+      "city": "İstanbul",
+      "district": "Ataşehir",
+      "password": "EmreK2023+",
+      "passwordConfirm": "EmreK2023+"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Derya",
+      "lastName": "Güneş",
+      "email": "derya.gunes@eposta.com",
+      "phoneNumber": "545 678 9012",
+      "governmentId": "90123456789",
+      "city": "İstanbul",
+      "district": "Maltepe",
+      "password": "Derya567#",
+      "passwordConfirm": "Derya567#"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Burak",
+      "lastName": "Özdemir",
+      "email": "burak.ozdemir@eposta.com",
+      "phoneNumber": "538 765 4321",
+      "governmentId": "67890123456",
+      "city": "Ankara",
+      "district": "Mamak",
+      "password": "BOzdemir8!",
+      "passwordConfirm": "BOzdemir8!"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Selin",
+      "lastName": "Doğan",
+      "email": "selin.dogan@eposta.com",
+      "phoneNumber": "507 654 3210",
+      "governmentId": "45678901234",
+      "city": "İzmir",
+      "district": "Karşıyaka",
+      "password": "SDogan123$",
+      "passwordConfirm": "SDogan123$"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Tolga",
+      "lastName": "Aksoy",
+      "email": "tolga.aksoy@eposta.com",
+      "phoneNumber": "546 789 0123",
+      "governmentId": "89012345678",
+      "city": "Adana",
+      "district": "Seyhan",
+      "password": "TAksoy456!",
+      "passwordConfirm": "TAksoy456!"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Canan",
+      "lastName": "Tekin",
+      "email": "canan.tekin@eposta.com",
+      "phoneNumber": "539 012 3456",
+      "governmentId": "56789012347",
+      "city": "Eskişehir",
+      "district": "Tepebaşı",
+      "password": "CTekin789*",
+      "passwordConfirm": "CTekin789*"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Kemal",
+      "lastName": "Yavuz",
+      "email": "kemal.yavuz@eposta.com",
+      "phoneNumber": "508 901 2345",
+      "governmentId": "23456789016",
+      "city": "Kayseri",
+      "district": "Melikgazi",
+      "password": "KYavuz23@",
+      "passwordConfirm": "KYavuz23@"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Melis",
+      "lastName": "Şen",
+      "email": "melis.sen@eposta.com",
+      "phoneNumber": "548 765 4321",
+      "governmentId": "90123456782",
+      "city": "Trabzon",
+      "district": "Ortahisar",
+      "password": "MSen2023!",
+      "passwordConfirm": "MSen2023!"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Serkan",
+      "lastName": "Özer",
+      "email": "serkan.ozer@eposta.com",
+      "phoneNumber": "535 432 1098",
+      "governmentId": "67890123459",
+      "city": "Samsun",
+      "district": "İlkadım",
+      "password": "SOzer456$",
+      "passwordConfirm": "SOzer456$"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Cansu",
+      "lastName": "Yalçın",
+      "email": "cansu.yalcin@eposta.com",
+      "phoneNumber": "541 234 5678",
+      "governmentId": "34567890127",
+      "city": "Diyarbakır",
+      "district": "Bağlar",
+      "password": "CYalcin21+",
+      "passwordConfirm": "CYalcin21+"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Orhan",
+      "lastName": "Akın",
+      "email": "orhan.akin@eposta.com",
+      "phoneNumber": "554 321 0987",
+      "governmentId": "78901234567",
+      "city": "Konya",
+      "district": "Selçuklu",
+      "password": "OAkin789!",
+      "passwordConfirm": "OAkin789!"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "İrem",
+      "lastName": "Eren",
+      "email": "irem.eren@eposta.com",
+      "phoneNumber": "534 567 8901",
+      "governmentId": "45678901237",
+      "city": "Gaziantep",
+      "district": "Şahinbey",
+      "password": "IEren123#",
+      "passwordConfirm": "IEren123#"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Cem",
+      "lastName": "Uğur",
+      "email": "cem.ugur@eposta.com",
+      "phoneNumber": "552 345 6789",
+      "governmentId": "12345678912",
+      "city": "Hatay",
+      "district": "Antakya",
+      "password": "CUgur456*",
+      "passwordConfirm": "CUgur456*"
+    }
+  },
+  {
+    "courier": {
+      "firstName": "Ebru",
+      "lastName": "Tuncer",
+      "email": "ebru.tuncer@eposta.com",
+      "phoneNumber": "544 321 9876",
+      "governmentId": "89012345672",
+      "city": "Muğla",
+      "district": "Bodrum",
+      "password": "ETuncer7!",
+      "passwordConfirm": "ETuncer7!"
+    }
+  }
+]

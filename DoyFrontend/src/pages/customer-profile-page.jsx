@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
-import { Moon, Edit2, AlertTriangle, User, Phone, Mail, MapPin, LogOut, Check, ChevronRight } from "lucide-react"
+import { Moon, Edit2, AlertTriangle, User, Phone, Mail, LogOut, Check, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { getCustomerById, getUserById } from "../services/profileData"
+import { getUserById } from "../services/profileData"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import axios from "axios"
 import { getResponseErrors } from "../services/exceptionUtils"
@@ -50,8 +50,8 @@ export default function CustomerProfilePage() {
     phoneNumber: " ",
     role: " ",
     addresses: " ",
-    name: " "
-  }) 
+    name: " ",
+  })
 
   // Form state for profile update
   const [formData, setFormData] = useState({
@@ -112,19 +112,19 @@ export default function CustomerProfilePage() {
 
   const onCityDropdownValueChanged = (event) => {
     const value = event.target.value
-    setAddressInfo(prev => ({
+    setAddressInfo((prev) => ({
       ...prev,
       city: value,
-      district: DISTRICT_DATA[value][0] // Set first district as default
+      district: DISTRICT_DATA[value][0], // Set first district as default
     }))
     setDistricts(DISTRICT_DATA[value])
   }
-  
+
   const onDistrictDropdownValueChanged = (event) => {
     const value = event.target.value
-    setAddressInfo(prev => ({
+    setAddressInfo((prev) => ({
       ...prev,
-      district: value
+      district: value,
     }))
   }
 
@@ -141,7 +141,7 @@ export default function CustomerProfilePage() {
     }))
   }
 
-  const handleProfileUpdate = async(e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault()
     setErrorMessages([])
 
@@ -149,12 +149,12 @@ export default function CustomerProfilePage() {
       const putData = {
         ...formData,
         current_address: addressInfo,
-        role: "CUSTOMER"
+        role: "CUSTOMER",
       }
       console.log("updated: ")
       console.log(putData)
       const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
-      
+
       setUser({
         ...user,
         firstname: formData.firstname,
@@ -163,12 +163,12 @@ export default function CustomerProfilePage() {
         phoneNumber: formData.phoneNumber,
         current_address: addressInfo,
       })
-  
+
       // Animation for success notification
       const notification = document.getElementById("success-notification")
       notification.classList.remove("translate-y-20", "opacity-0")
       notification.classList.add("translate-y-0", "opacity-100")
-  
+
       setTimeout(() => {
         notification.classList.add("translate-y-20", "opacity-0")
         notification.classList.remove("translate-y-0", "opacity-100")
@@ -188,9 +188,9 @@ export default function CustomerProfilePage() {
 
   const handleAddressInfoChange = (e) => {
     const { id, value } = e.target
-    setAddressInfo(prev => ({
+    setAddressInfo((prev) => ({
       ...prev,
-      [id]: id === 'buildingNumber' || id === 'apartmentNumber' ? Number(value) : value
+      [id]: id === "buildingNumber" || id === "apartmentNumber" ? Number(value) : value,
     }))
   }
 
@@ -322,7 +322,7 @@ export default function CustomerProfilePage() {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className={`w-full md:w-4/5 max-w-5xl ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-xl p-6 shadow-xl`}
+          className={`w-full md:w-4/5 max-w-[75%] ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-xl p-6 shadow-xl`}
         >
           <h1 className={`text-2xl font-bold ${darkMode ? "text-amber-400" : "text-amber-800"} text-center mb-6`}>
             Hesap Profilim - Müşteri {customerId ? `(ID: ${customerId})` : ""}
@@ -370,7 +370,7 @@ export default function CustomerProfilePage() {
                 >
                   <div className="flex">
                     <div className="py-1">
-                      <svg 
+                      <svg
                         className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -392,14 +392,16 @@ export default function CustomerProfilePage() {
                 </motion.div>
               ))}
 
-<motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              onClick={() => {navigate("/restaurants/browse")}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
-            >
-              Browse Restaurants
-            </Button>
-          </motion.div>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  onClick={() => {
+                    navigate("/restaurants/browse")
+                  }}
+                  className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+                >
+                  Browse Restaurants
+                </Button>
+              </motion.div>
 
               {activeTab === "profile" && (
                 <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
@@ -557,7 +559,7 @@ export default function CustomerProfilePage() {
                         </svg>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-3">
                       <Label htmlFor="neighborhood" className="text-gray-700 dark:text-gray-300 font-medium">
                         Mahalle
@@ -571,7 +573,7 @@ export default function CustomerProfilePage() {
                         required
                       />
                     </div>
-                    
+
                     <div className="space-y-3">
                       <Label htmlFor="avenue" className="text-gray-700 dark:text-gray-300 font-medium">
                         Cadde
@@ -585,7 +587,7 @@ export default function CustomerProfilePage() {
                         required
                       />
                     </div>
-                    
+
                     <div className="space-y-3">
                       <Label htmlFor="street" className="text-gray-700 dark:text-gray-300 font-medium">
                         Sokak
@@ -599,7 +601,7 @@ export default function CustomerProfilePage() {
                         required
                       />
                     </div>
-                    
+
                     <div className="space-y-3">
                       <Label htmlFor="buildingNumber" className="text-gray-700 dark:text-gray-300 font-medium">
                         Bina No
@@ -614,7 +616,7 @@ export default function CustomerProfilePage() {
                         required
                       />
                     </div>
-                    
+
                     <div className="space-y-3">
                       <Label htmlFor="apartmentNumber" className="text-gray-700 dark:text-gray-300 font-medium">
                         Daire No

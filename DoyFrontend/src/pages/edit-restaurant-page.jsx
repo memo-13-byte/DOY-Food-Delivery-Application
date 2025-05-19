@@ -15,7 +15,6 @@ import {
   Edit,
   ImageIcon,
   Upload,
-  Axis3D,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import axios from "axios"
@@ -44,8 +43,6 @@ export default function RestaurantManagePage() {
   const [itemImageSuccess, setItemImageSuccess] = useState({ show: false, itemName: "" })
   const [errorMessages, setErrorMessages] = useState([])
 
-
-
   // Restoran verilerini ID'ye göre getir
   const [restaurant, setRestaurant] = useState({
     restaurantName: "Restoran A",
@@ -53,52 +50,49 @@ export default function RestaurantManagePage() {
     restaurantPhone: "",
     restaurantCategory: "",
     rating: "",
-    minOrderPrice: ""
+    minOrderPrice: "",
   })
 
-  const [isEditingPhoneNumber, setIsEditingPhoneNumber] = useState(false);
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
-const [phoneNumberInput, setPhoneNumberInput] = useState(restaurant.restaurantPhone || '');
+  const [isEditingPhoneNumber, setIsEditingPhoneNumber] = useState(false)
+  const [isEditingDescription, setIsEditingDescription] = useState(false)
+  const [phoneNumberInput, setPhoneNumberInput] = useState(restaurant.restaurantPhone || "")
 
-const [isEditingMinOrderPrice, setIsEditingMinOrderPrice] = useState(false);
-const [minOrderPriceInput, setMinOrderPriceInput] = useState(restaurant.minOrderPrice || '');
+  const [isEditingMinOrderPrice, setIsEditingMinOrderPrice] = useState(false)
+  const [minOrderPriceInput, setMinOrderPriceInput] = useState(restaurant.minOrderPrice || "")
 
-const handleEditPhoneNumberClick = () => setIsEditingPhoneNumber(true);
-const handleCancelPhoneNumberEdit = () => {
-  setIsEditingPhoneNumber(false);
-  setPhoneNumberInput(restaurant.restaurantPhone || '');
-};
+  const handleEditPhoneNumberClick = () => setIsEditingPhoneNumber(true)
+  const handleCancelPhoneNumberEdit = () => {
+    setIsEditingPhoneNumber(false)
+    setPhoneNumberInput(restaurant.restaurantPhone || "")
+  }
 
-const handleEditMinOrderPriceClick = () => setIsEditingMinOrderPrice(true);
-const handleCancelMinOrderPriceEdit = () => {
-  setIsEditingMinOrderPrice(false);
-  setMinOrderPriceInput(restaurant.minOrderPrice || '');
-};
+  const handleEditMinOrderPriceClick = () => setIsEditingMinOrderPrice(true)
+  const handleCancelMinOrderPriceEdit = () => {
+    setIsEditingMinOrderPrice(false)
+    setMinOrderPriceInput(restaurant.minOrderPrice || "")
+  }
   // ID'ye göre restoran verilerini yükle
   useEffect(() => {
     console.log("wtf")
     const getRestaurantInformation = async () => {
       try {
-        
         const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
         console.log(response.data)
         setRestaurant(response.data)
         setPhoneNumberInput(response.data.restaurantPhone)
         setMinOrderPriceInput(response.data.minOrderPrice)
-        
-        if(response.data.imageId != null) {
+
+        if (response.data.imageId != null) {
           const imageResponse = await axios.get(`http://localhost:8080/api/upload/image/${response.data.imageId}`, {
-            responseType: 'blob',
-          });
-          
-          const reader = new FileReader();
+            responseType: "blob",
+          })
+
+          const reader = new FileReader()
           reader.onloadend = () => {
-            setRestaurantImage(reader.result); // base64 string to display in <img src=...>
-          };
-          reader.readAsDataURL(imageResponse.data);
-        
+            setRestaurantImage(reader.result) // base64 string to display in <img src=...>
+          }
+          reader.readAsDataURL(imageResponse.data)
         }
-        
       } catch (error) {
         alert("Error fetching restaurant information:", error)
       }
@@ -295,22 +289,22 @@ const handleCancelMinOrderPriceEdit = () => {
         else if (responseItems[i].menuItemType === "MAIN_DISH") placeholderQuery = responseItems[i].name
         else if (responseItems[i].menuItemType === "MENU") placeholderQuery = "meal"
         else if (responseItems[i].menuItemType === "COMBO") placeholderQuery = "combo meal"
-        
+
         itemData[categoryMap.get(responseItems[i].menuItemType)].items.push({
           id: responseItems[i].id,
           name: responseItems[i].name,
           description: responseItems[i].description,
           price: responseItems[i].price,
-          image: responseItems[i].imageId 
+          image: responseItems[i].imageId
             ? `http://localhost:8080/api/upload/image/${responseItems[i].imageId}`
             : `https://source.unsplash.com/400x300/?${placeholderQuery}`,
         })
         console.log("asasda")
       }
-      
+
       setMenuCategories(itemData)
     } catch (error) {
-      setErrorMessages(getResponseErrors(error));
+      setErrorMessages(getResponseErrors(error))
     }
   }
 
@@ -326,13 +320,12 @@ const handleCancelMinOrderPriceEdit = () => {
     setDescriptionInput(restaurant.description)
   }
 
-  const handleSaveDescription = async() => {
+  const handleSaveDescription = async () => {
     if (descriptionInput.trim()) {
-      let data = {
+      const data = {
         ...restaurant,
-        desription: descriptionInput
+        desription: descriptionInput,
       }
-      
 
       try {
         console.log(restaurant)
@@ -345,44 +338,43 @@ const handleCancelMinOrderPriceEdit = () => {
     }
     console.log("Saving new description:", descriptionInput)
     setIsEditing(false)
-    
   }
 
   const handleSavePhoneNumber = async () => {
     if (phoneNumberInput.trim()) {
-      let data = {
+      const data = {
         ...restaurant,
-        restaurantPhone: phoneNumberInput
+        restaurantPhone: phoneNumberInput,
       }
-      restaurant.restaurantPhone = phoneNumberInput;
-  
+      restaurant.restaurantPhone = phoneNumberInput
+
       try {
-        console.log(restaurant);
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+        console.log(restaurant)
+        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
       } catch (error) {
-        setErrorMessages(getResponseErrors(error));
+        setErrorMessages(getResponseErrors(error))
       }
     }
     setIsEditingPhoneNumber(false)
   }
-  
-  const handleSaveMinOrderPrice = async() => {
-    if (minOrderPriceInput !== '' && !isNaN(minOrderPriceInput)) {
-      let data = {
+
+  const handleSaveMinOrderPrice = async () => {
+    if (minOrderPriceInput !== "" && !isNaN(minOrderPriceInput)) {
+      const data = {
         ...restaurant,
-        minOrderPrice: minOrderPriceInput
+        minOrderPrice: minOrderPriceInput,
       }
-  
+
       try {
-        console.log(restaurant);
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
-        restaurant.minOrderPrice = minOrderPriceInput;
+        console.log(restaurant)
+        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
+        restaurant.minOrderPrice = minOrderPriceInput
       } catch (error) {
-        console.log(error);
-        setErrorMessages(getResponseErrors(error));
+        console.log(error)
+        setErrorMessages(getResponseErrors(error))
       }
     }
-    console.log("Saving new minimum order price:", minOrderPriceInput);
+    console.log("Saving new minimum order price:", minOrderPriceInput)
     setIsEditingMinOrderPrice(false)
   }
 
@@ -410,13 +402,12 @@ const handleCancelMinOrderPriceEdit = () => {
     setNameInput(restaurant.restaurantName)
   }
 
-  const handleSaveName = async() => {
+  const handleSaveName = async () => {
     if (nameInput.trim()) {
-      let data = {
+      const data = {
         ...restaurant,
-        restaurantName: nameInput
+        restaurantName: nameInput,
       }
-      
 
       try {
         console.log(restaurant)
@@ -441,32 +432,31 @@ const handleCancelMinOrderPriceEdit = () => {
 
   // Add a function to handle the file upload
   const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file && file.type.startsWith("image/")) {
-      const formData = new FormData();
-      formData.append("file", file);
-  
+      const formData = new FormData()
+      formData.append("file", file)
+
       try {
         const response = await axios.post(
           `http://localhost:8080/api/upload/image/restaurant/${restaurantId}`,
-          formData // Axios sets headers automatically
-        );
-  
-        const reader = new FileReader();
+          formData, // Axios sets headers automatically
+        )
+
+        const reader = new FileReader()
         reader.onload = (event) => {
-          setRestaurantImage(event.target.result);
-          showUploadSuccess(file.name);
-          console.log("File selected:", file.name);
-        };
-        reader.readAsDataURL(file);
+          setRestaurantImage(event.target.result)
+          showUploadSuccess(file.name)
+          console.log("File selected:", file.name)
+        }
+        reader.readAsDataURL(file)
       } catch (error) {
-        console.error("Upload failed:", error);
+        console.error("Upload failed:", error)
       }
     } else {
-      alert("Lütfen sadece resim dosyaları yükleyin (JPG, PNG, GIF, vb.)");
+      alert("Lütfen sadece resim dosyaları yükleyin (JPG, PNG, GIF, vb.)")
     }
-  };
-  
+  }
 
   const handleDragOver = (e) => {
     e.preventDefault()
@@ -516,6 +506,11 @@ const handleCancelMinOrderPriceEdit = () => {
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"}`}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
     >
       {/* Header */}
       <motion.header
@@ -564,38 +559,38 @@ const handleCancelMinOrderPriceEdit = () => {
       </motion.header>
 
       {errorMessages.map((message, i) => (
-                        
-                        <motion.div key={i}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
-                        >
-                          <div className="flex">
-                            <div className="py-1">
-                              <svg 
-                                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="font-medium">{message}</p>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+        >
+          <div className="flex">
+            <div className="py-1">
+              <svg
+                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p className="font-medium">{message}</p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-7xl px-6 py-8">
+      <main className="container mx-auto max-w-[75%] px-6 py-8" style={{ flex: "1 0 auto" }}>
         {/* Restaurant Info */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -720,124 +715,130 @@ const handleCancelMinOrderPriceEdit = () => {
               </div>
 
               {/* PHONE NUMBER */}
-<div className="flex items-center justify-between mt-6">
-  {isEditingPhoneNumber ? (
-    <div className="flex items-center gap-3 flex-1">
-      <input
-        type="text"
-        value={phoneNumberInput}
-        onChange={(e) => setPhoneNumberInput(e.target.value)}
-        className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
-          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-        }`}
-      />
-      <div className="flex gap-2">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleSavePhoneNumber}
-          className={`rounded-full p-2 ${
-            darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleCancelPhoneNumberEdit}
-          className={`rounded-full p-2 ${
-            darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
-          }`}
-        >
-          <X className="h-5 w-5" />
-        </motion.button>
-      </div>
-    </div>
-  ) : (<div className="flex items-center">
-  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Telefon Numarası: " + restaurant.restaurantPhone}</p>
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={handleEditPhoneNumberClick}
-    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
-  >
-    <Edit className="h-5 w-5" />
-  </motion.button>
-</div>)}
-</div>
+              <div className="flex items-center justify-between mt-6">
+                {isEditingPhoneNumber ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <input
+                      type="text"
+                      value={phoneNumberInput}
+                      onChange={(e) => setPhoneNumberInput(e.target.value)}
+                      className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
+                        darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
+                      }`}
+                    />
+                    <div className="flex gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleSavePhoneNumber}
+                        className={`rounded-full p-2 ${
+                          darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
+                        }`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleCancelPhoneNumberEdit}
+                        className={`rounded-full p-2 ${
+                          darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
+                        }`}
+                      >
+                        <X className="h-5 w-5" />
+                      </motion.button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                      {"Telefon Numarası: " + restaurant.restaurantPhone}
+                    </p>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleEditPhoneNumberClick}
+                      className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+                    >
+                      <Edit className="h-5 w-5" />
+                    </motion.button>
+                  </div>
+                )}
+              </div>
 
-{/* MINIMUM ORDER PRICE */}
-<div className="flex items-center justify-between mt-6">
-  {isEditingMinOrderPrice ? (
-    <div className="flex items-center gap-3 flex-1">
-      <input
-        type="number"
-        value={minOrderPriceInput}
-        onChange={(e) => setMinOrderPriceInput(e.target.value)}
-        className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
-          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-        }`}
-      />
-      <div className="flex gap-2">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleSaveMinOrderPrice}
-          className={`rounded-full p-2 ${
-            darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleCancelMinOrderPriceEdit}
-          className={`rounded-full p-2 ${
-            darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
-          }`}
-        >
-          <X className="h-5 w-5" />
-        </motion.button>
-      </div>
-    </div>
-  ) : (
-    
-    <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Minimum Sipariş Tutarı: " + restaurant.minOrderPrice}</p>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleEditMinOrderPriceClick}
-                    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
-                  >
-                    <Edit className="h-5 w-5" />
-                  </motion.button>
-                </div>)}
-</div>
+              {/* MINIMUM ORDER PRICE */}
+              <div className="flex items-center justify-between mt-6">
+                {isEditingMinOrderPrice ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <input
+                      type="number"
+                      value={minOrderPriceInput}
+                      onChange={(e) => setMinOrderPriceInput(e.target.value)}
+                      className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
+                        darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
+                      }`}
+                    />
+                    <div className="flex gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleSaveMinOrderPrice}
+                        className={`rounded-full p-2 ${
+                          darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
+                        }`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleCancelMinOrderPriceEdit}
+                        className={`rounded-full p-2 ${
+                          darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
+                        }`}
+                      >
+                        <X className="h-5 w-5" />
+                      </motion.button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                      {"Minimum Sipariş Tutarı: " + restaurant.minOrderPrice}
+                    </p>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleEditMinOrderPriceClick}
+                      className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+                    >
+                      <Edit className="h-5 w-5" />
+                    </motion.button>
+                  </div>
+                )}
+              </div>
 
               {isEditing ? (
                 <div className="flex flex-col gap-3">
@@ -874,7 +875,9 @@ const handleCancelMinOrderPriceEdit = () => {
                 </div>
               ) : (
                 <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Açıklama: " + restaurant.description}</p>
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                    {"Açıklama: " + restaurant.description}
+                  </p>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -886,55 +889,50 @@ const handleCancelMinOrderPriceEdit = () => {
                 </div>
               )}
             </div>
-            
           </div>
 
           <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                    "İl: " + restaurant.address?.cityEnum
-                    }</p>
-                </div>
+            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+              {"İl: " + restaurant.address?.cityEnum}
+            </p>
+          </div>
 
-                <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                    "İlçe: " + restaurant.address?.district.name
-                    }</p>
-                </div>
+          <div className="flex items-center">
+            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+              {"İlçe: " + restaurant.address?.district.name}
+            </p>
+          </div>
 
-                <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                    "Mahalle: " + restaurant.address?.neighborhood
-                    }</p>
-                </div>
+          <div className="flex items-center">
+            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+              {"Mahalle: " + restaurant.address?.neighborhood}
+            </p>
+          </div>
 
-                <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                    "Cadde: " + restaurant.address?.avenue
-                    }</p>
-                </div>
+          <div className="flex items-center">
+            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+              {"Cadde: " + restaurant.address?.avenue}
+            </p>
+          </div>
 
-                <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                    "Sokak: " + restaurant.address?.street
-                    }</p>
-                </div>
+          <div className="flex items-center">
+            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+              {"Sokak: " + restaurant.address?.street}
+            </p>
+          </div>
 
-                <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                    "Bina No: " + restaurant.address?.buildingNumber
-                    }</p>
-                </div>
+          <div className="flex items-center">
+            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+              {"Bina No: " + restaurant.address?.buildingNumber}
+            </p>
+          </div>
 
-                <div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                    "Apartman No: " + restaurant.address?.apartment_number
-                    }</p>
-                </div>
-
-                  
+          <div className="flex items-center">
+            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+              {"Apartman No: " + restaurant.address?.apartment_number}
+            </p>
+          </div>
         </motion.div>
-
-
 
         {/* Menu Sections - All categories displayed vertically */}
         <div className="space-y-12">
@@ -1187,13 +1185,15 @@ const handleCancelMinOrderPriceEdit = () => {
       {/* Footer */}
       <footer
         style={{
-          marginTop: "2rem",
           padding: "2rem",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
           transition: "all 0.3s ease-in-out",
+          marginTop: "auto",
+          width: "100%",
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.1)",
         }}
       >
         <img

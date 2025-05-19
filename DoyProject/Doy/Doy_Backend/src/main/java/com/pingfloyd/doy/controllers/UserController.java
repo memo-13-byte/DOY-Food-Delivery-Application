@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+@CrossOrigin(origins = {"http://localhost:3000"})
 public class UserController implements IUserController{
     @Autowired
     private UserService userService;
@@ -107,6 +107,5 @@ public class UserController implements IUserController{
     public ResponseEntity<Boolean> SuspendUser(@RequestBody @Valid DtoBanRequest request){
         return ResponseEntity.ok(userService.SuspendUser(request));
     }
-
 
 }

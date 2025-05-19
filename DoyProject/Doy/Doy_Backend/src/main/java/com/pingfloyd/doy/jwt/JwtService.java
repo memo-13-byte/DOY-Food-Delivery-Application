@@ -30,7 +30,7 @@ public class JwtService {
     * */
     public String generateTokenForUser(UserDetails userDetails) {
         //expires 2 hours from now
-        int expirationDateInMilliseconds = 1000 * 60 * 60 * 2;
+        int expirationDateInMilliseconds = 1000 * 60 * 60 * 24;
 
         return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date())
                 .claim("role", userDetails.getAuthorities()) //embed role to token
@@ -48,7 +48,12 @@ public class JwtService {
     }
 
     public String getUsernameFromToken(String token) {
-        return exportToken(token, Claims::getSubject);
+        try {
+            return exportToken(token, Claims::getSubject);
+        } catch (Exception e) {
+            System.err.println("Token geçersiz veya süresi dolmuş: " + e.getMessage());
+            return null;
+        }
     }
 
     public Object getClaimFromToken(String token, String claim) {
@@ -56,8 +61,9 @@ public class JwtService {
     }
 
     public boolean isTokenExpired(String token) {
+        long toleranceInMillis = 5 * 60 * 1000;
         Date expirationDate = exportToken(token, Claims::getExpiration);
-        return expirationDate.before(new Date());
+        return expirationDate.before(new Date(System.currentTimeMillis() - toleranceInMillis));
     }
 
     public Key getKey() {

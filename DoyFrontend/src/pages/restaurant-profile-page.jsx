@@ -3,22 +3,7 @@
 import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
-import { Badge } from "../components/ui/badge"
-import {
-  Moon,
-  Clock,
-  Phone,
-  Mail,
-  MapPin,
-  Award,
-  Clock3,
-  TrendingUp,
-  LogOut,
-  Twitter,
-  Instagram,
-  Youtube,
-  Linkedin,
-} from "lucide-react"
+import { Moon, Phone, Mail, MapPin, LogOut, Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import { motion } from "framer-motion"
 import { getUserById } from "../services/profileData"
 import axios from "axios"
@@ -56,19 +41,19 @@ export default function RestaurantProfilePage() {
   useEffect(() => {
     console.log("yetr")
     const loadRestaurantOwnerById = async () => {
-      const response = await getUserById(restaurantId);
+      const response = await getUserById(restaurantId)
 
       const data = {
         firstname: response.firstname,
         lastname: response.lastname,
         phoneNumber: response.phoneNumber,
-        email: response.email
+        email: response.email,
       }
       console.log(data)
       setRestaurant(data)
       setEditableData(data)
       setGovernmentId(response.governmentId)
-      
+
       const response2 = await axios.get(`http://localhost:8080/api/restaurant/get/${response.restaurantId}`)
       setOwnersRestaurant(response2.data.restaurantName)
     }
@@ -96,14 +81,14 @@ export default function RestaurantProfilePage() {
     navigate(`/restaurants/manage/${restaurantId}`)
   }
 
-  const handleUpdateProfile = async() => {
+  const handleUpdateProfile = async () => {
     setErrorMessages([])
     try {
       console.log(editableData)
       await axios.put(`http://localhost:8080/api/users/restaurant-owners/update/${restaurant.email}`, {
         ...editableData,
         governmentId: governmentId,
-        role: "RESTAURANT_OWNER"
+        role: "RESTAURANT_OWNER",
       })
     } catch (error) {
       setErrorMessages(getResponseErrors(error))
@@ -217,42 +202,42 @@ export default function RestaurantProfilePage() {
       </motion.div>
 
       {errorMessages.map((message, i) => (
-                        
-                        <motion.div key={i}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
-                        >
-                          <div className="flex">
-                            <div className="py-1">
-                              <svg 
-                                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="font-medium">{message}</p>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+        >
+          <div className="flex">
+            <div className="py-1">
+              <svg
+                className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p className="font-medium">{message}</p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
       {/* Profile Content */}
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className={`w-full max-w-5xl ${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} rounded-lg p-8 shadow-lg transition-colors duration-300`}
+          className={`w-full max-w-[75%] ${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} rounded-lg p-8 shadow-lg transition-colors duration-300`}
         >
           <motion.h1
             initial={{ opacity: 0 }}
@@ -283,7 +268,9 @@ export default function RestaurantProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/orders`)}}
+              onClick={() => {
+                navigate(`/restaurant/profile/${restaurantId}/orders`)
+              }}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See Given Orders
@@ -292,7 +279,9 @@ export default function RestaurantProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/orders-status`)}}
+              onClick={() => {
+                navigate(`/restaurant/profile/${restaurantId}/orders-status`)
+              }}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See Prepared Order Status
@@ -385,7 +374,7 @@ export default function RestaurantProfilePage() {
             variants={container}
             initial="hidden"
             animate={isLoaded ? "show" : "hidden"}
-            className="space-y-5 mb-8 w-full max-w-4xl mx-auto"
+            className="space-y-5 mb-8 w-full mx-auto"
           >
             <motion.div variants={item}>
               <label className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-1 font-medium`}>
@@ -665,7 +654,7 @@ export default function RestaurantProfilePage() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span>{errorMessages.length === 0? "Profil başarıyla güncellendi!" : "Hata!"} </span>
+              <span>{errorMessages.length === 0 ? "Profil başarıyla güncellendi!" : "Hata!"} </span>
             </div>
             <button onClick={() => setShowAlert(false)} className="text-white hover:text-gray-200">
               <svg

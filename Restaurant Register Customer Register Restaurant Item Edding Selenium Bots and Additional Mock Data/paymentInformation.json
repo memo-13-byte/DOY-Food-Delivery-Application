@@ -1,0 +1,134 @@
+[{
+  "deliveryInfo": {
+    "fullName": "Ahmet Yılmaz",
+    "email": "ahmet.yilmaz@gmail.com",
+    "phoneNumber": "0532 123 4567"
+  },
+  "addressInfo": {
+    "fullAddress": "Atatürk Mahallesi, Gül Sokak No:15 Daire:7",
+    "district": "Kadıköy",
+    "city": "İstanbul",
+    "postalCode": "34710"
+  },
+  "orderNotes": "Kapıda kredi kartı ile ödeme yapacağım. Lütfen bina girişinde arayın, apartman kapısında zil çalışmıyor.",
+  "tipAmount": 15,
+  "paymentInfo": {
+    "cardholderName": "Ahmet Yılmaz",
+    "cardNumber": "5555 5555 5555 5555",
+    "expiryDate": "12/26",
+    "cvv": "123",
+    "paymentMethod": "creditCard"
+  }
+},
+
+{
+  "deliveryInfo": {
+    "fullName": "Ayşe Demir",
+    "email": "ayse.demir@hotmail.com",
+    "phoneNumber": "0555 987 6543"
+  },
+  "addressInfo": {
+    "fullAddress": "Bahçelievler Mahallesi, Çiçek Sokak No:8 Daire:12",
+    "district": "Bahçelievler",
+    "city": "İstanbul",
+    "postalCode": "34180"
+  },
+  "orderNotes": "Lütfen siparişimi kapıya bırakın ve zili çalın. Temassız teslimat tercih ediyorum.",
+  "tipAmount": 20,
+  "paymentInfo": {
+    "cardholderName": "Ayşe Demir",
+    "cardNumber": "4111 1111 1111 1111",
+    "expiryDate": "09/27",
+    "cvv": "321",
+    "paymentMethod": "creditCard"
+  }
+},
+  {
+  "deliveryInfo": {
+    "fullName": "Zeynep Öztürk",
+    "email": "zeynep.ozturk@gmail.com",
+    "phoneNumber": "0542 333 4444"
+  },
+  "addressInfo": {
+    "fullAddress": "Bostancı Mahallesi, Deniz Sokak No:23 Blok:B Daire:15",
+    "district": "Kadıköy",
+    "city": "İstanbul",
+    "postalCode": "34744"
+  },
+  "orderNotes": "Kurye gelmeden 5 dakika önce arayabilir mi? Köpeğimi balkona almam gerekiyor.",
+  "tipAmount": 30,
+  "paymentInfo": {
+    "cardholderName": "Zeynep Öztürk",
+    "cardNumber": "6011 0009 9013 9424",
+    "expiryDate": "07/25",
+    "cvv": "789",
+    "paymentMethod": "creditCard"
+  }
+},
+  {
+  "deliveryInfo": {
+    "fullName": "Mehmet Kaya",
+    "email": "mehmet.kaya@yahoo.com",
+    "phoneNumber": "0530 456 7890"
+  },
+  "addressInfo": {
+    "fullAddress": "Cumhuriyet Mahallesi, Atatürk Caddesi No:42 Daire:5",
+    "district": "Şişli",
+    "city": "İstanbul",
+    "postalCode": "34380"
+  },
+  "orderNotes": "Paket içine ekstra sos ve peçete koyabilir misiniz? Teşekkürler.",
+  "tipAmount": 25,
+  "paymentInfo": {
+    "cardholderName": "Mehmet Kaya",
+    "cardNumber": "3782 822463 10005",
+    "expiryDate": "03/28",
+    "cvv": "4321",
+    "paymentMethod": "creditCard"
+  }
+},
+  {
+  "deliveryInfo": {
+    "fullName": "Can Yılmaz",
+    "email": "can.yilmaz@outlook.com",
+    "phoneNumber": "0537 777 8888"
+  },
+  "addressInfo": {
+    "fullAddress": "Erenköy Mahallesi, Bağdat Caddesi No:180 Daire:9",
+    "district": "Kadıköy",
+    "city": "İstanbul",
+    "postalCode": "34738"
+  },
+  "orderNotes": "Kapıda nakit ödeme yapacağım. 200 TL ile ödeyeceğim, para üstü getirebilir misiniz?",
+  "tipAmount": 10,
+  "paymentInfo": {
+    "cardholderName": "Can Yılmaz",
+    "cardNumber": "2223 0000 4841 0010",
+    "expiryDate": "11/26",
+    "cvv": "456",
+    "paymentMethod": "cash"
+  }
+},
+  {
+  "deliveryInfo": {
+    "fullName": "Serkan Acar",
+    "email": "serkan.acar@example.com",
+    "phoneNumber": "0555 741 2369"
+  },
+  "addressInfo": {
+    "fullAddress": "Erzene Mahallesi, İnönü Caddesi, Çınar Sokak No:9 Daire:11",
+    "district": "Bornova",
+    "city": "İzmir",
+    "postalCode": "35040"
+  },
+  "orderNotes": "Lütfen apartmanın arka girişini kullanın, ön kapı tamir ediliyor. İçecekler için buz paketi ekleyebilir misiniz?",
+  "tipAmount": 25,
+  "paymentInfo": {
+    "cardholderName": "Serkan Acar",
+    "cardNumber": "5374 6258 9137 0426",
+    "expiryDate": "05/26",
+    "cvv": "248",
+    "paymentMethod": "creditCard"
+  }
+}
+  ]

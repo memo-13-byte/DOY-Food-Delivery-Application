@@ -4,10 +4,8 @@ import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Button } from "../components/ui/button"
-import { Checkbox } from "../components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
-import { getCourierById, getUserById } from "../services/profileData"
+import { Moon, Edit2, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
+import { getUserById } from "../services/profileData"
 import { useToast } from "../hooks/use-toast"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import axios from "axios"
@@ -57,7 +55,9 @@ export default function CourierProfilePage() {
     districtName: "",
   })
 
-  const [districts, setDistricts] = useState(courier.districtCity ? DISTRICT_DATA[courier.districtCity] || [] : DISTRICT_DATA["ISTANBUL"])
+  const [districts, setDistricts] = useState(
+    courier.districtCity ? DISTRICT_DATA[courier.districtCity] || [] : DISTRICT_DATA["ISTANBUL"],
+  )
 
   // Load courier data
   useEffect(() => {
@@ -145,14 +145,14 @@ export default function CourierProfilePage() {
   const handleUpdate = async () => {
     setErrorMessages([])
     try {
-      let data = {
+      const data = {
         governmentId: courier.governmentId,
-  district: {city: courier.districtCity, district: courier.districtName},
-  firstname: courier.firstname,
-  lastname: courier.lastname,
-  email: courier.email,
-  phoneNumber: courier.phoneNumber,
-  role: "COURIER"
+        district: { city: courier.districtCity, district: courier.districtName },
+        firstname: courier.firstname,
+        lastname: courier.lastname,
+        email: courier.email,
+        phoneNumber: courier.phoneNumber,
+        role: "COURIER",
       }
       const response = await axios.put(`http://localhost:8080/api/users/couriers/update/${courier.email}`, data)
       setOriginalCourier(response.data)
@@ -314,7 +314,7 @@ export default function CourierProfilePage() {
 
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
         <motion.div
-          className={`w-full max-w-5xl ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} rounded-lg p-8 shadow-md`}
+          className={`w-full max-w-[75%] ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} rounded-lg p-8 shadow-md`}
           variants={containerVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
@@ -327,24 +327,28 @@ export default function CourierProfilePage() {
             <span className="ml-2 text-sm font-normal text-gray-500">(ID: {courierId || "Varsayılan"})</span>
           </motion.h1>
 
-          <motion.div className="w-full max-w-4xl mx-auto space-y-5 mb-8" variants={itemVariants}>
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              onClick={() => {navigate(`/courier/requests/${courierId}`)}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
-            >
-              Manage Status
-            </Button>
-          </motion.div>
+          <motion.div className="w-full space-y-5 mb-8" variants={itemVariants}>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                onClick={() => {
+                  navigate(`/courier/requests/${courierId}`)
+                }}
+                className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+              >
+                Manage Status
+              </Button>
+            </motion.div>
 
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              onClick={() => {navigate(`/courier/profile/${courierId}/orders`)}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
-            >
-              See All Assigned Orders
-            </Button>
-          </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                onClick={() => {
+                  navigate(`/courier/profile/${courierId}/orders`)
+                }}
+                className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+              >
+                See All Assigned Orders
+              </Button>
+            </motion.div>
 
             <motion.div className="grid grid-cols-2 gap-6" variants={fadeInVariants}>
               <div>
@@ -437,7 +441,7 @@ export default function CourierProfilePage() {
             </motion.div>
 
             <motion.div variants={fadeInVariants} className="grid grid-cols-2 gap-6">
-              <div className="m-2">
+              <div>
                 <label htmlFor="cityDropdown" className="block text-base text-gray-800 mb-1">
                   İl
                 </label>
@@ -469,7 +473,7 @@ export default function CourierProfilePage() {
                   </svg>
                 </div>
               </div>
-              <div className="m-2">
+              <div>
                 <label htmlFor="districtDropdown" className="block text-base text-gray-800 mb-1">
                   İlçe
                 </label>
@@ -526,7 +530,7 @@ export default function CourierProfilePage() {
           </motion.div>
 
           <motion.div
-            className="w-full max-w-4xl mx-auto"
+            className="w-full"
             variants={itemVariants}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -541,7 +545,7 @@ export default function CourierProfilePage() {
 
           <motion.button
             onClick={handleLogout}
-            className={`w-full max-w-4xl mx-auto block text-center py-3 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-[#333]" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
+            className={`w-full block text-center py-3 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-[#333]" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
             variants={itemVariants}
             whileHover={{ scale: 1.02, backgroundColor: darkMode ? "#374151" : "#f9fafb" }}
             whileTap={{ scale: 0.98 }}

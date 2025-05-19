@@ -1,0 +1,26 @@
+Sending payload: {
+  "userInfo": {
+    "firstName": "Umut",
+    "lastName": "Korkmaz",
+    "email": "umutkorkmaz@gmail.com",
+    "governmentId": "98765432109",
+    "password": "Keb.2024!",
+    "phoneNumber": "5550000008"
+  },
+  "restaurantInfo": {
+    "restaurantName": "Aspava",
+    "description": "Odun ateşinde pişen Ankara tava, kuzu şiş ve özel Ankara dönerlerimiz ile otantik kebap lezzetleri sunuyoruz.",
+    "restaurantPhone": "5550000008",
+    "restaurantCategory": "KEBAB",
+    "minOrderPrice": 150
+  },
+  "addressInfo": {
+    "city": "ANKARA",
+    "district": "Keçiören",
+    "neighborhood": "Şenyuva Mahallesi",
+    "avenue": "Fatih Caddesi",
+    "street": "Tepebaşı Sokak",
+    "buildingNumber": 42,
+    "apartmentNumber": 1
+  }
+}

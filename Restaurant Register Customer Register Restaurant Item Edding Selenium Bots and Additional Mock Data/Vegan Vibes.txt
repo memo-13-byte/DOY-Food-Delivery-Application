@@ -1,0 +1,26 @@
+Sending payload: {
+  "userInfo": {
+    "firstName": "Ayşe",
+    "lastName": "Şahin",
+    "email": "ayse@gmail.com",
+    "governmentId": "89012345678",
+    "password": "Veg.2024!",
+    "phoneNumber": "5550000008"
+  },
+  "restaurantInfo": {
+    "restaurantName": "Vegan Vibes",
+    "description": "%100 vegan, organik ve sürdürülebilir malzemelerle hazırlanmış sağlıklı ve lezzetli yemekler.",
+    "restaurantPhone": "5550000008",
+    "restaurantCategory": "HOME_COOKING",
+    "minOrderPrice": 85
+  },
+  "addressInfo": {
+    "city": "ISTANBUL",
+    "district": "Bakırköy",
+    "neighborhood": "Cevizlik Mahallesi",
+    "avenue": "İstasyon Caddesi",
+    "street": "Menekşe Sokak",
+    "buildingNumber": 9,
+    "apartmentNumber": 7
+  }
+}

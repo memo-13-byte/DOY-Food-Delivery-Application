@@ -3,12 +3,7 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from 'axios';
-import {
-  Moon, Sun, Utensils, User, Mail, Phone, CreditCard, MapPin, ChevronRight,
-  Instagram, Twitter, Youtube, Linkedin, AlertCircle, CheckCircle, Lock, Eye,
-  EyeOff, Building, Home, BookText, Tag, DollarSign, Navigation, Loader2,
-  ListChecks // Icon for backend errors list
-} from "lucide-react"
+import { Moon, Sun, Utensils, User, Mail, Phone, CreditCard, MapPin, ChevronRight, Instagram, Twitter, Youtube, Linkedin, AlertCircle, CheckCircle, Lock, Eye, EyeOff, Building, Home, BookText, Tag, DollarSign, Navigation, Loader2, ListChecks } from 'lucide-react'
 import { getResponseErrors } from "../services/exceptionUtils";
 
 // --- Custom UI components (Button, Input, Label, Checkbox, Switch, Textarea, Select) ---
@@ -94,6 +89,27 @@ export default function RestaurantRegisterPage() {
     setMounted(true)
   }, [])
 
+  // Initialize dark mode from localStorage
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode") === "true"
+    setDarkMode(savedDarkMode)
+    if (savedDarkMode) {
+      document.documentElement.classList.add("dark")
+    }
+  }, [])
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+    if (!darkMode) {
+      document.documentElement.classList.add("dark")
+      localStorage.setItem("darkMode", "true")
+    } else {
+      document.documentElement.classList.remove("dark")
+      localStorage.setItem("darkMode", "false")
+    }
+  }
+
   // --- Simplified Validation Functions (remain the same) ---
   const validateRequired = (value, fieldName) => { /* ... */ if (!value || (typeof value === 'string' && value.trim() === "")) return `${fieldName} gereklidir`; return ""; };
   const validateEmail = (email) => { /* ... */ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; if (!email) return "E-posta adresi gereklidir"; if (!emailRegex.test(email)) return "Geçerli bir e-posta adresi giriniz"; return ""; };
@@ -130,8 +146,8 @@ export default function RestaurantRegisterPage() {
       case "confirmPassword": return validateConfirmPassword(value, currentFormData.password);
       case "acceptTerms": return validateTerms(value);
       case "description": case "avenue":
-
-       }
+        return "";
+    }
   };
 
   // validateAllFields function remains structurally the same
@@ -160,7 +176,7 @@ export default function RestaurantRegisterPage() {
     return ""; // Valid
   };
 
-
+  
   // --- Updated handleInputChange for Dependent Dropdowns & Clearing Errors ---
   const handleInputChange = (e) => {
     const { id, value, type, checked } = e.target;
@@ -231,14 +247,37 @@ export default function RestaurantRegisterPage() {
     const isValid = validateAllFields(formData)
 
     if (isValid) {
-      const payload = { /* ... payload construction ... */
-        userInfo: { firstName: formData.ownerName, lastName: formData.ownerSurname, email: formData.email, governmentId: formData.idNumber, password: formData.password, phoneNumber: formData.ownerPhone.replace(/\D/g, ''), },
-        restaurantInfo: { restaurantName: formData.restaurantName, description: formData.description, restaurantPhone: formData.restaurantPhone.replace(/\D/g, ''), restaurantCategory: formData.restaurantCategory, minOrderPrice: parseFloat(formData.minOrderPrice) || 0, },
-        addressInfo: { city: formData.city, neighborhood: formData.neighborhood, district: formData.district, avenue: formData.avenue, street: formData.street, buildingNumber: formData.buildingNumber, apartmentNumber: formData.apartmentNumber, },
+      const payload = {
+        userInfo: { 
+          firstName: formData.ownerName, 
+          lastName: formData.ownerSurname, 
+          email: formData.email, // Benzersiz e-posta için değiştirin
+          governmentId: formData.idNumber, 
+          password: formData.password, 
+          phoneNumber: formData.ownerPhone.replace(/\D/g, ''), 
+        },
+        restaurantInfo: { 
+          restaurantName: formData.restaurantName, 
+          description: formData.description, 
+          restaurantPhone: formData.restaurantPhone.replace(/\D/g, ''), 
+          restaurantCategory: formData.restaurantCategory, 
+          minOrderPrice: parseInt(formData.minOrderPrice) || 0, // parseFloat yerine parseInt kullanın
+        },
+        addressInfo: { 
+          city: formData.city, // "ISTANBUL" gibi olduğundan emin olun
+          district: formData.district, // "Kadıköy" gibi olduğundan emin olun
+          neighborhood: formData.neighborhood, 
+          avenue: formData.avenue, 
+          street: formData.street, 
+          buildingNumber: parseInt(formData.buildingNumber) || 0,
+          apartmentNumber: parseInt(formData.apartmentNumber) || 0 
+        },
       };
 
       // --- API Call ---
       try {
+        // handleSubmit fonksiyonunda, axios isteğinden önce:
+        console.log("Sending payload:", JSON.stringify(payload, null, 2));
         const response = await axios.post("http://localhost:8080/api/registration/restaurant", payload, {
           headers: { "Content-Type": "application/json", }
         });
@@ -320,20 +359,20 @@ export default function RestaurantRegisterPage() {
 
 
   return (
-      <div className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gradient-to-b from-amber-50 to-amber-100"} transition-colors duration-300`} >
+      <div className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1a1a2e] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`} >
         {/* --- Header --- */}
-        <header className={`${darkMode ? "bg-gray-800" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center sticky top-0 z-10 shadow-md transition-colors duration-300`} > <div className="flex items-center"> <Link to="/"> <span className="font-bold text-xl hover:text-amber-200 transition-colors duration-200 cursor-pointer flex items-center gap-2"> <Utensils className="h-5 w-5" /> <span>Doy!</span> </span> </Link> </div> <div className="flex items-center gap-4"> <div className="flex items-center gap-2"> <Switch checked={darkMode} onCheckedChange={setDarkMode} className={`${darkMode ? "data-[state=checked]:bg-gray-600" : "data-[state=checked]:bg-amber-200"} transition-colors duration-300`} /> {darkMode ? <Sun className="h-4 w-4 text-yellow-300" /> : <Moon className="h-4 w-4 text-amber-200" />} </div> <Link to="/auth?tab=register"> <button className={`${darkMode ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-amber-200 text-amber-800 hover:bg-amber-300"} rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 transform hover:scale-105`}>KAYIT</button> </Link> <Link to="/auth?tab=login"> <button className={`${darkMode ? "bg-gray-600 text-white hover:bg-gray-500" : "bg-white text-amber-800 hover:bg-amber-50"} rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm`}>GİRİŞ</button> </Link> </div> </header>
+        <header className={`${darkMode ? "bg-[#20203a]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center sticky top-0 z-10 shadow-md transition-colors duration-300`} > <div className="flex items-center"> <Link to="/"> <span className="font-bold text-xl hover:text-amber-200 transition-colors duration-200 cursor-pointer flex items-center gap-2"> <Utensils className="h-5 w-5" /> <span>Doy!</span> </span> </Link> </div> <div className="flex items-center gap-4"> <div className="flex items-center gap-2"> <Switch checked={darkMode} onCheckedChange={toggleDarkMode} className={`${darkMode ? "data-[state=checked]:bg-gray-600" : "data-[state=checked]:bg-amber-200"} transition-colors duration-300`} /> {darkMode ? <Sun className="h-4 w-4 text-yellow-300" /> : <Moon className="h-4 w-4 text-amber-200" />} </div> <Link to="/auth?tab=register"> <button className={`${darkMode ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-amber-200 text-amber-800 hover:bg-amber-300"} rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 transform hover:scale-105`}>KAYIT</button> </Link> <Link to="/auth?tab=login"> <button className={`${darkMode ? "bg-gray-600 text-white hover:bg-gray-500" : "bg-white text-amber-800 hover:bg-amber-50"} rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm`}>GİRİŞ</button> </Link> </div> </header>
 
         {/* --- Logo --- */}
-        <div className={`flex justify-center py-8 ${mounted ? "animate-fadeIn" : "opacity-0"}`}> <div className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-6 w-36 h-36 flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-105`}> <div className="relative w-28 h-28"> <img src="/image1.png" alt="DOY Logo" width={112} height={112} className="w-full h-full" /> <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>FOOD DELIVERY</div> </div> </div> </div>
+        <div className={`flex justify-center py-8 ${mounted ? "animate-fadeIn" : "opacity-0"}`}> <div className={`rounded-full ${darkMode ? "bg-[#2d2d42]" : "bg-white"} p-6 w-36 h-36 flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-105`}> <div className="relative w-28 h-28"> <img src="/image1.png" alt="DOY Logo" width={112} height={112} className="w-full h-full" /> <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>FOOD DELIVERY</div> </div> </div> </div>
 
         {/* Registration Form */}
         <div className="flex-grow flex justify-center items-start px-4 pb-12">
-          <div className={`w-full max-w-2xl ${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg p-8 shadow-lg transition-all duration-300 ${mounted ? "animate-slideUp" : "opacity-0 translate-y-10"}`} >
+          <div className={`w-full max-w-[75%] mx-auto ${darkMode ? "bg-[#2d2d42]" : "bg-white"} rounded-lg p-8 shadow-lg transition-all duration-300 ${mounted ? "animate-slideUp" : "opacity-0 translate-y-10"}`} >
             <h1 className={`text-2xl font-bold ${darkMode ? "text-amber-300" : "text-amber-800"} text-center mb-6`}> Restoran Kayıt Formu </h1>
 
             {/* Tabs */}
-            <div className="flex mb-8"> <Link to="/auth?tab=login&type=restaurant" className="flex-1"> <div className={`text-center py-2 border-b ${darkMode ? "border-gray-700 text-gray-400" : "border-gray-300 text-gray-500"} hover:text-amber-500 transition-colors duration-200`}>Giriş</div> </Link> <div className="flex-1"> <div className={`text-center py-2 border-b-2 ${darkMode ? "border-amber-400 text-amber-300" : "border-amber-500 text-amber-800"} font-medium`}>Kayıt Ol</div> </div> </div>
+            <div className="flex mb-8"> <Link to="/auth?tab=login&type=restaurant" className="flex-1"> <div className={`text-center py-2 border-b ${darkMode ? "border-[#454560] text-gray-400" : "border-gray-300 text-gray-500"} hover:text-amber-500 transition-colors duration-200`}>Giriş</div> </Link> <div className="flex-1"> <div className={`text-center py-2 border-b-2 ${darkMode ? "border-amber-400 text-amber-300" : "border-amber-500 text-amber-800"} font-medium`}>Kayıt Ol</div> </div> </div>
 
             {/* General Submission Feedback Area (Only shows fallback/network errors now) */}
             {submitStatus.error && (
@@ -346,7 +385,7 @@ export default function RestaurantRegisterPage() {
             {/* Form */}
             <form className="space-y-5" onSubmit={handleSubmit} noValidate>
               {/* --- User Info Section --- */}
-              <h2 className={`text-lg font-semibold border-b pb-2 mb-4 ${darkMode ? 'border-gray-700 text-amber-400' : 'border-gray-300 text-amber-700'}`}> Sahip Bilgileri </h2>
+              <h2 className={`text-lg font-semibold border-b pb-2 mb-4 ${darkMode ? 'border-[#454560] text-amber-400' : 'border-gray-300 text-amber-700'}`}> Sahip Bilgileri </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                 {/* Input Fields... */}
                 <div className="space-y-1 group"> <Label htmlFor="ownerName" className={getLabelClassName(darkMode)}><User className="h-4 w-4" /> Adınız</Label> <div className="relative"> <Input id="ownerName" value={formData.ownerName} onChange={handleInputChange} onBlur={handleBlur} placeholder="Adınız" className={getInputClassName(darkMode)} error={!!errors.ownerName} /> {touched.ownerName && !errors.ownerName && formData.ownerName && <SuccessIndicator darkMode={darkMode} />} </div> <ErrorMessage message={errors.ownerName} darkMode={darkMode} /> </div>
@@ -359,7 +398,7 @@ export default function RestaurantRegisterPage() {
               </div>
 
               {/* --- Restaurant Info Section --- */}
-              <h2 className={`text-lg font-semibold border-b pb-2 mb-4 mt-6 ${darkMode ? 'border-gray-700 text-amber-400' : 'border-gray-300 text-amber-700'}`}> Restoran Bilgileri </h2>
+              <h2 className={`text-lg font-semibold border-b pb-2 mb-4 mt-6 ${darkMode ? 'border-[#454560] text-amber-400' : 'border-gray-300 text-amber-700'}`}> Restoran Bilgileri </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                 {/* Input Fields... */}
                 <div className="space-y-1 group"> <Label htmlFor="restaurantName" className={getLabelClassName(darkMode)}><Utensils className="h-4 w-4" /> Restoran Adı</Label> <div className="relative"> <Input id="restaurantName" value={formData.restaurantName} onChange={handleInputChange} onBlur={handleBlur} placeholder="Restoranınızın adı" className={getInputClassName(darkMode)} error={!!errors.restaurantName} /> {touched.restaurantName && !errors.restaurantName && formData.restaurantName && <SuccessIndicator darkMode={darkMode} />} </div> <ErrorMessage message={errors.restaurantName} darkMode={darkMode} /> </div>
@@ -371,7 +410,7 @@ export default function RestaurantRegisterPage() {
 
 
               {/* --- Address Info Section --- */}
-              <h2 className={`text-lg font-semibold border-b pb-2 mb-4 mt-6 ${darkMode ? 'border-gray-700 text-amber-400' : 'border-gray-300 text-amber-700'}`}> Restoran Adresi </h2>
+              <h2 className={`text-lg font-semibold border-b pb-2 mb-4 mt-6 ${darkMode ? 'border-[#454560] text-amber-400' : 'border-gray-300 text-amber-700'}`}> Restoran Adresi </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                 <div className="space-y-1 group"> <Label htmlFor="city" className={getLabelClassName(darkMode)}><MapPin className="h-4 w-4" /> Şehir</Label> <Select id="city" value={formData.city} onChange={handleInputChange} onBlur={handleBlur} className={getInputClassName(darkMode)} error={!!errors.city}> {TURKISH_CITIES.map(city => (<option key={city.value} value={city.value} disabled={city.value === ""}>{city.label}</option>))} </Select> <ErrorMessage message={errors.city} darkMode={darkMode} /> </div>
                 <div className="space-y-1 group"> <Label htmlFor="district" className={getLabelClassName(darkMode)}><MapPin className="h-4 w-4" /> İlçe</Label> <Select id="district" value={formData.district} onChange={handleInputChange} onBlur={handleBlur} className={getInputClassName(darkMode)} error={!!errors.district} disabled={!formData.city || availableDistricts.length === 0} > <option value="" disabled> {formData.city ? "İlçe Seçin" : "Önce Şehir Seçin"} </option> {availableDistricts.map(district => ( <option key={district} value={district}> {district} </option> ))} </Select> <ErrorMessage message={errors.district} darkMode={darkMode} /> </div>
@@ -416,7 +455,17 @@ export default function RestaurantRegisterPage() {
         </div>
 
         {/* --- Footer --- */}
-        <footer className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-amber-50 border-amber-200"} p-8 border-t transition-colors duration-300 mt-auto`}> <div className="flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto"> <div className="mb-6 md:mb-0"> <div className={`rounded-full ${darkMode ? "bg-gray-700" : "bg-white"} p-4 w-24 h-24 flex items-center justify-center shadow-md transition-all duration-300 hover:shadow-lg transform hover:scale-105`}> <div className="relative w-16 h-16"> <img src="/image1.png" alt="DOY Logo" width={64} height={64} className="w-full h-full" /> <div className={`text-center text-[8px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>FOOD DELIVERY</div> </div> </div> </div> <div className="flex gap-8"> {/* Social Links */} <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"} transition-all duration-200 transform hover:scale-110`} aria-label="Twitter"><Twitter className="w-6 h-6" /></a> <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"} transition-all duration-200 transform hover:scale-110`} aria-label="Instagram"><Instagram className="w-6 h-6" /></a> <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"} transition-all duration-200 transform hover:scale-110`} aria-label="YouTube"><Youtube className="w-6 h-6" /></a> <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"} transition-all duration-200 transform hover:scale-110`} aria-label="LinkedIn"><Linkedin className="w-6 h-6" /></a> </div> </div> </footer>
+        <footer className={`${darkMode ? "bg-[#1a1a1a]" : "bg-white"} p-8 border-t ${darkMode ? "border-[#353550]" : "border-amber-200"} transition-colors duration-300 mt-auto`}> 
+          <div className="flex justify-between items-center">
+            <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
+            <div className="flex gap-6">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"> <Twitter className="h-6 w-6" /> </a> 
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"> <Instagram className="h-6 w-6" /> </a> 
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"> <Youtube className="h-6 w-6" /> </a> 
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"> <Linkedin className="h-6 w-6" /> </a>
+            </div>
+          </div>
+        </footer>
       </div>
   )
 }

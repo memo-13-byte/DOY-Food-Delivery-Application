@@ -1,0 +1,114 @@
+[
+  {
+    "firstName": "Burak",
+    "lastName": "Özdemir",
+    "email": "burak.ozdemir@example.com",
+    "phoneNumber": "0532 654 8791",
+    "password": "Burak34!O",
+    "addressInfo": {
+      "city": "ISTANBUL",
+      "district": "Ataşehir",
+      "neighborhood": "Barbaros",
+      "avenue": "Atatürk",
+      "street": "Zambak",
+      "buildingNumber": 23,
+      "apartmentNumber": 14
+    }
+  },
+  {
+    "firstName": "Elif",
+    "lastName": "Yalçın",
+    "email": "elif.yalcin@example.com",
+    "phoneNumber": "0505 369 7452",
+    "password": "Elif_2024Y",
+    "addressInfo": {
+      "city": "ISTANBUL",
+      "district": "Üsküdar",
+      "neighborhood": "Acıbadem",
+      "avenue": "Tekin",
+      "street": "Menekşe",
+      "buildingNumber": 42,
+      "apartmentNumber": 5
+    }
+  },
+  {
+    "firstName": "Canan",
+    "lastName": "Korkmaz",
+    "email": "canan.k@example.com",
+    "phoneNumber": "0542 789 1453",
+    "password": "CananK06$",
+    "addressInfo": {
+      "city": "ANKARA",
+      "district": "Keçiören",
+      "neighborhood": "Etlik",
+      "avenue": "Ayvaz",
+      "street": "Fatih",
+      "buildingNumber": 17,
+      "apartmentNumber": 8
+    }
+  },
+  {
+    "firstName": "Serkan",
+    "lastName": "Acar",
+    "email": "serkan.acar@example.com",
+    "phoneNumber": "0555 741 2369",
+    "password": "SAcar35@!",
+    "addressInfo": {
+      "city": "IZMIR",
+      "district": "Bornova",
+      "neighborhood": "Erzene",
+      "avenue": "İnönü",
+      "street": "Çınar",
+      "buildingNumber": 9,
+      "apartmentNumber": 11
+    }
+  },
+  {
+    "firstName": "Gizem",
+    "lastName": "Tuncer",
+    "email": "gizem.t@example.com",
+    "phoneNumber": "0533 852 7496",
+    "password": "GizemT16!",
+    "addressInfo": {
+      "city": "BURSA",
+      "district": "Osmangazi",
+      "neighborhood": "Demirtaş",
+      "avenue": "Cumhuriyet",
+      "street": "Orkide",
+      "buildingNumber": 31,
+      "apartmentNumber": 2
+    }
+  },
+  {
+    "firstName": "Oğuzhan",
+    "lastName": "Güneş",
+    "email": "oguzhan.gunes@example.com",
+    "phoneNumber": "0539 632 1478",
+    "password": "Oguz07&Gunes",
+    "addressInfo": {
+      "city": "ANTALYA",
+      "district": "Muratpaşa",
+      "neighborhood": "Lara",
+      "avenue": "Akdeniz",
+      "street": "Manolya",
+      "buildingNumber": 12,
+      "apartmentNumber": 6
+    }
+  },
+  {
+    "firstName": "Melisa",
+    "lastName": "Erdem",
+    "email": "melisa.erdem@example.com",
+    "phoneNumber": "0549 753 1246",
+    "password": "M3Lisa!26E",
+    "addressInfo": {
+      "city": "ESKISEHIR",
+      "district": "Tepebaşı",
+      "neighborhood": "Batıkent",
+      "avenue": "Yunus Emre",
+      "street": "Lale",
+      "buildingNumber": 27,
+      "apartmentNumber": 10
+    }
+  }
+]

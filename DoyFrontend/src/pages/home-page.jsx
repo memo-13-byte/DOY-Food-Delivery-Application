@@ -182,7 +182,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-[70%] mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-[75%] mx-auto">
             {/* Customer Section */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200 dark:hover:border-amber-700">
               <h2 className="text-2xl font-bold text-[#6b4b10] dark:text-amber-400 mb-4">Müşterimiz Olun!</h2>
