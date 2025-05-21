@@ -122,34 +122,39 @@ export default function RestaurantRegisterPage() {
   const validateTerms = (accepted) => { /* ... */ if (!accepted) return "Kullanım şartlarını kabul etmelisiniz"; return ""; };
 
   // --- Updated validateField Function (remains the same structure) ---
-  const validateField = (name, value, currentFormData) => { /* ... same as before ... */
-    switch (name) { case "ownerName": return validateRequired(value, "Ad");
-      case "ownerSurname": return validateRequired(value, "Soyad");
-      case "restaurantName": return validateRequired(value, "Restoran adı");
-      case "district": return validateRequired(value, "İlçe");
-      case "neighborhood": return validateRequired(value, "Mahalle");
-      case "street": return validateRequired(value, "Sokak");
-        // --- UPDATED CASES ---
-      case "buildingNumber":
-        // Must be required AND digits only
-        return validateDigitsOnly(value, "Bina Numarası", true);
-      case "apartmentNumber":
-        // Optional, but if present, must be digits only
-        return validateDigitsOnly(value, "Daire Numarası", false);
-      case "restaurantCategory": return validateRequired(value, "Restoran kategorisi");
-      case "city": return validateRequired(value, "Şehir");
-      case "password": return validateRequired(value, "Şifre");
-      case "email": return validateEmail(value);
-      case "ownerPhone": return validatePhone(value, "Sahip Telefon");
-      case "restaurantPhone": return validatePhone(value, "Restoran Telefon");
-      case "idNumber": return validateTCKN(value);
-      case "minOrderPrice": return validateNumber(value, "Minimum sipariş tutarı", true, false);
-      case "confirmPassword": return validateConfirmPassword(value, currentFormData.password);
-      case "acceptTerms": return validateTerms(value);
-      case "description": case "avenue":
-
-       }
-  };
+  const validateField = (name, value, currentFormData) => {
+  switch (name) { 
+    case "ownerName": return validateRequired(value, "Ad");
+    case "ownerSurname": return validateRequired(value, "Soyad");
+    case "restaurantName": return validateRequired(value, "Restoran adı");
+    case "district": return validateRequired(value, "İlçe");
+    case "neighborhood": return validateRequired(value, "Mahalle");
+    case "street": return validateRequired(value, "Sokak");
+    case "buildingNumber":
+      // Must be required AND digits only
+      return validateDigitsOnly(value, "Bina Numarası", true);
+    case "apartmentNumber":
+      // Optional, but if present, must be digits only
+      return validateDigitsOnly(value, "Daire Numarası", false);
+    case "restaurantCategory": return validateRequired(value, "Restoran kategorisi");
+    case "city": return validateRequired(value, "Şehir");
+    case "password": return validatePassword(value);
+    case "email": return validateEmail(value);
+    case "ownerPhone": return validatePhone(value, "Sahip Telefon");
+    case "restaurantPhone": return validatePhone(value, "Restoran Telefon");
+    case "idNumber": return validateTCKN(value);
+    case "minOrderPrice": return validateNumber(value, "Minimum sipariş tutarı", true, false);
+    case "confirmPassword": return validateConfirmPassword(value, currentFormData.password);
+    case "acceptTerms": return validateTerms(value);
+    case "openingHour": return validateRequired(value, "Açılış saati");
+    case "closingHour": return validateRequired(value, "Kapanış saati");
+    case "description": 
+    case "avenue":
+      return ""; // Bunlar opsiyonel alanlar
+    default:
+      return "";
+  }
+};
 
   // validateAllFields function remains structurally the same
   const validateAllFields = (data) => { /* ... same as before ... */
@@ -166,16 +171,16 @@ export default function RestaurantRegisterPage() {
     return isValid;
   };
   const validateDigitsOnly = (value, fieldName, isRequired = true) => {
-    // Check if required first
-    if (!value) {
-      return isRequired ? `${fieldName} gereklidir` : ""; // Empty is ok if not required
-    }
-    // Check if value contains only digits
-    if (!/^\d+$/.test(value)) {
-      return `${fieldName} sadece rakamlardan oluşmalıdır`;
-    }
-    return ""; // Valid
-  };
+  // Check if required first
+  if (!value) {
+    return isRequired ? `${fieldName} gereklidir` : ""; // Empty is ok if not required
+  }
+  // Check if value contains only digits
+  if (!/^\d+$/.test(value)) {
+    return `${fieldName} sadece rakamlardan oluşmalıdır`;
+  }
+  return ""; // Valid
+};
 
   
   // --- Updated handleInputChange for Dependent Dropdowns & Clearing Errors ---
@@ -248,33 +253,35 @@ export default function RestaurantRegisterPage() {
     const isValid = validateAllFields(formData)
 
     if (isValid) {
-      const payload = {
-        userInfo: { 
-          firstName: formData.ownerName, 
-          lastName: formData.ownerSurname, 
-          email: formData.email, // Benzersiz e-posta için değiştirin
-          governmentId: formData.idNumber, 
-          password: formData.password, 
-          phoneNumber: formData.ownerPhone.replace(/\D/g, ''), 
-        },
-        restaurantInfo: { 
-          restaurantName: formData.restaurantName, 
-          description: formData.description, 
-          restaurantPhone: formData.restaurantPhone.replace(/\D/g, ''), 
-          restaurantCategory: formData.restaurantCategory, 
-          minOrderPrice: parseInt(formData.minOrderPrice) || 0, // parseFloat yerine parseInt kullanın
-        },
-        addressInfo: { 
-          city: formData.city, // "ISTANBUL" gibi olduğundan emin olun
-          district: formData.district, // "Kadıköy" gibi olduğundan emin olun
-          neighborhood: formData.neighborhood, 
-          avenue: formData.avenue, 
-          street: formData.street, 
-          buildingNumber: parseInt(formData.buildingNumber) || 0,
-          apartmentNumber: parseInt(formData.apartmentNumber) || 0 
-        },
-      };
-
+      // Correct payload structure
+const payload = {
+  userInfo: { 
+    firstName: formData.ownerName, 
+    lastName: formData.ownerSurname, 
+    email: formData.email,
+    governmentId: formData.idNumber, 
+    password: formData.password, 
+    phoneNumber: formData.ownerPhone.replace(/\D/g, ''), 
+  },
+  restaurantInfo: { 
+    restaurantName: formData.restaurantName, 
+    description: formData.description, 
+    restaurantPhone: formData.restaurantPhone.replace(/\D/g, ''), 
+    restaurantCategory: formData.restaurantCategory, 
+    minOrderPrice: parseInt(formData.minOrderPrice) || 0,
+    openingHour: formData.openingHour,  // Add this
+    closingHour: formData.closingHour   // Add this
+  },
+  addressInfo: { 
+    city: formData.city,
+    district: formData.district,
+    neighborhood: formData.neighborhood, 
+    avenue: formData.avenue, 
+    street: formData.street, 
+    buildingNumber: parseInt(formData.buildingNumber) || 0,
+    apartmentNumber: parseInt(formData.apartmentNumber) || 0 
+  },
+};
       // --- API Call ---
       try {
         // handleSubmit fonksiyonunda, axios isteğinden önce:

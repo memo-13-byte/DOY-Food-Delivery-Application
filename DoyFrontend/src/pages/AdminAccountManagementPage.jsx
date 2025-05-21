@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import AdminNavbar from "../components/AdminNavbar"
 import Footer from "../components/Footer"
@@ -10,18 +8,12 @@ import ActionButtons from "../components/ActionButtons"
 import Toast from "../components/Toast" // 📌 Toast'ı import ettik
 import axios from "axios"
 
+
 const initialUsers = [
   { id: 1, name: "Customer A", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
   { id: 2, name: "Customer B", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
   { id: 3, name: "Courier A", type: "Courier Account", banned: false, suspended: false, suspendUntil: null },
-  {
-    id: 4,
-    name: "Restaurant Owner A",
-    type: "Restaurant Owner Account",
-    banned: false,
-    suspended: false,
-    suspendUntil: null,
-  },
+  { id: 4, name: "Restaurant Owner A", type: "Restaurant Owner Account", banned: false, suspended: false, suspendUntil: null},
   { id: 5, name: "Customer C", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
   { id: 6, name: "Customer D", type: "Customer Account", banned: false, suspended: false, suspendUntil: null },
 ]

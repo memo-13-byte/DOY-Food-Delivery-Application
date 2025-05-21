@@ -256,7 +256,7 @@ export default function OrderStatusRestaurant() {
     // --- Rendering ---
     return (
         <div style={{
-            backgroundColor: darkMode ? "#1c1c1c" : "#f9f5ed",
+            backgroundColor: darkMode ? "#1c1c1c" : "#f2e8d6",
             color: darkMode ? "#fff" : "#000",
             minHeight: "100vh", display: "flex", flexDirection: "column",
         }}>

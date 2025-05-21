@@ -110,7 +110,8 @@ export default function RestaurantManagePage() {
           }
           reader.readAsDataURL(imageResponse.data)
         }
-      } catch (error) {
+      }
+     } catch (error) {
         alert("Error fetching restaurant information:", error)
       }
     }
@@ -191,6 +192,28 @@ export default function RestaurantManagePage() {
     input.accept = "image/*"
     input.onchange = (e) => handleItemImageChange(e, categoryId, itemId)
     input.click()
+  }
+
+  const handleSaveWorkingHours = async () => {
+    if (openingHour && closingHour) {
+      const data = {
+        ...restaurant,
+        openingHour: openingHour,
+        closingHour: closingHour,
+      }
+
+      try {
+        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
+        // Update original values after successful save
+        setOriginalOpeningHour(openingHour)
+        setOriginalClosingHour(closingHour)
+        setShowTimeSaveButton(false)
+        console.log("Working hours saved successfully")
+      } catch (error) {
+        console.log(error)
+        setErrorMessages(getResponseErrors(error))
+      }
+    }
   }
 
   const handleItemImageChange = (e, categoryId, itemId) => {
