@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "restaurant")
@@ -46,6 +47,11 @@ public class Restaurant {
     @Column(name = "restaurant_category", length = 30, nullable = false)
     private RestaurantCategory restaurantCategory;
 
+    @Column(name = "opening_hour")
+    private LocalTime openingHour;
+
+    @Column(name = "closing_hour")
+    private LocalTime closingHour;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private final Set<CustomerOrder> orders = new HashSet<>();
