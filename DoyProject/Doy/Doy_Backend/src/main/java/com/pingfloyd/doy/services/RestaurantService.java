@@ -2,14 +2,13 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
-import com.pingfloyd.doy.entities.CourierRequest;
-import com.pingfloyd.doy.entities.CustomerOrder;
-import com.pingfloyd.doy.entities.Restaurant;
+import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.exception.RestaurantNotFoundException;
+import com.pingfloyd.doy.exception.UserNotFoundException;
+import com.pingfloyd.doy.repositories.CustomerRepository;
 import com.pingfloyd.doy.repositories.RestaurantRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +17,12 @@ import java.util.Optional;
 
 @Service
 public class RestaurantService implements IRestaurantService {
-
+    @Autowired
+    private CustomerRepository customerRepository;
     @Autowired
     private RestaurantRepository restaurantRepository;
+    @Autowired
+    private UserService userService;
 
     public Restaurant findRestaurantById(Long id) {
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
@@ -95,5 +97,27 @@ public class RestaurantService implements IRestaurantService {
         return dtoRestaurantList;
     }
 
+    public Boolean getFavoriteRestaurant(String username, Long restaurantId) throws UserNotFoundException, RestaurantNotFoundException {
+        Customer customer = userService.SearchCustomer(username);
+        if(customer == null){
+            throw new UserNotFoundException("User with given email doesn't exist!");
+        }
+        Restaurant restaurant = this.findRestaurantById(restaurantId);
+        return customer.getFavoriteRestaurants().contains(restaurant);
+    }
 
+    public Boolean setFavoriteRestaurant(String username, Long restaurantId) throws UserNotFoundException, RestaurantNotFoundException {
+        Customer customer = userService.SearchCustomer(username);
+        if(customer == null) {
+            throw new UserNotFoundException("User with given email doesn't exist!");
+        }
+        Restaurant restaurant = this.findRestaurantById(restaurantId);
+        if(customer.getFavoriteRestaurants().contains(restaurant)) {
+            customer.getFavoriteRestaurants().remove(restaurant);
+        } else {
+            customer.getFavoriteRestaurants().add(restaurant);
+        }
+        customerRepository.save(customer);
+        return customer.getFavoriteRestaurants().contains(restaurant);
+    }
 }

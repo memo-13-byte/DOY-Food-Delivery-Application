@@ -76,6 +76,7 @@ const CartBadge = ({ count, darkMode }) => {
 
 const RestaurantDetail = () => {
   // --- State ---
+  const [isFavorited, setIsFavorited] = useState(null);
   const [cart, setCart] = useState([]) // Local frontend cart state
   const location = useLocation()
   const navigate = useNavigate()
@@ -158,6 +159,20 @@ const RestaurantDetail = () => {
       } finally {
         setLoadingRestaurant(false)
       }
+    try {
+        const header = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+        const response = await axios.get(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`, header)
+        console.log("favorite restaurant?:", response.data)
+        setIsFavorited(response.data)
+    } catch(error) {
+        console.error("Error fetching favorite info:", error)
+        setIsFavorited(null)
+    }
+      
     }
     // Only run if currentRestaurantId has a valid value
     if (currentRestaurantId !== null) {
@@ -461,6 +476,21 @@ const RestaurantDetail = () => {
     }
   }
 
+  const handleFavoriteClick = async () => {
+    try {
+      const header = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+      const response = await axios.put(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`, null, header)
+      console.log("toggled favorite:", response.data)
+      setIsFavorited(response.data)
+    } catch(error) {
+      console.error("no user: ", error)
+      setIsFavorited(null)
+    }
+  }
   // Calculate total cart items
   const cartItemCount = cart.length
 
@@ -702,6 +732,45 @@ const RestaurantDetail = () => {
               </div>
             )}
             <div style={{ flexGrow: 1 }}>
+              <div style={{display: "flex", alignItems: "center", gap: "0.3rem", marginBottom: "0.5rem"}}>
+                {isFavorited !== null && (
+                  <button
+                    onClick={handleFavoriteClick}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "1.2rem",
+                          color: "black",
+                          padding: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          transition: "transform 0.2s ease, color 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = "#a13d41";
+                          e.currentTarget.style.transform = "scale(1.05)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = "black";
+                          e.currentTarget.style.transform = "scale(1)";
+                        }}
+                        onMouseDown={(e) => {
+                          e.currentTarget.style.transform = "scale(0.95)";
+                        }}
+                        onMouseUp={(e) => {
+                          e.currentTarget.style.transform = "scale(1.05)";
+                        }} 
+                    aria-label="Favorilere ekle"
+                  >
+                    <span>{isFavorited ? "❤️" : "🤍"}</span>
+                    <span>{isFavorited ? "Favori Restoran" : "Favorilere ekle"}</span>
+                  </button>
+                )
+                }
+
+              </div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.3rem", marginBottom: "0.5rem" }}>
                 {renderStars(restaurant.rating)}{" "}
                 {typeof restaurant.rating === "number" ? restaurant.rating.toFixed(1) : "N/A"}/5
