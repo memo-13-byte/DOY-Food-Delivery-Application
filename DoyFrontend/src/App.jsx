@@ -84,7 +84,7 @@ function App() {
               <Route path="/order/:id/review" element={<OrderReviewPage />} />
               <Route path="/order/:id/comment" element={<CommentPage />} />
               <Route path="/courier/profile/:id/comments" element={<CourierCommentPage />} />
-              <Route path="/restaurant/profile/:id/comments" element={<RestaurantCommentPage />} />
+              <Route path="/restaurant/profile/comments" element={<RestaurantCommentPage />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -28,7 +28,7 @@ import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
-
+import axios from "axios"
 export default function AddItemPage() {
   const navigate = useNavigate()
   const location = useLocation()

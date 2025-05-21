@@ -19,6 +19,7 @@ import {
 import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from "react-router-dom";
 import { CommentSection } from "../components/CommentSection";
+import { getUserByEmail } from "../services/profileData";
 
 
 
@@ -49,7 +50,8 @@ export default function RestaurantCommentPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeReplyId, setActiveReplyId] = useState(null);
-  const {id: restaurantId} = useParams()
+  const [restaurantId, setRestaurantId] = useState(0);
+  const [restaurantEmail, setRestaurantEmail] = useState(localStorage.getItem("email"));
 
   const [rating, setRating] = useState(0)
   const [ratingCount, setRatingCount] = useState(0)
@@ -75,13 +77,16 @@ export default function RestaurantCommentPage() {
 
   useEffect(() => {
     const getComments = async () => {
-        const ratingResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${restaurantId}`);
+        const userResponse = await getUserByEmail(restaurantEmail);
+        setRestaurantId(userResponse.id);
+
+        const ratingResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${userResponse.id}`);
 
         setRating(ratingResponse.data.rating)
         setRatingCount(ratingResponse.data.ratingCount)
 
 
-        const reviewResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get/for-restaurant/${restaurantId}`);
+        const reviewResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get/for-restaurant/${userResponse.id}`);
         const comments = reviewResponse.data;
         let commentsData = await Promise.all( comments.map(async (element) => {
             const replies = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get-replies/${element.id}`);
