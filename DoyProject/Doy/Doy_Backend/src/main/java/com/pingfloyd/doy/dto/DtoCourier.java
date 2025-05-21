@@ -11,4 +11,6 @@ public class DtoCourier extends DtoUser{
     private String governmentId;
     private String districtCity;
     private String districtName;
+    private Double rating;
+    private Long ratingCount;
 }

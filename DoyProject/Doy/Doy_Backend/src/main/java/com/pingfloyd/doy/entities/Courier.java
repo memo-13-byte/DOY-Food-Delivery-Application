@@ -35,6 +35,12 @@ public class Courier extends User {
 
     private Boolean isOnDelivery = false;
 
+    @Column(name = "rating")
+    private Double rating = 0.0;
+
+    @Column(name = "rating_count")
+    private Long ratingCount = 0L;
+
     public Courier(String firstName, String lastName, String email, String passwordHash, String phoneNumber) {
         super(firstName, lastName, email, passwordHash, phoneNumber);
     }

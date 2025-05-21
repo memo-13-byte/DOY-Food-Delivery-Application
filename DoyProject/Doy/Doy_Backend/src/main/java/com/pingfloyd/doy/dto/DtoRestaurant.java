@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.dto;
 
+import java.time.LocalTime;
 import com.pingfloyd.doy.entities.Address;
 import com.pingfloyd.doy.enums.RestaurantCategory;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,12 @@ public class DtoRestaurant {
 
     private RestaurantCategory restaurantCategory;
     private Double rating;
+    private Long ratingCount;
     private Integer minOrderPrice;
 
     private Address address;
     private Long imageId;
+
+    private LocalTime openingHour;
+    private LocalTime closingHour;
 }

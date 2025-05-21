@@ -33,6 +33,10 @@ import PlatformConfigurationsPage from './pages/PlatformConfigurationsPage.jsx';
 import OrderTrackingPage from './pages/OrderTracking.jsx';
 import OrderStatusRestaurant from "./pages/restaurant-track-orders";
 import OrderStatusCourier from "./pages/courier-order-tracking";
+import OrderReviewPage from './pages/order-review-form.jsx';
+import CommentPage from './pages/order-review-view.jsx';
+import CourierCommentPage from './pages/courier-comments.jsx';
+import RestaurantCommentPage from './pages/restaurant-comments.jsx';
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -77,6 +81,10 @@ function App() {
               <Route path="/restaurant/profile/:id/orders" element={<OrderTrackingPage />} />
               <Route path="/restaurant/profile/:id/orders-status" element={<OrderStatusRestaurant />} />
               <Route path="/courier/profile/:id/orders" element={<OrderStatusCourier />} />
+              <Route path="/order/:id/review" element={<OrderReviewPage />} />
+              <Route path="/order/:id/comment" element={<CommentPage />} />
+              <Route path="/courier/profile/:id/comments" element={<CourierCommentPage />} />
+              <Route path="/restaurant/profile/:id/comments" element={<RestaurantCommentPage />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>

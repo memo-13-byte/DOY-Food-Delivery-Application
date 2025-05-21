@@ -21,7 +21,7 @@ const ITEMS_PER_PAGE = 5;
 
 // --- Order Detail Modal Component ---
 // (Assume this is defined correctly as in the previous version)
-function OrderDetailModal({ orderDetails, onClose, isLoading, error, darkMode }) {
+export function OrderDetailModal({ orderDetails, onClose, isLoading, error, darkMode }) {
     if (!orderDetails && !isLoading && !error) return null;
 
     const contentBgColor = darkMode ? '#333' : '#fff';

@@ -145,6 +145,10 @@ public class RegistrationService {
         restaurantDb.setDescription(restaurant.getDescription());
         restaurantDb.setRestaurantPhone(restaurant.getRestaurantPhone());
         restaurantDb.setMinOrderPrice(restaurant.getMinOrderPrice());
+
+        restaurantDb.setOpeningHour(restaurant.getOpeningHour());
+        restaurantDb.setClosingHour(restaurant.getClosingHour());
+
         return restaurantDb;
 
     }

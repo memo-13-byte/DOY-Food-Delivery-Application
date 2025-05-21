@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.dto;
 
+import java.time.LocalTime;
 import com.pingfloyd.doy.enums.RestaurantCategory;
 // Import necessary validation annotations
 import jakarta.validation.constraints.*;
@@ -33,4 +34,10 @@ public class DtoRestaurantIU {
     private Integer minOrderPrice;
 
     private Long imageId;
+
+    @NotNull(message = "Opening hour must be specified.")
+    private LocalTime openingHour;
+
+    @NotNull(message = "Closing hour must be specified.")
+    private LocalTime closingHour;
 }

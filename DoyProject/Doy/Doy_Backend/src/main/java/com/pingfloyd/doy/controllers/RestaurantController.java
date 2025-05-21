@@ -6,6 +6,7 @@ import com.pingfloyd.doy.services.RestaurantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,5 +52,17 @@ public class RestaurantController implements IRestaurantController {
     //@PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<DtoRestaurant>> getAllRestaurants() {
         return ResponseEntity.ok(restaurantService.gelAllRestaurants());
+    }
+
+    @GetMapping("/favorite/{restaurantId}")
+    public ResponseEntity<Boolean> getFavoriteRestaurant(@PathVariable(name = "restaurantId") Long restaurantId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return ResponseEntity.ok(restaurantService.getFavoriteRestaurant(username, restaurantId));
+    }
+
+    @PutMapping("/favorite/{restaurantId}")
+    public ResponseEntity<Boolean> setFavoriteRestaurant(@PathVariable(name = "restaurantId") Long restaurantId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return ResponseEntity.ok(restaurantService.setFavoriteRestaurant(username, restaurantId));
     }
 }

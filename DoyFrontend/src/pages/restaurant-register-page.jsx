@@ -77,7 +77,8 @@ export default function RestaurantRegisterPage() {
     password: "", confirmPassword: "", restaurantName: "", description: "",
     restaurantPhone: "", restaurantCategory: "", minOrderPrice: "", city: "",
     district: "", neighborhood: "", avenue: "", street: "", buildingNumber: "",
-    apartmentNumber: "", acceptTerms: false,
+    apartmentNumber: "", acceptTerms: false, openingHour: "",
+    closingHour: "",
   })
 
   const [errors, setErrors] = useState({}) // For client-side validation errors
@@ -146,8 +147,8 @@ export default function RestaurantRegisterPage() {
       case "confirmPassword": return validateConfirmPassword(value, currentFormData.password);
       case "acceptTerms": return validateTerms(value);
       case "description": case "avenue":
-        return "";
-    }
+
+       }
   };
 
   // validateAllFields function remains structurally the same
@@ -401,19 +402,120 @@ export default function RestaurantRegisterPage() {
               <h2 className={`text-lg font-semibold border-b pb-2 mb-4 mt-6 ${darkMode ? 'border-[#454560] text-amber-400' : 'border-gray-300 text-amber-700'}`}> Restoran Bilgileri </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                 {/* Input Fields... */}
-                <div className="space-y-1 group"> <Label htmlFor="restaurantName" className={getLabelClassName(darkMode)}><Utensils className="h-4 w-4" /> Restoran Adı</Label> <div className="relative"> <Input id="restaurantName" value={formData.restaurantName} onChange={handleInputChange} onBlur={handleBlur} placeholder="Restoranınızın adı" className={getInputClassName(darkMode)} error={!!errors.restaurantName} /> {touched.restaurantName && !errors.restaurantName && formData.restaurantName && <SuccessIndicator darkMode={darkMode} />} </div> <ErrorMessage message={errors.restaurantName} darkMode={darkMode} /> </div>
-                <div className="space-y-1 group"> <Label htmlFor="restaurantPhone" className={getLabelClassName(darkMode)}><Phone className="h-4 w-4" /> Restoran Telefonu</Label> <div className="relative"> <Input id="restaurantPhone" value={formData.restaurantPhone} onChange={handleInputChange} onBlur={handleBlur} placeholder="Restoran iletişim numarası" className={getInputClassName(darkMode)} error={!!errors.restaurantPhone} /> {touched.restaurantPhone && !errors.restaurantPhone && formData.restaurantPhone && <SuccessIndicator darkMode={darkMode} />} </div> <ErrorMessage message={errors.restaurantPhone} darkMode={darkMode} /> </div>
-                <div className="space-y-1 group"> <Label htmlFor="restaurantCategory" className={getLabelClassName(darkMode)}><Tag className="h-4 w-4" /> Restoran Kategorisi</Label> <Select id="restaurantCategory" value={formData.restaurantCategory} onChange={handleInputChange} onBlur={handleBlur} className={getInputClassName(darkMode)} error={!!errors.restaurantCategory} > {RESTAURANT_CATEGORIES.map(cat => (<option key={cat.value} value={cat.value} disabled={cat.value === ""}>{cat.label}</option>))} </Select> <ErrorMessage message={errors.restaurantCategory} darkMode={darkMode} /> </div>
-                <div className="space-y-1 group"> <Label htmlFor="minOrderPrice" className={getLabelClassName(darkMode)}><DollarSign className="h-4 w-4" /> Minimum Sipariş Tutarı (₺)</Label> <div className="relative"> <Input id="minOrderPrice" type="number" value={formData.minOrderPrice} onChange={handleInputChange} onBlur={handleBlur} placeholder="Örn: 50" className={getInputClassName(darkMode)} error={!!errors.minOrderPrice} min="0" step="0.01"/> {touched.minOrderPrice && !errors.minOrderPrice && formData.minOrderPrice !== "" && <SuccessIndicator darkMode={darkMode} />} </div> <ErrorMessage message={errors.minOrderPrice} darkMode={darkMode} /> </div>
-                <div className="space-y-1 group md:col-span-2"> <Label htmlFor="description" className={getLabelClassName(darkMode)}><BookText className="h-4 w-4" /> Restoran Açıklaması (Opsiyonel)</Label> <Textarea id="description" value={formData.description} onChange={handleInputChange} onBlur={handleBlur} placeholder="Restoranınız hakkında kısa bir açıklama..." className={getInputClassName(darkMode)} error={!!errors.description} rows={3} /> <ErrorMessage message={errors.description} darkMode={darkMode} /> </div>
+                <div className="space-y-1 group"><Label htmlFor="restaurantName"
+                                                        className={getLabelClassName(darkMode)}><Utensils
+                    className="h-4 w-4"/> Restoran Adı</Label>
+                  <div className="relative"><Input id="restaurantName" value={formData.restaurantName}
+                                                   onChange={handleInputChange} onBlur={handleBlur}
+                                                   placeholder="Restoranınızın adı"
+                                                   className={getInputClassName(darkMode)}
+                                                   error={!!errors.restaurantName}/> {touched.restaurantName && !errors.restaurantName && formData.restaurantName &&
+                      <SuccessIndicator darkMode={darkMode}/>} </div>
+                  <ErrorMessage message={errors.restaurantName} darkMode={darkMode}/></div>
+                <div className="space-y-1 group"><Label htmlFor="restaurantPhone"
+                                                        className={getLabelClassName(darkMode)}><Phone
+                    className="h-4 w-4"/> Restoran Telefonu</Label>
+                  <div className="relative"><Input id="restaurantPhone" value={formData.restaurantPhone}
+                                                   onChange={handleInputChange} onBlur={handleBlur}
+                                                   placeholder="Restoran iletişim numarası"
+                                                   className={getInputClassName(darkMode)}
+                                                   error={!!errors.restaurantPhone}/> {touched.restaurantPhone && !errors.restaurantPhone && formData.restaurantPhone &&
+                      <SuccessIndicator darkMode={darkMode}/>} </div>
+                  <ErrorMessage message={errors.restaurantPhone} darkMode={darkMode}/></div>
+                <div className="space-y-1 group"><Label htmlFor="restaurantCategory"
+                                                        className={getLabelClassName(darkMode)}><Tag
+                    className="h-4 w-4"/> Restoran Kategorisi</Label> <Select id="restaurantCategory"
+                                                                              value={formData.restaurantCategory}
+                                                                              onChange={handleInputChange}
+                                                                              onBlur={handleBlur}
+                                                                              className={getInputClassName(darkMode)}
+                                                                              error={!!errors.restaurantCategory}> {RESTAURANT_CATEGORIES.map(cat => (
+                    <option key={cat.value} value={cat.value}
+                            disabled={cat.value === ""}>{cat.label}</option>))} </Select> <ErrorMessage
+                    message={errors.restaurantCategory} darkMode={darkMode}/></div>
+                <div className="space-y-1 group"><Label htmlFor="minOrderPrice" className={getLabelClassName(darkMode)}><DollarSign
+                    className="h-4 w-4"/> Minimum Sipariş Tutarı (₺)</Label>
+                  <div className="relative"><Input id="minOrderPrice" type="number" value={formData.minOrderPrice}
+                                                   onChange={handleInputChange} onBlur={handleBlur}
+                                                   placeholder="Örn: 50" className={getInputClassName(darkMode)}
+                                                   error={!!errors.minOrderPrice} min="0"
+                                                   step="0.01"/> {touched.minOrderPrice && !errors.minOrderPrice && formData.minOrderPrice !== "" &&
+                      <SuccessIndicator darkMode={darkMode}/>} </div>
+                  <ErrorMessage message={errors.minOrderPrice} darkMode={darkMode}/></div>
+                <div className="space-y-1 group">
+                  <Label htmlFor="openingHour" className={getLabelClassName(darkMode)}>
+                    Açılış Saati (örn: 09:00)
+                  </Label>
+                  <div className="relative">
+                    <Input
+                        id="openingHour"
+                        type="time"
+                        value={formData.openingHour}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        className={getInputClassName(darkMode)}
+                        error={!!errors.openingHour}
+                    />
+                    {touched.openingHour && !errors.openingHour && formData.openingHour && (
+                        <SuccessIndicator darkMode={darkMode}/>
+                    )}
+                  </div>
+                  <ErrorMessage message={errors.openingHour} darkMode={darkMode}/>
+                </div>
+
+                <div className="space-y-1 group">
+                  <Label htmlFor="closingHour" className={getLabelClassName(darkMode)}>
+                    Kapanış Saati (örn: 22:00)
+                  </Label>
+                  <div className="relative">
+                    <Input
+                        id="closingHour"
+                        type="time"
+                        value={formData.closingHour}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        className={getInputClassName(darkMode)}
+                        error={!!errors.closingHour}
+                    />
+                    {touched.closingHour && !errors.closingHour && formData.closingHour && (
+                        <SuccessIndicator darkMode={darkMode}/>
+                    )}
+                  </div>
+                  <ErrorMessage message={errors.closingHour} darkMode={darkMode}/>
+                </div>
+                <div className="space-y-1 group md:col-span-2"><Label htmlFor="description"
+                                                                      className={getLabelClassName(darkMode)}><BookText
+                    className="h-4 w-4"/> Restoran Açıklaması (Opsiyonel)</Label> <Textarea id="description"
+                                                                                            value={formData.description}
+                                                                                            onChange={handleInputChange}
+                                                                                            onBlur={handleBlur}
+                                                                                            placeholder="Restoranınız hakkında kısa bir açıklama..."
+                                                                                            className={getInputClassName(darkMode)}
+                                                                                            error={!!errors.description}
+                                                                                            rows={3}/> <ErrorMessage
+                    message={errors.description} darkMode={darkMode}/></div>
               </div>
 
 
               {/* --- Address Info Section --- */}
               <h2 className={`text-lg font-semibold border-b pb-2 mb-4 mt-6 ${darkMode ? 'border-[#454560] text-amber-400' : 'border-gray-300 text-amber-700'}`}> Restoran Adresi </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
-                <div className="space-y-1 group"> <Label htmlFor="city" className={getLabelClassName(darkMode)}><MapPin className="h-4 w-4" /> Şehir</Label> <Select id="city" value={formData.city} onChange={handleInputChange} onBlur={handleBlur} className={getInputClassName(darkMode)} error={!!errors.city}> {TURKISH_CITIES.map(city => (<option key={city.value} value={city.value} disabled={city.value === ""}>{city.label}</option>))} </Select> <ErrorMessage message={errors.city} darkMode={darkMode} /> </div>
-                <div className="space-y-1 group"> <Label htmlFor="district" className={getLabelClassName(darkMode)}><MapPin className="h-4 w-4" /> İlçe</Label> <Select id="district" value={formData.district} onChange={handleInputChange} onBlur={handleBlur} className={getInputClassName(darkMode)} error={!!errors.district} disabled={!formData.city || availableDistricts.length === 0} > <option value="" disabled> {formData.city ? "İlçe Seçin" : "Önce Şehir Seçin"} </option> {availableDistricts.map(district => ( <option key={district} value={district}> {district} </option> ))} </Select> <ErrorMessage message={errors.district} darkMode={darkMode} /> </div>
+                <div className="space-y-1 group"><Label htmlFor="city" className={getLabelClassName(darkMode)}><MapPin
+                    className="h-4 w-4"/> Şehir</Label> <Select id="city" value={formData.city}
+                                                                onChange={handleInputChange} onBlur={handleBlur}
+                                                                className={getInputClassName(darkMode)}
+                                                                error={!!errors.city}> {TURKISH_CITIES.map(city => (
+                    <option key={city.value} value={city.value}
+                            disabled={city.value === ""}>{city.label}</option>))} </Select> <ErrorMessage
+                    message={errors.city} darkMode={darkMode}/></div>
+                <div className="space-y-1 group"><Label htmlFor="district"
+                                                        className={getLabelClassName(darkMode)}><MapPin
+                    className="h-4 w-4"/> İlçe</Label> <Select id="district" value={formData.district}
+                                                               onChange={handleInputChange} onBlur={handleBlur}
+                                                               className={getInputClassName(darkMode)}
+                                                               error={!!errors.district}
+                                                               disabled={!formData.city || availableDistricts.length === 0}>
+                  <option value="" disabled> {formData.city ? "İlçe Seçin" : "Önce Şehir Seçin"} </option> {availableDistricts.map(district => ( <option key={district} value={district}> {district} </option> ))} </Select> <ErrorMessage message={errors.district} darkMode={darkMode} /> </div>
                 <div className="space-y-1 group md:col-span-2"> <Label htmlFor="neighborhood" className={getLabelClassName(darkMode)}><MapPin className="h-4 w-4" /> Mahalle</Label> <div className="relative"> <Input id="neighborhood" value={formData.neighborhood} onChange={handleInputChange} onBlur={handleBlur} placeholder="Örn: Kızılay Mahallesi" className={getInputClassName(darkMode)} error={!!errors.neighborhood}/> {touched.neighborhood && !errors.neighborhood && formData.neighborhood && <SuccessIndicator darkMode={darkMode} />} </div> <ErrorMessage message={errors.neighborhood} darkMode={darkMode} /> </div>
                 <div className="space-y-1 group"> <Label htmlFor="avenue" className={getLabelClassName(darkMode)}><Navigation className="h-4 w-4" /> Cadde/Bulvar (Opsiyonel)</Label> <div className="relative"> <Input id="avenue" value={formData.avenue} onChange={handleInputChange} onBlur={handleBlur} placeholder="Örn: Atatürk Bulvarı" className={getInputClassName(darkMode)} error={!!errors.avenue}/> {touched.avenue && !errors.avenue && formData.avenue && <SuccessIndicator darkMode={darkMode} />} </div> <ErrorMessage message={errors.avenue} darkMode={darkMode} /> </div>
                 <div className="space-y-1 group"> <Label htmlFor="street" className={getLabelClassName(darkMode)}><Navigation className="h-4 w-4" /> Sokak</Label> <div className="relative"> <Input id="street" value={formData.street} onChange={handleInputChange} onBlur={handleBlur} placeholder="Örn: Gazi Sokak" className={getInputClassName(darkMode)} error={!!errors.street}/> {touched.street && !errors.street && formData.street && <SuccessIndicator darkMode={darkMode} />} </div> <ErrorMessage message={errors.street} darkMode={darkMode} /> </div>
