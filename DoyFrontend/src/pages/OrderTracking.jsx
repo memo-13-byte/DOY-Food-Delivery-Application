@@ -10,6 +10,7 @@ import RestaurantNavbar from "../components/RestaurantNavbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/Button";
 import CourierAssignModal from "../components/CourierAssignModal"; // Make sure this path is correct
+import { getUserByEmail } from "../services/profileData";
 
 // Define the OrderStatus enum values matching your backend
 const OrderStatus = {
@@ -152,8 +153,8 @@ export default function OrderTrackingPage() {
     const [courierError, setCourierError] = useState(null);
     const courierPollIntervalRef = useRef(null);
     // --- Get Restaurant ID from URL ---
-    const { id: restaurantId } = useParams();
-    console.log("OrderTrackingPage rendered. Restaurant ID from URL:", restaurantId);
+    const [restaurantEmail, setRestaurantEmail] = useState(localStorage.getItem("email"));
+    const [restaurantId, setRestaurantId] = useState(0);
 
     // --- Column Definitions ---
     const initialStatuses = [
@@ -167,17 +168,21 @@ export default function OrderTrackingPage() {
 
     // Fetch orders for the specific restaurant
     const fetchOrders = async () => {
-        if (!restaurantId) {
+        const restaurantOwner = await getUserByEmail(restaurantEmail);
+        console.log(restaurantOwner);
+        setRestaurantId(restaurantOwner.id);
+
+        if (!restaurantOwner.id) {
             console.error("fetchOrders called with no restaurantId!");
             setError("Restoran ID URL'de bulunamadı veya geçerli değil.");
             setLoading(false);
             setAllOrders([]);
             return;
         }
-        console.log(`WorkspaceOrders: Fetching for restaurant ID: ${restaurantId}`); // Kept existing log prefix
+        console.log(`WorkspaceOrders: Fetching for restaurant ID: ${restaurantOwner.id}`); // Kept existing log prefix
         setLoading(true);
         setError(null);
-        const url = `http://localhost:8080/order/restaurant/${restaurantId}/order`;
+        const url = `http://localhost:8080/order/restaurant/${restaurantOwner.id}/order`;
         try {
             const response = await AuthorizedRequest.getRequest(url);
             console.log("fetchOrders: API Response (Orders):", response.data);
@@ -197,13 +202,13 @@ export default function OrderTrackingPage() {
                 setError("Siparişler yüklenirken beklenmedik bir formatla karşılaşıldı.");
             }
         } catch (err) {
-            console.error(`WorkspaceOrders: Error fetching orders for restaurant ${restaurantId}:`, err.response || err.message || err);
+            console.error(`WorkspaceOrders: Error fetching orders for restaurant ${restaurantOwner.id}:`, err.response || err.message || err);
             console.log(err);
             if(err.response.data.errors){
                 setError(err.response.data.errors);
             }
             else if (err.response && err.response.status === 404) {
-                setError(`Restoran ID ${restaurantId} için sipariş bulunamadı.`);
+                setError(`Restoran ID ${restaurantOwner.id} için sipariş bulunamadı.`);
             } else {
                 setError(`Siparişler yüklenirken bir hata oluştu (${err.message || 'Bilinmeyen Hata'}).`);
             }
@@ -312,16 +317,8 @@ export default function OrderTrackingPage() {
 
     // --- Effects ---
     useEffect(() => {
-        console.log(`useEffect[restaurantId]: Running effect. Current restaurantId: ${restaurantId}`);
-        if (restaurantId) {
-            fetchOrders();
-        } else {
-            console.warn("useEffect[restaurantId]: restaurantId is missing, skipping initial fetch.");
-            setError("Restoran ID URL'de bulunamadı.");
-            setLoading(false);
-        }
-        // Cleanup function (optional)
-        // return () => { console.log("Cleanup effect"); };
+        fetchOrders();
+
     }, [restaurantId]); // Dependency array
     // --- ADDED: Effect for Courier Polling ---
     useEffect(() => {

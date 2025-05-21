@@ -28,12 +28,17 @@ import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
+import { getUserByEmail } from "../services/profileData"
 
 export default function UpdateItemPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
-  const { id: restaurantId, menuItemTypeId, itemId } = params
+
+  const restaurantEmail = localStorage.getItem("email");
+  const [restaurantId, setRestaurantId] = useState(0);
+
+  const { /*id: restaurantId,*/ menuItemTypeId, itemId } = params
   const isEditMode = !!itemId
 
   const [darkMode, setDarkMode] = useState(false)
@@ -77,7 +82,7 @@ export default function UpdateItemPage() {
   // Load item data if in edit mode
   useEffect(() => {
     if (isEditMode && itemId) {
-
+      getUserByEmail(restaurantEmail).then((response) => {setRestaurantId(response.id)});
       setIsLoading(true)
       // In a real app, fetch the item data from API
       AuthorizedRequest
@@ -333,7 +338,7 @@ const handleSubmit = async (e) => {
 
     setShowSuccess(true);
     setTimeout(() => {
-      navigate(`/restaurants/manage/${restaurantId}`);
+      navigate(`/restaurants/manage`);
     }, 1500);
 
   } catch (error) {
@@ -346,7 +351,7 @@ const handleSubmit = async (e) => {
 
   // Update the back button click handler
   const handleBackClick = () => {
-    navigate(`/restaurants/manage/${restaurantId}`)
+    navigate(`/restaurants/manage`)
   }
 
   // Toggle dark mode

@@ -10,6 +10,7 @@ import {
     Bike
 } from "lucide-react"
 import { motion } from "framer-motion"
+import { getUserByEmail } from "../services/profileData";
 
 // --- Custom UI components (Assume Button, Label, Switch are defined correctly) ---
 const Button = ({ className, children, type = "button", disabled = false, ...props }) => {
@@ -25,7 +26,8 @@ const Switch = ({ checked, onCheckedChange, className, id, disabled = false }) =
 
 
 export default function CourierOrdersPage() {
-    const { id: courierId } = useParams();
+    const [courierEmail, setCourierEmail] = useState(localStorage.getItem("email"));
+    const [courierId, setCourierId] = useState(0);
     const navigate = useNavigate();
     const [darkMode, setDarkMode] = useState(false);
     const [ordersData, setOrdersData] = useState([]);
@@ -40,6 +42,15 @@ export default function CourierOrdersPage() {
 
     // Base URL for your API
     const API_BASE_URL = "http://localhost:8080";
+
+    
+    useEffect(() => {
+        const getCourier = async() => {
+            const response = await getUserByEmail(courierEmail);
+            setCourierId(response.id);
+        }
+        getCourier();
+    }, [])
 
     // --- Define fetchOrders using useCallback ---
     const fetchOrdersAndStatus = useCallback(async () => { // Renamed for clarity
@@ -87,7 +98,6 @@ export default function CourierOrdersPage() {
             setTimeout(() => setIsLoaded(true), 100);
         }
     }, [courierId, API_BASE_URL]);
-
 
     // --- useEffect to call fetchOrdersAndStatus on mount and when courierId changes ---
     useEffect(() => {
@@ -238,7 +248,7 @@ export default function CourierOrdersPage() {
             <main className="flex-grow container mx-auto px-4 py-8 max-w-7xl">
                 {/* Title */}
                 <h1 className={`text-2xl font-bold text-center mb-2 ${darkMode ? "text-yellow-400" : "text-amber-800"}`}>
-                    Aktif Teslimat Görevleri {courierId ? `(Kurye #${courierId})` : ''}
+                    Aktif Teslimat Görevleri
                 </h1>
 
                 {/* --- Courier Status Toggle --- */}

@@ -7,6 +7,7 @@ import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.exception.ApiError;
 import com.pingfloyd.doy.exception.UserIsAlreadySuspendedException;
 import com.pingfloyd.doy.exception.UserNotFoundException;
+import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.repositories.CourierRepository;
 import com.pingfloyd.doy.repositories.CustomerRepository;
 import com.pingfloyd.doy.repositories.RestaurantOwnerRepository;
@@ -34,10 +35,11 @@ public class UserService implements UserDetailsService, IUserService {
     private final RestaurantOwnerRepository restaurantOwnerRepository;
     private final SuspensionService suspensionService;
     private final DistrictService districtService;
+    private final JwtService jwtService;
 
     @Autowired
     public UserService(UserRepository userRepository, CustomerRepository customerRepository, BCryptPasswordEncoder bCryptPasswordEncoder
-    , CourierRepository courierRepository, RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService, DistrictService districtService){
+    , CourierRepository courierRepository, RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService, DistrictService districtService, JwtService jwtService){
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -45,7 +47,9 @@ public class UserService implements UserDetailsService, IUserService {
         this.restaurantOwnerRepository = restaurantOwnerRepository;
         this.suspensionService = suspensionService;
         this.districtService = districtService;
+        this.jwtService = jwtService;
     }
+
 
     public String SignUpCustomer(User user, UserRoles role){
         user.setPasswordHash(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -366,6 +370,8 @@ public class UserService implements UserDetailsService, IUserService {
         return list;
     }
 
-
+    public boolean checkIfSameUserFromToken(Long id) {
+        return getUserById(id).getEmail().equals(jwtService.getUserEmail());
+    }
 
 }

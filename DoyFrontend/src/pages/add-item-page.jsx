@@ -29,11 +29,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import axios from "axios"
+import { getUserByEmail } from "../services/profileData"
 export default function AddItemPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
-  const { id: restaurantId, menuItemTypeId, itemId } = params
+
+  const restaurantEmail = localStorage.getItem("email");
+  const [restaurantId, setRestaurantId] = useState(0);
+  const { menuItemTypeId, itemId } = params
+
   const isEditMode = !!itemId
 
   const [darkMode, setDarkMode] = useState(false)
@@ -76,6 +81,7 @@ export default function AddItemPage() {
 
   // Load item data if in edit mode
   useEffect(() => {
+    getUserByEmail(restaurantEmail).then((response) => {setRestaurantId(response.id)});
     if (isEditMode && itemId) {
       setIsLoading(true)
       // In a real app, fetch the item data from API
@@ -329,7 +335,7 @@ const handleSubmit = async (e) => {
 
     setShowSuccess(true);
     setTimeout(() => {
-      navigate(`/restaurants/manage/${restaurantId}`);
+      navigate(`/restaurants/manage`);
     }, 1500);
 
   } catch (error) {
@@ -342,7 +348,7 @@ const handleSubmit = async (e) => {
 
   // Update the back button click handler
   const handleBackClick = () => {
-    navigate(`/restaurants/manage/${restaurantId}`)
+    navigate(`/restaurants/manage`)
   }
 
   // Toggle dark mode

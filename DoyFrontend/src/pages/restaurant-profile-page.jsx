@@ -20,7 +20,7 @@ import {
   Linkedin,
 } from "lucide-react"
 import { motion } from "framer-motion"
-import { getUserById } from "../services/profileData"
+import { getUserByEmail, getUserById } from "../services/profileData"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 
@@ -28,7 +28,7 @@ export default function RestaurantProfilePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
-  const restaurantId = params.id
+  const [restaurantEmail, setRestaurantEmail] = useState(localStorage.getItem("email"))
   const [darkMode, setDarkMode] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -56,7 +56,7 @@ export default function RestaurantProfilePage() {
   useEffect(() => {
     console.log("yetr")
     const loadRestaurantOwnerById = async () => {
-      const response = await getUserById(restaurantId);
+      const response = await getUserByEmail(restaurantEmail);
 
       const data = {
         firstname: response.firstname,
@@ -76,12 +76,6 @@ export default function RestaurantProfilePage() {
     loadRestaurantOwnerById()
   }, [])
 
-  // ID değiştiğinde restoran verilerini güncelle
-  useEffect(() => {
-    if (restaurantId) {
-      setRestaurant(getUserById(restaurantId))
-    }
-  }, [restaurantId])
 
   useEffect(() => {
     setIsLoaded(true)
@@ -93,14 +87,14 @@ export default function RestaurantProfilePage() {
   }
 
   const handleManageMenu = () => {
-    navigate(`/restaurants/manage/${restaurantId}`)
+    navigate(`/restaurants/manage`)
   }
 
   const handleUpdateProfile = async() => {
     setErrorMessages([])
     try {
       console.log(editableData)
-      await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/restaurant-owners/update/${restaurant.email}`, {
+      await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/restaurant-owners/update/${restaurantEmail}`, {
         ...editableData,
         governmentId: governmentId,
         role: "RESTAURANT_OWNER"
@@ -180,7 +174,7 @@ export default function RestaurantProfilePage() {
               <Moon className={`h-4 w-4 ${darkMode ? "text-[#F8F5DE]" : "text-[#F8F5DE]"}`} />
             </div>
           </div>
-          <Link to={`/restaurants/manage/${restaurantId}`}>
+          <Link to={`/restaurants/manage/${0}`}>
             <span
               className={`px-3 py-1.5 rounded-md text-sm font-medium ${
                 darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-amber-600 hover:bg-amber-700"
@@ -283,7 +277,7 @@ export default function RestaurantProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/orders`)}}
+              onClick={() => {navigate(`/restaurant/profile/orders`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See Given Orders
@@ -292,7 +286,7 @@ export default function RestaurantProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/orders-status`)}}
+              onClick={() => {navigate(`/restaurant/profile/orders-status`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See Prepared Order Status
@@ -301,7 +295,7 @@ export default function RestaurantProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/comments`)}}
+              onClick={() => {navigate(`/restaurant/profile/comments`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See Ratings and Reviews

@@ -234,21 +234,22 @@ export default function AuthPage() {
       }
       const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/login/auth",payload,null, false);
       AuthorizedRequest.updateAuthorization(response.data.token);
+      localStorage.setItem("email", response.data.email)
       const createdUser = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/get-by-email/${email}`)
       const profileId = createdUser.data.id
 
       if (userType === "restaurant") {
         await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${email}`)
-        navigate(`/restaurant/profile/${profileId}`)
+        navigate(`/restaurant/profile`)
       } else if (userType === "courier") { 
         await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${email}`)
-        navigate(`/courier/profile/${profileId}`)
+        navigate(`/courier/profile`)
       } else {
         if (createdUser.data.role === "ADMIN") {
           navigate("/admin/complaints")
         }
         await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/customers/get-by-email/${email}`)
-        navigate(`/customer/profile/${profileId}`)
+        navigate(`/customer/profile`)
       }
       } 
     catch (error) {

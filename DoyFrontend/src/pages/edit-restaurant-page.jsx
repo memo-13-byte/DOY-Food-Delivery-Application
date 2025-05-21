@@ -25,7 +25,8 @@ export default function RestaurantManagePage() {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const restaurantId = params.id
+  const [restaurantEmail, setRestaurantEmail] = useState(localStorage.getItem("email"))
+  const [restaurantId, setRestaurantId] = useState(-1)
   const [darkMode, setDarkMode] = useState(false)
   const categoryMap = new Map()
   categoryMap.set("COMBO", 0)
@@ -74,9 +75,19 @@ const handleCancelMinOrderPriceEdit = () => {
   setIsEditingMinOrderPrice(false);
   setMinOrderPriceInput(restaurant.minOrderPrice || '');
 };
-  // ID'ye göre restoran verilerini yükle
+  useEffect(() => {
+    const getRestaurantId = async () => {
+      const response = await AuthorizedRequest.
+      getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)
+      setRestaurantId(response.data.restaurantId)
+    }
+    getRestaurantId()
+  }, [])
+
+
   useEffect(() => {
     const getRestaurantInformation = async () => {
+      if (restaurantId === -1) return;
       try {
         
         const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
@@ -158,17 +169,17 @@ const handleCancelMinOrderPriceEdit = () => {
 
   const handleAddItemClick = (categoryId) => {
     // Ensure restaurantId is passed in the URL
-    navigate(`/restaurants/manage/${restaurantId}/add-item/${categoryId}`)
+    navigate(`/restaurants/manage/add-item/${categoryId}`)
   }
 
   const handleEditItemClick = (categoryId, itemId) => {
     // Ensure restaurantId is passed in the URL
-    navigate(`/restaurants/manage/${restaurantId}/edit-item/${categoryId}/${itemId}`)
+    navigate(`/restaurants/manage/edit-item/${categoryId}/${itemId}`)
   }
 
   const handleBackClick = () => {
     // Updated to match App.js routing structure
-    navigate(`/restaurant/profile/${restaurantId || ""}`)
+    navigate(`/restaurant/profile`)
   }
 
   // 3. Menü öğesi resim yükleme fonksiyonlarını ekleyelim - handleFileChange fonksiyonundan sonra ekleyin
@@ -257,6 +268,7 @@ const handleCancelMinOrderPriceEdit = () => {
 
   // 4. getRestaurantItems fonksiyonunu güncelleyelim - mevcut fonksiyonu aşağıdakiyle değiştirin
   const getRestaurantItems = async () => {
+    if (restaurantId === -1) return;
     setErrorMessages([])
 
     try {

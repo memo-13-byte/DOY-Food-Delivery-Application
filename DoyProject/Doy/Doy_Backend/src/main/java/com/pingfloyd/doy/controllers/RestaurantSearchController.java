@@ -1,6 +1,9 @@
 package com.pingfloyd.doy.controllers;
 
 import com.pingfloyd.doy.dto.RestaurantRequest;
+import com.pingfloyd.doy.entities.UserRoles;
+import com.pingfloyd.doy.exception.UnauthorizedRequestException;
+import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.services.RestaurantSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,9 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class RestaurantSearchController {
     private final RestaurantSearchService restaurantService;
+    private final JwtService jwtService;
+
     @Autowired
-    public RestaurantSearchController(RestaurantSearchService restaurantService){
+    public RestaurantSearchController(RestaurantSearchService restaurantService, JwtService jwtService){
         this.restaurantService = restaurantService;
+        this.jwtService = jwtService;
     }
     /*
     @GetMapping("/search")
@@ -35,6 +41,7 @@ public class RestaurantSearchController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortDirection // Default sort ASC
     ) {
+        if (!jwtService.checkIfUserRole(UserRoles.CUSTOMER)) throw new UnauthorizedRequestException();
         Page<RestaurantRequest> restaurantPage = restaurantService.searchRestaurants(
                 name, minRating, maxMinOrderPrice, cuisine,
                 page, size, sortBy, sortDirection

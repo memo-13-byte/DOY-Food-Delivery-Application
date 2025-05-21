@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import RestaurantNavbar from "../components/RestaurantNavbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/Button"; // Assuming Button can handle disabled state
+import { getUserByEmail } from "../services/profileData";
 
 // Define ONLY the necessary OrderStatus enum values
 const OrderStatus = {
@@ -150,7 +151,8 @@ export default function OrderStatusRestaurant() {
     });
 
     // --- Get Restaurant ID from URL ---
-    const { id: restaurantId } = useParams();
+    const restaurantEmail = localStorage.getItem("email");
+    const [restaurantId, setRestaurantId] = useState(0);
 
     // --- Column Definitions ---
     const initialStatuses = [
@@ -164,7 +166,11 @@ export default function OrderStatusRestaurant() {
 
     // Fetch orders for the specific restaurant
     const fetchOrders = async () => {
-        if (!restaurantId) {
+        const restaurantOwner = await getUserByEmail(restaurantEmail);
+        console.log(restaurantOwner);
+        setRestaurantId(restaurantOwner.id);
+
+        if (!restaurantOwner.id) {
             setError("Restoran ID URL'de bulunamadı veya geçerli değil.");
             setLoading(false); setAllOrders([]); return;
         }
@@ -174,7 +180,7 @@ export default function OrderStatusRestaurant() {
             [OrderStatus.UNDER_WAY]: 1,
             [OrderStatus.DELIVERED]: 1,
         });
-        const url = `http://localhost:8080/order/restaurant/${restaurantId}/order`;
+        const url = `http://localhost:8080/order/restaurant/${restaurantOwner.id}/order`;
         try {
             const response = await AuthorizedRequest.getRequest(url);
             if (response.data && Array.isArray(response.data.orderInfoList)) {
@@ -219,9 +225,8 @@ export default function OrderStatusRestaurant() {
 
     // --- Effects ---
     useEffect(() => {
-        if (restaurantId) { fetchOrders(); }
-        else { setError("Restoran ID URL'de bulunamadı."); setLoading(false); }
-    }, [restaurantId]);
+        fetchOrders();
+    }, []);
 
 
     // --- Event Handlers ---

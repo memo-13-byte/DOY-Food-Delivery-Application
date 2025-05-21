@@ -19,7 +19,7 @@ import {
 import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from "react-router-dom";
 import { CommentSection } from "../components/CommentSection";
-import { getUserById } from "../services/profileData";
+import { getUserByEmail, getUserById } from "../services/profileData";
 
 
 
@@ -50,7 +50,8 @@ export default function CourierCommentPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeReplyId, setActiveReplyId] = useState(null);
-  const {id: courierId} = useParams()
+  const [courierId, setCourierId] = useState(0);
+  const [courierEmail, setCourierEmial] = useState(localStorage.getItem("email"));
   const [rating, setRating] = useState(0)
   const [ratingCount, setRatingCount] = useState(0)
 
@@ -75,11 +76,12 @@ export default function CourierCommentPage() {
 
   useEffect(() => {
     const getComments = async () => {
-        const ratingResponse = await getUserById(courierId);
+        const ratingResponse = await getUserByEmail(courierEmail);
         setRating(ratingResponse.rating)
         setRatingCount(ratingResponse.ratingCount)
+        setCourierId(ratingResponse.id)
 
-        const reviewResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get/for-courier/${courierId}`);
+        const reviewResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get/for-courier/${ratingResponse.id}`);
         const comments = reviewResponse.data;
         let commentsData = await Promise.all( comments.map(async (element) => {
             const replies = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get-replies/${element.id}`);
