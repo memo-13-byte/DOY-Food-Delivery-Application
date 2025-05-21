@@ -2,6 +2,8 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.DtoMenuItem;
 import com.pingfloyd.doy.dto.DtoMenuItemIU;
+import com.pingfloyd.doy.enums.Allergens;
+import com.pingfloyd.doy.enums.MenuItemType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,4 +14,6 @@ public interface IItemService {
     DtoMenuItem deleteItem(Long itemId);
     DtoMenuItem getItem(Long itemId);
     List<DtoMenuItem> getRestaurantItems(Long restaurantId);
+
+    Allergens[] GetAllTypes();
 }

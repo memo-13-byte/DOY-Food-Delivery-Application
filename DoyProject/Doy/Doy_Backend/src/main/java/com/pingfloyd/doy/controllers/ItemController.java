@@ -2,6 +2,8 @@ package com.pingfloyd.doy.controllers;
 
 import com.pingfloyd.doy.dto.DtoMenuItem;
 import com.pingfloyd.doy.dto.DtoMenuItemIU;
+import com.pingfloyd.doy.enums.Allergens;
+import com.pingfloyd.doy.enums.MenuItemType;
 import com.pingfloyd.doy.services.IItemService;
 import com.pingfloyd.doy.utils.ImageValidator;
 import jakarta.validation.Valid;
@@ -49,5 +51,10 @@ public class ItemController implements IItemController {
     @GetMapping("/get-items/{id}")
     public ResponseEntity<List<DtoMenuItem>> getRestaurantItems(@PathVariable("id") Long restaurantId) {
         return ResponseEntity.ok(itemService.getRestaurantItems(restaurantId));
+    }
+
+    @GetMapping("/get-types")
+    public ResponseEntity<Allergens[]> GetAllItemTypes(){
+        return ResponseEntity.ok(itemService.GetAllTypes());
     }
 }

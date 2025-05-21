@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.entities;
 
+import com.pingfloyd.doy.enums.Allergens;
 import com.pingfloyd.doy.enums.MenuItemType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 @Table(name = "menu_item")
@@ -39,6 +41,16 @@ public class MenuItem {
     @Enumerated
     @Column(name = "menu_item_type", length = 30, nullable = false)
     private MenuItemType menuItemType;
+
+    @ElementCollection(targetClass = Allergens.class)
+    @CollectionTable(
+            name = "menu_item_allergens",
+            joinColumns = @JoinColumn(name = "menu_item_id")
+    )
+    @Enumerated(EnumType.STRING)
+    @Column(name = "allergen", length = 30)
+    private Set<Allergens> allergens;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "image_id")

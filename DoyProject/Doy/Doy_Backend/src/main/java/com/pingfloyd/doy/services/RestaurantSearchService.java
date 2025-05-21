@@ -32,7 +32,6 @@ public class RestaurantSearchService {
             String name, Float minRating, Double maxMinOrderPrice, String cuisine,
             int page, int size, String sortBy, String sortDirection) {
 
-        // 1. Build the Specification dynamically based on provided filters
         Specification<Restaurant> spec = RestaurantSpecification.filterBy(
                 name, minRating, maxMinOrderPrice, cuisine
         );

@@ -1,6 +1,7 @@
 package com.pingfloyd.doy.entities;
 
 import com.pingfloyd.doy.entities.User;
+import com.pingfloyd.doy.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,9 @@ public class ConfirmationToken {
     @Column(nullable = false)
     private LocalDateTime expiredAt;
     private Boolean confirmed = false;
+
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType;
 
     @ManyToOne
     @JoinColumn(

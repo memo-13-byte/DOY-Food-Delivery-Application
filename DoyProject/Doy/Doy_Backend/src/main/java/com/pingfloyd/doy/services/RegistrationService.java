@@ -4,6 +4,7 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.*;
+import com.pingfloyd.doy.enums.TokenType;
 import com.pingfloyd.doy.exception.UserAlreadyExistException;
 import com.pingfloyd.doy.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
@@ -55,6 +56,7 @@ public class RegistrationService {
 
         String success = userService.SignUpCustomer(customer, UserRoles.CUSTOMER);
         ConfirmationToken token = confirmationTokenService.GenerateToken(customer , 15);
+        token.setTokenType(TokenType.REGISTER);
         String link = confirmUrlBase + "/api/registration/confirm?token=" + token.getToken();
         String emailBody = buildEmail(customer.getUsername() , link);
         emailService.send(customer.getEmail() , "Confirm your Email for Food Delivery App", emailBody);

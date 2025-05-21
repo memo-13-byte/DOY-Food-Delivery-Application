@@ -5,6 +5,8 @@ import com.pingfloyd.doy.dto.DtoMenuItemIU;
 import com.pingfloyd.doy.entities.Image;
 import com.pingfloyd.doy.entities.MenuItem;
 import com.pingfloyd.doy.entities.Restaurant;
+import com.pingfloyd.doy.enums.Allergens;
+import com.pingfloyd.doy.enums.MenuItemType;
 import com.pingfloyd.doy.exception.ItemNotFoundException;
 import com.pingfloyd.doy.exception.RestaurantNotFoundException;
 import com.pingfloyd.doy.repositories.ItemRepository;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +44,7 @@ public class ItemService implements IItemService {
     public DtoMenuItem postItem(DtoMenuItemIU dtoMenuItemIU) throws RestaurantNotFoundException {
         MenuItem item = new MenuItem();
         BeanUtils.copyProperties(dtoMenuItemIU, item);
-
+        item.setAllergens(new HashSet<>(dtoMenuItemIU.getAllergens()));
         Restaurant restaurant = restaurantService.findRestaurantById(dtoMenuItemIU.getRestaurantId());
 
 
@@ -63,7 +66,9 @@ public class ItemService implements IItemService {
 
         item.setRestaurant(restaurant);
 
-        BeanUtils.copyProperties(dtoMenuItemIU, item);
+        BeanUtils.copyProperties(dtoMenuItemIU, item );
+        item.setAllergens(new HashSet<>(dtoMenuItemIU.getAllergens()));
+
         MenuItem savedItem = itemRepository.save(item);
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(savedItem, dtoMenuItem);
@@ -91,9 +96,9 @@ public class ItemService implements IItemService {
     @Override
     public DtoMenuItem getItem(Long itemId) throws ItemNotFoundException {
         MenuItem item = getItemById(itemId);
-
         DtoMenuItem dtoMenuItem = new DtoMenuItem();
         BeanUtils.copyProperties(item, dtoMenuItem);
+        dtoMenuItem.setAllergens(item.getAllergens().stream().toList());
         dtoMenuItem.setRestaurantId(item.getRestaurant().getId());
         dtoMenuItem.setImageId(item.getImage() == null ? null : item.getImage().getId());
         return dtoMenuItem;
@@ -111,11 +116,17 @@ public class ItemService implements IItemService {
         for (MenuItem menuItem : menuItems) {
             DtoMenuItem dtoMenuItem = new DtoMenuItem();
             BeanUtils.copyProperties(menuItem, dtoMenuItem);
+            dtoMenuItem.setAllergens(menuItem.getAllergens().stream().toList());
             dtoMenuItem.setRestaurantId(restaurantId);
             dtoMenuItem.setImageId(menuItem.getImage() == null ? null : menuItem.getImage().getId());
             dtoMenuItems.add(dtoMenuItem);
         }
 
         return dtoMenuItems;
+    }
+
+    @Override
+    public Allergens[] GetAllTypes(){
+        return Allergens.values();
     }
 }

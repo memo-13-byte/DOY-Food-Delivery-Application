@@ -3,10 +3,8 @@ package com.pingfloyd.doy.controllers;
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.services.UserService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -106,6 +104,17 @@ public class UserController implements IUserController{
     @PutMapping("/suspend")
     public ResponseEntity<Boolean> SuspendUser(@RequestBody @Valid DtoBanRequest request){
         return ResponseEntity.ok(userService.SuspendUser(request));
+    }
+
+    @GetMapping("/forget-password/{email}")
+    public ResponseEntity<Void> SendPasswordResetRequest(@PathVariable(name = "email") String email){
+        userService.ResetPasswordRequest(email);
+        return ResponseEntity.ok().build();
+    }
+    @PutMapping("/reset-password")
+    public ResponseEntity<Void> ResetPassword(@Valid @RequestBody ResetPasswordDto dto){
+        userService.ResetPassword(dto);
+        return ResponseEntity.ok().build();
     }
 
 

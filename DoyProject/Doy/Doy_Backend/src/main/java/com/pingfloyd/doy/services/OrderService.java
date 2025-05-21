@@ -165,7 +165,7 @@ public class OrderService {
         Double price = 0.0;
         for(CartItem item : set){
             OrderItem orderItem = CreateOrderItem(item,customerOrder);
-            price +=  item.getMenuItem().getPrice().doubleValue();
+            price +=  item.getMenuItem().getPrice().doubleValue() * item.getQuantity();
             //orderItemRepository.save(orderItem);
             customerOrder.getItems().add(orderItem);
         }
