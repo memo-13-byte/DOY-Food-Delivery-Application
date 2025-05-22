@@ -10,11 +10,11 @@ const CartSummary = ({ cart = [], onConfirm, onRemove, darkMode }) => {
     // Style for each item row in the cart summary
     const itemRowStyle = {
         display: 'flex',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between', // Adjusted for image
         alignItems: 'center',
-        marginBottom: '0.75rem', // A bit more space
-        fontSize: '0.9rem',     // Slightly smaller font
-        borderBottom: `1px dashed ${darkMode ? '#444' : '#ddd'}`, // Separator line
+        marginBottom: '0.75rem',
+        fontSize: '0.9rem',
+        borderBottom: `1px dashed ${darkMode ? '#444' : '#ddd'}`,
         paddingBottom: '0.75rem'
     };
 
@@ -22,13 +22,31 @@ const CartSummary = ({ cart = [], onConfirm, onRemove, darkMode }) => {
     const removeButtonStyle = {
         background: 'none',
         border: 'none',
-        color: darkMode ? '#ff8a8a' : '#e53e3e', // Reddish color
+        color: darkMode ? '#ff8a8a' : '#e53e3e',
         cursor: 'pointer',
-        padding: '0 0.2rem', // Minimal padding around icon
-        marginLeft: '0.8rem', // Space between item text and button
+        padding: '0 0.2rem',
+        marginLeft: '0.5rem', // Adjusted margin
         display: 'flex',
         alignItems: 'center'
     };
+
+    // Style for the item image
+    const itemImageStyle = {
+        width: '40px', // Or your desired size
+        height: '40px',
+        borderRadius: '4px', // Optional: rounded corners
+        objectFit: 'cover', // Ensures the image covers the area without distortion
+        marginRight: '0.75rem', // Space between image and text
+        flexShrink: 0 // Prevent image from shrinking
+    };
+
+    // Style for item details (name and price)
+    const itemDetailsStyle = {
+        flexGrow: 1,
+        marginRight: '0.5rem',
+        wordBreak: 'break-word' // Keep this for long names
+    };
+
 
     return (
         <div
@@ -38,41 +56,52 @@ const CartSummary = ({ cart = [], onConfirm, onRemove, darkMode }) => {
                 padding: "1.5rem",
                 borderRadius: "16px",
                 boxShadow: darkMode ? "0 0 8px rgba(255,255,255,0.1)" : "0 0 8px rgba(0,0,0,0.1)",
-                minWidth: "280px", // Slightly wider min-width
-                maxHeight: "400px", // Increased max-height
-                overflowY: "auto",  // Keep scroll enabled
-                display: 'flex',    // Use flexbox for layout
-                flexDirection: 'column' // Stack content vertically
+                minWidth: "280px",
+                maxHeight: "400px",
+                overflowY: "auto",
+                display: 'flex',
+                flexDirection: 'column'
             }}
         >
-            <h4 style={{ marginBottom: "1rem", marginTop: 0, flexShrink: 0 /* Prevent shrinking */ }}>Sepet</h4>
+            <h4 style={{ marginBottom: "1rem", marginTop: 0, flexShrink: 0 }}>Sepet</h4>
 
-            {/* Use a div for the list area to allow scrolling */}
             <div style={{ flexGrow: 1, overflowY: 'auto', marginBottom: '1rem' }}>
                 {safeCart.length === 0 ? (
                     <p style={{ fontStyle: 'italic', color: darkMode ? '#aaa' : '#666' }}>Sepetiniz boş</p>
                 ) : (
-                    // Using div instead of ul/li for easier flex layout with button
                     <div>
                         {safeCart.map((item, index) => (
-                            // Ensure item has a unique ID for the key and removal
-                            <div key={item.id ?? `cart-item-${index}`} style={itemRowStyle}>
+                            // Corrected key to ensure uniqueness
+                            <div key={`cart-summary-item-${item.id}-${index}`} style={itemRowStyle}>
+                                {/* Item Image */}
+                                <img
+                                    src={item.image || "/placeholder.svg?text=No+Image"} // Use item.image, fallback to placeholder
+                                    alt={item.name || 'Ürün resmi'}
+                                    style={itemImageStyle}
+                                    onError={(e) => {
+                                        e.target.onerror = null; // Prevents looping if placeholder also fails
+                                        e.target.src = "/placeholder.svg?text=Hata"; // Fallback image on error
+                                    }}
+                                />
+
                                 {/* Item Name & Price */}
-                                <span style={{ flexGrow: 1, marginRight: '0.5rem', wordBreak: 'break-word' }}>
-                                    {item.name || 'İsimsiz Ürün'} - {item.price?.toFixed(2) || '0.00'}₺
-                                </span>
+                                <div style={itemDetailsStyle}>
+                                    {item.name || 'İsimsiz Ürün'}
+                                    <div style={{ fontSize: '0.8em', color: darkMode ? '#bbb' : '#555' }}>
+                                        {item.price?.toFixed(2) || '0.00'}₺
+                                    </div>
+                                </div>
 
                                 {/* Remove Button */}
-                                {/* Check if onRemove function is provided before rendering button */}
                                 {onRemove && (
                                     <button
                                         type="button"
-                                        onClick={() => onRemove(item.id)} // Call onRemove with item.id
+                                        onClick={() => onRemove(item.id)}
                                         style={removeButtonStyle}
                                         aria-label={`Remove ${item.name || 'item'}`}
                                         title={`"${item.name || 'item'}" öğesini kaldır`}
                                     >
-                                        <FaTrashAlt size={14} /> {/* Use trash icon */}
+                                        <FaTrashAlt size={14} />
                                     </button>
                                 )}
                             </div>
@@ -81,9 +110,8 @@ const CartSummary = ({ cart = [], onConfirm, onRemove, darkMode }) => {
                 )}
             </div>
 
-            {/* Footer section of the summary (Total and Confirm button) */}
             {safeCart.length > 0 && (
-                <div style={{ flexShrink: 0 /* Prevent shrinking */ }}>
+                <div style={{ flexShrink: 0 }}>
                     <hr style={{ margin: "1rem 0", border: 'none', borderTop: `1px solid ${darkMode ? '#555' : '#ccc'}` }} />
                     <div style={{ fontWeight: "bold", marginBottom: "1rem", textAlign: 'right' }}>
                         Toplam: {total.toFixed(2)}₺
@@ -91,9 +119,9 @@ const CartSummary = ({ cart = [], onConfirm, onRemove, darkMode }) => {
                     <button
                         onClick={onConfirm}
                         style={{
-                            backgroundColor: "#7A0000", // Consider a less intense red or match theme
+                            backgroundColor: "#7A0000",
                             color: "#fff",
-                            padding: "0.6rem 1rem", // Adjusted padding
+                            padding: "0.6rem 1rem",
                             border: "none",
                             borderRadius: "8px",
                             cursor: "pointer",

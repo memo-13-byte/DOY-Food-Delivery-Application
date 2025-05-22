@@ -461,6 +461,7 @@ public class OrderService {
                     itemInfo.setPrice(cartItem.getMenuItem().getPrice());
                     itemInfo.setDescription(cartItem.getMenuItem().getDescription());
                     itemInfo.setQuantity(cartItem.getQuantity());
+                    itemInfo.setImageId(cartItem.getMenuItem().getImage() == null ? null : cartItem.getMenuItem().getImage().getId());
                     cartDto.getItems().add(itemInfo);
                 } else {
                     System.err.println("WARN: Skipping invalid CartItem in cart " + cart.getCartId());

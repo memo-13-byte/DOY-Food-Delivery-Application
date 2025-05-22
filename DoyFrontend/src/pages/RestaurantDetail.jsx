@@ -166,7 +166,7 @@ const RestaurantDetail = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         }
-        const response = await axios.get(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`, header)
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`)
         console.log("favorite restaurant?:", response.data)
         setIsFavorited(response.data)
     } catch(error) {
@@ -296,7 +296,9 @@ const RestaurantDetail = () => {
                   name: itemInfo.name || "İsimsiz Ürün",
                   price: isNaN(price) ? 0 : price,
                   description: itemInfo.description || "",
-                  // image: itemInfo.imageUrl // If available in DTO
+                  imageId: itemInfo.imageId,
+                  image: itemInfo.imageId? `http://localhost:8080/api/upload/image/${itemInfo.imageId}`: "/placeholder.svg",
+                 // image: itemInfo.imageUrl // If available in DTO
                 })
               }
             }
@@ -484,7 +486,7 @@ const RestaurantDetail = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       }
-      const response = await axios.put(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`, null, header)
+      const response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`)
       console.log("toggled favorite:", response.data)
       setIsFavorited(response.data)
     } catch(error) {
