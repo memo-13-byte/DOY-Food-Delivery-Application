@@ -44,7 +44,13 @@ export default function RestaurantManagePage() {
   // 1. Yeni state ekleyelim - useState tanımlamalarının olduğu bölüme ekleyin
   const [draggingItemId, setDraggingItemId] = useState(null)
   const [itemImageSuccess, setItemImageSuccess] = useState({ show: false, itemName: "" })
-  const [errorMessages, setErrorMessages] = useState([])
+  const [errorMessages, setErrorMessages] = useState([]);
+
+  const [openingHour, setOpeningHour] = useState("");
+  const [closingHour, setClosingHour] = useState("");
+  const [originalOpeningHour, setOriginalOpeningHour] = useState("");
+  const [originalClosingHour, setOriginalClosingHour] = useState("");
+  const [showTimeSaveButton, setShowTimeSaveButton] = useState(false);
 
 
 
@@ -76,6 +82,7 @@ const handleCancelMinOrderPriceEdit = () => {
   setIsEditingMinOrderPrice(false);
   setMinOrderPriceInput(restaurant.minOrderPrice || '');
 };
+
   useEffect(() => {
     const getRestaurantId = async () => {
       let loadedEmail = "";
@@ -95,6 +102,10 @@ const handleCancelMinOrderPriceEdit = () => {
     getRestaurantId()
   }, [])
 
+  useEffect(() => {
+    setShowTimeSaveButton(openingHour !== originalOpeningHour || closingHour !== originalClosingHour);
+  }, [openingHour, closingHour, originalOpeningHour, originalClosingHour]);
+
 
   useEffect(() => {
     const getRestaurantInformation = async () => {
@@ -106,6 +117,10 @@ const handleCancelMinOrderPriceEdit = () => {
         setRestaurant(response.data)
         setPhoneNumberInput(response.data.restaurantPhone)
         setMinOrderPriceInput(response.data.minOrderPrice)
+        setOpeningHour(response.data.openingHour);
+        setClosingHour(response.data.closingHour);
+        setOriginalOpeningHour(response.data.openingHour);
+        setOriginalClosingHour(response.data.closingHour);
         
         if(response.data.imageId != null) {
           const imageResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/upload/image/${response.data.imageId}`, {
@@ -135,6 +150,41 @@ const handleCancelMinOrderPriceEdit = () => {
       document.body.classList.remove("dark-mode")
     }
   }, [restaurantId, darkMode])
+
+  const handleSaveWorkingHours = async () => {
+    try {
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${restaurantId}`);
+      const res = response.data;
+
+      if (!openingHour || !closingHour) {
+        alert("Açılış ve kapanış saatlerini doldurunuz.");
+        return;
+      }
+
+      let data = {
+        restaurantName: res.restaurantName,
+        restaurantPhone: restaurant.restaurantPhone || res.restaurantPhone,
+        description: res.description || "",
+        restaurantCategory: res.restaurantCategory || "FAST_FOOD",
+        rating: res.rating || 0.0,
+        minOrderPrice: res.minOrderPrice || 0,
+        imageId: res.imageId || null,
+        openingHour: `${openingHour}`,
+        closingHour: `${closingHour}`
+      };
+
+      console.log("Giden PUT verisi:", data)
+
+      await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+
+      setOriginalOpeningHour(openingHour);
+      setOriginalClosingHour(closingHour);
+      setShowTimeSaveButton(false);
+    } catch (error) {
+      console.error("PUT hatası:", error);
+      setErrorMessages(getResponseErrors(error));
+    }
+  };
 
   // 2. menuCategories state'ini güncelleyelim - her öğeye image alanı ekleyelim
   // Mevcut menuCategories state tanımlamasını aşağıdakiyle değiştirin
@@ -740,6 +790,38 @@ const handleCancelMinOrderPriceEdit = () => {
                   <Edit className="h-5 w-5" />
                 </motion.button>
               </div>
+
+               {/* Working Hours */}
+              <div className="flex items-center gap-4 mt-6">
+                <label className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>Açılış Saati:</label>
+                <input
+                    type="time"
+                    value={openingHour}
+                    onChange={(e) => setOpeningHour(e.target.value)}
+                    className="rounded-md border px-4 py-2 text-black"
+                />
+              </div>
+              <div className="flex items-center gap-4 mt-2">
+                <label className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>Kapanış Saati:</label>
+                <input
+                    type="time"
+                    value={closingHour}
+                    onChange={(e) => setClosingHour(e.target.value)}
+                    className="rounded-md border px-4 py-2 text-black"
+                />
+              </div>
+              {showTimeSaveButton && (
+                  <div className="mt-4">
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleSaveWorkingHours}
+                        className={`px-6 py-3 rounded-xl text-lg font-medium bg-green-600 text-white hover:bg-green-700 transition-colors duration-300`}
+                    >
+                      Çalışma Saatlerini Kaydet
+                    </motion.button>
+                  </div>
+              )}
 
               {/* PHONE NUMBER */}
 <div className="flex items-center justify-between mt-6">

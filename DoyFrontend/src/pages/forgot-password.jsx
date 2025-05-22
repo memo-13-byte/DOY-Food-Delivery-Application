@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { ArrowRight, Moon, Sun, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react"
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 
 // Simplified UI components (Button, Input, Label)
 const Button = ({ className, children, ...props }) => (
@@ -106,7 +107,7 @@ export default function ForgotPassword() {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/users/forget-password/${email}`)
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/forget-password/${email}`)
       if (response.status === 200 || response.status === 204) {
         setSuccessMessage(
             response.data?.message || "Şifre sıfırlama talimatları e-posta adresinize gönderildi. Lütfen gelen kutunuzu ve spam klasörünüzü kontrol edin. Ardından aşağıdaki alana token'ı ve yeni şifrenizi girin."

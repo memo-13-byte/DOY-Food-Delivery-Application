@@ -87,8 +87,8 @@ export default function AddItemPage() {
     if (isEditMode && itemId) {
       setIsLoading(true)
       // In a real app, fetch the item data from API
-      axios
-        .get(`http://localhost:8080/api/item/get/${itemId}`)
+      AuthorizedRequest
+        .getRequest(`http://localhost:8080/api/item/get/${itemId}`)
         .then((response) => {
           const item = response.data
           setFormData({
@@ -111,7 +111,7 @@ export default function AddItemPage() {
     }
 
     if (isEditMode && itemId) {
-      getUserByEmail(restaurantEmail).then((response) => {
+      (AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).then((response) => {
         if (response && response.id) {
           setRestaurantId(response.id);
         } else {
@@ -148,7 +148,7 @@ export default function AddItemPage() {
           });
     } else {
       // For new items, still fetch restaurantId
-      getUserByEmail(restaurantEmail).then((response) => {
+      (AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).then((response) => {
         if (response && response.id) {
           setRestaurantId(response.id);
         } else {

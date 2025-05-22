@@ -116,34 +116,6 @@ export default function AddItemPage() {
     }
   }, [isEditMode, itemId])
 
-  // Get menuItemType ID from menuItemType type
-  const getmenuItemTypeIdFromType = (type) => {
-    const menuItemTypeIds = {
-      COMBO: "1",
-      MAIN_DISH: "2",
-      DRINK: "3",
-      EXTRA: "4",
-    }
-    return menuItemTypeIds[type] || "1"
-  }
-
-  // Validate form data
-  const validateForm = () => {
-    const newErrors = {}
-
-    // Validate name
-    if (!formData.name.trim()) {
-      newErrors.name = "Ürün adı gereklidir"
-    } else if (formData.name.trim().length < 3) {
-      newErrors.name = "Ürün adı en az 3 karakter olmalıdır"
-    }
-
-    const reversemenuItemTypeMap = {
-        "1": "COMBO",
-        "2": "MAIN_DISH",
-        "3": "DRINK",
-        "4": "EXTRA",
-    }
 
     // Load item data if in edit mode
     useEffect(() => {
@@ -155,9 +127,9 @@ export default function AddItemPage() {
         }
 
         if (isEditMode && itemId) {
-            getUserByEmail(restaurantEmail).then((response) => {
-                if (response && response.id) {
-                    setRestaurantId(response.id);
+            AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`).then((response) => {
+                if (response.data && response.data.id) {
+                    setRestaurantId(response.data.id);
                 } else {
                     console.error("Could not fetch restaurant ID for email:", restaurantEmail);
                     setErrors(prev => ({ ...prev, restaurant: "Restoran bilgileri alınamadı."}));
@@ -192,8 +164,8 @@ export default function AddItemPage() {
                 });
         } else {
             // For new items, still fetch restaurantId
-            getUserByEmail(restaurantEmail).then((response) => {
-                if (response && response.id) {
+            AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`).then((response) => {
+                if (response.data && response.data.id) {
                     setRestaurantId(response.id);
                 } else {
                     console.error("Could not fetch restaurant ID for email:", restaurantEmail);
