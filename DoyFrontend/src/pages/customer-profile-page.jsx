@@ -9,6 +9,9 @@ import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 import { Button } from "../components/Button"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 const Input = ({ className, ...props }) => (
   <input className={`w-full px-3 py-2 border rounded-lg ${className}`} {...props} />
@@ -256,68 +259,9 @@ export default function CustomerProfilePage() {
       </div>
 
       {/* Header section */}
-      <motion.header
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center shadow-md`}
-      >
-        <div className="flex items-center">
-          <Link to="/">
-            <span className="font-bold text-xl tracking-wide hover:text-amber-200 transition-colors duration-200">
-              Doy!
-            </span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggleDarkMode}
-              className={`w-10 h-5 rounded-full flex items-center ${darkMode ? "bg-amber-400 justify-end" : "bg-gray-300 justify-start"} p-1 transition-all duration-300`}
-            >
-              <div className="w-3 h-3 bg-white rounded-full"></div>
-            </button>
-            <Moon className="h-4 w-4 text-amber-200" />
-          </div>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className={`rounded-full w-10 h-10 ${darkMode ? "bg-amber-400" : "bg-amber-500"} flex items-center justify-center shadow-md hover:shadow-lg transition-shadow duration-200`}
-          >
-            <span className="text-white text-sm font-medium">
-              {user.firstname[0].toUpperCase() + user.lastname[0].toUpperCase()}
-            </span>
-          </motion.button>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      {/* Logo section */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="flex justify-center py-8"
-      >
-        <motion.div
-          whileHover={{ rotate: 5, scale: 1.05 }}
-          className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg`}
-        >
-          <div className="relative w-24 h-24">
-            {user.profileImage ? (
-              <img
-                src={user.profileImage || "/placeholder.svg"}
-                alt={user?.firstname}
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              <img src="/image1.png" alt="DOY Logo" width={96} height={96} className="w-full h-full" />
-            )}
-            <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-amber-400" : "text-amber-800"}`}>
-              {user.profileImage ? user.firstname : "FOOD DELIVERY"}
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+      <DoyLogo></DoyLogo>
 
       {/* Profile Content */}
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
@@ -765,47 +709,7 @@ export default function CustomerProfilePage() {
         </motion.div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
-      >
-        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

@@ -22,6 +22,9 @@ import {
 import { motion } from "framer-motion"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 
 export default function RestaurantProfilePage() {
@@ -148,81 +151,9 @@ export default function RestaurantProfilePage() {
     <div
       className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
-      {/* Header section */}
-      <motion.header
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center shadow-md`}
-      >
-        <div className="flex items-center">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="text-xl font-bold text-white cursor-pointer"
-            onClick={() => navigate("/")}
-          >
-            <span className="flex items-center gap-2">
-              <motion.img
-                src="/image1.png"
-                alt="Doy Logo"
-                className="h-8 w-8 rounded-full bg-white p-1"
-                whileHover={{ rotate: 10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              />
-              Doy!
-            </span>
-          </motion.div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div onClick={() => setDarkMode(!darkMode)} className="flex items-center gap-2 cursor-pointer">
-              <div className="w-[34px] h-[18px] rounded-full bg-[#F8F5DE] relative">
-                <div
-                  className="w-[16px] h-[16px] rounded-full bg-[#000] absolute top-[1px]"
-                  style={{
-                    left: darkMode ? "17px" : "1px",
-                    transition: "left 0.3s",
-                  }}
-                />
-              </div>
-              <Moon className={`h-4 w-4 ${darkMode ? "text-[#F8F5DE]" : "text-[#F8F5DE]"}`} />
-            </div>
-          </div>
-          <Link to={`/restaurants/manage/${0}`}>
-            <span
-              className={`px-3 py-1.5 rounded-md text-sm font-medium ${
-                darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-amber-600 hover:bg-amber-700"
-              } transition-colors`}
-            >
-              Restoranı Yönet
-            </span>
-          </Link>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      {/* Logo section */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="flex justify-center py-8"
-      >
-        <motion.div
-          whileHover={{ scale: 1.05, rotate: 5 }}
-          className={`rounded-full ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg transition-colors duration-300`}
-        >
-          <div className="relative w-24 h-24 flex flex-col items-center">
-            <img
-              src={restaurant.profileImage || "/image1.png"}
-              alt={`${ownersRestaurant} logo`}
-              className="w-full h-full object-cover rounded-full"
-            />
-            <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-              FOOD DELIVERY
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+      <DoyLogo></DoyLogo>
 
       {errorMessages.map((message, i) => (
                         
@@ -486,47 +417,7 @@ export default function RestaurantProfilePage() {
         </motion.div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
-      >
-        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
 
       {/* Alertify notification */}
       {showAlert && (

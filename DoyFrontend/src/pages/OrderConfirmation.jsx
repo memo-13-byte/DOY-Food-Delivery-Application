@@ -7,6 +7,8 @@ import doyLogo from "../assets/doylogo.jpeg"
 import { BsMoon } from "react-icons/bs"
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6"
 import restaurants from "../services/restaurants.js"
+import Header from "../components/Header.jsx"
+import Footer from "../components/Footer.jsx"
 
 const statuses = [
   { label: "Hazırlanıyor 🧑‍🍳", delay: 0 },
@@ -85,52 +87,7 @@ const OrderConfirmation = () => {
         flexDirection: "column",
       }}
     >
-      {/* Üst bar */}
-      <div
-        style={{
-          backgroundColor: darkMode ? "#333" : "#47300A",
-          padding: "0.6rem 1.5rem",
-          color: darkMode ? "#fff" : "white",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-          <div style={{ fontWeight: "bold", fontSize: "1.1rem", cursor: "pointer" }}>Doy!</div>
-        </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <div
-            onClick={() => setDarkMode(!darkMode)}
-            style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
-          >
-            <div
-              style={{
-                width: "34px",
-                height: "18px",
-                borderRadius: "20px",
-                backgroundColor: "#F8F5DE",
-                position: "relative",
-              }}
-            >
-              <div
-                style={{
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "50%",
-                  backgroundColor: "#000",
-                  position: "absolute",
-                  top: "1px",
-                  left: darkMode ? "17px" : "1px",
-                  transition: "left 0.3s",
-                }}
-              />
-            </div>
-            <BsMoon color={darkMode ? "#000" : "#fff"} size={18} />
-          </div>
-          <div style={{ fontWeight: "bold" }}>Customer A</div>
-        </div>
-      </div>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
       {/* Sipariş Onayı */}
       <div
@@ -242,45 +199,7 @@ const OrderConfirmation = () => {
         )}
       </div>
 
-      {/* Footer */}
-      <footer
-        style={{
-          marginTop: "2rem",
-          padding: "2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
-        }}
-      >
-        {/* Sol: Logo */}
-        <img
-          src={doyLogo || "/placeholder.svg"}
-          alt="Logo"
-          style={{
-            height: "50px",
-            width: "50px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
-
-        {/* Sağ: Sosyal Medya */}
-        <div style={{ display: "flex", gap: "1.5rem" }}>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}>
-            <FaXTwitter size={24} />
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}>
-            <FaInstagram size={24} />
-          </a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}>
-            <FaYoutube size={24} />
-          </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}>
-            <FaLinkedin size={24} />
-          </a>
-        </div>
-      </footer>
+     <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

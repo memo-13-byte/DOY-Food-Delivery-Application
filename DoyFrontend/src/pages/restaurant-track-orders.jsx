@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import RestaurantNavbar from "../components/RestaurantNavbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/Button"; // Assuming Button can handle disabled state
+import Header from "../components/Header";
 
 // Define ONLY the necessary OrderStatus enum values
 const OrderStatus = {
@@ -264,7 +265,7 @@ export default function OrderStatusRestaurant() {
             color: darkMode ? "#fff" : "#000",
             minHeight: "100vh", display: "flex", flexDirection: "column",
         }}>
-            <RestaurantNavbar darkMode={darkMode} setDarkMode={setDarkMode} />
+            <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
             <div style={{ padding: "1rem 2rem 2rem 2rem", flexGrow: 1 }}>
                 <h2 style={{ textAlign: "center", marginBottom: "0.5rem" }}>Sipariş Takibi</h2>
                 <p style={{ textAlign: "center", marginBottom: "1.5rem", color: darkMode ? '#ccc' : '#555', fontSize: '0.9em' }}>

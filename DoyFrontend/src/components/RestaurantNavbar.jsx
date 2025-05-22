@@ -2,6 +2,7 @@ import React from "react";
 import { BsMoon } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import doyLogo from "../assets/doylogo.jpeg";
+import DoyLogo from "./DoyLogo";
 
 const RestaurantNavbar = ({ darkMode, setDarkMode }) => {
     const navigate = useNavigate();
@@ -16,15 +17,7 @@ const RestaurantNavbar = ({ darkMode, setDarkMode }) => {
             padding: "0.6rem 1.5rem",
             transition: "all 0.3s ease-in-out"
         }}>
-            {/* Logo */}
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", cursor: "pointer" }} onClick={() => navigate("/")}>
-                <img
-                    src={doyLogo}
-                    alt="Doy Logo"
-                    style={{ height: "40px", width: "40px", borderRadius: "50%", objectFit: "cover" }}
-                />
-                <div style={{ fontWeight: "bold", fontSize: "1.1rem" }}>Doy!</div>
-            </div>
+            <DoyLogo></DoyLogo>
 
             {/* Sağ Kısım */}
             <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>

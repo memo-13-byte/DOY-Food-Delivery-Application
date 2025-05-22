@@ -14,6 +14,9 @@ import { HiOutlineHome } from "react-icons/hi"
 import LocationModal from "../components/ui/LocationModal"
 import { useEffect } from "react"
 import AuthorizedRequest from "../services/AuthorizedRequest"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 const renderStars = (rating) => {
   const stars = []
@@ -26,10 +29,10 @@ const renderStars = (rating) => {
 }
 
 const Home = () => {
-  const [darkMode, setDarkMode] = useState(false)
-  // Replace wouter's useLocation with react-router-dom's useNavigate
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode"))
+
   const navigate = useNavigate()
-  const location = useLocation() // This is now react-router-dom's useLocation
+  const location = useLocation() 
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState("")
   const [searchText, setSearchText] = useState("")
@@ -57,6 +60,7 @@ const Home = () => {
   }
 
   useEffect(() => {
+    console.log(darkMode);
     const getRestaurantsFromBackend = async () => {
       console.log(minRating.toString())
       const response = await AuthorizedRequest.getRequest("http://localhost:8080/api/restaurant/search", {
@@ -115,93 +119,7 @@ const Home = () => {
         flexDirection: "column",
       }}
     >
-      {/* ÜST BAR */}
-      <div
-        style={{
-          backgroundColor: darkMode ? "#333" : "#47300A",
-          color: darkMode ? "#fff" : "white",
-          padding: "0.6rem 1.5rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          transition: "all 0.3s ease-in-out",
-        }}
-      >
-        {/* Sol - Doy! yazısı */}
-        <div style={{ fontWeight: "bold", fontSize: "1.1rem" }}>Doy!</div>
-
-        {/* Sağ - Toggle + simge + Kayıt/Giriş */}
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          {/* Toggle + BsMoon */}
-          <div
-            onClick={() => setDarkMode(!darkMode)}
-            style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
-          >
-            <div
-              style={{
-                width: "34px",
-                height: "18px",
-                borderRadius: "20px",
-                backgroundColor: "#F8F5DE",
-                position: "relative",
-                transition: "background-color 0.3s",
-              }}
-            >
-              <div
-                style={{
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "50%",
-                  backgroundColor: "#000",
-                  position: "absolute",
-                  top: "1px",
-                  left: darkMode ? "17px" : "1px",
-                  transition: "left 0.3s",
-                }}
-              />
-            </div>
-            <BsMoon color={darkMode ? "#000" : "#fff"} size={18} />
-          </div>
-
-          {/* Kayıt / Giriş birlikte kutu */}
-          <div
-            style={{
-              display: "flex",
-              backgroundColor: "#F8F5DE",
-              borderRadius: "10px",
-              overflow: "hidden",
-            }}
-          >
-            <button
-              onClick={() => navigate("/auth")} // Changed from setLocation to navigate
-              style={{
-                padding: "0.3rem 0.8rem",
-                backgroundColor: "#F8F5DE",
-                color: "#000",
-                fontWeight: "bold",
-                border: "none",
-                borderRight: "1px solid #ccc",
-                cursor: "pointer",
-              }}
-            >
-              KAYIT
-            </button>
-            <button
-              onClick={() => navigate("/auth")} // Changed from setLocation to navigate
-              style={{
-                padding: "0.3rem 0.8rem",
-                backgroundColor: "#F8F5DE",
-                color: "#000",
-                fontWeight: "bold",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              GİRİŞ
-            </button>
-          </div>
-        </div>
-      </div>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode}></Header>
 
       {/* ALT BAR - Konum seç alanı */}
       <div
@@ -214,8 +132,7 @@ const Home = () => {
           transition: "all 0.3s ease-in-out",
         }}
       >
-        {/* Logo */}
-        <img src={doyLogo || "/placeholder.svg"} alt="logo" style={{ height: "180px", borderRadius: "50%" }} />
+        <DoyLogo></DoyLogo>
 
         {/* Kutu ve yazıyı saran div */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1 }}>
@@ -533,68 +450,7 @@ const Home = () => {
         )}
       </div>
 
-      {/* Footer */}
-      <footer
-        style={{
-          marginTop: "2rem",
-          padding: "2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
-          transition: "all 0.3s ease-in-out",
-        }}
-      >
-        <img
-          src={doyLogo || "/placeholder.svg"}
-          alt="Logo alt"
-          style={{
-            height: "50px",
-            width: "50px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
-
-        <div style={{ display: "flex", gap: "1.5rem" }}>
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={iconLinkStyle}
-            className="icon-link"
-          >
-            <FaXTwitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={iconLinkStyle}
-            className="icon-link"
-          >
-            <FaInstagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={iconLinkStyle}
-            className="icon-link"
-          >
-            <FaYoutube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={iconLinkStyle}
-            className="icon-link"
-          >
-            <FaLinkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
 
       {modalOpen && (
         <LocationModal

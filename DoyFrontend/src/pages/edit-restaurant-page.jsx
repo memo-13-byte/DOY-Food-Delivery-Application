@@ -20,6 +20,8 @@ import {
 import { motion } from "framer-motion"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
 
 export default function RestaurantManagePage() {
   const location = useLocation()
@@ -589,51 +591,7 @@ const handleCancelMinOrderPriceEdit = () => {
     <div
       className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"}`}
     >
-      {/* Header */}
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 100 }}
-        className={`sticky top-0 z-10 flex items-center justify-between px-6 py-5 shadow-lg ${darkMode ? "bg-[#333]" : "bg-[#47300A]"}`}
-      >
-        <motion.div whileHover={{ scale: 1.05 }} className="text-2xl font-bold text-white">
-          <Link to="/">
-            <span className="flex items-center gap-2">
-              <img src="/image1.png" alt="Doy Logo" className="h-10 w-10 rounded-full bg-white p-1" />
-              Doy!
-            </span>
-          </Link>
-        </motion.div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <motion.button
-              onClick={toggleDarkMode}
-              className="relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
-              style={{
-                backgroundColor: darkMode ? "#6c4c9c" : "#e2e8f0",
-                transition: "background-color 0.3s",
-              }}
-            >
-              <span className="sr-only">Toggle dark mode</span>
-              <motion.span
-                className="inline-block h-5 w-5 rounded-full bg-white shadow-lg"
-                animate={{
-                  x: darkMode ? 24 : 3,
-                }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              />
-            </motion.button>
-            {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
-          </div>
-          <motion.div whileHover={{ scale: 1.05 }}>
-            <button
-              className={`rounded-full px-4 py-2 font-medium text-lg ${darkMode ? "text-white hover:bg-gray-700" : "text-white hover:bg-amber-600"}`}
-            >
-              {restaurant.restaurantName}
-            </button>
-          </motion.div>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
       {errorMessages.map((message, i) => (
                         
@@ -1298,108 +1256,7 @@ const handleCancelMinOrderPriceEdit = () => {
         )}
       </main>
 
-      {/* Footer */}
-      <footer
-        style={{
-          marginTop: "2rem",
-          padding: "2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
-          transition: "all 0.3s ease-in-out",
-        }}
-      >
-        <img
-          src="/image1.png"
-          alt="Logo alt"
-          style={{
-            height: "50px",
-            width: "50px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
-
-        <div style={{ display: "flex", gap: "1.5rem" }}>
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

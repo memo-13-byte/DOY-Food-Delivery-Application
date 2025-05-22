@@ -10,6 +10,9 @@ import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 import { add } from "date-fns"
 import AuthorizedRequest from "../services/AuthorizedRequest"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 
 // Since we're having issues with the UI component imports, let's create simplified versions
@@ -402,54 +405,9 @@ export default function AuthPage() {
       {/* Alertify notification */}
       {alertify.show && <Alertify message={alertify.message} type={alertify.type} onClose={hideAlertify} />}
 
-      {/* Header section */}
-      <header
-        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-4 px-6 flex justify-between items-center shadow-lg transition-colors duration-300`}
-      >
-        <div className="flex items-center">
-          <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
-            <span className="font-bold text-white text-xl tracking-wide">DOY!</span>
-          </Link>
-        </div>
-        <div className="flex gap-3 items-center">
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={darkMode}
-              onCheckedChange={toggleDarkMode}
-              className={`${darkMode ? "bg-amber-500" : "bg-gray-300"} transition-colors duration-300`}
-            />
-            {darkMode ? <Sun className="h-4 w-4 text-white" /> : <Moon className="h-4 w-4 text-white" />}
-          </div>
-          <div className="flex">
-            <button
-              className={`px-4 py-1.5 text-sm font-medium rounded-l-full ${darkMode ? "bg-amber-600 text-white" : "bg-[#e8c886] text-[#6b4b10]"} transition-colors duration-300`}
-              onClick={() => navigate("/auth?tab=register&type=" + userType)}
-            >
-              KAYIT
-            </button>
-            <button
-              className={`px-4 py-1.5 text-sm font-medium rounded-r-full ${darkMode ? "bg-amber-700 text-white" : "bg-[#d9b978] text-[#6b4b10]"} transition-colors duration-300`}
-              onClick={() => navigate("/auth?tab=login&type=" + userType)}
-            >
-              GİRİŞ
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      {/* Logo section */}
-      <div className={`flex justify-center py-8 ${mounted ? "animate-fadeIn" : "opacity-0"}`}>
-        <div
-          className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-6 w-36 h-36 flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-105`}
-        >
-          <div className="relative w-28 h-28">
-            <img src="/image1.png" alt="DOY Logo" width={112} height={112} className="w-full h-full" />
-            <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-              FOOD DELIVERY
-            </div>
-          </div>
-        </div>
-      </div>
+      <DoyLogo></DoyLogo>
 
       {/* Auth Form */}
       <div className="flex-grow flex justify-center items-start p-4 w-full">
@@ -545,18 +503,6 @@ export default function AuthPage() {
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <input
-                          id="remember-me"
-                          type="checkbox"
-                          className="h-4 w-4 text-[#5c4018] focus:ring-[#5c4018] border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700"
-                          checked={rememberMe}
-                          onChange={(e) => setRememberMe(e.target.checked)}
-                        />
-                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                          Beni hatırla
-                        </label>
-                      </div>
                       <div className="text-sm">
                         <Link to="/forgot-password" className="text-[#5c4018] dark:text-amber-400 hover:underline">
                           Şifremi unuttum
@@ -657,26 +603,26 @@ export default function AuthPage() {
                     
                     
                     <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-gray-700 font-medium">
+                      <Label htmlFor="firstName" className="text-gray-700 dark:text-gray-300 font-medium">
                         Ad
                       </Label>
                       <Input
                         id="firstName"
                         placeholder="Ad"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={registerFirstName}
                         onChange={(e) => setRegisterFirstName(e.target.value)}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-gray-700 font-medium">
+                      <Label htmlFor="lastName" className="text-gray-700 dark:text-gray-300 font-medium">
                         Soyad
                       </Label>
                       <Input
                         id="lastName"
                         placeholder="Soyad"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={registerLastName}
                         onChange={(e) => setRegisterLastName(e.target.value)}
                         required
@@ -960,51 +906,7 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
-      >
-        <img
-          src="/image1.png"
-          alt="Logo alt"
-          className="h-[50px] w-[50px] rounded-full object-cover"
-        />
-
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

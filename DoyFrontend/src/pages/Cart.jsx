@@ -4,6 +4,8 @@ import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6"
 import doyLogo from "../assets/doylogo.jpeg"; // Assuming path is correct
 import { BsMoon } from "react-icons/bs";
 import AuthorizedRequest from "../services/AuthorizedRequest"; // <-- Import Axios
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const iconLinkStyle = (darkMode) => ({
     color: darkMode ? "#ffffff" : "inherit",
@@ -162,22 +164,7 @@ const Cart = () => {
 
     return (
         <form onSubmit={handleSubmit} style={{ backgroundColor: darkMode ? "#1c1c1c" : "#F2E8D6", minHeight: "100vh", display: "flex", flexDirection: "column", color: darkMode ? "#fff" : "#000" }}>
-            {/* ÜST BAR */}
-            <div style={{ backgroundColor: darkMode ? "#333" : "#47300A", padding: "0.6rem 1.5rem", color: "white", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ fontWeight: "bold", fontSize: "1.1rem", cursor: 'pointer' }} onClick={() => navigate('/')}>Doy!</div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    <div onClick={() => setDarkMode(!darkMode)} style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}>
-                        <div style={{ width: "34px", height: "18px", borderRadius: "20px", backgroundColor: "#F8F5DE", position: "relative" }}>
-                            <div style={{ width: "16px", height: "16px", borderRadius: "50%", backgroundColor: "#000", position: "absolute", top: "1px", left: darkMode ? "17px" : "1px", transition: "left 0.3s" }} />
-                        </div>
-                        <BsMoon color={darkMode ? "#ccc" : "#fff"} size={18} />
-                    </div>
-                    <div style={{ display: "flex", backgroundColor: "#F8F5DE", borderRadius: "10px", overflow: "hidden" }}>
-                        <button type="button" onClick={() => navigate("/register")} style={{ padding: "0.3rem 0.8rem", backgroundColor: "transparent", color: "#47300A", fontWeight: "bold", border: "none", borderRight: "1px solid #ccc", cursor: "pointer" }}>KAYIT</button>
-                        <button type="button" onClick={() => navigate("/login")} style={{ padding: "0.3rem 0.8rem", backgroundColor: "transparent", color: "#47300A", fontWeight: "bold", border: "none", cursor: "pointer" }}>GİRİŞ</button>
-                    </div>
-                </div>
-            </div>
+            <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
             {/* Logo bar altı */}
             <div style={{ backgroundColor: darkMode ? "#2a2a2a" : "#E7DECB", padding: "1.5rem 3rem", display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
@@ -262,13 +249,7 @@ const Cart = () => {
                     </div>
                 </div>
             </div>
-            {/* Footer */}
-            <footer style={{ marginTop: "auto", padding: "2rem", display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: darkMode ? "#1a1a1a" : "#ffffff", borderTop: `1px solid ${darkMode ? '#444' : '#ddd'}` }}>
-                <img src={doyLogo} alt="Logo alt" style={{ height: "50px", width: "50px", borderRadius: "50%", objectFit: "cover" }} />
-                <div style={{ display: "flex", gap: "1rem" }}>
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaXTwitter size={20} /></a> <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaInstagram size={20} /></a> <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaYoutube size={20} /></a> <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}><FaLinkedin size={20} /></a>
-                </div>
-            </footer>
+            <Footer darkMode={darkMode}></Footer>
         </form>
     );
 };

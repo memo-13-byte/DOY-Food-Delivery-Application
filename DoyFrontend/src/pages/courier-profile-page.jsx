@@ -10,6 +10,9 @@ import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 const Input = ({ className, ...props }) => (
   <input className={`w-full px-3 py-2 border rounded-lg ${className}`} {...props} />
@@ -224,72 +227,9 @@ export default function CourierProfilePage() {
     <div
       className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
-      <motion.header
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 100 }}
-        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center sticky top-0 z-10 shadow-md`}
-      >
-        <div className="flex items-center">
-          <Link to="/">
-            <motion.span className="font-bold text-xl" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              Doy!
-            </motion.span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div onClick={() => setDarkMode(!darkMode)} className="flex items-center gap-2 cursor-pointer">
-              <div className="w-[34px] h-[18px] bg-[#F8F5DE] rounded-full relative">
-                <div
-                  className="w-[16px] h-[16px] bg-black rounded-full absolute top-[1px]"
-                  style={{
-                    left: darkMode ? "17px" : "1px",
-                    transition: "left 0.3s",
-                  }}
-                />
-              </div>
-              <Moon className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-amber-200"}`} />
-            </div>
-          </div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`flex items-center justify-center rounded-full w-10 h-10 ${darkMode ? "bg-purple-400" : "bg-amber-500"}`}
-          >
-            <span className="text-white text-sm font-medium">
-              {courier.firstname && courier.lastname ? courier.firstname[0] + courier.lastname[0] : "K"}
-            </span>
-          </motion.div>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      <motion.div
-        className="flex justify-center py-8"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
-      >
-        <motion.div
-          className={`rounded-full ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg`}
-          whileHover={{
-            scale: 1.05,
-            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-          }}
-        >
-          <div className="relative w-24 h-24">
-            <img src="/image1.png" alt="DOY Logo" width={96} height={96} className="w-full h-full" />
-            <motion.div
-              className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              FOOD DELIVERY
-            </motion.div>
-          </div>
-        </motion.div>
-      </motion.div>
+      <DoyLogo></DoyLogo>
 
       {errorMessages.map((message, i) => (
         <motion.div
@@ -584,45 +524,7 @@ export default function CourierProfilePage() {
         </motion.div>
       </div>
 
-      <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
-      >
-        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

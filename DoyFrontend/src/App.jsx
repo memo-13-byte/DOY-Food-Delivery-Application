@@ -18,7 +18,6 @@ import NotFound from './pages/not-found';
 import CustomerProfilePage from './pages/customer-profile-page';
 import RestaurantProfilePage from './pages/restaurant-profile-page';
 import CourierProfilePage from './pages/courier-profile-page';
-import ProfileTestPageFixed from './pages/profile-test-page-fixed';
 import RestaurantDetail from './pages/RestaurantDetail.jsx';
 import RestaurantManagePage from './pages/edit-restaurant-page';
 import ForgotPassword from './pages/forgot-password';
@@ -72,7 +71,6 @@ function App() {
               <Route path="/restaurant/:id" element={<RestaurantDetail />} />
               <Route path="/restaurants/manage/edit-item/:categoryId/:itemId" element={<UpdateItemPage />} />
               <Route path="/restaurants/manage/add-item/:categoryId" element={<AddItemPage />} />
-              <Route path="/profile-test" element={<ProfileTestPageFixed />} />     
               <Route path="/admin/complaints" element={<AdminComplaintsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/account-management" element={<AdminAccountManagementPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/pending-registrations" element={<PendingRegistrationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
