@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
@@ -11,7 +9,6 @@ import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 import { add } from "date-fns"
-
 
 // Since we're having issues with the UI component imports, let's create simplified versions
 const Button = ({ className, children, ...props }) => (
@@ -167,18 +164,15 @@ export default function AuthPage() {
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [isRegisterLoading, setIsRegisterLoading] = useState(false)
   const [districts, setDistricts] = useState(DISTRICT_DATA["ISTANBUL"])
-  const [addressInfo, setAddressInfo] = useState(
-    {
-      city:"ISTANBUL",
-      neighborhood:"",
-      district:"Adalar",
-      avenue:"",
-      street:"",
-      buildingNumber:0,
-      apartmentNumber:0
-    }
-  )
-
+  const [addressInfo, setAddressInfo] = useState({
+    city: "ISTANBUL",
+    neighborhood: "",
+    district: "Adalar",
+    avenue: "",
+    street: "",
+    buildingNumber: 0,
+    apartmentNumber: 0,
+  })
 
   // Alertify state
   const [alertify, setAlertify] = useState({ show: false, message: "", type: "success" })
@@ -192,13 +186,12 @@ export default function AuthPage() {
   const handleAddressInfoChange = (e) => {
     setAddressInfo({
       ...addressInfo,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     })
   }
 
   // Update URL when tabs change
   const handleTabChange = (value) => {
-    
     setActiveTab(value)
     const newParams = new URLSearchParams(location.search)
     newParams.set("tab", value)
@@ -233,38 +226,41 @@ export default function AuthPage() {
       // For this demo, we'll just check if email and password are provided
       const response = await axios.post("http://localhost:8080/api/login/auth", {
         username: email,
-        password: password
-      });
+        password: password,
+      })
 
       localStorage.setItem("token", response.data.token) //fetch user token
       console.log(response.data.token)
 
-      const createdUser = await axios.get(`http://localhost:8080/api/users/get-by-email/${email}`,
-         { headers: { Authorization: `Bearer ${response.data.token}` } });
-        
+      const createdUser = await axios.get(`http://localhost:8080/api/users/get-by-email/${email}`, {
+        headers: { Authorization: `Bearer ${response.data.token}` },
+      })
+
       const profileId = createdUser.data.id
 
       if (userType === "restaurant") {
-        await axios.get(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
+        await axios.get(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${email}`, {
+          headers: { Authorization: `Bearer ${response.data.token}` },
+        })
+
         navigate(`/restaurant/profile/${profileId}`)
-      } else if (userType === "courier") { 
-        await axios.get(`http://localhost:8080/api/users/couriers/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
+      } else if (userType === "courier") {
+        await axios.get(`http://localhost:8080/api/users/couriers/get-by-email/${email}`, {
+          headers: { Authorization: `Bearer ${response.data.token}` },
+        })
+
         navigate(`/courier/profile/${profileId}`)
       } else {
         if (createdUser.data.role === "ADMIN") {
           navigate("/admin/complaints")
         }
-        await axios.get(`http://localhost:8080/api/users/customers/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
+        await axios.get(`http://localhost:8080/api/users/customers/get-by-email/${email}`, {
+          headers: { Authorization: `Bearer ${response.data.token}` },
+        })
+
         navigate(`/customer/profile/${profileId}`)
       }
-      } 
-    catch (error) {
+    } catch (error) {
       setErrorMessage("Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.")
       console.error("Login error:", error)
     } finally {
@@ -302,12 +298,12 @@ export default function AuthPage() {
         email: registerEmail,
         password: registerPassword,
         phoneNumber: registerPhone,
-        dtoAddress: addressInfo
+        dtoAddress: addressInfo,
       }
 
       console.log(addressInfo)
 
-      await CustomerService.RegisterCustomer(registrationInfo);
+      await CustomerService.RegisterCustomer(registrationInfo)
 
       // Mock API call - in a real app, you would send registration data to an API
       // For this demo, we'll just simulate a successful registration
@@ -318,7 +314,7 @@ export default function AuthPage() {
         setTimeout(() => {
           // Redirect to the appropriate dashboard based on user type
           try {
-            navigate("/");
+            navigate("/")
           } catch (error) {
             console.error("Navigation error:", error)
             // Fallback - if navigation fails, try direct location change
@@ -327,16 +323,16 @@ export default function AuthPage() {
         }, 2000) // Wait 2 seconds before redirecting so the user can see the message
       }, 1000) // Simulate network delay
     } catch (error) {
-      
       setErrorMessages(getResponseErrors(error))
       console.error("Registration error:", error)
     } finally {
       setIsRegisterLoading(false)
     }
   }
-  const getLabelClassName = (darkMode) => `${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`
-  const getInputClassName = (darkMode) => `${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`
-
+  const getLabelClassName = (darkMode) =>
+    `${darkMode ? "text-gray-300" : "text-gray-600"} text-sm flex items-center gap-2`
+  const getInputClassName = (darkMode) =>
+    `${darkMode ? "bg-gray-700 border-gray-600 focus:border-amber-400 text-white" : "bg-amber-50 border-amber-100 focus:border-amber-300"} focus:ring-amber-200 transition-all duration-200 group-hover:border-amber-300`
 
   // Helper function to change user type
   const changeUserType = (newType) => {
@@ -372,9 +368,9 @@ export default function AuthPage() {
 
   const onCityDropdownValueChanged = (event) => {
     const value = event.target.value
-      setDistricts(DISTRICT_DATA[value])
-      addressInfo.city = value
-      addressInfo.district = DISTRICT_DATA[value][0]
+    setDistricts(DISTRICT_DATA[value])
+    addressInfo.city = value
+    addressInfo.district = DISTRICT_DATA[value][0]
   }
 
   const onDistrictDropdownValueChanged = (event) => {
@@ -471,7 +467,7 @@ export default function AuthPage() {
       <div className="flex-grow flex justify-center items-start p-4 w-full">
         <div className="w-full md:w-3/4 lg:w-2/3 xl:w-3/5 bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg transition-colors duration-300 mx-auto">
           <h2 className="text-center text-2xl font-semibold text-[#6b4b10] dark:text-amber-400 mb-8 transition-colors duration-300">
-            {getTitle()} Girişi
+            {activeTab === "login" ? `${getTitle()} Giriş` : `${getTitle()} Kayıt`}
           </h2>
 
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
@@ -641,37 +637,36 @@ export default function AuthPage() {
                     className="space-y-4"
                   >
                     {errorMessages.map((message, i) => (
-                        
-                          <motion.div key={i}
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
-                          >
-                            <div className="flex">
-                              <div className="py-1">
-                                <svg 
-                                  className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                  />
-                                </svg>
-                              </div>
-                              <div>
-                                <p className="font-medium">{message}</p>
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                    
-                    
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm dark:bg-red-900/30 dark:text-red-400"
+                      >
+                        <div className="flex">
+                          <div className="py-1">
+                            <svg
+                              className="h-6 w-6 text-red-500 dark:text-red-400 mr-4"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className="font-medium">{message}</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+
                     <div className="space-y-2">
                       <Label htmlFor="firstName" className="text-gray-700 font-medium">
                         Ad
@@ -724,74 +719,74 @@ export default function AuthPage() {
                         onChange={(e) => setRegisterPhone(e.target.value.toString())}
                         required
                       />
-                      
                     </div>
-                        <div className="m-2">
-                        <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
-                            İl
-                        </label>
-                        <div className="relative">
-                            <select
-                                id="dropdown"
-                                name="dropdown1"
-                                className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
-                                onChange={onCityDropdownValueChanged}
-                            >
-                              
-                                {TURKISH_CITIES.map((option) => (
-                                    <option key={option.value} value={option.value} disabled={option.value === ""}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                            <svg
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                viewBox="0 0 24 24"
-                            >
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </div></div>
-                        <div className="m-2">
-                        <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
-                            İlçe
-                        </label>
-                        <div className="relative">
-                            <select
-                                id="dropdown2"
-                                name="dropdown"
-                                onChange={onDistrictDropdownValueChanged}
-                                className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
-                            >
-                                <option value="" disabled>Seçiniz</option>
-                                {districts.map((option) => (
+                    <div className="m-2">
+                      <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
+                        İl
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="dropdown"
+                          name="dropdown1"
+                          className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                          onChange={onCityDropdownValueChanged}
+                        >
+                          {TURKISH_CITIES.map((option) => (
+                            <option key={option.value} value={option.value} disabled={option.value === ""}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          viewBox="0 0 24 24"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="m-2">
+                      <label htmlFor="dropdown" className="block text-base text-gray-800 mb-1">
+                        İlçe
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="dropdown2"
+                          name="dropdown"
+                          onChange={onDistrictDropdownValueChanged}
+                          className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                        >
+                          <option value="" disabled>
+                            Seçiniz
+                          </option>
+                          {districts.map((option) => (
+                            <option key={option} value={option} disabled={option.value === ""}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          viewBox="0 0 24 24"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                    </div>
 
-                                    <option key={option} value={option} disabled={option.value === ""}>
-                                      
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
-                            <svg
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                viewBox="0 0 24 24"
-                            >
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </div></div>
-
-                        <div className="space-y-3">
+                    <div className="space-y-3">
                       <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
                         Mahalle
                       </Label>
@@ -803,9 +798,6 @@ export default function AuthPage() {
                         onChange={handleAddressInfoChange}
                         required
                       />
-
-                      
-                      
                     </div>
 
                     <div className="space-y-3">
@@ -820,9 +812,6 @@ export default function AuthPage() {
                         onChange={handleAddressInfoChange}
                         required
                       />
-
-                      
-                      
                     </div>
 
                     <div className="space-y-3">
@@ -837,11 +826,7 @@ export default function AuthPage() {
                         onChange={handleAddressInfoChange}
                         required
                       />
-
-                      
-                      
                     </div>
-                        
 
                     <div className="space-y-3">
                       <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
@@ -855,11 +840,7 @@ export default function AuthPage() {
                         onChange={handleAddressInfoChange}
                         required
                       />
-
-                      
-                      
                     </div>
-                    
 
                     <div className="space-y-3">
                       <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300 font-medium">
@@ -873,11 +854,8 @@ export default function AuthPage() {
                         onChange={handleAddressInfoChange}
                         required
                       />
-
-                      
-                      
                     </div>
-                  
+
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-gray-700 dark:text-gray-300 font-medium">
                         Şifre
@@ -893,7 +871,6 @@ export default function AuthPage() {
                       />
                     </div>
 
-                    
                     <div className="space-y-2">
                       <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300 font-medium">
                         Şifre Tekrar
@@ -980,11 +957,7 @@ export default function AuthPage() {
       <footer
         className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
       >
-        <img
-          src="/image1.png"
-          alt="Logo alt"
-          className="h-[50px] w-[50px] rounded-full object-cover"
-        />
+        <img src="/image1.png" alt="Logo alt" className="h-[50px] w-[50px] rounded-full object-cover" />
 
         <div className="flex gap-6">
           <a
