@@ -168,7 +168,7 @@ export default function OrderTrackingPage() {
 
     // Fetch orders for the specific restaurant
     const fetchOrders = async () => {
-        const restaurantOwner = await getUserByEmail(restaurantEmail);
+        const restaurantOwner = AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`);
         console.log(restaurantOwner);
         setRestaurantId(restaurantOwner.id);
 

@@ -85,7 +85,7 @@ public class UserController implements IUserController{
     @Override
     @GetMapping("/customers/get-by-email/{email}")
     public ResponseEntity<DtoCustomer> getCustomerByEmail(@PathVariable(name = "email")String email) {
-        if (!jwtService.getUserEmail().equals(email)) throw new UnauthorizedRequestException();
+        if (!jwtService.getUserEmail().equals(email) || !jwtService.checkIfUserRole(UserRoles.CUSTOMER, UserRoles.ADMIN)) throw new UnauthorizedRequestException();
         return ResponseEntity.ok(userService.getCustomerByEmail(jwtService.getUserEmail()));
     }
 

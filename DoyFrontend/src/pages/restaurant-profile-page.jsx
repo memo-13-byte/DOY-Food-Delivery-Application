@@ -56,7 +56,7 @@ export default function RestaurantProfilePage() {
   useEffect(() => {
     console.log("yetr")
     const loadRestaurantOwnerById = async () => {
-      const response = await getUserByEmail(restaurantEmail);
+      const response = AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)
 
       const data = {
         firstname: response.firstname,

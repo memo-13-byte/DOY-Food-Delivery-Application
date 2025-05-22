@@ -83,7 +83,7 @@ export default function CustomerProfilePage() {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const userData = await getUserByEmail(customerEmail)
+        const userData = AuthorizedRequest.getRequest(`http://localhost:8080/api/users/customers/get-by-email/${customerEmail}`);
         userData.name = userData.firstname + " " + userData.lastname
         setUser(userData)
         setFormData({

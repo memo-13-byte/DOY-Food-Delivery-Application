@@ -81,7 +81,7 @@ export default function AddItemPage() {
 
   // Load item data if in edit mode
   useEffect(() => {
-    getUserByEmail(restaurantEmail).then((response) => {setRestaurantId(response.id)});
+    AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`).then((response) => {setRestaurantId(response.id)});
     if (isEditMode && itemId) {
       setIsLoading(true)
       // In a real app, fetch the item data from API
