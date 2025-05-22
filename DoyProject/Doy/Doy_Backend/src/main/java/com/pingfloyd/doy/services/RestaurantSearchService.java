@@ -1,6 +1,7 @@
 package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.RestaurantRequest;
+import com.pingfloyd.doy.entities.Customer;
 import com.pingfloyd.doy.entities.Restaurant;
 import com.pingfloyd.doy.enums.CityEnum;
 import com.pingfloyd.doy.other.RestaurantSpecification;
@@ -13,17 +14,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.StringUtils;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class RestaurantSearchService {
     private final RestaurantRepository restaurantRepository;
+    private final UserService userService;
     private final int DataLimit = 10;
 
     @Autowired
-    public RestaurantSearchService(RestaurantRepository restaurantRepository){
+    public RestaurantSearchService(RestaurantRepository restaurantRepository, UserService userService){
         this.restaurantRepository = restaurantRepository;
+        this.userService = userService;
     }
 
 
@@ -32,11 +38,20 @@ public class RestaurantSearchService {
     public Page<RestaurantRequest> searchRestaurants(
             String name, Float minRating, Double maxMinOrderPrice, String cuisine,String districtName,
             CityEnum city,
-            int page, int size, String sortBy, String sortDirection) {
+            int page, int size, String sortBy, String sortDirection,String username) {
 
-        Specification<Restaurant> spec = RestaurantSpecification.filterBy(
-                name, minRating, maxMinOrderPrice, cuisine ,districtName ,city
-        );
+        Customer customer = userService.SearchCustomer(username);
+        Specification<Restaurant> spec = null;
+        if(customer == null || city != null ){
+            spec = RestaurantSpecification.filterBy(
+                    name, minRating, maxMinOrderPrice, cuisine ,districtName ,city
+            );
+        }
+        else{
+            spec = RestaurantSpecification.filterBy(
+                    name, minRating, maxMinOrderPrice, cuisine ,customer.getCurrent_address().getDistrict().getName() ,customer.getCurrent_address().getCityEnum()
+            );
+        }
         int pageSize = (size <= 0) ? DataLimit : size;
         int pageNum = Math.max(page, 0);
         Sort sort = Sort.unsorted(); // Default: no sorting

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,12 +44,13 @@ public class RestaurantSearchController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String sortBy,
             @RequestParam(defaultValue = "ASC") String sortDirection) {
-
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         return restaurantService.searchRestaurants(
+
                 name, minRating, maxMinOrderPrice, cuisine,
                 districtName,
                 city, // <--- PASS IT TO THE SERVICE METHOD
-                page, size, sortBy, sortDirection
+                page, size, sortBy, sortDirection , username
         );
     }
 

@@ -143,6 +143,7 @@ public class UserService implements UserDetailsService, IUserService {
         for (Customer customer: dbCustomers) {
             DtoCustomer dtoCustomer = new DtoCustomer();
             BeanUtils.copyProperties(customer, dtoCustomer);
+            dtoCustomer.setAllergens(customer.getAllergens().stream().toList());
             dtoCustomers.add(dtoCustomer);
         }
         return dtoCustomers;
@@ -156,6 +157,7 @@ public class UserService implements UserDetailsService, IUserService {
         }
         DtoUser dtoUser = new DtoUser();
         BeanUtils.copyProperties(user.get(), dtoUser);
+
         return dtoUser;
     }
 
@@ -178,6 +180,7 @@ public class UserService implements UserDetailsService, IUserService {
         }
         DtoCustomer dtoCustomer = new DtoCustomer();
         BeanUtils.copyProperties(customer.get(), dtoCustomer);
+        dtoCustomer.setAllergens(customer.get().getAllergens().stream().toList());
         return dtoCustomer;
     }
 
@@ -215,6 +218,7 @@ public class UserService implements UserDetailsService, IUserService {
         }
         Customer savedCustomer = customer.get();
         BeanUtils.copyProperties(dtoCustomerIU, savedCustomer);
+        savedCustomer.setAllergens(new HashSet<>(dtoCustomerIU.getAllergens()));
 
         BeanUtils.copyProperties(dtoCustomerIU.getCurrent_address(), savedCustomer.getCurrent_address());
 
@@ -226,6 +230,7 @@ public class UserService implements UserDetailsService, IUserService {
         savedCustomer = customerRepository.save(savedCustomer);
         DtoCustomer dtoCustomer = new DtoCustomer();
         BeanUtils.copyProperties(savedCustomer, dtoCustomer);
+        dtoCustomer.setAllergens(savedCustomer.getAllergens().stream().toList());
         return dtoCustomer;
     }
 
