@@ -27,12 +27,12 @@ const ActionButtons = ({ selected, type, darkMode, setToast, updateUserOrRestaur
             console.log(selected);
             if (selected && selected.type) {
                 if (selected.type === "COURIER") {
-                    navigate(`/courier/profile`);
+                    navigate(`/courier/profile/${selected.id}`);
                 } else if (selected.type === "RESTAURANT_OWNER") {
-                    navigate(`/restaurant/profile`);
+                    navigate(`/restaurant/profile/${selected.id}`);
                 }
                 else if(selected.type === "Restaurant"){
-                    navigate(`/restaurants/manage`);
+                    navigate(`/restaurants/manage/${selected.id}`);
                 }
                 else {
                     console.warn(`Unhandled role for navigation: ${selected.role}`);

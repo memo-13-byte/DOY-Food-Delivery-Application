@@ -28,7 +28,6 @@ import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
-import { getUserByEmail } from "../services/profileData"
 
 export default function UpdateItemPage() {
   const navigate = useNavigate()
@@ -82,7 +81,9 @@ export default function UpdateItemPage() {
   // Load item data if in edit mode
   useEffect(() => {
     if (isEditMode && itemId) {
-      getUserByEmail(restaurantEmail).then((response) => {setRestaurantId(response.id)});
+      (AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).then(
+(response) => {setRestaurantId(response.data.id)}
+      );
       setIsLoading(true)
       // In a real app, fetch the item data from API
       AuthorizedRequest

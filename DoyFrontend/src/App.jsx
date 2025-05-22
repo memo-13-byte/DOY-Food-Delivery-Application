@@ -63,11 +63,11 @@ function App() {
               <Route path="/payment-result" element={<PaymentResult />} />
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/restaurants/register" element={<RestaurantRegisterPage />} />
-              <Route path="/restaurant/profile" element={<RestaurantProfilePage />} />
+              <Route path="/restaurant/profile/:id?" element={<RestaurantProfilePage />} />
               <Route path="/courier/requests" element={<CourierOrdersPage/>} />
               <Route path="/couriers/register" element={<CourierRegisterPage />} />
-              <Route path="/courier/profile" element={<CourierProfilePage />} />
-              <Route path="/restaurants/manage" element={<RestaurantManagePage />} />
+              <Route path="/courier/profile/:id?" element={<CourierProfilePage />} />
+              <Route path="/restaurants/manage/:id?" element={<RestaurantManagePage />} />
               <Route path="/restaurant/:id" element={<RestaurantDetail />} />
               <Route path="/restaurants/manage/edit-item/:categoryId/:itemId" element={<UpdateItemPage />} />
               <Route path="/restaurants/manage/add-item/:categoryId" element={<AddItemPage />} />

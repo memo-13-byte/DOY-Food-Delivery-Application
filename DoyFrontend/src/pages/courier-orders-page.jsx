@@ -10,7 +10,7 @@ import {
     Bike
 } from "lucide-react"
 import { motion } from "framer-motion"
-import { getUserByEmail } from "../services/profileData";
+
 
 // --- Custom UI components (Assume Button, Label, Switch are defined correctly) ---
 const Button = ({ className, children, type = "button", disabled = false, ...props }) => {
@@ -46,7 +46,7 @@ export default function CourierOrdersPage() {
     
     useEffect(() => {
         const getCourier = async() => {
-            const response = await getUserByEmail(courierEmail);
+            const response = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${courierEmail}`)).data;
             setCourierId(response.id);
         }
         getCourier();

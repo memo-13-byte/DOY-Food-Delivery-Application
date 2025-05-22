@@ -29,7 +29,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import axios from "axios"
-import { getUserByEmail } from "../services/profileData"
 export default function AddItemPage() {
   const navigate = useNavigate()
   const location = useLocation()

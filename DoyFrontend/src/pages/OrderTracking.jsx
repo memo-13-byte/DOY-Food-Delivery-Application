@@ -10,7 +10,6 @@ import RestaurantNavbar from "../components/RestaurantNavbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/Button";
 import CourierAssignModal from "../components/CourierAssignModal"; // Make sure this path is correct
-import { getUserByEmail } from "../services/profileData";
 
 // Define the OrderStatus enum values matching your backend
 const OrderStatus = {
@@ -168,7 +167,7 @@ export default function OrderTrackingPage() {
 
     // Fetch orders for the specific restaurant
     const fetchOrders = async () => {
-        const restaurantOwner = AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`);
+        const restaurantOwner = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).data;
         console.log(restaurantOwner);
         setRestaurantId(restaurantOwner.id);
 
