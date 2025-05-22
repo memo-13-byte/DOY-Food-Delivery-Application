@@ -230,7 +230,9 @@ public class OrderService {
         for(Courier c : couriers){
             if(c.getIsAvailable()){
                 DtoCourierForOrder dtoCourierForOrder = MapDtoCourierForOrder(c);
+                dtoCourierForOrder.setRating(c.getRating());
                 courierForOrderList.add(dtoCourierForOrder);
+
             }
         }
         return courierForOrderList;
