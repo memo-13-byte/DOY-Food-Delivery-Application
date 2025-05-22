@@ -3,7 +3,11 @@ package com.pingfloyd.doy.controllers;
 
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.User;
+import com.pingfloyd.doy.entities.UserRoles;
+import com.pingfloyd.doy.exception.UnauthorizedRequestException;
+import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.services.OrderService;
+import com.pingfloyd.doy.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +24,15 @@ public class OrderController {
 
     private final OrderService orderService;
     private final User user;
+    private final JwtService jwtService;
+    private final UserService userService;
 
     @Autowired
-    public OrderController(OrderService orderService, User user) {
+    public OrderController(OrderService orderService, User user, JwtService jwtService, UserService userService) {
         this.orderService = orderService;
         this.user = user;
+        this.jwtService = jwtService;
+        this.userService = userService;
     }
     @GetMapping("/me")
     public String testUser(){
@@ -134,6 +142,14 @@ public class OrderController {
     @GetMapping("/details/get-user-info/{id}")
     public ResponseEntity<DtoOrderUserInformation> GetOrderUserInformation(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(orderService.GetOrderUserInformation(id));
+    }
+
+    @GetMapping("/details/get-orders-of/{email}")
+    public ResponseEntity<List<DtoOrderDetails>> getPastOrdersOfCustomer(@PathVariable(name = "email") String email) {
+        if (true || (jwtService.checkIfUserRole(UserRoles.CUSTOMER) && jwtService.getUserEmail().equals(email))) {
+            return ResponseEntity.ok(orderService.getPastOrdersOfCustomer(email));
+        }
+        throw new UnauthorizedRequestException();
     }
 
 

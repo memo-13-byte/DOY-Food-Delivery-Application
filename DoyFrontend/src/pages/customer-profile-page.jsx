@@ -349,8 +349,7 @@ export default function CustomerProfilePage() {
                 Profil Bilgileri
               </button>
               <button
-                disabled
-                onClick={() => setActiveTab("orders")}
+                onClick={() => navigate("/customer/past-orders")}
                 className={`py-2 px-4 text-center transition-colors duration-200 ${
                   activeTab === "orders"
                     ? darkMode
