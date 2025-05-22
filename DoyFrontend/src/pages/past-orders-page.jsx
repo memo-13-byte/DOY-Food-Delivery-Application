@@ -49,7 +49,10 @@ const Switch = ({ checked, onCheckedChange, className }) => {
   );
 };
 
-const OrderCard = ({ order, darkMode, onViewDetails }) => {
+
+
+
+const OrderCard = ({ order, darkMode }) => {
     const navigate = useNavigate();
   return (
     <div
@@ -66,6 +69,7 @@ const OrderCard = ({ order, darkMode, onViewDetails }) => {
           <Package className="w-6 h-6" />
         </div>
       </div>
+      
       <div className="flex-1">
         <div className="flex items-center justify-between">
           <div className={`font-semibold ${darkMode ? "text-amber-300" : "text-amber-800"}`}>
@@ -75,6 +79,7 @@ const OrderCard = ({ order, darkMode, onViewDetails }) => {
             {order.deliveryDate}
           </div>
         </div>
+
         <div className="mt-2">
           <Button
             onClick={() => {
@@ -102,6 +107,7 @@ const OrderCard = ({ order, darkMode, onViewDetails }) => {
 const OrderSection = ({ title, orders, darkMode, onViewDetails }) => {
   return (
     <div className="space-y-4">
+        {/* --- Order Detail Modal --- */}
       <h2
         className={`text-lg font-semibold border-b pb-2 mb-4 ${
           darkMode ? "border-gray-700 text-amber-400" : "border-gray-300 text-amber-700"
@@ -118,10 +124,9 @@ const OrderSection = ({ title, orders, darkMode, onViewDetails }) => {
       ) : (
         orders.map((order) => (
           <OrderCard
-            key={order.id}
+            key={order.orderId}
             order={order}
             darkMode={darkMode}
-            onViewDetails={onViewDetails}
           />
         ))
       )}
@@ -136,6 +141,7 @@ export default function PastOrdersPage() {
   const customerEmail = localStorage.getItem("email");
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     setMounted(true);

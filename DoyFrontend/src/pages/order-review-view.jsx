@@ -19,8 +19,20 @@ import {
 import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from "react-router-dom";
 import { CommentSection } from "../components/CommentSection";
+import { OrderDetailModal } from "./courier-order-tracking";
 
-
+const Button = ({ className, children, type = "button", disabled = false, ...props }) => {
+  return (
+    <button
+      type={type}
+      disabled={disabled}
+      className={`inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
 
 const Switch = ({ checked, onCheckedChange, className }) => {
   return (
@@ -80,9 +92,71 @@ export default function CommentPage() {
   const { id: orderId } = useParams()
   const [customerId, setCustomerId] = useState(0)
 
+    const [selectedOrderDetail, setSelectedOrderDetail] = useState(null)
+  const [detailLoading, setDetailLoading] = useState(false)
+  const [detailError, setDetailError] = useState(null)
+  const [showModal, setShowModal] = useState(false)
+  const [orderIdInformation, setOrderIdInformation] = useState(null)
+
+  const handleShowDetailsClick = () => {
+    console.log(orderId)
+    if (orderId) {
+      fetchOrderDetails(orderId)
+    } else {
+      setDetailError("Sipariş ID URL'de bulunamadı.")
+    }
+  }
+
+   const fetchOrderDetails = async (orderId) => {
+      
+      if (!orderId) {
+        setDetailError("Sipariş ID sağlanmadı.")
+        setDetailLoading(false)
+        return
+      }
+      
+      setDetailLoading(true)
+      setDetailError(null)
+      setSelectedOrderDetail(null)
+      
+      const url = `http://localhost:8080/order/details/${orderId}`
+      console.log(selectedOrderDetail)
+      try {
+        
+        const response = await AuthorizedRequest.getRequest(url)
+        if (response.data) {
+          setSelectedOrderDetail(response.data)
+          
+          setShowModal(true) // Show modal after fetching
+          
+        } else {
+          setDetailError("Sipariş detayları bulunamadı.")
+          setSelectedOrderDetail({ orderId })
+        }
+      } catch (err) {
+        setDetailError(
+          `Sipariş detayları yüklenirken hata: ${
+            err.response?.data?.message || err.message || "Bilinmeyen Hata"
+          }`
+        )
+        setSelectedOrderDetail({ orderId })
+      } finally {
+        setDetailLoading(false)
+        
+      }
+    }
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Handler to close modal
+  const closeDetailModal = () => {
+    setShowModal(false)
+    setSelectedOrderDetail(null)
+    setDetailLoading(false)
+    setDetailError(null)
+  }
 
   useEffect(() => {
     const getComments = async () => {
@@ -222,8 +296,11 @@ export default function CommentPage() {
         </div>
       </div>
 
+     
+
       {/* Comment Sections */}
       <div className="flex-grow flex justify-center items-start px-4 pb-12">
+         
         <div
           className={`w-full max-w-2xl ${
             darkMode ? "bg-gray-800" : "bg-white"
@@ -237,6 +314,23 @@ export default function CommentPage() {
             Order Review
           </h1>
           <div className="space-y-8">
+            <Button
+                  onClick={handleShowDetailsClick}
+                  disabled={detailLoading}
+                  className={`w-full mb-6 ${darkMode ? "bg-amber-500 hover:bg-amber-600 text-gray-900" : "bg-amber-300 hover:bg-amber-400 text-amber-800"} font-medium transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2 h-11 px-4 py-2`}
+                >
+                  {detailLoading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Yükleniyor...
+                    </>
+                  ) : (
+                    <>
+                      Sipariş Detaylarını Görüntüle
+                      <ChevronRight className="h-4 w-4" />
+                    </>
+                  )}
+                </Button>
             <CommentSection
               title="Restaurant Review"
               comments={[restaurantComment]}
@@ -260,6 +354,17 @@ export default function CommentPage() {
           </div>
         </div>
       </div>
+
+      {/* --- Order Detail Modal --- */}
+            {showModal && (
+              <OrderDetailModal
+                orderDetails={selectedOrderDetail}
+                onClose={closeDetailModal}
+                isLoading={detailLoading}
+                error={detailError}
+                darkMode={darkMode}
+              />
+            )}
 
       {/* Footer */}
       <footer
