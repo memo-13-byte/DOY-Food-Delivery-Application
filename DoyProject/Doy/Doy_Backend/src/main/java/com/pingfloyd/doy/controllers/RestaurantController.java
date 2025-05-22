@@ -2,6 +2,7 @@ package com.pingfloyd.doy.controllers;
 
 import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
+import com.pingfloyd.doy.dto.RestaurantRequest;
 import com.pingfloyd.doy.services.RestaurantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,4 +66,12 @@ public class RestaurantController implements IRestaurantController {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         return ResponseEntity.ok(restaurantService.setFavoriteRestaurant(username, restaurantId));
     }
+
+    @GetMapping("/favorite")
+    public ResponseEntity<List<RestaurantRequest>> getCustomerFavorites() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        List<RestaurantRequest> favoriteRestaurants = restaurantService.getCustomerFavorites(username);
+        return ResponseEntity.ok(favoriteRestaurants);
+    }
+
 }

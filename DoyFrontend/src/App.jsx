@@ -16,6 +16,7 @@ import RestaurantRegisterPage from './pages/restaurant-register-page';
 import CourierRegisterPage from './pages/courier-register-page';
 import NotFound from './pages/not-found';
 import CustomerProfilePage from './pages/customer-profile-page';
+import FavoriteRestaurantPage from './pages/favorite-restaurant-page';
 import RestaurantProfilePage from './pages/restaurant-profile-page';
 import CourierProfilePage from './pages/courier-profile-page';
 import ProfileTestPageFixed from './pages/profile-test-page-fixed';
@@ -65,6 +66,7 @@ function App() {
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/restaurants/register" element={<RestaurantRegisterPage />} />
               <Route path="/restaurant/profile/:id?" element={<RestaurantProfilePage />} />
+              <Route path="/restaurants/favorite" element={<FavoriteRestaurantPage />} />
               <Route path="/restaurantowner/profile/:id?" element={<RestaurantOwnerProfilePage/>} />
               <Route path="/courier/requests/:id?" element={<CourierOrdersPage/>} />
               <Route path="/couriers/register" element={<CourierRegisterPage />} />

@@ -228,9 +228,17 @@ export default function CustomerProfilePage() {
     },
   }
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
+const toggleDarkMode = () => {
+  const newDarkMode = !darkMode;
+  setDarkMode(newDarkMode);
+  if (newDarkMode) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
   }
+  // Optional: persist the theme in localStorage
+  localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
+};
 
   return (
     <div
@@ -392,15 +400,22 @@ export default function CustomerProfilePage() {
                 </motion.div>
               ))}
 
-<motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               onClick={() => {navigate("/restaurants/browse")}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+              className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
-              Browse Restaurants
+              Restoranları Gez
             </Button>
           </motion.div>
-
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={() => {navigate("/restaurants/favorite")}}
+              className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+            >
+              Favori Restoranlarım
+            </Button>
+          </motion.div>
               {activeTab === "profile" && (
                 <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
                   {/* Personal Information */}
@@ -493,8 +508,8 @@ export default function CustomerProfilePage() {
                       </div>
                     </div>
 
-                    <div className="m-2">
-                      <label htmlFor="cityDropdown" className="block text-base text-gray-800 mb-1">
+                    <div className="space-y-3">
+                      <label htmlFor="cityDropdown" className="block text-base text-gray-800 dark:text-gray-200 mb-1">
                         İl
                       </label>
                       <div className="relative">
@@ -503,7 +518,7 @@ export default function CustomerProfilePage() {
                           name="city"
                           value={addressInfo.city}
                           onChange={onCityDropdownValueChanged}
-                          className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                          className="w-full px-3 py-2 border rounded-lg text-base border border-gray-300 rounded-lg bg-[#f5f2e9] dark:bg-gray-700 text-gray-800 dark:text-white appearance-none focus:outline-none focus:border-gray-500"
                         >
                           {TURKISH_CITIES.map((option) => (
                             <option key={option.value} value={option.value} disabled={option.value === ""}>
@@ -525,8 +540,8 @@ export default function CustomerProfilePage() {
                         </svg>
                       </div>
                     </div>
-                    <div className="m-2">
-                      <label htmlFor="districtDropdown" className="block text-base text-gray-800 mb-1">
+                    <div className="space-y-3">
+                      <label htmlFor="districtDropdown" className="block text-base text-gray-800 dark:text-gray-200 mb-1">
                         İlçe
                       </label>
                       <div className="relative">
@@ -535,7 +550,7 @@ export default function CustomerProfilePage() {
                           name="district"
                           value={addressInfo.district}
                           onChange={onDistrictDropdownValueChanged}
-                          className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
+                          className="w-full px-3 py-2 border rounded-lg text-base border border-gray-300 rounded-lg bg-[#f5f2e9] dark:bg-gray-700 text-gray-800 dark:text-white appearance-none focus:outline-none focus:border-gray-500"
                         >
                           {districts.map((option) => (
                             <option key={option} value={option}>
@@ -544,7 +559,7 @@ export default function CustomerProfilePage() {
                           ))}
                         </select>
                         <svg
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 dark:text-gray-200 pointer-events-none"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           stroke="currentColor"
@@ -636,9 +651,7 @@ export default function CustomerProfilePage() {
                     <button
                       onClick={handleProfileUpdate}
                       className={`w-full py-2 px-4 rounded-md font-medium mb-4 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
-                        darkMode
-                          ? "bg-amber-500 hover:bg-amber-600 text-gray-900"
-                          : "bg-amber-400 hover:bg-amber-500 text-amber-900"
+                        darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"
                       }`}
                     >
                       Güncelle
