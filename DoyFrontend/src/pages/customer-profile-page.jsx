@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { Moon, Edit2, AlertTriangle, User, Phone, Mail, MapPin, LogOut, Check, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { getCustomerById, getUserById } from "../services/profileData"
+import { getCustomerById, getUserByEmail, getUserById } from "../services/profileData"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 import { Button } from "../components/Button"
@@ -25,7 +25,7 @@ export default function CustomerProfilePage() {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const customerId = params.id
+  const [customerEmail, setCustomerEmail] = useState(localStorage.getItem("email"))
   const [darkMode, setDarkMode] = useState(false)
   const [activeTab, setActiveTab] = useState("profile")
   const [isLoaded, setIsLoaded] = useState(false)
@@ -77,9 +77,13 @@ export default function CustomerProfilePage() {
   )
 
   useEffect(() => {
+    
+  })
+
+  useEffect(() => {
     const loadUser = async () => {
       try {
-        const userData = await getUserById(customerId)
+        const userData = await getUserByEmail(customerEmail)
         userData.name = userData.firstname + " " + userData.lastname
         setUser(userData)
         setFormData({
@@ -108,7 +112,7 @@ export default function CustomerProfilePage() {
     }
 
     loadUser()
-  }, [customerId])
+  }, [customerEmail])
 
   const onCityDropdownValueChanged = (event) => {
     const value = event.target.value
@@ -153,7 +157,7 @@ export default function CustomerProfilePage() {
       }
       console.log("updated: ")
       console.log(putData)
-      const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
+      const response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
       
       setUser({
         ...user,
@@ -190,7 +194,7 @@ export default function CustomerProfilePage() {
     const { id, value } = e.target
     setAddressInfo(prev => ({
       ...prev,
-      [id]: id === 'buildingNumber' || id === 'apartmentNumber' ? Number(value) : value
+      [id]: value
     }))
   }
 
@@ -325,7 +329,7 @@ export default function CustomerProfilePage() {
           className={`w-full md:w-4/5 max-w-5xl ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-xl p-6 shadow-xl`}
         >
           <h1 className={`text-2xl font-bold ${darkMode ? "text-amber-400" : "text-amber-800"} text-center mb-6`}>
-            Hesap Profilim - Müşteri {customerId ? `(ID: ${customerId})` : ""}
+            Hesap Profilim - Müşteri 
           </h1>
 
           {/* Tabs */}

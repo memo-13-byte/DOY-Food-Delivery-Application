@@ -24,7 +24,6 @@ import RestaurantManagePage from './pages/edit-restaurant-page';
 import ForgotPassword from './pages/forgot-password';
 import UpdateItemPage from './pages/update-item-page';
 import AddItemPage from './pages/add-item-page';
-import RestaurantOwnerProfilePage from "./pages/restaurant-owner-profile-page";
 import CourierOrdersPage from "./pages/courier-orders-page";
 import AdminComplaintsPage from './pages/AdminComplaintsPage.jsx';
 import AdminAccountManagementPage from './pages/AdminAccountManagementPage.jsx';
@@ -57,34 +56,33 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/customer/profile/:id?" element={<CustomerProfilePage />} />
+              <Route path="/customer/profile" element={<CustomerProfilePage />} />
               <Route path="/restaurants/browse" element={<Home />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/payment-result" element={<PaymentResult />} />
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/restaurants/register" element={<RestaurantRegisterPage />} />
-              <Route path="/restaurant/profile/:id?" element={<RestaurantProfilePage />} />
-              <Route path="/restaurantowner/profile/:id?" element={<RestaurantOwnerProfilePage/>} />
-              <Route path="/courier/requests/:id?" element={<CourierOrdersPage/>} />
+              <Route path="/restaurant/profile" element={<RestaurantProfilePage />} />
+              <Route path="/courier/requests" element={<CourierOrdersPage/>} />
               <Route path="/couriers/register" element={<CourierRegisterPage />} />
-              <Route path="/courier/profile/:id?" element={<CourierProfilePage />} />
-              <Route path="/restaurants/manage/:id?" element={<RestaurantManagePage />} />
+              <Route path="/courier/profile" element={<CourierProfilePage />} />
+              <Route path="/restaurants/manage" element={<RestaurantManagePage />} />
               <Route path="/restaurant/:id" element={<RestaurantDetail />} />
-              <Route path="/restaurants/manage/:id/edit-item/:categoryId/:itemId" element={<UpdateItemPage />} />
-              <Route path="/restaurants/manage/:id/add-item/:categoryId" element={<AddItemPage />} />
+              <Route path="/restaurants/manage/edit-item/:categoryId/:itemId" element={<UpdateItemPage />} />
+              <Route path="/restaurants/manage/add-item/:categoryId" element={<AddItemPage />} />
               <Route path="/profile-test" element={<ProfileTestPageFixed />} />     
               <Route path="/admin/complaints" element={<AdminComplaintsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/account-management" element={<AdminAccountManagementPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/pending-registrations" element={<PendingRegistrationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/platform-configurations" element={<PlatformConfigurationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />         
-              <Route path="/restaurant/profile/:id/orders" element={<OrderTrackingPage />} />
-              <Route path="/restaurant/profile/:id/orders-status" element={<OrderStatusRestaurant />} />
+              <Route path="/restaurant/profile/orders" element={<OrderTrackingPage />} />
+              <Route path="/restaurant/profile/orders-status" element={<OrderStatusRestaurant />} />
               <Route path="/courier/profile/:id/orders" element={<OrderStatusCourier />} />
               <Route path="/order/:id/review" element={<OrderReviewPage />} />
               <Route path="/order/:id/comment" element={<CommentPage />} />
-              <Route path="/courier/profile/:id/comments" element={<CourierCommentPage />} />
-              <Route path="/restaurant/profile/:id/comments" element={<RestaurantCommentPage />} />
+              <Route path="/courier/profile/comments" element={<CourierCommentPage />} />
+              <Route path="/restaurant/profile/comments" element={<RestaurantCommentPage />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>

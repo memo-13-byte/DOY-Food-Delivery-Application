@@ -7,10 +7,10 @@ import { Button } from "../components/ui/button"
 import { Checkbox } from "../components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
-import { getCourierById, getUserById } from "../services/profileData"
+import { getCourierById, getUserByEmail, getUserById } from "../services/profileData"
 import { useToast } from "../hooks/use-toast"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 
@@ -28,7 +28,7 @@ export default function CourierProfilePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
-  const courierId = params.id
+  const [courierEmail, setCourierEmail] = useState(localStorage.getItem("email"))
   const [darkMode, setDarkMode] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
@@ -63,7 +63,7 @@ export default function CourierProfilePage() {
   useEffect(() => {
     const getCourier = async () => {
       try {
-        const response = await getUserById(courierId)
+        const response = await getUserByEmail(courierEmail)
         setCourier(response)
         setOriginalCourier(response)
         // Set districts based on the loaded city
@@ -75,7 +75,7 @@ export default function CourierProfilePage() {
       }
     }
     getCourier()
-  }, [courierId])
+  }, [])
 
   // Update districts when districtCity changes
   useEffect(() => {
@@ -154,7 +154,7 @@ export default function CourierProfilePage() {
   phoneNumber: courier.phoneNumber,
   role: "COURIER"
       }
-      const response = await axios.put(`http://localhost:8080/api/users/couriers/update/${courier.email}`, data)
+      const response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/couriers/update/${courier.email}`, data)
       setOriginalCourier(response.data)
       console.log(response)
       toast({
@@ -324,13 +324,12 @@ export default function CourierProfilePage() {
             variants={itemVariants}
           >
             Hesap Profilim - Kurye
-            <span className="ml-2 text-sm font-normal text-gray-500">(ID: {courierId || "Varsayılan"})</span>
           </motion.h1>
 
           <motion.div className="w-full max-w-4xl mx-auto space-y-5 mb-8" variants={itemVariants}>
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/courier/requests/${courierId}`)}}
+              onClick={() => {navigate(`/courier/requests`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               Manage Status
@@ -339,7 +338,7 @@ export default function CourierProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/courier/profile/${courierId}/comments`)}}
+              onClick={() => {navigate(`/courier/profile/comments`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See Ratings and Comments
@@ -348,7 +347,7 @@ export default function CourierProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/courier/profile/${courierId}/orders`)}}
+              onClick={() => {navigate(`/courier/profile/orders`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See All Assigned Orders

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react" // Added useCallback
 import { Link, useNavigate, useParams } from "react-router-dom"
-import axios from 'axios';
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import {
     Moon, Sun, Utensils, User, Mail, Phone, MapPin, CheckCircle, XCircle, Send, CheckCheck,
     StickyNote, Package, ImageIcon, Loader2, AlertTriangle, Wifi, WifiOff, // Added Wifi icons for status
@@ -10,6 +10,7 @@ import {
     Bike
 } from "lucide-react"
 import { motion } from "framer-motion"
+import { getUserByEmail } from "../services/profileData";
 
 // --- Custom UI components (Assume Button, Label, Switch are defined correctly) ---
 const Button = ({ className, children, type = "button", disabled = false, ...props }) => {
@@ -25,7 +26,8 @@ const Switch = ({ checked, onCheckedChange, className, id, disabled = false }) =
 
 
 export default function CourierOrdersPage() {
-    const { id: courierId } = useParams();
+    const [courierEmail, setCourierEmail] = useState(localStorage.getItem("email"));
+    const [courierId, setCourierId] = useState(0);
     const navigate = useNavigate();
     const [darkMode, setDarkMode] = useState(false);
     const [ordersData, setOrdersData] = useState([]);
@@ -41,6 +43,15 @@ export default function CourierOrdersPage() {
     // Base URL for your API
     const API_BASE_URL = "http://localhost:8080";
 
+    
+    useEffect(() => {
+        const getCourier = async() => {
+            const response = await getUserByEmail(courierEmail);
+            setCourierId(response.id);
+        }
+        getCourier();
+    }, [])
+
     // --- Define fetchOrders using useCallback ---
     const fetchOrdersAndStatus = useCallback(async () => { // Renamed for clarity
         if (!courierId) {
@@ -55,8 +66,8 @@ export default function CourierOrdersPage() {
         setError(null);
         try {
             const [ordersResponse, statusResponse] = await Promise.all([
-                axios.get(`${API_BASE_URL}/order/courier/${courierId}/requests`),
-                axios.get(`${API_BASE_URL}/order/courier/status/${courierId}`) // Fetch status
+                AuthorizedRequest.getRequest(`${API_BASE_URL}/order/courier/${courierId}/requests`),
+                AuthorizedRequest.getRequest(`${API_BASE_URL}/order/courier/status/${courierId}`) // Fetch status
             ]);
 
             setOrdersData(ordersResponse.data.requestInfos || []);
@@ -88,7 +99,6 @@ export default function CourierOrdersPage() {
         }
     }, [courierId, API_BASE_URL]);
 
-
     // --- useEffect to call fetchOrdersAndStatus on mount and when courierId changes ---
     useEffect(() => {
         fetchOrdersAndStatus();
@@ -109,7 +119,7 @@ export default function CourierOrdersPage() {
 
         try {
             const url = `${API_BASE_URL}/order/courier/update/status/${courierId}-${newStatus}`;
-            const response = await axios.put(url);
+            const response = await AuthorizedRequest.putRequest(url);
             console.log(url + " here is url")
 
             // Check if the status returned by the backend matches the intended new status
@@ -146,7 +156,7 @@ export default function CourierOrdersPage() {
         setActionLoading(requestId);
         try {
             const url = `${API_BASE_URL}/order/courier/request${requestId}-true`;
-            const response = await axios.put(url);
+            const response = await AuthorizedRequest.putRequest(url);
             if (response.data === true) {
                 console.log(`Task #${requestId} accepted successfully.`);
                 alert(`Görev #${requestId} başarıyla kabul edildi.`);
@@ -175,7 +185,7 @@ export default function CourierOrdersPage() {
         setActionLoading(requestId);
         try {
             const url = `${API_BASE_URL}/order/courier/request${requestId}-false`;
-            const response = await axios.put(url);
+            const response = await AuthorizedRequest.putRequest(url);
             if (response.data === true) {
                 console.log(`Task #${requestId} rejected successfully.`);
                 alert(`Görev #${requestId} başarıyla reddedildi.`);
@@ -238,7 +248,7 @@ export default function CourierOrdersPage() {
             <main className="flex-grow container mx-auto px-4 py-8 max-w-7xl">
                 {/* Title */}
                 <h1 className={`text-2xl font-bold text-center mb-2 ${darkMode ? "text-yellow-400" : "text-amber-800"}`}>
-                    Aktif Teslimat Görevleri {courierId ? `(Kurye #${courierId})` : ''}
+                    Aktif Teslimat Görevleri
                 </h1>
 
                 {/* --- Courier Status Toggle --- */}

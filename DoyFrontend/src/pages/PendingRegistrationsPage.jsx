@@ -5,7 +5,7 @@ import PendingUserList from "../components/PendingUserList";
 import PendingSelectedUser from "../components/PendingSelectedUser";
 import PendingActionButtons from "../components/PendingActionButtons";
 import Toast from "../components/Toast";
-import axios from "axios";
+import AuthorizedRequest from "../services/AuthorizedRequest";
 
 const initialUsers = [
     { id: 1, name: "John Doe", email: "john@example.com", role: "Customer", status: "pending" },
@@ -25,7 +25,7 @@ export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
 
     const getRegistrationRequests = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/users/pendings")   
+            const response = await AuthorizedRequest.getRequest("http://localhost:8080/api/users/pendings")   
             let data = response.data.pendingUsers 
             data.forEach((value) => {value.status = "pending"})
             setUsers(data)
@@ -43,7 +43,7 @@ export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
 
     const putPendingRequest = async(id, state) => {
         try {
-            await axios.put(`http://localhost:8080/api/registration/pending/${id}-${state}`)
+            await AuthorizedRequest.putRequest(`http://localhost:8080/api/registration/pending/${id}-${state}`)
             return true
         } catch (error) {
             console.log("Error: " + error)

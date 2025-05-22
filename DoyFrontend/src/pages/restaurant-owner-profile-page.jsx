@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import {
     Moon, Edit2, AlertTriangle, User, Phone, Mail, MapPin, LogOut, Check,
     ChevronRight, Utensils, Tag, DollarSign, BookText, Building, Home, Navigation,
@@ -168,7 +168,7 @@ export default function RestaurantOwnerProfilePage() {
         //setIsSubmitting(true); // Consider adding submitting state handling
 
         try {
-            const response = await axios.put(apiUrl, updatePayload, {
+            const response = await AuthorizedRequest.putRequest(apiUrl, updatePayload, {
                 headers: { 'Content-Type': 'application/json' /*, Auth header? */ }
             });
             console.log("Update successful:", response.data);

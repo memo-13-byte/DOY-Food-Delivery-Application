@@ -16,9 +16,10 @@ import {
   Loader2,
 } from "lucide-react";
 
-import axios from "axios";
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from "react-router-dom";
 import { CommentSection } from "../components/CommentSection";
+import { getUserByEmail } from "../services/profileData";
 
 
 
@@ -49,7 +50,8 @@ export default function RestaurantCommentPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeReplyId, setActiveReplyId] = useState(null);
-  const {id: restaurantId} = useParams()
+  const [restaurantId, setRestaurantId] = useState(0);
+  const [restaurantEmail, setRestaurantEmail] = useState(localStorage.getItem("email"));
 
   const [rating, setRating] = useState(0)
   const [ratingCount, setRatingCount] = useState(0)
@@ -75,16 +77,19 @@ export default function RestaurantCommentPage() {
 
   useEffect(() => {
     const getComments = async () => {
-        const ratingResponse = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`);
+        const userResponse = await getUserByEmail(restaurantEmail);
+        setRestaurantId(userResponse.id);
+
+        const ratingResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${userResponse.id}`);
 
         setRating(ratingResponse.data.rating)
         setRatingCount(ratingResponse.data.ratingCount)
 
 
-        const reviewResponse = await axios.get(`http://localhost:8080/api/comment/get/for-restaurant/${restaurantId}`);
+        const reviewResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get/for-restaurant/${userResponse.id}`);
         const comments = reviewResponse.data;
         let commentsData = await Promise.all( comments.map(async (element) => {
-            const replies = await axios.get(`http://localhost:8080/api/comment/get-replies/${element.id}`);
+            const replies = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get-replies/${element.id}`);
             return {
                     id: element.id,
                     author: element.user.firstname + " " + element.user.lastname,
@@ -118,7 +123,7 @@ export default function RestaurantCommentPage() {
       userId: restaurantId
     }
 
-    const response = await axios.post("http://localhost:8080/api/comment/post-reply", payload)
+    const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/comment/post-reply", payload)
     alert(`Reply to comment ID: ${commentId} with text: ${replyText}`);
     setActiveReplyId(null);
   };

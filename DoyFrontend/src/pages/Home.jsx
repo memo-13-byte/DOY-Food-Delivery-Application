@@ -13,7 +13,7 @@ import { FaSearch } from "react-icons/fa"
 import { HiOutlineHome } from "react-icons/hi"
 import LocationModal from "../components/ui/LocationModal"
 import { useEffect } from "react"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 
 const renderStars = (rating) => {
   const stars = []
@@ -59,10 +59,10 @@ const Home = () => {
   useEffect(() => {
     const getRestaurantsFromBackend = async () => {
       console.log(minRating.toString())
-      const response = await axios.get("http://localhost:8080/api/restaurant/search", {
+      const response = await AuthorizedRequest.getRequest("http://localhost:8080/api/restaurant/search", {
         params: {
           key1: searchText,
-          key2: minRating.toString(),
+          key2: minRating.toString()
         },
       })
 

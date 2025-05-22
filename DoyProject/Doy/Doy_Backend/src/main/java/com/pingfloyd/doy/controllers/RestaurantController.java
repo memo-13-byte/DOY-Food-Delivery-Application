@@ -2,7 +2,11 @@ package com.pingfloyd.doy.controllers;
 
 import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
+import com.pingfloyd.doy.entities.UserRoles;
+import com.pingfloyd.doy.exception.UnauthorizedRequestException;
+import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.services.RestaurantService;
+import com.pingfloyd.doy.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,10 @@ public class RestaurantController implements IRestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private UserService userService;
 
     @Override
     @GetMapping("/get/{id}")
@@ -27,30 +35,31 @@ public class RestaurantController implements IRestaurantController {
 
     @Override
     @PostMapping("/post")
-    //@PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<DtoRestaurant> postRestaurant(@RequestBody @Valid DtoRestaurantIU dtoRestaurantIU) {
         return ResponseEntity.ok(restaurantService.postRestaurant(dtoRestaurantIU));
     }
 
     @Override
     @PutMapping("/update/{id}")
-    //@PreAuthorize("hasAuthority('RESTAURANT_OWNER') or hasAuthority('ADMIN')")
     public ResponseEntity<DtoRestaurant> updateRestaurant(@PathVariable(name = "id") Long id, @RequestBody @Valid DtoRestaurantIU dtoRestaurantIU) {
+        if (!jwtService.checkIfUserRole(UserRoles.RESTAURANT_OWNER) ||
+        !userService.checkIfSameUserFromToken(id))
+            throw new UnauthorizedRequestException();
         return ResponseEntity.ok(restaurantService.updateRestaurant(id, dtoRestaurantIU));
     }
 
     @Override
     @DeleteMapping("/delete/{id}")
-    //@PreAuthorize("hasAuthority('ADMIN')") // only admins can delete
     public ResponseEntity<DtoRestaurant> deleteRestaurant(@PathVariable(name = "id") Long id) {
+        if (!jwtService.checkIfUserRole(UserRoles.ADMIN)) throw new UnauthorizedRequestException();
         return ResponseEntity.ok(restaurantService.deleteRestaurant(id));
     }
 
 
     @Override
     @GetMapping("/get-all")
-    //@PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<DtoRestaurant>> getAllRestaurants() {
+        if (!jwtService.checkIfUserRole(UserRoles.ADMIN)) throw new UnauthorizedRequestException();
         return ResponseEntity.ok(restaurantService.gelAllRestaurants());
     }
 

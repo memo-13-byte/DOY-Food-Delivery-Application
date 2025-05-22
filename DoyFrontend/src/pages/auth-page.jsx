@@ -5,12 +5,11 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Moon, Sun, CheckCircle } from "lucide-react"
-import axios from "axios"
-import CustomerService from "../services/CustomerService"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 import { add } from "date-fns"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 
 
 // Since we're having issues with the UI component imports, let's create simplified versions
@@ -229,39 +228,28 @@ export default function AuthPage() {
     setIsLoading(true)
 
     try {
-      // Mock API call - in a real app, you would validate credentials with an API
-      // For this demo, we'll just check if email and password are provided
-      const response = await axios.post("http://localhost:8080/api/login/auth", {
+      const payload = {
         username: email,
         password: password
-      });
-
-      localStorage.setItem("token", response.data.token) //fetch user token
-      console.log(response.data.token)
-
-      const createdUser = await axios.get(`http://localhost:8080/api/users/get-by-email/${email}`,
-         { headers: { Authorization: `Bearer ${response.data.token}` } });
-        
+      }
+      const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/login/auth",payload,null, false);
+      AuthorizedRequest.updateAuthorization(response.data.token);
+      localStorage.setItem("email", response.data.email)
+      const createdUser = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/get-by-email/${email}`)
       const profileId = createdUser.data.id
 
       if (userType === "restaurant") {
-        await axios.get(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
-        navigate(`/restaurant/profile/${profileId}`)
+        await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${email}`)
+        navigate(`/restaurant/profile`)
       } else if (userType === "courier") { 
-        await axios.get(`http://localhost:8080/api/users/couriers/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
-        navigate(`/courier/profile/${profileId}`)
+        await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${email}`)
+        navigate(`/courier/profile`)
       } else {
         if (createdUser.data.role === "ADMIN") {
           navigate("/admin/complaints")
         }
-        await axios.get(`http://localhost:8080/api/users/customers/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
-        navigate(`/customer/profile/${profileId}`)
+        await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/customers/get-by-email/${email}`)
+        navigate(`/customer/profile`)
       }
       } 
     catch (error) {
@@ -305,12 +293,8 @@ export default function AuthPage() {
         dtoAddress: addressInfo
       }
 
-      console.log(addressInfo)
+      const response = await AuthorizedRequest.postRequest('http://localhost:8080/api/registration', registrationInfo)
 
-      await CustomerService.RegisterCustomer(registrationInfo);
-
-      // Mock API call - in a real app, you would send registration data to an API
-      // For this demo, we'll just simulate a successful registration
       setTimeout(() => {
         // Show success message
         showAlertify("Kayıt işlemi başarıyla tamamlandı!", "success")

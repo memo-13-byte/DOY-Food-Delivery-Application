@@ -76,7 +76,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
     }
     @ExceptionHandler(value = CartIsNotEmptyException.class)
-    public ResponseEntity<ApiError> handleCartIsNotEmptyException(UserNotFoundException ex){
+    public ResponseEntity<ApiError> handleCartIsNotEmptyException(CartIsNotEmptyException ex){
+        return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = UnauthorizedRequestException.class)
+    public ResponseEntity<ApiError> handleUnauthorizedRequestException(UnauthorizedRequestException ex){
         return ResponseEntity.badRequest().body(ApiError.createApiError(ex.getMessage()));
     }
 }

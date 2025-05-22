@@ -8,6 +8,7 @@ import com.pingfloyd.doy.enums.TokenType;
 import com.pingfloyd.doy.exception.ApiError;
 import com.pingfloyd.doy.exception.UserIsAlreadySuspendedException;
 import com.pingfloyd.doy.exception.UserNotFoundException;
+import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.repositories.CourierRepository;
 import com.pingfloyd.doy.repositories.CustomerRepository;
 import com.pingfloyd.doy.repositories.RestaurantOwnerRepository;
@@ -35,12 +36,15 @@ public class UserService implements UserDetailsService, IUserService {
     private final RestaurantOwnerRepository restaurantOwnerRepository;
     private final SuspensionService suspensionService;
     private final DistrictService districtService;
+
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
+    private final JwtService jwtService;
 
     @Autowired
     public UserService(UserRepository userRepository, CustomerRepository customerRepository, BCryptPasswordEncoder bCryptPasswordEncoder
-    , CourierRepository courierRepository, RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService, DistrictService districtService, ConfirmationTokenService confirmationTokenService, EmailService emailService){
+    , CourierRepository courierRepository,ConfirmationTokenService confirmationTokenService, EmailService emailService,RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService, DistrictService districtService, JwtService jwtService){
+
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -48,9 +52,14 @@ public class UserService implements UserDetailsService, IUserService {
         this.restaurantOwnerRepository = restaurantOwnerRepository;
         this.suspensionService = suspensionService;
         this.districtService = districtService;
+
         this.confirmationTokenService = confirmationTokenService;
         this.emailService = emailService;
+
+        this.jwtService = jwtService;
+
     }
+
 
     public String SignUpCustomer(User user, UserRoles role){
         user.setPasswordHash(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -390,4 +399,10 @@ public class UserService implements UserDetailsService, IUserService {
         user.setPasswordHash(bCryptPasswordEncoder.encode(resetPasswordDto.getPassword()));
         userRepository.save(user);
     }
+
+    public boolean checkIfSameUserFromToken(Long id) {
+        return getUserById(id).getEmail().equals(jwtService.getUserEmail());
+    }
+
+
 }

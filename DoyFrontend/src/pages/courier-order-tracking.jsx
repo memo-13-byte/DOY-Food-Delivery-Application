@@ -1,7 +1,7 @@
 // OrderStatusRestaurant.js (Simplified + Pagination + Card Alignment Fix + Update Buttons)
 
 import React, { useState, useEffect, useCallback } from "react"; // Added useCallback
-import axios from 'axios';
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from 'react-router-dom';
 
 // Assuming these components exist in the specified paths
@@ -179,7 +179,7 @@ export default function OrderStatusCourier() {
         }
         const url = `${API_BASE_URL}/order/courier/${restaurantId}/order`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             if (response.data && Array.isArray(response.data.orderInfoList)) {
                 const relevantOrders = response.data.orderInfoList.filter(
                     order => displayableStatuses.includes(order.status)
@@ -211,7 +211,7 @@ export default function OrderStatusCourier() {
         setDetailLoading(true); setDetailError(null); setSelectedOrderDetail(null);
         const url = `${API_BASE_URL}/order/details/${orderId}`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             if (response.data) { setSelectedOrderDetail(response.data); }
             else {
                 console.warn(`No details found for order ID: ${orderId}`);
@@ -245,7 +245,7 @@ export default function OrderStatusCourier() {
         console.log(`updateOrderStatus: Sending PATCH to ${url} with payload:`, payload);
 
         try {
-            const patchResponse = await axios.patch(url, payload);
+            const patchResponse = await AuthorizedRequest.patchRequest(url, payload);
             console.log(`updateOrderStatus: PATCH successful for Order ID: ${orderId}. Status: ${patchResponse.status}`);
 
             // Re-fetch orders to reflect the change accurately
