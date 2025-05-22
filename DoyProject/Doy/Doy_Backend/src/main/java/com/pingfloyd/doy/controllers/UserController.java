@@ -124,6 +124,7 @@ public class UserController implements IUserController{
 
     @GetMapping("/forget-password/{email}")
     public ResponseEntity<Void> SendPasswordResetRequest(@PathVariable(name = "email") String email){
+
         userService.ResetPasswordRequest(email);
         return ResponseEntity.ok().build();
     }

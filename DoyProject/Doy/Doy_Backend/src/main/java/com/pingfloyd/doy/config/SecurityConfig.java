@@ -56,7 +56,7 @@ public class SecurityConfig {
                         request.requestMatchers("/api/login/auth", "/api/registration", "/api/registration/confirm",
                                         "/api/registration/courier", "/api/registration/restaurant",
                                         "/api/restaurant/search", "/api/restaurant/get/**", "/api/item/get-items/**",
-                                        "/order/cart", "api/upload/image/**").permitAll()
+                                        "/order/cart", "api/upload/image/**", "api/users/reset-password", "api/users/forget-password/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
