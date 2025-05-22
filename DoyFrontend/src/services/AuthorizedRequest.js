@@ -10,9 +10,10 @@ export default class AuthorizedRequest {
     static getParameters(parameters) {
         let p = {}
         if (parameters !== null) {
+            console.log("here")
             for (let key in parameters) {
                 if (parameters.hasOwnProperty(key)) {
-                    console.log(key)
+
                     p[key] = parameters[key]
                 }
             }

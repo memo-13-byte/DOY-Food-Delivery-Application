@@ -3,6 +3,7 @@ package com.pingfloyd.doy.controllers;
 import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
 import com.pingfloyd.doy.entities.UserRoles;
+import com.pingfloyd.doy.enums.RestaurantCategory;
 import com.pingfloyd.doy.exception.UnauthorizedRequestException;
 import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.services.RestaurantService;
@@ -73,5 +74,10 @@ public class RestaurantController implements IRestaurantController {
     public ResponseEntity<Boolean> setFavoriteRestaurant(@PathVariable(name = "restaurantId") Long restaurantId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         return ResponseEntity.ok(restaurantService.setFavoriteRestaurant(username, restaurantId));
+    }
+
+    @GetMapping("/get-types")
+    public ResponseEntity<RestaurantCategory[]> GetCategories(){
+        return ResponseEntity.ok(restaurantService.GetCategories());
     }
 }

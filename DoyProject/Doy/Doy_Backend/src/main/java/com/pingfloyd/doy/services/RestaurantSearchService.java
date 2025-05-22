@@ -2,6 +2,7 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.RestaurantRequest;
 import com.pingfloyd.doy.entities.Restaurant;
+import com.pingfloyd.doy.enums.CityEnum;
 import com.pingfloyd.doy.other.RestaurantSpecification;
 import com.pingfloyd.doy.repositories.RestaurantRepository;
 import jakarta.transaction.Transactional;
@@ -29,11 +30,12 @@ public class RestaurantSearchService {
 
     @Transactional()
     public Page<RestaurantRequest> searchRestaurants(
-            String name, Float minRating, Double maxMinOrderPrice, String cuisine,
+            String name, Float minRating, Double maxMinOrderPrice, String cuisine,String districtName,
+            CityEnum city,
             int page, int size, String sortBy, String sortDirection) {
 
         Specification<Restaurant> spec = RestaurantSpecification.filterBy(
-                name, minRating, maxMinOrderPrice, cuisine
+                name, minRating, maxMinOrderPrice, cuisine ,districtName ,city
         );
         int pageSize = (size <= 0) ? DataLimit : size;
         int pageNum = Math.max(page, 0);
