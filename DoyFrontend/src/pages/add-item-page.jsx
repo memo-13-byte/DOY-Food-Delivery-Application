@@ -28,8 +28,7 @@ import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
-import { getUserByEmail } from "../services/profileData"
-
+import axios from "axios"
 export default function AddItemPage() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -84,11 +83,31 @@ export default function AddItemPage() {
 
   // Load item data if in edit mode
   useEffect(() => {
-    if (!restaurantEmail) {
-      console.error("Restaurant email not found in localStorage.");
-      // Potentially navigate to login or show an error
-      setErrors(prev => ({ ...prev, auth: "Kullanıcı bilgileri bulunamadı."}));
-      return;
+    AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`).then((response) => {setRestaurantId(response.id)});
+    if (isEditMode && itemId) {
+      setIsLoading(true)
+      // In a real app, fetch the item data from API
+      axios
+        .get(`http://localhost:8080/api/item/get/${itemId}`)
+        .then((response) => {
+          const item = response.data
+          setFormData({
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            menuItemType: getmenuItemTypeIdFromType(item.menuItemType),
+            image: null,
+          })
+          // If there's an image URL in the response
+          if (item.imageUrl) {
+            setImagePreview(item.imageUrl)
+          }
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.error("Error fetching item:", error)
+          setIsLoading(false)
+        })
     }
 
     if (isEditMode && itemId) {

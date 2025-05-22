@@ -32,20 +32,22 @@ public class OrderReviewController implements IOrderReviewController {
 
     @PostMapping("/post")
     public ResponseEntity<DtoOrderReview> postOrderReview(@RequestBody DtoOrderReviewIU dtoOrderReviewIU) {
-        if (!jwtService.checkIfUserRole(UserRoles.CUSTOMER) ||
-                !userService.checkIfSameUserFromToken(orderService.GetOrderUserInformation(dtoOrderReviewIU.getOrderId())
+        if (jwtService.checkIfUserRole(UserRoles.CUSTOMER) &&
+                userService.checkIfSameUserFromToken(orderService.GetOrderUserInformation(dtoOrderReviewIU.getOrderId())
                         .getCustomerId()))
-            throw new UnauthorizedRequestException();
-        return ResponseEntity.ok(orderReviewService.postOrderReview(dtoOrderReviewIU));
+            return ResponseEntity.ok(orderReviewService.postOrderReview(dtoOrderReviewIU));
+        throw new UnauthorizedRequestException();
+
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<DtoOrderReview> getOrderReview(@PathVariable(name = "id") Long orderId) {
-        if (!jwtService.checkIfUserRole(UserRoles.CUSTOMER) ||
-                !userService.checkIfSameUserFromToken(orderService.GetOrderUserInformation(orderId)
+        if (jwtService.checkIfUserRole(UserRoles.CUSTOMER) &&
+                userService.checkIfSameUserFromToken(orderService.GetOrderUserInformation(orderId)
                         .getCustomerId()))
-            throw new UnauthorizedRequestException();
-        return ResponseEntity.ok(orderReviewService.getOrderReview(orderId));
+            return ResponseEntity.ok(orderReviewService.getOrderReview(orderId));
+        throw new UnauthorizedRequestException();
+
     }
 
 

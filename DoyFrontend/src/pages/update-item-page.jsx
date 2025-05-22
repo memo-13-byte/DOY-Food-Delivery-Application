@@ -28,7 +28,6 @@ import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
-import { getUserByEmail } from "../services/profileData"
 
 export default function AddItemPage() {
     const navigate = useNavigate()
@@ -67,12 +66,76 @@ export default function AddItemPage() {
     })
     const [availableAllergens, setAvailableAllergens] = useState([])
 
-    // menuItemType mapping
-    const menuItemTypeMap = {
-        "1": "Menüler",
-        "2": "Yiyecek Seçenekleri",
-        "3": "İçecek Seçenekleri",
-        "4": "Ek Seçenekleri",
+  // menuItemType mapping
+  const menuItemTypeMap = {
+    "1": "Menüler",
+    "2": "Yiyecek Seçenekleri",
+    "3": "İçecek Seçenekleri",
+    "4": "Ek Seçenekleri",
+  }
+
+  const reversemenuItemTypeMap = {
+    "1": "COMBO",
+    "2": "MAIN_DISH",
+    "3": "DRINK",
+    "4": "EXTRA",
+  }
+
+  // Load item data if in edit mode
+  useEffect(() => {
+    if (isEditMode && itemId) {
+      (AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).then(
+(response) => {setRestaurantId(response.data.id)}
+      );
+      setIsLoading(true)
+      // In a real app, fetch the item data from API
+      AuthorizedRequest
+        .getRequest(`http://localhost:8080/api/item/get/${itemId}`)
+        .then((response) => {
+          const item = response.data
+          console.log(item)
+          setFormData({
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            menuItemType: getmenuItemTypeIdFromType(item.menuItemType),
+            imageId: item.imageId,
+          })
+          // If there's an image URL in the response
+          if(item.imageId != null) {
+            setImagePreview(`http://localhost:8080/api/upload/image/${item.imageId}`)
+          } else {
+            setImagePreview("/placeholder.svg?height=200&width=200")
+          }
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.error("Error fetching item:", error)
+          setIsLoading(false)
+        })
+    }
+  }, [isEditMode, itemId])
+
+  // Get menuItemType ID from menuItemType type
+  const getmenuItemTypeIdFromType = (type) => {
+    const menuItemTypeIds = {
+      COMBO: "1",
+      MAIN_DISH: "2",
+      DRINK: "3",
+      EXTRA: "4",
+    }
+    return menuItemTypeIds[type] || "1"
+  }
+
+  // Validate form data
+  const validateForm = () => {
+    const newErrors = {}
+
+    // Validate name
+    if (!formData.name.trim()) {
+      newErrors.name = "Ürün adı gereklidir"
+    } else if (formData.name.trim().length < 3) {
+      newErrors.name = "Ürün adı en az 3 karakter olmalıdır"
     }
 
     const reversemenuItemTypeMap = {

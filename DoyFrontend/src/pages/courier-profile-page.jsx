@@ -4,10 +4,7 @@ import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Button } from "../components/ui/button"
-import { Checkbox } from "../components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
-import { getCourierById, getUserByEmail, getUserById } from "../services/profileData"
+import { Moon, Edit2, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
 import { useToast } from "../hooks/use-toast"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import AuthorizedRequest from "../services/AuthorizedRequest"
@@ -28,7 +25,9 @@ export default function CourierProfilePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
-  const [courierEmail, setCourierEmail] = useState(localStorage.getItem("email"))
+  const {id:courierId} = params
+  const fromAdmin = courierId !== undefined
+  const [courierEmail, setCourierEmail] = useState("")
   const [darkMode, setDarkMode] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
@@ -63,7 +62,18 @@ export default function CourierProfilePage() {
   useEffect(() => {
     const getCourier = async () => {
       try {
-        const response = await getUserByEmail(courierEmail)
+        let loadedEmail = "";
+              if (courierId !== undefined) {
+              const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/get-by-id/${courierId}`)
+              console.log(response.data);
+              setCourierEmail(response.data.email);
+              loadedEmail = response.data.email;
+            }else{
+              setCourierEmail(localStorage.getItem("email"));
+              loadedEmail = localStorage.getItem("email");
+            }
+
+        const response = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${loadedEmail}`)).data
         setCourier(response)
         setOriginalCourier(response)
         // Set districts based on the loaded city
@@ -75,7 +85,7 @@ export default function CourierProfilePage() {
       }
     }
     getCourier()
-  }, [])
+  }, [courierEmail])
 
   // Update districts when districtCity changes
   useEffect(() => {
@@ -327,7 +337,9 @@ export default function CourierProfilePage() {
           </motion.h1>
 
           <motion.div className="w-full max-w-4xl mx-auto space-y-5 mb-8" variants={itemVariants}>
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+
+          {
+            !fromAdmin && <div><motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               onClick={() => {navigate(`/courier/requests`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
@@ -347,12 +359,15 @@ export default function CourierProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/courier/profile/orders`)}}
+              onClick={() => {navigate(`/courier/profile/${courier.id}/orders`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See All Assigned Orders
             </Button>
-          </motion.div>
+          </motion.div> </div>
+          }
+
+          
 
             <motion.div className="grid grid-cols-2 gap-6" variants={fadeInVariants}>
               <div>
@@ -406,6 +421,7 @@ export default function CourierProfilePage() {
               </label>
               <div className="flex">
                 <input
+                disabled
                   type="email"
                   name="email"
                   value={courier.email}
@@ -517,6 +533,7 @@ export default function CourierProfilePage() {
               </label>
               <div className="flex">
                 <input
+                disabled
                   type="text"
                   name="governmentId"
                   value={courier.governmentId}
@@ -547,18 +564,23 @@ export default function CourierProfilePage() {
             </Button>
           </motion.div>
 
-          <motion.button
+          
+
+          {
+              !fromAdmin && <motion.button
             onClick={handleLogout}
             className={`w-full max-w-4xl mx-auto block text-center py-3 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-[#333]" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
             variants={itemVariants}
             whileHover={{ scale: 1.02, backgroundColor: darkMode ? "#374151" : "#f9fafb" }}
             whileTap={{ scale: 0.98 }}
           >
+            
             <div className="flex items-center justify-center gap-2">
               <LogOut className="h-4 w-4" />
               Hesabımdan Çıkış Yap
             </div>
           </motion.button>
+            }
         </motion.div>
       </div>
 

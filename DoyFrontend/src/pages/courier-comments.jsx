@@ -17,9 +17,7 @@ import {
 } from "lucide-react";
 
 import AuthorizedRequest from "../services/AuthorizedRequest";
-import { useParams } from "react-router-dom";
 import { CommentSection } from "../components/CommentSection";
-import { getUserByEmail, getUserById } from "../services/profileData";
 
 
 
@@ -76,7 +74,7 @@ export default function CourierCommentPage() {
 
   useEffect(() => {
     const getComments = async () => {
-        const ratingResponse = await getUserByEmail(courierEmail);
+        const ratingResponse = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${courierEmail}`)).data;
         setRating(ratingResponse.rating)
         setRatingCount(ratingResponse.ratingCount)
         setCourierId(ratingResponse.id)

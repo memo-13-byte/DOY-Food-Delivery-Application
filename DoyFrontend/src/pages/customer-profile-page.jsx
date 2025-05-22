@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { Moon, Edit2, AlertTriangle, User, Phone, Mail, MapPin, LogOut, Check, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { getCustomerById, getUserByEmail, getUserById } from "../services/profileData"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
@@ -83,7 +82,7 @@ export default function CustomerProfilePage() {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const userData = await getUserByEmail(customerEmail)
+        const userData = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/customers/get-by-email/${customerEmail}`)).data;
         userData.name = userData.firstname + " " + userData.lastname
         setUser(userData)
         setFormData({

@@ -25,7 +25,8 @@ export default function RestaurantManagePage() {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const [restaurantEmail, setRestaurantEmail] = useState(localStorage.getItem("email"))
+  const {id:restaurantIdFromAdmin} = params;
+  const [restaurantEmail, setRestaurantEmail] = useState("")
   const [restaurantId, setRestaurantId] = useState(-1)
   const [darkMode, setDarkMode] = useState(false)
   const categoryMap = new Map()
@@ -77,8 +78,18 @@ const handleCancelMinOrderPriceEdit = () => {
 };
   useEffect(() => {
     const getRestaurantId = async () => {
+      let loadedEmail = "";
+            if (restaurantIdFromAdmin !== undefined) {
+            const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/get-by-id/${restaurantIdFromAdmin}`)
+            setRestaurantEmail(response.data.email);
+            loadedEmail = response.data.email;
+          }else{
+            setRestaurantEmail(localStorage.getItem("email"));
+            loadedEmail = localStorage.getItem("email");
+          }
+
       const response = await AuthorizedRequest.
-      getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)
+      getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${loadedEmail}`)
       setRestaurantId(response.data.restaurantId)
     }
     getRestaurantId()
@@ -962,7 +973,8 @@ const handleCancelMinOrderPriceEdit = () => {
                   <h2 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-black"} mr-2`}>
                     {category.name}
                   </h2>
-                  <motion.button
+                  {
+                    !restaurantIdFromAdmin && <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => handleAddItemClick(category.id)}
@@ -970,6 +982,8 @@ const handleCancelMinOrderPriceEdit = () => {
                   >
                     <Plus className="h-5 w-5" />
                   </motion.button>
+                  }
+                  
                 </div>
 
                 {/* Menu Items - 2-column grid layout */}
@@ -985,8 +999,8 @@ const handleCancelMinOrderPriceEdit = () => {
                         whileHover={{ y: -5 }}
                         className={`relative overflow-hidden rounded-2xl ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 shadow-xl transition-shadow hover:shadow-2xl h-full`}
                       >
-                        {/* Delete Button - Top Right */}
-                        <motion.button
+                        {
+                          !restaurantIdFromAdmin && <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => deleteMenuItem(category.id, item.id)}
@@ -994,6 +1008,8 @@ const handleCancelMinOrderPriceEdit = () => {
                         >
                           <X className="h-5 w-5" />
                         </motion.button>
+                        }
+                        
 
                         <div className="flex flex-col h-full">
                           {/* Item Content */}
@@ -1055,7 +1071,8 @@ const handleCancelMinOrderPriceEdit = () => {
                             >
                               {item.price} TL
                             </div>
-                            <motion.button
+                            {
+                              !restaurantIdFromAdmin && <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => handleEditItemClick(category.id, item.id)}
@@ -1067,6 +1084,8 @@ const handleCancelMinOrderPriceEdit = () => {
                             >
                               Düzenle
                             </motion.button>
+                            }
+                            
                           </div>
                         </div>
                       </motion.div>
@@ -1078,8 +1097,8 @@ const handleCancelMinOrderPriceEdit = () => {
           ))}
         </div>
 
-        {/* Back to Profile Button */}
-        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>
+        {
+      !restaurantIdFromAdmin && <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -1090,6 +1109,8 @@ const handleCancelMinOrderPriceEdit = () => {
             Profil Sayfasına Dön
           </motion.button>
         </motion.div>
+      }
+        
 
         {showConfirmation && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

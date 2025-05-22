@@ -8,11 +8,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface IUserController {
-    ResponseEntity<List<DtoUser>> getAllUsers();
-    ResponseEntity<List<DtoRestaurantOwner>> getAllRestaurantOwners();
-    ResponseEntity<List<DtoCourier>> getAllCouriers();
-    ResponseEntity<List<DtoCustomer>> getAllCustomers();
-
     ResponseEntity<DtoUser> getUserById(Long id);
 
     ResponseEntity<DtoUser> getUserByEmail(String email);

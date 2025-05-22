@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import RestaurantNavbar from "../components/RestaurantNavbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/Button"; // Assuming Button can handle disabled state
-import { getUserByEmail } from "../services/profileData";
 
 // Define ONLY the necessary OrderStatus enum values
 const OrderStatus = {
@@ -166,7 +165,7 @@ export default function OrderStatusRestaurant() {
 
     // Fetch orders for the specific restaurant
     const fetchOrders = async () => {
-        const restaurantOwner = await getUserByEmail(restaurantEmail);
+        const restaurantOwner = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).data;
         console.log(restaurantOwner);
         setRestaurantId(restaurantOwner.id);
 

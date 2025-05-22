@@ -38,25 +38,27 @@ public class CommentController implements ICommentController {
     @Override
     @PostMapping("/post")
     public ResponseEntity<DtoComment> postComment(@RequestBody @Valid DtoCommentIU dtoCommentIU) {
-        if (!jwtService.checkIfUserRole(UserRoles.CUSTOMER) ||
+        if (jwtService.checkIfUserRole(UserRoles.CUSTOMER) &&
                 userService.checkIfSameUserFromToken(dtoCommentIU.getUserId()))
-            throw new UnauthorizedRequestException();
+            return ResponseEntity.ok(commentService.postComment(dtoCommentIU));
+        throw new UnauthorizedRequestException();
 
-        return ResponseEntity.ok(commentService.postComment(dtoCommentIU));
+
     }
 
     @PostMapping("/post-reply")
     public ResponseEntity<DtoReply> postReply(@RequestBody @Valid DtoReplyIU dtoReplyIU) {
-        if (!jwtService.checkIfUserRole(UserRoles.CUSTOMER, UserRoles.COURIER, UserRoles.RESTAURANT_OWNER) ||
+        if (jwtService.checkIfUserRole(UserRoles.CUSTOMER, UserRoles.COURIER, UserRoles.RESTAURANT_OWNER) &&
                 userService.checkIfSameUserFromToken(dtoReplyIU.getUserId()))
-            throw new UnauthorizedRequestException();
-        return ResponseEntity.ok(commentService.postReply(dtoReplyIU));
+            return ResponseEntity.ok(commentService.postReply(dtoReplyIU));
+        throw new UnauthorizedRequestException();
+
     }
 
     @Override
     @GetMapping("/get/for-courier/{id}")
     public ResponseEntity<List<DtoComment>> getCommentsForCourier(@PathVariable(name = "id") Long courierId) {
-        if (userService.checkIfSameUserFromToken(courierId))
+        if (!userService.checkIfSameUserFromToken(courierId))
             throw new UnauthorizedRequestException();
 
         return ResponseEntity.ok(commentService.getCommentsForCourier(courierId));
@@ -65,7 +67,7 @@ public class CommentController implements ICommentController {
     @Override
     @GetMapping("/get/for-restaurant/{id}")
     public ResponseEntity<List<DtoComment>> getCommentsForRestaurant(@PathVariable(name = "id") Long restaurantId) {
-        if (userService.checkIfSameUserFromToken(restaurantId))
+        if (!userService.checkIfSameUserFromToken(restaurantId))
             throw new UnauthorizedRequestException();
         return ResponseEntity.ok(commentService.getCommentsForRestaurant(restaurantId));
     }

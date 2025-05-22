@@ -34,18 +34,13 @@ public class RestaurantController implements IRestaurantController {
     }
 
     @Override
-    @PostMapping("/post")
-    public ResponseEntity<DtoRestaurant> postRestaurant(@RequestBody @Valid DtoRestaurantIU dtoRestaurantIU) {
-        return ResponseEntity.ok(restaurantService.postRestaurant(dtoRestaurantIU));
-    }
-
-    @Override
     @PutMapping("/update/{id}")
     public ResponseEntity<DtoRestaurant> updateRestaurant(@PathVariable(name = "id") Long id, @RequestBody @Valid DtoRestaurantIU dtoRestaurantIU) {
-        if (!jwtService.checkIfUserRole(UserRoles.RESTAURANT_OWNER) ||
-        !userService.checkIfSameUserFromToken(id))
-            throw new UnauthorizedRequestException();
-        return ResponseEntity.ok(restaurantService.updateRestaurant(id, dtoRestaurantIU));
+        if ((jwtService.checkIfUserRole(UserRoles.RESTAURANT_OWNER) &&
+        userService.checkIfSameUserFromToken(id)) || jwtService.checkIfUserRole(UserRoles.ADMIN))
+            return ResponseEntity.ok(restaurantService.updateRestaurant(id, dtoRestaurantIU));
+        throw new UnauthorizedRequestException();
+
     }
 
     @Override

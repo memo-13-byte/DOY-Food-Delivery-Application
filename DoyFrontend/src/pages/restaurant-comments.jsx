@@ -17,9 +17,7 @@ import {
 } from "lucide-react";
 
 import AuthorizedRequest from "../services/AuthorizedRequest";
-import { useParams } from "react-router-dom";
 import { CommentSection } from "../components/CommentSection";
-import { getUserByEmail } from "../services/profileData";
 
 
 
@@ -77,7 +75,7 @@ export default function RestaurantCommentPage() {
 
   useEffect(() => {
     const getComments = async () => {
-        const userResponse = await getUserByEmail(restaurantEmail);
+        const userResponse = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).data;
         setRestaurantId(userResponse.id);
 
         const ratingResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${userResponse.id}`);
