@@ -6,6 +6,7 @@ import PendingSelectedUser from "../components/PendingSelectedUser";
 import PendingActionButtons from "../components/PendingActionButtons";
 import Toast from "../components/Toast";
 import AuthorizedRequest from "../services/AuthorizedRequest";
+import DoyLogo from "../components/DoyLogo";
 
 const initialUsers = [
     { id: 1, name: "John Doe", email: "john@example.com", role: "Customer", status: "pending" },
@@ -77,7 +78,8 @@ export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
             color: darkMode ? "#fff" : "#000",
             minHeight: "100vh",
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
+            position: "relative"
         }}>
             <AdminNavbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
@@ -85,7 +87,7 @@ export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
                 display: "flex",
                 flexDirection: "column",
                 padding: "2rem 4rem",
-                gap: "4rem"
+                gap: "1rem"
             }}>
                 <h2 style={{ marginBottom: "2rem" }}>Pending Registrations</h2>
 

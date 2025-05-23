@@ -61,7 +61,6 @@ const RestaurantList = ({ restaurants, setRestaurants, setSelectedRestaurant, se
                 style={{
                     width: "100%",
                     padding: "0.6rem",
-                    maxWidth: "382px",
                     marginBottom: "1rem",
                     borderRadius: "10px",
                     border: "1px solid #ccc",
@@ -75,7 +74,6 @@ const RestaurantList = ({ restaurants, setRestaurants, setSelectedRestaurant, se
                 onChange={(e) => setFilter(e.target.value)}
                 style={{
                     width: "100%",
-                    maxWidth: "382px",
                     padding: "0.6rem",
                     marginBottom: "1rem",
                     borderRadius: "10px",

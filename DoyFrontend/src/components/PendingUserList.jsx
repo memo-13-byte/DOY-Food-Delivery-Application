@@ -27,7 +27,7 @@ const PendingUserList = ({ pendingUsers, setSelectedPendingUser, selectedPending
                     setVisibleCount(3); // ✨ Arama yapınca yine baştan başlasın
                 }}
                 style={{
-                    width: "95%",
+                    width: "100%",
                     padding: "0.6rem",
                     marginBottom: "1rem",
                     borderRadius: "10px",

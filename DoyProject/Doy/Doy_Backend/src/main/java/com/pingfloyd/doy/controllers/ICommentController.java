@@ -16,4 +16,7 @@ public interface ICommentController {
     ResponseEntity<DtoReply> postReply(DtoReplyIU dtoReplyIU);
     ResponseEntity<List<DtoComment>> getCommentsForCourier(Long courierId);
     ResponseEntity<List<DtoComment>> getCommentsForRestaurant(Long restaurantId);
+    ResponseEntity<DtoComment> postComplaint(DtoCommentIU dtoCommentIU);
+    ResponseEntity<List<DtoComment>> getComplaints();
+    ResponseEntity<List<DtoComment>> getComplaintsOfUser(String email);
 }

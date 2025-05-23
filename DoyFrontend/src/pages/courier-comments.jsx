@@ -1,20 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Utensils,
-  Moon,
-  Sun,
-  MessageSquare,
-  Twitter,
-  Instagram,
-  Youtube,
-  Linkedin,
-  Star,
-  Send,
-  ChevronRight,
-  Loader2,
-} from "lucide-react";
 
 import AuthorizedRequest from "../services/AuthorizedRequest";
 import { CommentSection } from "../components/CommentSection";
@@ -22,28 +8,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import DoyLogo from "../components/DoyLogo";
 
-
-
-const Switch = ({ checked, onCheckedChange, className }) => {
-  return (
-    <button
-      role="switch"
-      aria-checked={checked}
-      data-state={checked ? "checked" : "unchecked"}
-      onClick={() => onCheckedChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-        checked ? "bg-amber-400" : "bg-gray-300"
-      } ${className}`}
-    >
-      <span
-        data-state={checked ? "checked" : "unchecked"}
-        className={`pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg transition-transform ${
-          checked ? "translate-x-5" : "translate-x-0"
-        }`}
-      />
-    </button>
-  );
-};
 
 
 

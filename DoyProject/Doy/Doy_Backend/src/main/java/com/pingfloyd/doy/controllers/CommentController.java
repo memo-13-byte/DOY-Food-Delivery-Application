@@ -42,14 +42,11 @@ public class CommentController implements ICommentController {
                 userService.checkIfSameUserFromToken(dtoCommentIU.getUserId()))
             return ResponseEntity.ok(commentService.postComment(dtoCommentIU));
         throw new UnauthorizedRequestException();
-
-
     }
 
     @PostMapping("/post-reply")
     public ResponseEntity<DtoReply> postReply(@RequestBody @Valid DtoReplyIU dtoReplyIU) {
-        if (jwtService.checkIfUserRole(UserRoles.CUSTOMER, UserRoles.COURIER, UserRoles.RESTAURANT_OWNER) &&
-                userService.checkIfSameUserFromToken(dtoReplyIU.getUserId()))
+        if (userService.checkIfSameUserFromToken(dtoReplyIU.getUserId()))
             return ResponseEntity.ok(commentService.postReply(dtoReplyIU));
         throw new UnauthorizedRequestException();
 
@@ -76,8 +73,33 @@ public class CommentController implements ICommentController {
     @Override
     @GetMapping("/get-replies/{id}")
     public ResponseEntity<List<DtoReply>> getReplies(@PathVariable(name = "id") Long id) {
-        if (!jwtService.checkIfUserRole(UserRoles.CUSTOMER, UserRoles.COURIER, UserRoles.RESTAURANT_OWNER))
-            throw new UnauthorizedRequestException();
         return ResponseEntity.ok(commentService.getReplies(id));
     }
+
+    @Override
+    @PostMapping("/post/complaint")
+    public ResponseEntity<DtoComment> postComplaint(@RequestBody @Valid DtoCommentIU dtoCommentIU) {
+        if (jwtService.checkIfUserRole(UserRoles.CUSTOMER) &&
+                userService.checkIfSameUserFromToken(dtoCommentIU.getUserId()))
+            return ResponseEntity.ok(commentService.postComplaint(dtoCommentIU));
+        throw new UnauthorizedRequestException();
+    }
+
+    @Override
+    @GetMapping("get/complaints")
+    public ResponseEntity<List<DtoComment>> getComplaints() {
+        if (jwtService.checkIfUserRole(UserRoles.ADMIN)) {
+            return ResponseEntity.ok(commentService.getComplaints());
+        }
+        throw new UnauthorizedRequestException();
+    }
+
+    @GetMapping("get/complaints/{email}")
+    public ResponseEntity<List<DtoComment>> getComplaintsOfUser(@PathVariable(name = "email") String email) {
+        if (jwtService.checkIfUserRole(UserRoles.CUSTOMER) && jwtService.getUserEmail().equals(email)) {
+            return ResponseEntity.ok(commentService.getComplaintsOfUser(email));
+        }
+        throw new UnauthorizedRequestException();
+    }
+
 }

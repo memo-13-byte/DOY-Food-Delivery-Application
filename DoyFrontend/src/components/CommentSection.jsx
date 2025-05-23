@@ -58,7 +58,7 @@ const StarRating = ({ rating, darkMode }) => {
     );
   };
 
-const CommentSection = ({ title, comments, darkMode, onReply, _rating, activeReplyId, onSubmitReply, onCancelReply }) => {
+const CommentSection = ({ title, comments, darkMode, onReply, _rating, activeReplyId, onSubmitReply, onCancelReply,noStar=false }) => {
   return (
     <div className="space-y-4">
       <h2
@@ -68,9 +68,10 @@ const CommentSection = ({ title, comments, darkMode, onReply, _rating, activeRep
       >
         {title}
       </h2>
-      <div className="mt-1">
+      {!noStar && <div className="mt-1">
         <StarRating rating={_rating} darkMode={darkMode} />
-      </div>
+      </div>}
+      
       {comments.map((comment) => (
         <div key={comment.id}>
           <Comment comment={comment} darkMode={darkMode} onReply={onReply} />

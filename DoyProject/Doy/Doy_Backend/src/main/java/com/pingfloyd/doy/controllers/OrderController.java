@@ -146,7 +146,7 @@ public class OrderController {
 
     @GetMapping("/details/get-orders-of/{email}")
     public ResponseEntity<List<DtoOrderDetails>> getPastOrdersOfCustomer(@PathVariable(name = "email") String email) {
-        if (true || (jwtService.checkIfUserRole(UserRoles.CUSTOMER) && jwtService.getUserEmail().equals(email))) {
+        if ((jwtService.checkIfUserRole(UserRoles.CUSTOMER) && jwtService.getUserEmail().equals(email))) {
             return ResponseEntity.ok(orderService.getPastOrdersOfCustomer(email));
         }
         throw new UnauthorizedRequestException();

@@ -2,14 +2,12 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.controllers.CommentController;
 import com.pingfloyd.doy.dto.*;
-import com.pingfloyd.doy.entities.Comment;
-import com.pingfloyd.doy.entities.OrderReview;
-import com.pingfloyd.doy.entities.Reply;
-import com.pingfloyd.doy.entities.User;
+import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.repositories.*;
 import org.hibernate.query.Order;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -109,6 +107,52 @@ public class CommentService implements ICommentService {
             DtoComment dtoComment = new DtoComment();
             BeanUtils.copyProperties(orderReview.getRestaurantComment(), dtoComment);
             dtoComment.setUser(userService.getUserById(orderReview.getCustomer().getId()));
+            dtoComments.add(dtoComment);
+        }
+
+        return dtoComments;
+    }
+
+    @Override
+    public DtoComment postComplaint(DtoCommentIU dtoCommentIU) {
+        Complaint complaint = new Complaint();
+
+        BeanUtils.copyProperties(dtoCommentIU, complaint);
+        complaint.setCreatedAt(LocalDateTime.now());
+        complaint.setUser(userRepository.findById(dtoCommentIU.getUserId()).get());
+
+        Complaint savedComment = commentRepository.save(complaint);
+        DtoComment dtoComment = new DtoComment();
+        BeanUtils.copyProperties(savedComment, dtoComment);
+        dtoComment.setUser(userService.getUserById(savedComment.getUser().getId()));
+        return dtoComment;
+    }
+
+    @Override
+    public List<DtoComment> getComplaints() {
+        List<Complaint> complaints = commentRepository.findComplaints();
+        List<DtoComment> dtoComments = new ArrayList<>();
+
+        for(Complaint complaint: complaints) {
+            DtoComment dtoComment = new DtoComment();
+            BeanUtils.copyProperties(complaint, dtoComment);
+            dtoComment.setUser(userService.getUserById(complaint.getUser().getId()));
+            dtoComments.add(dtoComment);
+        }
+
+        return dtoComments;
+    }
+
+    @Override
+    public List<DtoComment> getComplaintsOfUser(String email) {
+        DtoCustomer dtoCustomer = userService.getCustomerByEmail(email);
+        List<Complaint> complaints = commentRepository.findComplaintsByCustomerId(dtoCustomer.getId());
+        List<DtoComment> dtoComments = new ArrayList<>();
+
+        for(Complaint complaint: complaints) {
+            DtoComment dtoComment = new DtoComment();
+            BeanUtils.copyProperties(complaint, dtoComment);
+            dtoComment.setUser(userService.getUserById(complaint.getUser().getId()));
             dtoComments.add(dtoComment);
         }
 

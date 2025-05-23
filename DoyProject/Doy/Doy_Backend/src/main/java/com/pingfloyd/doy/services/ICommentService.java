@@ -17,4 +17,7 @@ public interface ICommentService {
     DtoReply postReply(DtoReplyIU dtoReplyIU);
     List<DtoComment> getCommentsForCourier(Long courierId);
     List<DtoComment> getCommentsForRestaurant(Long restaurantId);
+    DtoComment postComplaint(DtoCommentIU dtoCommentIU);
+    List<DtoComment> getComplaints();
+    List<DtoComment> getComplaintsOfUser(String email);
 }

@@ -50,7 +50,7 @@ const UserList = ({ users, setUsers, setSelectedUser, selectedUser, darkMode }) 
         <div style={{
             backgroundColor: darkMode ? "#2a2a2a" : "#E7DECB",
             padding: "1rem",
-            borderRadius: "20px",
+            borderRadius: "10px",
             minHeight: "300px",
         }}>
             {/* Arama Kutusu */}
@@ -61,7 +61,6 @@ const UserList = ({ users, setUsers, setSelectedUser, selectedUser, darkMode }) 
                 onChange={(e) => setSearch(e.target.value)}
                 style={{
                     width: "100%",
-                    maxWidth: "382px",
                     padding: "0.6rem",
                     marginBottom: "1rem",
                     borderRadius: "10px",
@@ -76,7 +75,6 @@ const UserList = ({ users, setUsers, setSelectedUser, selectedUser, darkMode }) 
                 onChange={(e) => setFilter(e.target.value)}
                 style={{
                     width: "100%",
-                    maxWidth: "382px",
                     padding: "0.6rem",
                     marginBottom: "1rem",
                     borderRadius: "10px",

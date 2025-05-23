@@ -58,7 +58,7 @@ public class SecurityConfig {
                                         "/api/restaurant/search", "/api/restaurant/get/**", "/api/item/get-items/**",
                                          "/api/restaurant/get-types" ,"/api/district/**",
                                          "/order/cart", "api/upload/image/**", "api/users/reset-password",
-                                        "api/users/forget-password/**", "order/details/get-orders-of/**").permitAll()
+                                        "api/users/forget-password/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

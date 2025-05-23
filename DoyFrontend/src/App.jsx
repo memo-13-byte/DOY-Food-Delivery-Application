@@ -36,6 +36,7 @@ import CommentPage from './pages/order-review-view.jsx';
 import CourierCommentPage from './pages/courier-comments.jsx';
 import RestaurantCommentPage from './pages/restaurant-comments.jsx';
 import PastOrdersPage from './pages/past-orders-page.jsx';
+import CustomerComplaintsPage from './pages/customer-complaints.jsx';
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -83,6 +84,7 @@ function App() {
               <Route path="/courier/profile/comments" element={<CourierCommentPage />} />
               <Route path="/restaurant/profile/comments" element={<RestaurantCommentPage />} />
               <Route path="/customer/past-orders" element={<PastOrdersPage />} />
+              <Route path="/customer/complaints" element={<CustomerComplaintsPage />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
