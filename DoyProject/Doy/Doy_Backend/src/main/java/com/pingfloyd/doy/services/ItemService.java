@@ -121,7 +121,7 @@ public class ItemService implements IItemService {
         }
         List<DtoMenuItem> dtoMenuItems = new ArrayList<>();
         for (MenuItem menuItem : menuItems) {
-            if(Collections.disjoint(customerAllergens , menuItem.getAllergens())){
+            if(Collections.disjoint(customerAllergens , menuItem.getAllergens()) && menuItem.getAvailability()){
                 DtoMenuItem dtoMenuItem = new DtoMenuItem();
                 BeanUtils.copyProperties(menuItem, dtoMenuItem);
                 dtoMenuItem.setAllergens(menuItem.getAllergens().stream().toList());

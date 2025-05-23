@@ -38,6 +38,9 @@ public class MenuItem {
     @Column(name = "category", length = 50)
     private String category;
 
+    @Column(name = "availability")
+    private Boolean availability = true;
+
     @Enumerated
     @Column(name = "menu_item_type", length = 30, nullable = false)
     private MenuItemType menuItemType;
@@ -50,6 +53,7 @@ public class MenuItem {
     @Enumerated(EnumType.STRING)
     @Column(name = "allergen", length = 30)
     private Set<Allergens> allergens;
+
 
 
     @OneToOne(cascade = CascadeType.ALL)
