@@ -48,8 +48,9 @@ public class RestaurantSearchService {
             );
         }
         else{
+
             spec = RestaurantSpecification.filterBy(
-                    name, minRating, maxMinOrderPrice, cuisine ,customer.getCurrent_address().getDistrict().getName() ,customer.getCurrent_address().getCityEnum(), customer.getAllergens()
+                    name, minRating, maxMinOrderPrice, cuisine ,customer.getCurrent_address().getDistrict().getName() ,customer.getCurrent_address().getDistrict().getCity(), customer.getAllergens()
             );
         }
         int pageSize = (size <= 0) ? DataLimit : size;
