@@ -37,6 +37,7 @@ import CommentPage from './pages/order-review-view.jsx';
 import CourierCommentPage from './pages/courier-comments.jsx';
 import RestaurantCommentPage from './pages/restaurant-comments.jsx';
 import PastOrdersPage from './pages/past-orders-page.jsx';
+import ManagePromotionPage from './pages/ManagePromotionPage.jsx'
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -66,7 +67,6 @@ function App() {
               <Route path="/restaurants/register" element={<RestaurantRegisterPage />} />
               <Route path="/restaurant/profile/:id?" element={<RestaurantProfilePage />} />
               <Route path="/restaurants/favorite" element={<FavoriteRestaurantPage />} />
-              <Route path="/restaurantowner/profile/:id?" element={<RestaurantOwnerProfilePage/>} />
               <Route path="/courier/requests/:id?" element={<CourierOrdersPage/>} />
               <Route path="/courier/requests" element={<CourierOrdersPage/>} />
               <Route path="/couriers/register" element={<CourierRegisterPage />} />
@@ -87,6 +87,7 @@ function App() {
               <Route path="/courier/profile/comments" element={<CourierCommentPage />} />
               <Route path="/restaurant/profile/comments" element={<RestaurantCommentPage />} />
               <Route path="/customer/past-orders" element={<PastOrdersPage />} />
+              <Route path="/promotions/manage" element={<ManagePromotionPage />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>

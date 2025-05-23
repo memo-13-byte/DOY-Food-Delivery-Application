@@ -279,7 +279,8 @@ const RestaurantDetail = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         }
-        const response = await axios.get(`http://localhost:8080/order/cart`, header) // Your single endpoint
+        const url = `http://localhost:8080/order/cart`
+        const response = await AuthorizedRequest.getRequest(url, header)
         const userCartDto = response.data // Expecting UserCartDTO format defined before
 
         console.log("Received UserCartDTO:", userCartDto)

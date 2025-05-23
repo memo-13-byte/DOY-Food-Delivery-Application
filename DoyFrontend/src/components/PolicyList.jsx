@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { Button } from "../components/Button";
+import { useNavigate } from 'react-router-dom';
+
 
 const mockPolicies = [
     { id: 1, name: "Policy A", description: "Policy A defines delivery fees..." },
@@ -9,7 +12,7 @@ const mockPolicies = [
 
 const PolicyList = ({ darkMode }) => {
     const [search, setSearch] = useState("");
-
+    const navigate = useNavigate();
     const filteredPolicies = mockPolicies.filter(policy =>
         policy.name.toLowerCase().includes(search.toLowerCase())
     );
@@ -59,7 +62,7 @@ const PolicyList = ({ darkMode }) => {
                             <div style={{ fontWeight: "bold" }}>{policy.name}</div>
                             <small>{policy.description}</small>
                         </div>
-                        <div style={{ fontSize: "1.5rem" }}>➔</div>
+                        <Button style={{ fontSize: "1.5rem" }}>➔</Button>
                     </div>
                 ))}
             </div>
