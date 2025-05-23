@@ -102,13 +102,16 @@ const Home = () => {
                 paramsForAPI.sortDirection = sortDirection;
             }
 
-            // --- MODIFIED LOGIC FOR CITY AND DISTRICT ---
-            // Only add city and districtName if BOTH are selected and not "None"
-            if (selectedCity && selectedCity !== "None" && selectedDistrict && selectedDistrict !== "None") {
+            const isCityDistrictValid =
+                selectedCity && selectedCity !== "None" &&
+                selectedDistrict && selectedDistrict !== "None";
+
+            if (isCityDistrictValid) {
                 paramsForAPI.city = selectedCity;
                 paramsForAPI.districtName = selectedDistrict;
+            } else if (selectedCity || selectedDistrict) {
+                return;
             }
-            // --- END MODIFIED LOGIC ---
 
             // Pagination parameters (always include)
             paramsForAPI.page = 0;
