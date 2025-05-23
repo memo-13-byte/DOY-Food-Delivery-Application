@@ -32,6 +32,9 @@ public class ItemService implements IItemService {
     @Autowired
     IStorageService storageService;
 
+    @Autowired
+    UserService userService;
+
     public MenuItem getItemById(Long id) throws ItemNotFoundException {
         Optional<MenuItem> item = itemRepository.findById(id);
         if (item.isEmpty()) {
