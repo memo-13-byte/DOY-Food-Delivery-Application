@@ -9,6 +9,7 @@ import doyLogo from "../assets/doylogo.jpeg";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Toast from '../components/Toast'; // 📢 Toast componentini import et
+import DoyLogo from '../components/DoyLogo';
 
 export default function AdminComplaintsPage({ darkMode, setDarkMode }) {
     const [selectedComplaint, setSelectedComplaint] = useState(null);
@@ -83,7 +84,7 @@ export default function AdminComplaintsPage({ darkMode, setDarkMode }) {
                 gap: "2rem",
                 transition: "all 0.3s ease-in-out"
             }}>
-                <img src={doyLogo} alt="logo" style={{ height: "180px", borderRadius: "50%" }} />
+                <DoyLogo></DoyLogo>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1 }}>
                     <div style={{ width: "100%", maxWidth: "500px" }}>
                         <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>
@@ -295,8 +296,7 @@ export default function AdminComplaintsPage({ darkMode, setDarkMode }) {
                     </AnimatePresence>
                 </div>
 
-                {/* Footer */}
-                <Footer darkMode={darkMode} />
+                
 
                 {/* Toasts */}
                 {toastMessages.length > 0 && (
@@ -304,6 +304,8 @@ export default function AdminComplaintsPage({ darkMode, setDarkMode }) {
                 )}
 
             </div>
+            {/* Footer */}
+                <Footer darkMode={darkMode} />
         </div>
     );
 }

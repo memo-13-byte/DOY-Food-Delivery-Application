@@ -1,9 +1,11 @@
 package com.pingfloyd.doy.dto;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,5 +22,9 @@ public class DtoOrderDetails{
     private String customerPhone;
     private String customerEmail;
     private String note;
+
+    private LocalDate creationDate;
+    private LocalDate deliveryDate;
+    private boolean isReviewed;
 }
 

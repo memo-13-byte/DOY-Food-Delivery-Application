@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface IRestaurantController {
     ResponseEntity<DtoRestaurant> getRestaurant(Long id);
-    ResponseEntity<DtoRestaurant> postRestaurant(DtoRestaurantIU dtoRestaurantIU);
     ResponseEntity<DtoRestaurant> updateRestaurant(Long id, DtoRestaurantIU dtoRestaurantIU);
     ResponseEntity<DtoRestaurant> deleteRestaurant(Long id);
     ResponseEntity<List<DtoRestaurant>> getAllRestaurants();

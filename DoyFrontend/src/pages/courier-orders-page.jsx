@@ -10,7 +10,10 @@ import {
     Bike
 } from "lucide-react"
 import { motion } from "framer-motion"
-import { getUserByEmail } from "../services/profileData";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import DoyLogo from "../components/DoyLogo";
+
 
 // --- Custom UI components (Assume Button, Label, Switch are defined correctly) ---
 const Button = ({ className, children, type = "button", disabled = false, ...props }) => {
@@ -46,7 +49,7 @@ export default function CourierOrdersPage() {
     
     useEffect(() => {
         const getCourier = async() => {
-            const response = await getUserByEmail(courierEmail);
+            const response = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${courierEmail}`)).data;
             setCourierId(response.id);
         }
         getCourier();
@@ -231,17 +234,9 @@ export default function CourierOrdersPage() {
     return (
         // --- JSX Structure Remains the Same ---
         <div className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-850 text-white" : "bg-gray-100"} transition-colors duration-300`} >
-            {/* --- Header --- */}
-            <header className={`${darkMode ? "bg-gray-900" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center sticky top-0 z-10 shadow-md`} >
-                <div className="flex items-center"> <Link to="/"> <span className="font-bold text-xl tracking-wide hover:text-amber-200 transition-colors duration-200"> Doy! </span> </Link> </div>
-                <div className="flex items-center gap-4">
-                    {/* Dark Mode Toggle */}
-                    <div className="flex items-center gap-2"> <button onClick={toggleDarkMode} className={`w-10 h-5 rounded-full flex items-center ${darkMode ? "bg-yellow-400 justify-end" : "bg-gray-300 justify-start"} p-1 transition-all duration-300`} > <div className="w-3 h-3 bg-white rounded-full"></div> </button> <Moon className="h-4 w-4 text-yellow-300" /> </div>
-                </div>
-            </header>
+            <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-            {/* --- Logo --- */}
-            <div className={`flex justify-center py-6 ${isLoaded ? "animate-fadeIn" : "opacity-0"}`}> <div className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg`} > <div className="relative w-24 h-24"> <img src="/image1.png" alt="DOY Logo" width={96} height={96} className="w-full h-full" /> <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>FOOD DELIVERY</div> </div> </div> </div>
+            <DoyLogo></DoyLogo>
 
 
             {/* Main Content Area */}
@@ -358,13 +353,7 @@ export default function CourierOrdersPage() {
                 )}
             </main>
 
-            {/* --- Footer --- */}
-            <footer className={`${darkMode ? "bg-gray-900" : "bg-white"} mt-8 p-8 flex justify-between items-center transition-colors duration-300 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`} >
-                <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-                <div className="flex gap-6">
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"> <Twitter size={24} /> </a> <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"> <Instagram size={24} /> </a> <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"> <Youtube size={24} /> </a> <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"> <Linkedin size={24} /> </a>
-                </div>
-            </footer>
+            <Footer darkMode={darkMode}></Footer>
         </div>
     )
 }

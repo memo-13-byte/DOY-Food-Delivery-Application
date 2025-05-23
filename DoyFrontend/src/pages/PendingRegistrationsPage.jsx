@@ -71,6 +71,7 @@ export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
     };
 
     return (
+        <div>
         <div style={{
             backgroundColor: darkMode ? "#1c1c1c" : "#F8F5DE",
             color: darkMode ? "#fff" : "#000",
@@ -131,10 +132,10 @@ export default function PendingRegistrationsPage({ darkMode, setDarkMode }) {
                     )}
                 </div>
             </div>
-
-            <Footer darkMode={darkMode} />
-
             {toasts.length > 0 && <Toast messages={toasts} darkMode={darkMode} />}
+            
+        </div>
+        <Footer darkMode={darkMode} />
         </div>
     );
 }

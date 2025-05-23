@@ -13,7 +13,6 @@ const Footer = ({ darkMode }) => {
             backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
             transition: "all 0.3s ease-in-out"
         }}>
-            {/* Sol - Doy Logo */}
             <img
                 src={doyLogo}
                 alt="Doy Logo"
@@ -25,7 +24,6 @@ const Footer = ({ darkMode }) => {
                 }}
             />
 
-            {/* Orta - X */}
             <div style={{
                 fontSize: "2rem",
                 fontWeight: "bold",
@@ -34,7 +32,6 @@ const Footer = ({ darkMode }) => {
 
             </div>
 
-            {/* Sağ - Sosyal Medya İkonları */}
             <div style={{ display: "flex", gap: "1.5rem" }}>
                 <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>
                     <FaXTwitter size={24} />

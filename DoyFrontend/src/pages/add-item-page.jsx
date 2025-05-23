@@ -28,8 +28,9 @@ import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
-import { getUserByEmail } from "../services/profileData"
-
+import axios from "axios"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
 export default function AddItemPage() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -84,15 +85,35 @@ export default function AddItemPage() {
 
   // Load item data if in edit mode
   useEffect(() => {
-    if (!restaurantEmail) {
-      console.error("Restaurant email not found in localStorage.");
-      // Potentially navigate to login or show an error
-      setErrors(prev => ({ ...prev, auth: "Kullanıcı bilgileri bulunamadı."}));
-      return;
+    AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`).then((response) => {setRestaurantId(response.id)});
+    if (isEditMode && itemId) {
+      setIsLoading(true)
+      // In a real app, fetch the item data from API
+      AuthorizedRequest
+        .getRequest(`http://localhost:8080/api/item/get/${itemId}`)
+        .then((response) => {
+          const item = response.data
+          setFormData({
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            menuItemType: getmenuItemTypeIdFromType(item.menuItemType),
+            image: null,
+          })
+          // If there's an image URL in the response
+          if (item.imageUrl) {
+            setImagePreview(item.imageUrl)
+          }
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.error("Error fetching item:", error)
+          setIsLoading(false)
+        })
     }
 
     if (isEditMode && itemId) {
-      getUserByEmail(restaurantEmail).then((response) => {
+      (AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).then((response) => {
         if (response && response.id) {
           setRestaurantId(response.id);
         } else {
@@ -129,7 +150,7 @@ export default function AddItemPage() {
           });
     } else {
       // For new items, still fetch restaurantId
-      getUserByEmail(restaurantEmail).then((response) => {
+      (AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).then((response) => {
         if (response && response.id) {
           setRestaurantId(response.id);
         } else {
@@ -433,40 +454,7 @@ export default function AddItemPage() {
       <div
           className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"}`}
       >
-        {/* Header */}
-        <motion.header
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ type: "spring", stiffness: 100 }}
-            className={`sticky top-0 z-10 flex items-center justify-between px-6 py-5 shadow-lg ${darkMode ? "bg-[#333]" : "bg-[#47300A]"}`}
-        >
-          <motion.div whileHover={{ scale: 1.05 }} className="text-2xl font-bold text-white">
-          <span className="flex items-center gap-2">
-            <img src="/image1.png" alt="Doy Logo" className="h-10 w-10 rounded-full bg-white p-1" />
-            Doy!
-          </span>
-          </motion.div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <motion.button
-                  onClick={toggleDarkMode}
-                  className="relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
-                  style={{
-                    backgroundColor: darkMode ? "#6c4c9c" : "#e2e8f0",
-                    transition: "background-color 0.3s",
-                  }}
-              >
-                <span className="sr-only">Toggle dark mode</span>
-                <motion.span
-                    className="inline-block h-5 w-5 rounded-full bg-white shadow-lg"
-                    animate={{ x: darkMode ? 24 : 3, }}
-                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                />
-              </motion.button>
-              {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
-            </div>
-          </div>
-        </motion.header>
+        <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
         {/* Main Content */}
         <main className="container mx-auto max-w-3xl px-6 py-8">
@@ -867,29 +855,7 @@ export default function AddItemPage() {
           </motion.div>
         </main>
 
-        {/* Footer */}
-        <footer
-            style={{
-              marginTop: "2rem", padding: "2rem", display: "flex", justifyContent: "space-between", alignItems: "center",
-              backgroundColor: darkMode ? "#1a1a1a" : "#ffffff", transition: "all 0.3s ease-in-out",
-            }}
-        >
-          <img src="/image1.png" alt="Logo alt" style={{ height: "50px", width: "50px", borderRadius: "50%", objectFit: "cover", }} />
-          <div style={{ display: "flex", gap: "1.5rem" }}>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none", padding: "0.4rem", borderRadius: "50%", transition: "background-color 0.3s", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", }} className="icon-link">
-              <Twitter size={24} />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none", padding: "0.4rem", borderRadius: "50%", transition: "background-color 0.3s", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", }} className="icon-link">
-              <Instagram size={24} />
-            </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none", padding: "0.4rem", borderRadius: "50%", transition: "background-color 0.3s", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", }} className="icon-link">
-              <Youtube size={24} />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none", padding: "0.4rem", borderRadius: "50%", transition: "background-color 0.3s", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", }} className="icon-link">
-              <Linkedin size={24} />
-            </a>
-          </div>
-        </footer>
+        <Footer darkMode={darkMode}></Footer>
       </div>
   )
 }

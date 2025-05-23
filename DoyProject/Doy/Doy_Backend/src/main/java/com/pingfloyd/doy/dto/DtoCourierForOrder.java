@@ -16,4 +16,5 @@ public class DtoCourierForOrder {
     private String email;
     private String phoneNumber;
     private String location;
+    private Double rating;
 }

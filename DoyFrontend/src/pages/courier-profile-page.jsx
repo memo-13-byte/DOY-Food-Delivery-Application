@@ -4,15 +4,15 @@ import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Button } from "../components/ui/button"
-import { Checkbox } from "../components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import { Moon, Edit2, Upload, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
-import { getCourierById, getUserByEmail, getUserById } from "../services/profileData"
+import { Moon, Edit2, TrendingUp, Star, Package, Clock, LogOut } from "lucide-react"
 import { useToast } from "../hooks/use-toast"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 const Input = ({ className, ...props }) => (
   <input className={`w-full px-3 py-2 border rounded-lg ${className}`} {...props} />
@@ -28,7 +28,9 @@ export default function CourierProfilePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
-  const [courierEmail, setCourierEmail] = useState(localStorage.getItem("email"))
+  const {id:courierId} = params
+  const fromAdmin = courierId !== undefined
+  const [courierEmail, setCourierEmail] = useState("")
   const [darkMode, setDarkMode] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
@@ -63,7 +65,18 @@ export default function CourierProfilePage() {
   useEffect(() => {
     const getCourier = async () => {
       try {
-        const response = await getUserByEmail(courierEmail)
+        let loadedEmail = "";
+              if (courierId !== undefined) {
+              const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/get-by-id/${courierId}`)
+              console.log(response.data);
+              setCourierEmail(response.data.email);
+              loadedEmail = response.data.email;
+            }else{
+              setCourierEmail(localStorage.getItem("email"));
+              loadedEmail = localStorage.getItem("email");
+            }
+
+        const response = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${loadedEmail}`)).data
         setCourier(response)
         setOriginalCourier(response)
         // Set districts based on the loaded city
@@ -75,7 +88,7 @@ export default function CourierProfilePage() {
       }
     }
     getCourier()
-  }, [])
+  }, [courierEmail])
 
   // Update districts when districtCity changes
   useEffect(() => {
@@ -214,72 +227,9 @@ export default function CourierProfilePage() {
     <div
       className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
-      <motion.header
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 100 }}
-        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center sticky top-0 z-10 shadow-md`}
-      >
-        <div className="flex items-center">
-          <Link to="/">
-            <motion.span className="font-bold text-xl" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              Doy!
-            </motion.span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div onClick={() => setDarkMode(!darkMode)} className="flex items-center gap-2 cursor-pointer">
-              <div className="w-[34px] h-[18px] bg-[#F8F5DE] rounded-full relative">
-                <div
-                  className="w-[16px] h-[16px] bg-black rounded-full absolute top-[1px]"
-                  style={{
-                    left: darkMode ? "17px" : "1px",
-                    transition: "left 0.3s",
-                  }}
-                />
-              </div>
-              <Moon className={`h-4 w-4 ${darkMode ? "text-purple-400" : "text-amber-200"}`} />
-            </div>
-          </div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`flex items-center justify-center rounded-full w-10 h-10 ${darkMode ? "bg-purple-400" : "bg-amber-500"}`}
-          >
-            <span className="text-white text-sm font-medium">
-              {courier.firstname && courier.lastname ? courier.firstname[0] + courier.lastname[0] : "K"}
-            </span>
-          </motion.div>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      <motion.div
-        className="flex justify-center py-8"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
-      >
-        <motion.div
-          className={`rounded-full ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg`}
-          whileHover={{
-            scale: 1.05,
-            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-          }}
-        >
-          <div className="relative w-24 h-24">
-            <img src="/image1.png" alt="DOY Logo" width={96} height={96} className="w-full h-full" />
-            <motion.div
-              className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              FOOD DELIVERY
-            </motion.div>
-          </div>
-        </motion.div>
-      </motion.div>
+      <DoyLogo></DoyLogo>
 
       {errorMessages.map((message, i) => (
         <motion.div
@@ -327,7 +277,9 @@ export default function CourierProfilePage() {
           </motion.h1>
 
           <motion.div className="w-full max-w-4xl mx-auto space-y-5 mb-8" variants={itemVariants}>
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+
+          {
+            !fromAdmin && <div><motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               onClick={() => {navigate(`/courier/requests`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
@@ -347,12 +299,15 @@ export default function CourierProfilePage() {
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/courier/profile/orders`)}}
+              onClick={() => {navigate(`/courier/profile/${courier.id}/orders`)}}
               className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               See All Assigned Orders
             </Button>
-          </motion.div>
+          </motion.div> </div>
+          }
+
+          
 
             <motion.div className="grid grid-cols-2 gap-6" variants={fadeInVariants}>
               <div>
@@ -406,6 +361,7 @@ export default function CourierProfilePage() {
               </label>
               <div className="flex">
                 <input
+                disabled
                   type="email"
                   name="email"
                   value={courier.email}
@@ -517,6 +473,7 @@ export default function CourierProfilePage() {
               </label>
               <div className="flex">
                 <input
+                disabled
                   type="text"
                   name="governmentId"
                   value={courier.governmentId}
@@ -547,60 +504,27 @@ export default function CourierProfilePage() {
             </Button>
           </motion.div>
 
-          <motion.button
+          
+
+          {
+              !fromAdmin && <motion.button
             onClick={handleLogout}
             className={`w-full max-w-4xl mx-auto block text-center py-3 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-[#333]" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200`}
             variants={itemVariants}
             whileHover={{ scale: 1.02, backgroundColor: darkMode ? "#374151" : "#f9fafb" }}
             whileTap={{ scale: 0.98 }}
           >
+            
             <div className="flex items-center justify-center gap-2">
               <LogOut className="h-4 w-4" />
               Hesabımdan Çıkış Yap
             </div>
           </motion.button>
+            }
         </motion.div>
       </div>
 
-      <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
-      >
-        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

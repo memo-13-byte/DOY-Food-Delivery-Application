@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { BsMoon } from "react-icons/bs";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -44,23 +46,7 @@ const Checkout = () => {
 
   return (
       <div style={{ backgroundColor: darkMode ? "#1c1c1c" : "#F2E8D6", minHeight: "100vh", display: "flex", flexDirection: "column", color: darkMode ? "#fff" : "#000" }}>
-        {/* Üst bar */}
-        <div style={{ backgroundColor: darkMode ? "#333" : "#47300A", padding: "0.6rem 1.5rem", color: darkMode ? "#fff" : "white", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          {/* Sol: Doy! yazısı */}
-          <div style={{ fontWeight: "bold", fontSize: "1.1rem" }}>Doy!</div>
-
-          {/* Sağ: Toggle + Kayıt/Giriş */}
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            {/* Dark Mode Toggle */}
-            <div onClick={() => setDarkMode(!darkMode)} style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}>
-              <div style={{ width: "34px", height: "18px", borderRadius: "20px", backgroundColor: "#F8F5DE", position: "relative" }}>
-                <div style={{ width: "16px", height: "16px", borderRadius: "50%", backgroundColor: "#000", position: "absolute", top: "1px", left: darkMode ? "17px" : "1px", transition: "left 0.3s" }} />
-              </div>
-              <BsMoon color={darkMode ? "#000" : "#fff"} size={18} />
-            </div>
-            <div style={{ fontWeight: "bold" }}>Customer A</div>
-          </div>
-        </div>
+        <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
         {/* Kod giriş kutusu */}
         <div style={{ padding: "3rem", maxWidth: "600px", margin: "auto", backgroundColor: darkMode ? "#2c2c2c" : "#fff", borderRadius: "20px", boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
@@ -115,6 +101,7 @@ const Checkout = () => {
             </button>
           </div>
         </div>
+        <Footer darkMode={darkMode}></Footer>
       </div>
   );
 };

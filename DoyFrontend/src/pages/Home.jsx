@@ -9,6 +9,9 @@ import { useNavigate } from "react-router-dom"
 import { FaLocationDot } from "react-icons/fa6"
 import LocationModal from "../components/ui/LocationModal"
 import AuthorizedRequest from "../services/AuthorizedRequest"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 const renderStars = (rating) => {
     const stars = []
@@ -23,10 +26,14 @@ const renderStars = (rating) => {
 }
 
 const Home = () => {
-    const [darkMode, setDarkMode] = useState(false)
-    const navigate = useNavigate()
-    const [modalOpen, setModalOpen] = useState(false)
-    const [selectedAddress, setSelectedAddress] = useState("")
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode"))
+
+  const navigate = useNavigate()
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedAddress, setSelectedAddress] = useState("")
+  const [searchText, setSearchText] = useState("")
+  const [filteredRestaurants, setFilteredRestaurants] = useState([])
+  const [minRating, setMinRating] = useState(0)
 
     const [selectedCity, setSelectedCity] = useState(""); // Stores the currently selected city (e.g., "ANKARA")
     const [cities, setCities] = useState([]); // Stores the list of available cities (e.g., ["ANKARA", "ISTANBUL"])
@@ -35,8 +42,6 @@ const Home = () => {
     const [districts, setDistricts] = useState([]); // Stores the list of di
 
     // Filter states
-    const [searchText, setSearchText] = useState("")
-    const [minRating, setMinRating] = useState(0)
     const [maxMinOrderPrice, setMaxMinOrderPrice] = useState("")
     const [cuisine, setCuisine] = useState("")
     const [sortBy, setSortBy] = useState("")
@@ -108,6 +113,7 @@ const Home = () => {
             // Pagination parameters (always include)
             paramsForAPI.page = 0;
             paramsForAPI.size = 9999; // Attempt to fetch all relevant for client-side grouping
+        
 
             console.log("Fetching restaurants with params for API call:", paramsForAPI);
             try {
@@ -370,89 +376,10 @@ const Home = () => {
                 flexDirection: "column",
             }}
         >
-            {/* Top Bar */}
-            <div
-                style={{
-                    backgroundColor: darkMode ? "#333" : "#47300A",
-                    color: "white",
-                    padding: "0.6rem 1.5rem",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    transition: "all 0.3s ease-in-out",
-                }}
-            >
-                <div style={{fontWeight: "bold", fontSize: "1.1rem"}}>Doy!</div>
-                <div style={{display: "flex", alignItems: "center", gap: "1rem"}}>
-                    <div
-                        onClick={() => setDarkMode(!darkMode)}
-                        style={{display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer"}}
-                    >
-                        <div
-                            style={{
-                                width: "34px",
-                                height: "18px",
-                                borderRadius: "20px",
-                                backgroundColor: darkMode ? "#555" : "#F8F5DE",
-                                position: "relative",
-                                transition: "background-color 0.3s",
-                            }}
-                        >
-                            <div
-                                style={{
-                                    width: "16px",
-                                    height: "16px",
-                                    borderRadius: "50%",
-                                    backgroundColor: darkMode ? "#F8F5DE" : "#000",
-                                    position: "absolute",
-                                    top: "1px",
-                                    left: darkMode ? "17px" : "1px",
-                                    transition: "left 0.3s, background-color 0.3s",
-                                }}
-                            />
-                        </div>
-                        <BsMoon color={darkMode ? "#F8F5DE" : "#fff"} size={18}/>
-                    </div>
-                    <div
-                        style={{
-                            display: "flex",
-                            backgroundColor: "#F8F5DE",
-                            borderRadius: "10px",
-                            overflow: "hidden",
-                        }}
-                    >
-                        <button
-                            onClick={() => navigate("/auth")}
-                            style={{
-                                padding: "0.3rem 0.8rem",
-                                backgroundColor: "transparent",
-                                color: "#47300A",
-                                fontWeight: "bold",
-                                border: "none",
-                                borderRight: "1px solid #ccc",
-                                cursor: "pointer",
-                            }}
-                        >
-                            KAYIT
-                        </button>
-                        <button
-                            onClick={() => navigate("/auth")}
-                            style={{
-                                padding: "0.3rem 0.8rem",
-                                backgroundColor: "transparent",
-                                color: "#47300A",
-                                fontWeight: "bold",
-                                border: "none",
-                                cursor: "pointer",
-                            }}
-                        >
-                            GİRİŞ
-                        </button>
-                    </div>
-                </div>
-            </div>
+           <Header darkMode={darkMode} setDarkMode={setDarkMode}></Header>
 
-            {/* Location + Filter Section (horizontal layout) */}
+
+        
 
 
             {/* Location + Filter Section (horizontal layout) */}
@@ -1071,47 +998,7 @@ const Home = () => {
                     </p>
                 )}
             </div>
-            <footer
-                style={{
-                    marginTop: "auto",
-                    padding: "2rem",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
-                    transition: "all 0.3s ease-in-out",
-                    borderTop: `1px solid ${darkMode ? "#333" : "#ddd"}`,
-                }}
-            >
-                <img
-                    src={doyLogo || "/placeholder.svg"}
-                    alt="Logo alt"
-                    style={{
-                        height: "50px",
-                        width: "50px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                    }}
-                />
-                <div style={{display: "flex", gap: "1.5rem"}}>
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle}
-                       className="icon-link">
-                        <FaXTwitter size={24}/>
-                    </a>
-                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle}
-                       className="icon-link">
-                        <FaInstagram size={24}/>
-                    </a>
-                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle}
-                       className="icon-link">
-                        <FaYoutube size={24}/>
-                    </a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle}
-                       className="icon-link">
-                        <FaLinkedin size={24}/>
-                    </a>
-                </div>
-            </footer>
+            <Footer darkMode={darkMode}/>
 
             {modalOpen && (
                 <LocationModal

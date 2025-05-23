@@ -20,12 +20,15 @@ import {
 import { motion } from "framer-motion"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
 
 export default function RestaurantManagePage() {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const [restaurantEmail, setRestaurantEmail] = useState(localStorage.getItem("email"))
+  const {id:restaurantIdFromAdmin} = params;
+  const [restaurantEmail, setRestaurantEmail] = useState("")
   const [restaurantId, setRestaurantId] = useState(-1)
   const [darkMode, setDarkMode] = useState(false)
   const categoryMap = new Map()
@@ -43,7 +46,13 @@ export default function RestaurantManagePage() {
   // 1. Yeni state ekleyelim - useState tanımlamalarının olduğu bölüme ekleyin
   const [draggingItemId, setDraggingItemId] = useState(null)
   const [itemImageSuccess, setItemImageSuccess] = useState({ show: false, itemName: "" })
-  const [errorMessages, setErrorMessages] = useState([])
+  const [errorMessages, setErrorMessages] = useState([]);
+
+  const [openingHour, setOpeningHour] = useState("");
+  const [closingHour, setClosingHour] = useState("");
+  const [originalOpeningHour, setOriginalOpeningHour] = useState("");
+  const [originalClosingHour, setOriginalClosingHour] = useState("");
+  const [showTimeSaveButton, setShowTimeSaveButton] = useState(false);
 
 
 
@@ -75,14 +84,29 @@ const handleCancelMinOrderPriceEdit = () => {
   setIsEditingMinOrderPrice(false);
   setMinOrderPriceInput(restaurant.minOrderPrice || '');
 };
+
   useEffect(() => {
     const getRestaurantId = async () => {
+      let loadedEmail = "";
+            if (restaurantIdFromAdmin !== undefined) {
+            const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/get-by-id/${restaurantIdFromAdmin}`)
+            setRestaurantEmail(response.data.email);
+            loadedEmail = response.data.email;
+          }else{
+            setRestaurantEmail(localStorage.getItem("email"));
+            loadedEmail = localStorage.getItem("email");
+          }
+
       const response = await AuthorizedRequest.
-      getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)
+      getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${loadedEmail}`)
       setRestaurantId(response.data.restaurantId)
     }
     getRestaurantId()
   }, [])
+
+  useEffect(() => {
+    setShowTimeSaveButton(openingHour !== originalOpeningHour || closingHour !== originalClosingHour);
+  }, [openingHour, closingHour, originalOpeningHour, originalClosingHour]);
 
 
   useEffect(() => {
@@ -95,6 +119,10 @@ const handleCancelMinOrderPriceEdit = () => {
         setRestaurant(response.data)
         setPhoneNumberInput(response.data.restaurantPhone)
         setMinOrderPriceInput(response.data.minOrderPrice)
+        setOpeningHour(response.data.openingHour);
+        setClosingHour(response.data.closingHour);
+        setOriginalOpeningHour(response.data.openingHour);
+        setOriginalClosingHour(response.data.closingHour);
         
         if(response.data.imageId != null) {
           const imageResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/upload/image/${response.data.imageId}`, {
@@ -124,6 +152,41 @@ const handleCancelMinOrderPriceEdit = () => {
       document.body.classList.remove("dark-mode")
     }
   }, [restaurantId, darkMode])
+
+  const handleSaveWorkingHours = async () => {
+    try {
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${restaurantId}`);
+      const res = response.data;
+
+      if (!openingHour || !closingHour) {
+        alert("Açılış ve kapanış saatlerini doldurunuz.");
+        return;
+      }
+
+      let data = {
+        restaurantName: res.restaurantName,
+        restaurantPhone: restaurant.restaurantPhone || res.restaurantPhone,
+        description: res.description || "",
+        restaurantCategory: res.restaurantCategory || "FAST_FOOD",
+        rating: res.rating || 0.0,
+        minOrderPrice: res.minOrderPrice || 0,
+        imageId: res.imageId || null,
+        openingHour: `${openingHour}`,
+        closingHour: `${closingHour}`
+      };
+
+      console.log("Giden PUT verisi:", data)
+
+      await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+
+      setOriginalOpeningHour(openingHour);
+      setOriginalClosingHour(closingHour);
+      setShowTimeSaveButton(false);
+    } catch (error) {
+      console.error("PUT hatası:", error);
+      setErrorMessages(getResponseErrors(error));
+    }
+  };
 
   // 2. menuCategories state'ini güncelleyelim - her öğeye image alanı ekleyelim
   // Mevcut menuCategories state tanımlamasını aşağıdakiyle değiştirin
@@ -528,51 +591,7 @@ const handleCancelMinOrderPriceEdit = () => {
     <div
       className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"}`}
     >
-      {/* Header */}
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 100 }}
-        className={`sticky top-0 z-10 flex items-center justify-between px-6 py-5 shadow-lg ${darkMode ? "bg-[#333]" : "bg-[#47300A]"}`}
-      >
-        <motion.div whileHover={{ scale: 1.05 }} className="text-2xl font-bold text-white">
-          <Link to="/">
-            <span className="flex items-center gap-2">
-              <img src="/image1.png" alt="Doy Logo" className="h-10 w-10 rounded-full bg-white p-1" />
-              Doy!
-            </span>
-          </Link>
-        </motion.div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <motion.button
-              onClick={toggleDarkMode}
-              className="relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
-              style={{
-                backgroundColor: darkMode ? "#6c4c9c" : "#e2e8f0",
-                transition: "background-color 0.3s",
-              }}
-            >
-              <span className="sr-only">Toggle dark mode</span>
-              <motion.span
-                className="inline-block h-5 w-5 rounded-full bg-white shadow-lg"
-                animate={{
-                  x: darkMode ? 24 : 3,
-                }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              />
-            </motion.button>
-            {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
-          </div>
-          <motion.div whileHover={{ scale: 1.05 }}>
-            <button
-              className={`rounded-full px-4 py-2 font-medium text-lg ${darkMode ? "text-white hover:bg-gray-700" : "text-white hover:bg-amber-600"}`}
-            >
-              {restaurant.restaurantName}
-            </button>
-          </motion.div>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
       {errorMessages.map((message, i) => (
                         
@@ -729,6 +748,38 @@ const handleCancelMinOrderPriceEdit = () => {
                   <Edit className="h-5 w-5" />
                 </motion.button>
               </div>
+
+               {/* Working Hours */}
+              <div className="flex items-center gap-4 mt-6">
+                <label className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>Açılış Saati:</label>
+                <input
+                    type="time"
+                    value={openingHour}
+                    onChange={(e) => setOpeningHour(e.target.value)}
+                    className="rounded-md border px-4 py-2 text-black"
+                />
+              </div>
+              <div className="flex items-center gap-4 mt-2">
+                <label className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>Kapanış Saati:</label>
+                <input
+                    type="time"
+                    value={closingHour}
+                    onChange={(e) => setClosingHour(e.target.value)}
+                    className="rounded-md border px-4 py-2 text-black"
+                />
+              </div>
+              {showTimeSaveButton && (
+                  <div className="mt-4">
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleSaveWorkingHours}
+                        className={`px-6 py-3 rounded-xl text-lg font-medium bg-green-600 text-white hover:bg-green-700 transition-colors duration-300`}
+                    >
+                      Çalışma Saatlerini Kaydet
+                    </motion.button>
+                  </div>
+              )}
 
               {/* PHONE NUMBER */}
 <div className="flex items-center justify-between mt-6">
@@ -962,7 +1013,8 @@ const handleCancelMinOrderPriceEdit = () => {
                   <h2 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-black"} mr-2`}>
                     {category.name}
                   </h2>
-                  <motion.button
+                  {
+                    !restaurantIdFromAdmin && <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => handleAddItemClick(category.id)}
@@ -970,6 +1022,8 @@ const handleCancelMinOrderPriceEdit = () => {
                   >
                     <Plus className="h-5 w-5" />
                   </motion.button>
+                  }
+                  
                 </div>
 
                 {/* Menu Items - 2-column grid layout */}
@@ -985,8 +1039,8 @@ const handleCancelMinOrderPriceEdit = () => {
                         whileHover={{ y: -5 }}
                         className={`relative overflow-hidden rounded-2xl ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 shadow-xl transition-shadow hover:shadow-2xl h-full`}
                       >
-                        {/* Delete Button - Top Right */}
-                        <motion.button
+                        {
+                          !restaurantIdFromAdmin && <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => deleteMenuItem(category.id, item.id)}
@@ -994,6 +1048,8 @@ const handleCancelMinOrderPriceEdit = () => {
                         >
                           <X className="h-5 w-5" />
                         </motion.button>
+                        }
+                        
 
                         <div className="flex flex-col h-full">
                           {/* Item Content */}
@@ -1055,7 +1111,8 @@ const handleCancelMinOrderPriceEdit = () => {
                             >
                               {item.price} TL
                             </div>
-                            <motion.button
+                            {
+                              !restaurantIdFromAdmin && <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => handleEditItemClick(category.id, item.id)}
@@ -1067,6 +1124,8 @@ const handleCancelMinOrderPriceEdit = () => {
                             >
                               Düzenle
                             </motion.button>
+                            }
+                            
                           </div>
                         </div>
                       </motion.div>
@@ -1078,8 +1137,8 @@ const handleCancelMinOrderPriceEdit = () => {
           ))}
         </div>
 
-        {/* Back to Profile Button */}
-        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>
+        {
+      !restaurantIdFromAdmin && <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -1090,6 +1149,8 @@ const handleCancelMinOrderPriceEdit = () => {
             Profil Sayfasına Dön
           </motion.button>
         </motion.div>
+      }
+        
 
         {showConfirmation && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -1195,108 +1256,7 @@ const handleCancelMinOrderPriceEdit = () => {
         )}
       </main>
 
-      {/* Footer */}
-      <footer
-        style={{
-          marginTop: "2rem",
-          padding: "2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
-          transition: "all 0.3s ease-in-out",
-        }}
-      >
-        <img
-          src="/image1.png"
-          alt="Logo alt"
-          style={{
-            height: "50px",
-            width: "50px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
-
-        <div style={{ display: "flex", gap: "1.5rem" }}>
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

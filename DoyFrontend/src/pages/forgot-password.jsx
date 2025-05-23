@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, Moon, Sun, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react"
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom"
+import { Link, useLocation, useNavigate, useSearchParams, useParams } from "react-router-dom"
 import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
 
 // Simplified UI components (Button, Input, Label)
 const Button = ({ className, children, ...props }) => (
@@ -41,7 +44,7 @@ export default function ForgotPassword() {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const type = searchParams.get("type") || "customer"
+  const {type:type} = useParams()
 
   const [userType, setUserType] = useState(type)
   const [mounted, setMounted] = useState(false)
@@ -106,7 +109,7 @@ export default function ForgotPassword() {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/users/forget-password/${email}`)
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/forget-password/${email}`)
       if (response.status === 200 || response.status === 204) {
         setSuccessMessage(
             response.data?.message || "Şifre sıfırlama talimatları e-posta adresinize gönderildi. Lütfen gelen kutunuzu ve spam klasörünüzü kontrol edin. Ardından aşağıdaki alana token'ı ve yeni şifrenizi girin."
@@ -204,35 +207,7 @@ export default function ForgotPassword() {
   return (
       <div className={`flex flex-col min-h-screen ${darkMode ? "bg-gray-900 text-gray-200" : "bg-[#f5f0e1] text-gray-800"}`}>
         <style>{fadeInAnimation}</style>
-        {/* Header section */}
-        <header className={`py-3 px-6 flex justify-between items-center ${darkMode ? "bg-gray-800" : "bg-[#5c4018]"}`}>
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
-              <span className="font-bold text-white text-xl tracking-wide">DOY!</span>
-            </Link>
-          </div>
-          <div className="flex gap-3 items-center">
-            <div className="flex items-center bg-white/20 rounded-full p-1">
-              <button onClick={toggleDarkMode} className="flex items-center justify-center w-6 h-6 rounded-full">
-                {darkMode ? <Sun className="h-4 w-4 text-yellow-300" /> : <Moon className="h-4 w-4 text-gray-700" />}
-              </button>
-            </div>
-            <div className="flex">
-              <button
-                  className={`px-4 py-1.5 text-sm font-medium rounded-l-full ${darkMode ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-[#f5f0e1] hover:bg-opacity-80 text-[#5c4018]"}`}
-                  onClick={() => navigate(`/auth?tab=register&type=${userType}`)}
-              >
-                KAYIT
-              </button>
-              <button
-                  className={`px-4 py-1.5 text-sm font-medium rounded-r-full ${darkMode ? "bg-gray-600 hover:bg-gray-500 text-white" : "bg-white hover:bg-opacity-80 text-[#5c4018]"}`}
-                  onClick={() => navigate(`/auth?tab=login&type=${userType}`)}
-              >
-                GİRİŞ
-              </button>
-            </div>
-          </div>
-        </header>
+        <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
         {/* Logo section */}
         <div className={`flex justify-center py-8 ${mounted ? "animate-fadeIn" : "opacity-0"}`}>
@@ -513,58 +488,7 @@ export default function ForgotPassword() {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="py-8 px-6 mt-auto">
-          <div className="flex flex-col items-center">
-            <div
-                className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-4 w-24 h-24 flex items-center justify-center shadow-md transition-all duration-300`}
-            >
-              <div className="relative w-16 h-16">
-                <img src="/image1.png" alt="DOY Logo" width={64} height={64} className="w-full h-full" />
-                <div className={`text-center text-[8px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                  FOOD DELIVERY
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-center gap-6 mt-6">
-              <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#5c4018]"} transition-colors`}
-              >
-                <Twitter />
-              </a>
-              <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#5c4018]"} transition-colors`}
-              >
-                <Instagram />
-              </a>
-              <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#5c4018]"} transition-colors`}
-              >
-                <Youtube />
-              </a>
-              <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#5c4018]"} transition-colors`}
-              >
-                <Linkedin />
-              </a>
-            </div>
-            <p className={`text-center text-xs ${darkMode ? "text-gray-500" : "text-gray-500"} mt-6`}>
-              © {new Date().getFullYear()} DOY! Food Delivery. Tüm hakları saklıdır.
-            </p>
-          </div>
-        </footer>
+        <Footer darkMode={darkMode}></Footer>
       </div>
   )
 }

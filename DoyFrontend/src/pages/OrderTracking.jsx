@@ -10,7 +10,7 @@ import RestaurantNavbar from "../components/RestaurantNavbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/Button";
 import CourierAssignModal from "../components/CourierAssignModal"; // Make sure this path is correct
-import { getUserByEmail } from "../services/profileData";
+import Header from "../components/Header";
 
 // Define the OrderStatus enum values matching your backend
 const OrderStatus = {
@@ -168,7 +168,7 @@ export default function OrderTrackingPage() {
 
     // Fetch orders for the specific restaurant
     const fetchOrders = async () => {
-        const restaurantOwner = await getUserByEmail(restaurantEmail);
+        const restaurantOwner = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).data;
         console.log(restaurantOwner);
         setRestaurantId(restaurantOwner.id);
 
@@ -456,8 +456,7 @@ export default function OrderTrackingPage() {
             color: darkMode ? "#fff" : "#000",
             minHeight: "100vh", display: "flex", flexDirection: "column",
         }}>
-            {/* Navbar */}
-            <RestaurantNavbar darkMode={darkMode} setDarkMode={setDarkMode} />
+            <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
             {/* Main Content Area */}
             <div style={{ padding: "1rem 2rem 2rem 2rem", flexGrow: 1 }}>
