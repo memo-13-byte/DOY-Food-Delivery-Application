@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, Moon, Sun, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react"
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom"
+import { Link, useLocation, useNavigate, useSearchParams, useParams } from "react-router-dom"
 import axios from "axios"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import Header from "../components/Header"
@@ -44,7 +44,7 @@ export default function ForgotPassword() {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const type = searchParams.get("type") || "customer"
+  const {type:type} = useParams()
 
   const [userType, setUserType] = useState(type)
   const [mounted, setMounted] = useState(false)

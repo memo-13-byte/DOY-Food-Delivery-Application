@@ -413,7 +413,7 @@ export default function AuthPage() {
       <div className="flex-grow flex justify-center items-start p-4 w-full">
         <div className="w-full md:w-3/4 lg:w-2/3 xl:w-3/5 bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg transition-colors duration-300 mx-auto">
           <h2 className="text-center text-2xl font-semibold text-[#6b4b10] dark:text-amber-400 mb-8 transition-colors duration-300">
-            {getTitle()} Girişi
+            {getTitle() + (activeTab === "login" ? " Girişi" : " Kayıt")} 
           </h2>
 
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
@@ -504,7 +504,7 @@ export default function AuthPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="text-sm">
-                        <Link to="/forgot-password" className="text-[#5c4018] dark:text-amber-400 hover:underline">
+                        <Link to={`/forgot-password/${userType}`} className="text-[#5c4018] dark:text-amber-400 hover:underline">
                           Şifremi unuttum
                         </Link>
                       </div>
