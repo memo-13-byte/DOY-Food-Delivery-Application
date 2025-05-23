@@ -2,6 +2,7 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.DtoMenuItem;
 import com.pingfloyd.doy.dto.DtoMenuItemIU;
+import com.pingfloyd.doy.entities.Customer;
 import com.pingfloyd.doy.entities.Image;
 import com.pingfloyd.doy.entities.MenuItem;
 import com.pingfloyd.doy.entities.Restaurant;
@@ -13,12 +14,10 @@ import com.pingfloyd.doy.repositories.ItemRepository;
 import com.pingfloyd.doy.storage.IStorageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ItemService implements IItemService {
@@ -114,15 +113,22 @@ public class ItemService implements IItemService {
         if (menuItems == null || menuItems.isEmpty()) {
             throw new ItemNotFoundException("The requested items were not found.");
         }
-
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Customer customer  = userService.SearchCustomer(username);
+        Set<Allergens> customerAllergens = new HashSet<>();
+        if(customer != null){
+            customerAllergens = new HashSet<>(customer.getAllergens());
+        }
         List<DtoMenuItem> dtoMenuItems = new ArrayList<>();
         for (MenuItem menuItem : menuItems) {
-            DtoMenuItem dtoMenuItem = new DtoMenuItem();
-            BeanUtils.copyProperties(menuItem, dtoMenuItem);
-            dtoMenuItem.setAllergens(menuItem.getAllergens().stream().toList());
-            dtoMenuItem.setRestaurantId(restaurantId);
-            dtoMenuItem.setImageId(menuItem.getImage() == null ? null : menuItem.getImage().getId());
-            dtoMenuItems.add(dtoMenuItem);
+            if(Collections.disjoint(customerAllergens , menuItem.getAllergens())){
+                DtoMenuItem dtoMenuItem = new DtoMenuItem();
+                BeanUtils.copyProperties(menuItem, dtoMenuItem);
+                dtoMenuItem.setAllergens(menuItem.getAllergens().stream().toList());
+                dtoMenuItem.setRestaurantId(restaurantId);
+                dtoMenuItem.setImageId(menuItem.getImage() == null ? null : menuItem.getImage().getId());
+                dtoMenuItems.add(dtoMenuItem);
+            }
         }
 
         return dtoMenuItems;

@@ -24,7 +24,35 @@ const Switch = ({ checked, onCheckedChange, className }) => {
 }
 
 export default function Header({darkMode, setDarkMode}) {
-  const navigate = useNavigate() 
+  const navigate = useNavigate()
+
+    function getUserRoleFromToken() {
+        const token = localStorage.getItem("token");
+        if (!token) return null;
+
+        try {
+            const payloadBase64 = token.split('.')[1];
+            const decodedPayload = atob(payloadBase64); // Decode base64
+            const payload = JSON.parse(decodedPayload); // Parse JSON
+
+            return payload.role || payload.roles || null; // adjust based on your token structure
+        } catch (error) {
+            console.error("Invalid token format", error);
+            return null;
+        }
+    }
+    const navigateProfile = () =>{
+      let payload = getUserRoleFromToken()
+      if(payload === "CUSTOMER"){
+          navigate("/customer/profile")
+      }
+      else if(payload === "RESTAURANT_OWNER"){
+          navigate("/restaurant/profile")
+      }
+      else{
+          navigate("/courier/profile")
+      }
+    }
 
   const toggleDarkMode = () => {
     console.log("now dark mode: " + !darkMode);
@@ -35,7 +63,11 @@ export default function Header({darkMode, setDarkMode}) {
     else 
         document.documentElement.classList.remove("dark")
   }
-
+  const OnLogout = () => {
+      console.log("lalalal")
+      localStorage.removeItem("token")
+      navigate("/")
+  }
   useEffect(() => {
     if (darkMode)
         document.documentElement.classList.add("dark")
@@ -58,19 +90,42 @@ export default function Header({darkMode, setDarkMode}) {
             />
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </div>
-          <span className="mx-1 text-white/30">|</span>
-          <button
-            onClick={() => navigate("/auth")}
-            className="bg-[#e8c886] hover:bg-[#d9b978] dark:bg-amber-600 dark:hover:bg-amber-500 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200 text-[#6b4b10] dark:text-white"
-          >
-            Kayıt
-          </button>
-          <button
-            onClick={() => navigate("/auth")}
-            className="bg-[#d9b978] hover:bg-[#c9a968] dark:bg-amber-700 dark:hover:bg-amber-600 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200 text-[#6b4b10] dark:text-white"
-          >
-            Giriş
-          </button>
+
+            {localStorage.getItem("token") === null &&(
+                <>
+                    <span className="mx-1 text-white/30">|</span>
+                    <button
+                        onClick={() => navigate("/auth")}
+                        className="bg-[#e8c886] hover:bg-[#d9b978] dark:bg-amber-600 dark:hover:bg-amber-500 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200 text-[#6b4b10] dark:text-white"
+                    >
+                        Kayıt
+                    </button>
+                    <button
+                        onClick={() => navigate("/auth")}
+                        className="bg-[#d9b978] hover:bg-[#c9a968] dark:bg-amber-700 dark:hover:bg-amber-600 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200 text-[#6b4b10] dark:text-white"
+                    >
+                        Giriş
+                    </button>
+                </>
+            )}
+            {localStorage.getItem("token") !== null &&(
+                <>
+                    <span className="mx-1 text-white/30">|</span>
+                    <button
+                        onClick={OnLogout}
+                        className="bg-[#e8c886] hover:bg-[#d9b978] dark:bg-amber-600 dark:hover:bg-amber-500 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200 text-[#6b4b10] dark:text-white"
+                    >
+                        Çıkış
+                    </button>
+                    <button
+                        onClick={navigateProfile}
+                        className="bg-[#e8c886] hover:bg-[#d9b978] dark:bg-amber-600 dark:hover:bg-amber-500 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200 text-[#6b4b10] dark:text-white"
+                    >
+                        Profil
+                    </button>
+                </>
+            )}
         </div>
       </header>
-)};
+  )
+};

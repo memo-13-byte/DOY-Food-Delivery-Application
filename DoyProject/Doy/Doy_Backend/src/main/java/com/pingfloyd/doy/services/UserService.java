@@ -171,6 +171,7 @@ public class UserService implements UserDetailsService, IUserService {
         BeanUtils.copyProperties(user.get(), dtoUser);
         return dtoUser;
     }
+    
 
     @Override
     public DtoCustomer getCustomerByEmail(String email) {

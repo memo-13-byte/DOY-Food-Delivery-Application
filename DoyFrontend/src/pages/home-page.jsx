@@ -70,7 +70,7 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-
+          {localStorage.getItem("token") === null && (
           <div className="flex justify-center gap-5 p-5">
             {/* Customer Section */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200 dark:hover:border-amber-700">
@@ -142,7 +142,7 @@ export default function HomePage() {
                 </Button>
               </div>
             </div>
-          </div>
+          </div>)}
         </div>
       </main>
 
