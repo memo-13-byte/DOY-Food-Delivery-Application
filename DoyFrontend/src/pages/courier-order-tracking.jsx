@@ -1,13 +1,14 @@
 // OrderStatusRestaurant.js (Simplified + Pagination + Card Alignment Fix + Update Buttons)
 
 import React, { useState, useEffect, useCallback } from "react"; // Added useCallback
-import axios from 'axios';
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import { useParams } from 'react-router-dom';
 
 // Assuming these components exist in the specified paths
 import RestaurantNavbar from "../components/RestaurantNavbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/Button"; // Assuming Button can handle disabled state
+import Header from "../components/Header";
 
 // Define ONLY the necessary OrderStatus enum values
 const OrderStatus = {
@@ -179,7 +180,7 @@ export default function OrderStatusCourier() {
         }
         const url = `${API_BASE_URL}/order/courier/${restaurantId}/order`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             if (response.data && Array.isArray(response.data.orderInfoList)) {
                 const relevantOrders = response.data.orderInfoList.filter(
                     order => displayableStatuses.includes(order.status)
@@ -211,7 +212,7 @@ export default function OrderStatusCourier() {
         setDetailLoading(true); setDetailError(null); setSelectedOrderDetail(null);
         const url = `${API_BASE_URL}/order/details/${orderId}`;
         try {
-            const response = await axios.get(url);
+            const response = await AuthorizedRequest.getRequest(url);
             if (response.data) { setSelectedOrderDetail(response.data); }
             else {
                 console.warn(`No details found for order ID: ${orderId}`);
@@ -245,7 +246,7 @@ export default function OrderStatusCourier() {
         console.log(`updateOrderStatus: Sending PATCH to ${url} with payload:`, payload);
 
         try {
-            const patchResponse = await axios.patch(url, payload);
+            const patchResponse = await AuthorizedRequest.patchRequest(url, payload);
             console.log(`updateOrderStatus: PATCH successful for Order ID: ${orderId}. Status: ${patchResponse.status}`);
 
             // Re-fetch orders to reflect the change accurately
@@ -317,7 +318,7 @@ export default function OrderStatusCourier() {
             color: darkMode ? "#fff" : "#000",
             minHeight: "100vh", display: "flex", flexDirection: "column",
         }}>
-            <RestaurantNavbar darkMode={darkMode} setDarkMode={setDarkMode} />
+            <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
             <div style={{ padding: "1rem 2rem 2rem 2rem", flexGrow: 1 }}>
                 <h2 style={{ textAlign: "center", marginBottom: "0.5rem" }}>Sipariş Takibi</h2>
                 <p style={{ textAlign: "center", marginBottom: "1.5rem", color: darkMode ? '#ccc' : '#555', fontSize: '0.9em' }}>

@@ -2,6 +2,9 @@ package com.pingfloyd.doy.controllers;
 
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.User;
+import com.pingfloyd.doy.entities.UserRoles;
+import com.pingfloyd.doy.exception.UnauthorizedRequestException;
+import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.services.RegistrationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class RegistrationController {
 
     private final RegistrationService registrationService;
+    private final JwtService jwtService;
 
     @Autowired
-    public RegistrationController(RegistrationService registrationService){
+    public RegistrationController(RegistrationService registrationService, JwtService jwtService){
         this.registrationService  = registrationService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping()
@@ -40,6 +45,7 @@ public class RegistrationController {
 
     @PutMapping("/pending/{id}-{accept}")
     public ResponseEntity<Boolean> PendingRegister(@PathVariable Long id , @PathVariable Boolean accept){
+        if (!jwtService.checkIfUserRole(UserRoles.ADMIN)) throw new UnauthorizedRequestException();
         return ResponseEntity.ok(registrationService.EnableUser(id , accept));
     }
 

@@ -18,14 +18,18 @@ import {
   Axis3D,
 } from "lucide-react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
 
 export default function RestaurantManagePage() {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const restaurantId = params.id
+  const {id:restaurantIdFromAdmin} = params;
+  const [restaurantEmail, setRestaurantEmail] = useState("")
+  const [restaurantId, setRestaurantId] = useState(-1)
   const [darkMode, setDarkMode] = useState(false)
   const categoryMap = new Map()
   categoryMap.set("COMBO", 0)
@@ -42,14 +46,13 @@ export default function RestaurantManagePage() {
   // 1. Yeni state ekleyelim - useState tanımlamalarının olduğu bölüme ekleyin
   const [draggingItemId, setDraggingItemId] = useState(null)
   const [itemImageSuccess, setItemImageSuccess] = useState({ show: false, itemName: "" })
-  const [errorMessages, setErrorMessages] = useState([])
+  const [errorMessages, setErrorMessages] = useState([]);
+
   const [openingHour, setOpeningHour] = useState("");
   const [closingHour, setClosingHour] = useState("");
   const [originalOpeningHour, setOriginalOpeningHour] = useState("");
   const [originalClosingHour, setOriginalClosingHour] = useState("");
   const [showTimeSaveButton, setShowTimeSaveButton] = useState(false);
-
-
 
 
 
@@ -60,7 +63,7 @@ export default function RestaurantManagePage() {
     restaurantPhone: "",
     restaurantCategory: "",
     rating: "",
-    minOrderPrice: "",
+    minOrderPrice: ""
   })
 
   const [isEditingPhoneNumber, setIsEditingPhoneNumber] = useState(false);
@@ -83,17 +86,35 @@ const handleCancelMinOrderPriceEdit = () => {
 };
 
   useEffect(() => {
+    const getRestaurantId = async () => {
+      let loadedEmail = "";
+            if (restaurantIdFromAdmin !== undefined) {
+            const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/get-by-id/${restaurantIdFromAdmin}`)
+            setRestaurantEmail(response.data.email);
+            loadedEmail = response.data.email;
+          }else{
+            setRestaurantEmail(localStorage.getItem("email"));
+            loadedEmail = localStorage.getItem("email");
+          }
+
+      const response = await AuthorizedRequest.
+      getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${loadedEmail}`)
+      setRestaurantId(response.data.restaurantId)
+    }
+    getRestaurantId()
+  }, [])
+
+  useEffect(() => {
     setShowTimeSaveButton(openingHour !== originalOpeningHour || closingHour !== originalClosingHour);
   }, [openingHour, closingHour, originalOpeningHour, originalClosingHour]);
 
 
-  // ID'ye göre restoran verilerini yükle
   useEffect(() => {
-    console.log("wtf")
     const getRestaurantInformation = async () => {
+      if (restaurantId === -1) return;
       try {
         
-        const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
         console.log(response.data)
         setRestaurant(response.data)
         setPhoneNumberInput(response.data.restaurantPhone)
@@ -102,10 +123,9 @@ const handleCancelMinOrderPriceEdit = () => {
         setClosingHour(response.data.closingHour);
         setOriginalOpeningHour(response.data.openingHour);
         setOriginalClosingHour(response.data.closingHour);
-
-
+        
         if(response.data.imageId != null) {
-          const imageResponse = await axios.get(`http://localhost:8080/api/upload/image/${response.data.imageId}`, {
+          const imageResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/upload/image/${response.data.imageId}`, {
             responseType: 'blob',
           });
           
@@ -132,6 +152,41 @@ const handleCancelMinOrderPriceEdit = () => {
       document.body.classList.remove("dark-mode")
     }
   }, [restaurantId, darkMode])
+
+  const handleSaveWorkingHours = async () => {
+    try {
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${restaurantId}`);
+      const res = response.data;
+
+      if (!openingHour || !closingHour) {
+        alert("Açılış ve kapanış saatlerini doldurunuz.");
+        return;
+      }
+
+      let data = {
+        restaurantName: res.restaurantName,
+        restaurantPhone: restaurant.restaurantPhone || res.restaurantPhone,
+        description: res.description || "",
+        restaurantCategory: res.restaurantCategory || "FAST_FOOD",
+        rating: res.rating || 0.0,
+        minOrderPrice: res.minOrderPrice || 0,
+        imageId: res.imageId || null,
+        openingHour: `${openingHour}`,
+        closingHour: `${closingHour}`
+      };
+
+      console.log("Giden PUT verisi:", data)
+
+      await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+
+      setOriginalOpeningHour(openingHour);
+      setOriginalClosingHour(closingHour);
+      setShowTimeSaveButton(false);
+    } catch (error) {
+      console.error("PUT hatası:", error);
+      setErrorMessages(getResponseErrors(error));
+    }
+  };
 
   // 2. menuCategories state'ini güncelleyelim - her öğeye image alanı ekleyelim
   // Mevcut menuCategories state tanımlamasını aşağıdakiyle değiştirin
@@ -160,7 +215,7 @@ const handleCancelMinOrderPriceEdit = () => {
 
   // Function to delete a menu item
   const deleteMenuItem = (categoryId, itemId) => {
-    axios.delete(`http://localhost:8080/api/item/delete/${itemId}`).then(
+    AuthorizedRequest.deleteRequest(`http://localhost:8080/api/item/delete/${itemId}`).then(
       setMenuCategories(
         menuCategories.map((category) => {
           if (category.id === categoryId) {
@@ -177,17 +232,17 @@ const handleCancelMinOrderPriceEdit = () => {
 
   const handleAddItemClick = (categoryId) => {
     // Ensure restaurantId is passed in the URL
-    navigate(`/restaurants/manage/${restaurantId}/add-item/${categoryId}`)
+    navigate(`/restaurants/manage/add-item/${categoryId}`)
   }
 
   const handleEditItemClick = (categoryId, itemId) => {
     // Ensure restaurantId is passed in the URL
-    navigate(`/restaurants/manage/${restaurantId}/edit-item/${categoryId}/${itemId}`)
+    navigate(`/restaurants/manage/edit-item/${categoryId}/${itemId}`)
   }
 
   const handleBackClick = () => {
     // Updated to match App.js routing structure
-    navigate(`/restaurant/profile/${restaurantId || ""}`)
+    navigate(`/restaurant/profile`)
   }
 
   // 3. Menü öğesi resim yükleme fonksiyonlarını ekleyelim - handleFileChange fonksiyonundan sonra ekleyin
@@ -276,10 +331,11 @@ const handleCancelMinOrderPriceEdit = () => {
 
   // 4. getRestaurantItems fonksiyonunu güncelleyelim - mevcut fonksiyonu aşağıdakiyle değiştirin
   const getRestaurantItems = async () => {
+    if (restaurantId === -1) return;
     setErrorMessages([])
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/item/get-items/${restaurantId}`)
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/item/get-items/${restaurantId}`)
       const itemData = [
         {
           id: 1,
@@ -354,7 +410,7 @@ const handleCancelMinOrderPriceEdit = () => {
 
       try {
         console.log(restaurant)
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
+        await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
         restaurant.description = descriptionInput
       } catch (error) {
         console.log(error)
@@ -376,48 +432,14 @@ const handleCancelMinOrderPriceEdit = () => {
   
       try {
         console.log(restaurant);
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+        await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
       } catch (error) {
         setErrorMessages(getResponseErrors(error));
       }
     }
     setIsEditingPhoneNumber(false)
   }
-  const handleSaveWorkingHours = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`);
-      const res = response.data;
-
-      if (!openingHour || !closingHour) {
-        alert("Açılış ve kapanış saatlerini doldurunuz.");
-        return;
-      }
-
-      let data = {
-        restaurantName: res.restaurantName,
-        restaurantPhone: restaurant.restaurantPhone || res.restaurantPhone,
-        description: res.description || "",
-        restaurantCategory: res.restaurantCategory || "FAST_FOOD",
-        rating: res.rating || 0.0,
-        minOrderPrice: res.minOrderPrice || 0,
-        imageId: res.imageId || null,
-        openingHour: `${openingHour}`,
-        closingHour: `${closingHour}`
-      };
-
-      console.log("Giden PUT verisi:", data)
-
-      await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
-
-      setOriginalOpeningHour(openingHour);
-      setOriginalClosingHour(closingHour);
-      setShowTimeSaveButton(false);
-    } catch (error) {
-      console.error("PUT hatası:", error);
-      setErrorMessages(getResponseErrors(error));
-    }
-  };
-
+  
   const handleSaveMinOrderPrice = async() => {
     if (minOrderPriceInput !== '' && !isNaN(minOrderPriceInput)) {
       let data = {
@@ -427,7 +449,7 @@ const handleCancelMinOrderPriceEdit = () => {
   
       try {
         console.log(restaurant);
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
+        await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
         restaurant.minOrderPrice = minOrderPriceInput;
       } catch (error) {
         console.log(error);
@@ -464,19 +486,15 @@ const handleCancelMinOrderPriceEdit = () => {
 
   const handleSaveName = async() => {
     if (nameInput.trim()) {
-
       let data = {
         ...restaurant,
-        restaurantName: nameInput,
-        openingHour: `${openingHour}:00`,
-        closingHour: `${closingHour}:00`
-      };
-
-
+        restaurantName: nameInput
+      }
+      
 
       try {
         console.log(restaurant)
-        await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
+        await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data)
         restaurant.restaurantName = nameInput
       } catch (error) {
         console.log(error)
@@ -503,9 +521,9 @@ const handleCancelMinOrderPriceEdit = () => {
       formData.append("file", file);
   
       try {
-        const response = await axios.post(
+        const response = await AuthorizedRequest.postRequest(
           `http://localhost:8080/api/upload/image/restaurant/${restaurantId}`,
-          formData // Axios sets headers automatically
+          formData 
         );
   
         const reader = new FileReader();
@@ -573,51 +591,7 @@ const handleCancelMinOrderPriceEdit = () => {
     <div
       className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-[#1c1c1c] text-white" : "bg-[#F2E8D6]"}`}
     >
-      {/* Header */}
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 100 }}
-        className={`sticky top-0 z-10 flex items-center justify-between px-6 py-5 shadow-lg ${darkMode ? "bg-[#333]" : "bg-[#47300A]"}`}
-      >
-        <motion.div whileHover={{ scale: 1.05 }} className="text-2xl font-bold text-white">
-          <Link to="/">
-            <span className="flex items-center gap-2">
-              <img src="/image1.png" alt="Doy Logo" className="h-10 w-10 rounded-full bg-white p-1" />
-              Doy!
-            </span>
-          </Link>
-        </motion.div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <motion.button
-              onClick={toggleDarkMode}
-              className="relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
-              style={{
-                backgroundColor: darkMode ? "#6c4c9c" : "#e2e8f0",
-                transition: "background-color 0.3s",
-              }}
-            >
-              <span className="sr-only">Toggle dark mode</span>
-              <motion.span
-                className="inline-block h-5 w-5 rounded-full bg-white shadow-lg"
-                animate={{
-                  x: darkMode ? 24 : 3,
-                }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              />
-            </motion.button>
-            {darkMode ? <Moon className="h-4 w-4 text-amber-200" /> : <Sun className="h-4 w-4 text-amber-600" />}
-          </div>
-          <motion.div whileHover={{ scale: 1.05 }}>
-            <button
-              className={`rounded-full px-4 py-2 font-medium text-lg ${darkMode ? "text-white hover:bg-gray-700" : "text-white hover:bg-amber-600"}`}
-            >
-              {restaurant.restaurantName}
-            </button>
-          </motion.div>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
       {errorMessages.map((message, i) => (
                         
@@ -719,62 +693,63 @@ const handleCancelMinOrderPriceEdit = () => {
             <div className="flex flex-1 flex-col gap-4">
               <div className="flex items-center justify-between">
                 {isEditingName ? (
-                    <div className="flex items-center gap-3 flex-1">
-                      <input
-                          type="text"
-                          value={nameInput}
-                          onChange={(e) => setNameInput(e.target.value)}
-                          className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
-                              darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-                          }`}
-                      />
-                      <div className="flex gap-2">
-                        <motion.button
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
-                            onClick={handleSaveName}
-                            className={`rounded-full p-2 ${
-                                darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
-                            }`}
+                  <div className="flex items-center gap-3 flex-1">
+                    <input
+                      type="text"
+                      value={nameInput}
+                      onChange={(e) => setNameInput(e.target.value)}
+                      className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
+                        darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
+                      }`}
+                    />
+                    <div className="flex gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleSaveName}
+                        className={`rounded-full p-2 ${
+                          darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
+                        }`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
-                          <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                          >
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                          </svg>
-                        </motion.button>
-                        <motion.button
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
-                            onClick={handleCancelNameEdit}
-                            className={`rounded-full p-2 ${
-                                darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
-                            }`}
-                        >
-                          <X className="h-5 w-5"/>
-                        </motion.button>
-                      </div>
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleCancelNameEdit}
+                        className={`rounded-full p-2 ${
+                          darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
+                        }`}
+                      >
+                        <X className="h-5 w-5" />
+                      </motion.button>
                     </div>
+                  </div>
                 ) : (
-                    <h1 className="text-3xl font-bold">{restaurant.restaurantName}</h1>
+                  <h1 className="text-3xl font-bold">{restaurant.restaurantName}</h1>
                 )}
                 <motion.button
-                    whileHover={{scale: 1.05}}
-                    whileTap={{scale: 0.95}}
-                    onClick={handleEditNameClick}
-                    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleEditNameClick}
+                  className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
                 >
-                  <Edit className="h-5 w-5"/>
+                  <Edit className="h-5 w-5" />
                 </motion.button>
               </div>
-              {/* Working Hours */}
+
+               {/* Working Hours */}
               <div className="flex items-center gap-4 mt-6">
                 <label className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>Açılış Saati:</label>
                 <input
@@ -806,192 +781,191 @@ const handleCancelMinOrderPriceEdit = () => {
                   </div>
               )}
 
-
               {/* PHONE NUMBER */}
-              <div className="flex items-center justify-between mt-6">
-                {isEditingPhoneNumber ? (
-                    <div className="flex items-center gap-3 flex-1">
-                      <input
-                          type="text"
-                          value={phoneNumberInput}
-                          onChange={(e) => setPhoneNumberInput(e.target.value)}
-                          className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
-                              darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-                          }`}
-                      />
-                      <div className="flex gap-2">
-                        <motion.button
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
-                            onClick={handleSavePhoneNumber}
-                            className={`rounded-full p-2 ${
-                                darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
-                            }`}
-                        >
-                          <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                          >
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                          </svg>
-                        </motion.button>
-                        <motion.button
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
-                            onClick={handleCancelPhoneNumberEdit}
-                            className={`rounded-full p-2 ${
-                                darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
-                            }`}
-                        >
-                          <X className="h-5 w-5"/>
-                        </motion.button>
-                      </div>
-                    </div>
-                ) : (<div className="flex items-center">
-                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Telefon Numarası: " + restaurant.restaurantPhone}</p>
+<div className="flex items-center justify-between mt-6">
+  {isEditingPhoneNumber ? (
+    <div className="flex items-center gap-3 flex-1">
+      <input
+        type="text"
+        value={phoneNumberInput}
+        onChange={(e) => setPhoneNumberInput(e.target.value)}
+        className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
+          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
+        }`}
+      />
+      <div className="flex gap-2">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSavePhoneNumber}
+          className={`rounded-full p-2 ${
+            darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleCancelPhoneNumberEdit}
+          className={`rounded-full p-2 ${
+            darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
+          }`}
+        >
+          <X className="h-5 w-5" />
+        </motion.button>
+      </div>
+    </div>
+  ) : (<div className="flex items-center">
+  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Telefon Numarası: " + restaurant.restaurantPhone}</p>
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={handleEditPhoneNumberClick}
+    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+  >
+    <Edit className="h-5 w-5" />
+  </motion.button>
+</div>)}
+</div>
+
+{/* MINIMUM ORDER PRICE */}
+<div className="flex items-center justify-between mt-6">
+  {isEditingMinOrderPrice ? (
+    <div className="flex items-center gap-3 flex-1">
+      <input
+        type="number"
+        value={minOrderPriceInput}
+        onChange={(e) => setMinOrderPriceInput(e.target.value)}
+        className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
+          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
+        }`}
+      />
+      <div className="flex gap-2">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSaveMinOrderPrice}
+          className={`rounded-full p-2 ${
+            darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleCancelMinOrderPriceEdit}
+          className={`rounded-full p-2 ${
+            darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
+          }`}
+        >
+          <X className="h-5 w-5" />
+        </motion.button>
+      </div>
+    </div>
+  ) : (
+    
+    <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Minimum Sipariş Tutarı: " + restaurant.minOrderPrice}</p>
                   <motion.button
-                      whileHover={{scale: 1.05}}
-                      whileTap={{scale: 0.95}}
-                      onClick={handleEditPhoneNumberClick}
-                      className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleEditMinOrderPriceClick}
+                    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
                   >
-                    <Edit className="h-5 w-5"/>
+                    <Edit className="h-5 w-5" />
                   </motion.button>
                 </div>)}
-              </div>
-
-              {/* MINIMUM ORDER PRICE */}
-              <div className="flex items-center justify-between mt-6">
-                {isEditingMinOrderPrice ? (
-                    <div className="flex items-center gap-3 flex-1">
-                      <input
-                          type="number"
-                          value={minOrderPriceInput}
-                          onChange={(e) => setMinOrderPriceInput(e.target.value)}
-                          className={`rounded-xl border px-5 py-4 text-2xl font-bold w-full ${
-                              darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-                          }`}
-                      />
-                      <div className="flex gap-2">
-                        <motion.button
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
-                            onClick={handleSaveMinOrderPrice}
-                            className={`rounded-full p-2 ${
-                                darkMode ? "bg-green-600 text-white" : "bg-green-500 text-white"
-                            }`}
-                        >
-                          <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                          >
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                          </svg>
-                        </motion.button>
-                        <motion.button
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
-                            onClick={handleCancelMinOrderPriceEdit}
-                            className={`rounded-full p-2 ${
-                                darkMode ? "bg-gray-600 text-white" : "bg-gray-300 text-gray-700"
-                            }`}
-                        >
-                          <X className="h-5 w-5"/>
-                        </motion.button>
-                      </div>
-                    </div>
-                ) : (
-
-                    <div className="flex items-center">
-                      <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Minimum Sipariş Tutarı: " + restaurant.minOrderPrice}</p>
-                      <motion.button
-                          whileHover={{scale: 1.05}}
-                          whileTap={{scale: 0.95}}
-                          onClick={handleEditMinOrderPriceClick}
-                          className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
-                      >
-                        <Edit className="h-5 w-5"/>
-                      </motion.button>
-                    </div>)}
-              </div>
+</div>
 
               {isEditing ? (
-                  <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3">
                   <textarea
-                      value={descriptionInput}
-                      onChange={(e) => setDescriptionInput(e.target.value)}
-                      className={`w-full rounded-xl border p-5 text-lg ${
-                          darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-                      }`}
-                      rows={3}
+                    value={descriptionInput}
+                    onChange={(e) => setDescriptionInput(e.target.value)}
+                    className={`w-full rounded-xl border p-5 text-lg ${
+                      darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
+                    }`}
+                    rows={3}
                   />
-                    <div className="flex gap-3">
-                      <button
-                          onClick={handleSaveDescription}
-                          className={`rounded-xl px-6 py-3 text-lg font-medium ${
-                              darkMode
-                                  ? "bg-[#6c4c9c] text-white hover:bg-[#5d3d8d]"
-                                  : "bg-[#6c4c9c] text-white hover:bg-[#5d3d8d]"
-                          } transition-colors duration-300 shadow-md hover:shadow-lg`}
-                      >
-                        Kaydet
-                      </button>
-                      <button
-                          onClick={handleCancelEdit}
-                          className={`rounded-xl px-6 py-3 text-lg font-medium ${
-                              darkMode
-                                  ? "bg-gray-600 text-white hover:bg-gray-500"
-                                  : "bg-[#7A0000] text-white hover:bg-[#6A0000]"
-                          } transition-colors duration-300 shadow-md hover:shadow-lg`}
-                      >
-                        İptal
-                      </button>
-                    </div>
-                  </div>
-              ) : (
-                  <div className="flex items-center">
-                    <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Açıklama: " + restaurant.description}</p>
-                    <motion.button
-                        whileHover={{scale: 1.05}}
-                        whileTap={{scale: 0.95}}
-                        onClick={handleEditProfileClick}
-                        className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleSaveDescription}
+                      className={`rounded-xl px-6 py-3 text-lg font-medium ${
+                        darkMode
+                          ? "bg-[#6c4c9c] text-white hover:bg-[#5d3d8d]"
+                          : "bg-[#6c4c9c] text-white hover:bg-[#5d3d8d]"
+                      } transition-colors duration-300 shadow-md hover:shadow-lg`}
                     >
-                      <Edit className="h-5 w-5"/>
-                    </motion.button>
+                      Kaydet
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className={`rounded-xl px-6 py-3 text-lg font-medium ${
+                        darkMode
+                          ? "bg-gray-600 text-white hover:bg-gray-500"
+                          : "bg-[#7A0000] text-white hover:bg-[#6A0000]"
+                      } transition-colors duration-300 shadow-md hover:shadow-lg`}
+                    >
+                      İptal
+                    </button>
                   </div>
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{"Açıklama: " + restaurant.description}</p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleEditProfileClick}
+                    className={`rounded-full p-3 ml-4 ${darkMode ? "bg-[#6c4c9c] text-white" : "bg-[#6c4c9c] text-white"}`}
+                  >
+                    <Edit className="h-5 w-5" />
+                  </motion.button>
+                </div>
               )}
             </div>
-
+            
           </div>
 
           <div className="flex items-center">
-            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                "İl: " + restaurant.address?.cityEnum
-            }</p>
-          </div>
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "İl: " + restaurant.address?.cityEnum
+                    }</p>
+                </div>
 
-          <div className="flex items-center">
-            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-                "İlçe: " + restaurant.address?.district.name
-            }</p>
-          </div>
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "İlçe: " + restaurant.address?.district.name
+                    }</p>
+                </div>
 
-          <div className="flex items-center">
-            <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
-            "Mahalle: " + restaurant.address?.neighborhood
+                <div className="flex items-center">
+                  <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{
+                    "Mahalle: " + restaurant.address?.neighborhood
                     }</p>
                 </div>
 
@@ -1039,7 +1013,8 @@ const handleCancelMinOrderPriceEdit = () => {
                   <h2 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-black"} mr-2`}>
                     {category.name}
                   </h2>
-                  <motion.button
+                  {
+                    !restaurantIdFromAdmin && <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => handleAddItemClick(category.id)}
@@ -1047,6 +1022,8 @@ const handleCancelMinOrderPriceEdit = () => {
                   >
                     <Plus className="h-5 w-5" />
                   </motion.button>
+                  }
+                  
                 </div>
 
                 {/* Menu Items - 2-column grid layout */}
@@ -1062,8 +1039,8 @@ const handleCancelMinOrderPriceEdit = () => {
                         whileHover={{ y: -5 }}
                         className={`relative overflow-hidden rounded-2xl ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 shadow-xl transition-shadow hover:shadow-2xl h-full`}
                       >
-                        {/* Delete Button - Top Right */}
-                        <motion.button
+                        {
+                          !restaurantIdFromAdmin && <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => deleteMenuItem(category.id, item.id)}
@@ -1071,6 +1048,8 @@ const handleCancelMinOrderPriceEdit = () => {
                         >
                           <X className="h-5 w-5" />
                         </motion.button>
+                        }
+                        
 
                         <div className="flex flex-col h-full">
                           {/* Item Content */}
@@ -1132,7 +1111,8 @@ const handleCancelMinOrderPriceEdit = () => {
                             >
                               {item.price} TL
                             </div>
-                            <motion.button
+                            {
+                              !restaurantIdFromAdmin && <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => handleEditItemClick(category.id, item.id)}
@@ -1144,6 +1124,8 @@ const handleCancelMinOrderPriceEdit = () => {
                             >
                               Düzenle
                             </motion.button>
+                            }
+                            
                           </div>
                         </div>
                       </motion.div>
@@ -1155,8 +1137,8 @@ const handleCancelMinOrderPriceEdit = () => {
           ))}
         </div>
 
-        {/* Back to Profile Button */}
-        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>
+        {
+      !restaurantIdFromAdmin && <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -1167,6 +1149,8 @@ const handleCancelMinOrderPriceEdit = () => {
             Profil Sayfasına Dön
           </motion.button>
         </motion.div>
+      }
+        
 
         {showConfirmation && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -1272,108 +1256,7 @@ const handleCancelMinOrderPriceEdit = () => {
         )}
       </main>
 
-      {/* Footer */}
-      <footer
-        style={{
-          marginTop: "2rem",
-          padding: "2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
-          transition: "all 0.3s ease-in-out",
-        }}
-      >
-        <img
-          src="/image1.png"
-          alt="Logo alt"
-          style={{
-            height: "50px",
-            width: "50px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
-
-        <div style={{ display: "flex", gap: "1.5rem" }}>
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "inherit",
-              textDecoration: "none",
-              padding: "0.4rem",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            className="icon-link"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

@@ -35,4 +35,17 @@ public class EmailService {
             throw new IllegalStateException("Failed to send email");
         }
     }
+
+    public String buildPasswordResetCodeEmail(String name, String code) {
+        return "<div style=\"font-family:Arial,sans-serif;font-size:16px;color:#333\">"
+                + "<p>Hi <b>" + name + "</b>,</p>"
+                + "<p>Your password reset code is:</p>"
+                + "<h2 style=\"color:#2e6c80\">" + code + "</h2>"
+                + "<p>This code will expire in 15 minutes.</p>"
+                + "<p>If you didn’t request this, please ignore the email.</p>"
+                + "<br>"
+                + "<p>Thanks,</p>"
+                + "<p><b>Your App Team</b></p>"
+                + "</div>";
+    }
 }

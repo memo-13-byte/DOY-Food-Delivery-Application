@@ -5,12 +5,14 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Moon, Sun, CheckCircle } from "lucide-react"
-import axios from "axios"
-import CustomerService from "../services/CustomerService"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 import { add } from "date-fns"
+import AuthorizedRequest from "../services/AuthorizedRequest"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 
 // Since we're having issues with the UI component imports, let's create simplified versions
@@ -229,39 +231,28 @@ export default function AuthPage() {
     setIsLoading(true)
 
     try {
-      // Mock API call - in a real app, you would validate credentials with an API
-      // For this demo, we'll just check if email and password are provided
-      const response = await axios.post("http://localhost:8080/api/login/auth", {
+      const payload = {
         username: email,
         password: password
-      });
-
-      localStorage.setItem("token", response.data.token) //fetch user token
-      console.log(response.data.token)
-
-      const createdUser = await axios.get(`http://localhost:8080/api/users/get-by-email/${email}`,
-         { headers: { Authorization: `Bearer ${response.data.token}` } });
-        
-      const profileId = createdUser.data.id
+      }
+      const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/login/auth",payload,null, false);
+      AuthorizedRequest.updateAuthorization(response.data.token);
+      localStorage.setItem("email", response.data.email)
 
       if (userType === "restaurant") {
-        await axios.get(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
-        navigate(`/restaurant/profile/${profileId}`)
+        await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${email}`)
+        navigate(`/restaurant/profile`)
       } else if (userType === "courier") { 
-        await axios.get(`http://localhost:8080/api/users/couriers/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
-        navigate(`/courier/profile/${profileId}`)
+        await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${email}`)
+        navigate(`/courier/profile`)
       } else {
-        if (createdUser.data.role === "ADMIN") {
+        if (response.data.role === "ADMIN") {
           navigate("/admin/complaints")
+        } else {
+          await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/customers/get-by-email/${email}`)
+        navigate(`/customer/profile`)
         }
-        await axios.get(`http://localhost:8080/api/users/customers/get-by-email/${email}`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } });
-         
-        navigate(`/customer/profile/${profileId}`)
+        
       }
       } 
     catch (error) {
@@ -305,12 +296,8 @@ export default function AuthPage() {
         dtoAddress: addressInfo
       }
 
-      console.log(addressInfo)
+      const response = await AuthorizedRequest.postRequest('http://localhost:8080/api/registration', registrationInfo)
 
-      await CustomerService.RegisterCustomer(registrationInfo);
-
-      // Mock API call - in a real app, you would send registration data to an API
-      // For this demo, we'll just simulate a successful registration
       setTimeout(() => {
         // Show success message
         showAlertify("Kayıt işlemi başarıyla tamamlandı!", "success")
@@ -418,60 +405,15 @@ export default function AuthPage() {
       {/* Alertify notification */}
       {alertify.show && <Alertify message={alertify.message} type={alertify.type} onClose={hideAlertify} />}
 
-      {/* Header section */}
-      <header
-        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-4 px-6 flex justify-between items-center shadow-lg transition-colors duration-300`}
-      >
-        <div className="flex items-center">
-          <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
-            <span className="font-bold text-white text-xl tracking-wide">DOY!</span>
-          </Link>
-        </div>
-        <div className="flex gap-3 items-center">
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={darkMode}
-              onCheckedChange={toggleDarkMode}
-              className={`${darkMode ? "bg-amber-500" : "bg-gray-300"} transition-colors duration-300`}
-            />
-            {darkMode ? <Sun className="h-4 w-4 text-white" /> : <Moon className="h-4 w-4 text-white" />}
-          </div>
-          <div className="flex">
-            <button
-              className={`px-4 py-1.5 text-sm font-medium rounded-l-full ${darkMode ? "bg-amber-600 text-white" : "bg-[#e8c886] text-[#6b4b10]"} transition-colors duration-300`}
-              onClick={() => navigate("/auth?tab=register&type=" + userType)}
-            >
-              KAYIT
-            </button>
-            <button
-              className={`px-4 py-1.5 text-sm font-medium rounded-r-full ${darkMode ? "bg-amber-700 text-white" : "bg-[#d9b978] text-[#6b4b10]"} transition-colors duration-300`}
-              onClick={() => navigate("/auth?tab=login&type=" + userType)}
-            >
-              GİRİŞ
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      {/* Logo section */}
-      <div className={`flex justify-center py-8 ${mounted ? "animate-fadeIn" : "opacity-0"}`}>
-        <div
-          className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-6 w-36 h-36 flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-105`}
-        >
-          <div className="relative w-28 h-28">
-            <img src="/image1.png" alt="DOY Logo" width={112} height={112} className="w-full h-full" />
-            <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-              FOOD DELIVERY
-            </div>
-          </div>
-        </div>
-      </div>
+      <DoyLogo></DoyLogo>
 
       {/* Auth Form */}
       <div className="flex-grow flex justify-center items-start p-4 w-full">
         <div className="w-full md:w-3/4 lg:w-2/3 xl:w-3/5 bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg transition-colors duration-300 mx-auto">
           <h2 className="text-center text-2xl font-semibold text-[#6b4b10] dark:text-amber-400 mb-8 transition-colors duration-300">
-            {getTitle()} Girişi
+            {getTitle() + (activeTab === "login" ? " Girişi" : " Kayıt")} 
           </h2>
 
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
@@ -561,20 +503,8 @@ export default function AuthPage() {
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <input
-                          id="remember-me"
-                          type="checkbox"
-                          className="h-4 w-4 text-[#5c4018] focus:ring-[#5c4018] border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700"
-                          checked={rememberMe}
-                          onChange={(e) => setRememberMe(e.target.checked)}
-                        />
-                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                          Beni hatırla
-                        </label>
-                      </div>
                       <div className="text-sm">
-                        <Link to="/forgot-password" className="text-[#5c4018] dark:text-amber-400 hover:underline">
+                        <Link to={`/forgot-password/${userType}`} className="text-[#5c4018] dark:text-amber-400 hover:underline">
                           Şifremi unuttum
                         </Link>
                       </div>
@@ -673,26 +603,26 @@ export default function AuthPage() {
                     
                     
                     <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-gray-700 font-medium">
+                      <Label htmlFor="firstName" className="text-gray-700 dark:text-gray-300 font-medium">
                         Ad
                       </Label>
                       <Input
                         id="firstName"
                         placeholder="Ad"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={registerFirstName}
                         onChange={(e) => setRegisterFirstName(e.target.value)}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-gray-700 font-medium">
+                      <Label htmlFor="lastName" className="text-gray-700 dark:text-gray-300 font-medium">
                         Soyad
                       </Label>
                       <Input
                         id="lastName"
                         placeholder="Soyad"
-                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={registerLastName}
                         onChange={(e) => setRegisterLastName(e.target.value)}
                         required
@@ -976,51 +906,7 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
-      >
-        <img
-          src="/image1.png"
-          alt="Logo alt"
-          className="h-[50px] w-[50px] rounded-full object-cover"
-        />
-
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

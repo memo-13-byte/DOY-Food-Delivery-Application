@@ -29,6 +29,7 @@ public class UserCartDTO {
         private BigDecimal price;
         private String description;
         private int quantity;
+        private long imageId;
         // private String imageUrl; // Add if needed
         // private Long cartItemId; // Optional: ID of the CartItem link itself
     }

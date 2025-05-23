@@ -1,84 +1,117 @@
 package com.pingfloyd.doy.other;
 
+import com.pingfloyd.doy.entities.Address;
+import com.pingfloyd.doy.entities.District;
+import com.pingfloyd.doy.entities.MenuItem;
 import com.pingfloyd.doy.entities.Restaurant;
-import jakarta.persistence.criteria.Predicate; // Use jakarta persistence
+import com.pingfloyd.doy.enums.Allergens;
+import com.pingfloyd.doy.enums.CityEnum;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils; // For checking empty strings
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RestaurantSpecification {
 
     // Private constructor to prevent instantiation
     private RestaurantSpecification() {}
 
-    /**
-     * Creates a specification based on multiple optional filter criteria.
-     *
-     * @param name Optional: Part of the restaurant name (case-insensitive).
-     * @param minRating Optional: Minimum acceptable rating.
-     * @param maxMinOrderPrice Optional: Maximum acceptable minimum order price.
-     * @param cuisine Optional: Exact cuisine type (case-insensitive).
-     * @return A Specification object combining the active filters.
-     */
     public static Specification<Restaurant> filterBy(
             String name,
             Float minRating,
             Double maxMinOrderPrice,
-            String cuisine) {
+            String cuisine,
+            String districtName,
+            CityEnum city
+            , Set<Allergens> customerAllergens
+            ) {
 
-        // Root<T> root: Represents the entity (Restaurant)
-        // CriteriaQuery<?> query: The query being built
-        // CriteriaBuilder criteriaBuilder: Used to build predicates (where clauses, etc.)
         return (root, query, criteriaBuilder) -> {
-
-            // Use a List to hold all the predicates (conditions)
             List<Predicate> predicates = new ArrayList<>();
 
-            // 1. Filter by Name (Containing, IgnoreCase)
-            if (StringUtils.hasText(name)) { // Check if name is not null and not empty/whitespace
+            if (StringUtils.hasText(name)) {
                 predicates.add(criteriaBuilder.like(
-                        criteriaBuilder.lower(root.get("restaurantName")), // field name from Restaurant entity
+                        criteriaBuilder.lower(root.get("restaurantName")),
                         "%" + name.toLowerCase() + "%"
                 ));
             }
 
-            // 2. Filter by Rating (Greater Than or Equal To)
             if (minRating != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(
-                        root.get("rating"), // field name from Restaurant entity
+                        root.get("rating"),
                         minRating
                 ));
             }
 
-            // 3. Filter by Min Order Price (Less Than or Equal To)
             if (maxMinOrderPrice != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(
-                        root.get("minOrderPrice"), // field name from Restaurant entity
+                        root.get("minOrderPrice"),
                         maxMinOrderPrice
                 ));
             }
 
-            // 4. Filter by Cuisine (Exact Match, IgnoreCase)
             if (StringUtils.hasText(cuisine)) {
                 predicates.add(criteriaBuilder.equal(
-                        criteriaBuilder.lower(root.get("cuisine")), // field name from Restaurant entity
+                        criteriaBuilder.lower(root.get("restaurantCategory")),
                         cuisine.toLowerCase()
                 ));
             }
 
-            // Combine all predicates with AND
-            // criteriaBuilder.and() takes an array of Predicate
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            // --- Consolidated JOIN for Address and District ---
+            Join<Restaurant, Address> addressJoin = null;
+            Join<Address, District> districtJoin = null;
 
-            // If no filters are applied, an empty predicate list results in "WHERE 1=1" essentially.
-            // Alternatively, you could return criteriaBuilder.conjunction() for an "always true" predicate.
+            // Only perform joins if either districtName or city filter is applied
+            if (StringUtils.hasText(districtName) || city != null) {
+                addressJoin = root.join("address", JoinType.INNER);
+                districtJoin = addressJoin.join("district", JoinType.INNER);
+            }
+
+
+            // --- ADD DISTRICT NAME FILTERING LOGIC ---
+            if (StringUtils.hasText(districtName)) {
+                predicates.add(criteriaBuilder.like(
+                        criteriaBuilder.lower(districtJoin.get("name")), // Access District name
+                        "%" + districtName.toLowerCase() + "%"
+                ));
+            }
+            // --- ADD CITY ENUM FILTERING LOGIC ---
+            if (city != null) { // Check if city enum is provided
+                // Use the districtJoin to filter by the city associated with the district
+                predicates.add(criteriaBuilder.equal(
+                        districtJoin.get("city"), // Access District's city enum
+                        city
+                ));
+            }
+            if (customerAllergens != null && !customerAllergens.isEmpty()) {
+
+                jakarta.persistence.criteria.Subquery<Long> safeMenuItemRestaurantSubquery = query.subquery(Long.class);
+                jakarta.persistence.criteria.Root<MenuItem> menuItemRoot = safeMenuItemRestaurantSubquery.from(MenuItem.class);
+
+                jakarta.persistence.criteria.Subquery<Long> menuItemsWithCustomerAllergensSubquery = query.subquery(Long.class);
+                jakarta.persistence.criteria.Root<MenuItem> subMenuItemRoot = menuItemsWithCustomerAllergensSubquery.from(MenuItem.class);
+                SetJoin<MenuItem, Allergens> subMenuItemAllergenJoin = subMenuItemRoot.joinSet("allergens");
+
+                menuItemsWithCustomerAllergensSubquery.select(subMenuItemRoot.get("id"))
+                        .where(subMenuItemAllergenJoin.in(customerAllergens)); // MenuItem contains an allergen the customer is allergic to.
+
+
+                safeMenuItemRestaurantSubquery.select(menuItemRoot.get("restaurant").get("id")) // Select the Restaurant ID
+                        .where(
+                                criteriaBuilder.equal(menuItemRoot.get("restaurant").get("id"), root.get("id")),
+                                criteriaBuilder.not(menuItemRoot.get("id").in(menuItemsWithCustomerAllergensSubquery))
+                        );
+                predicates.add(criteriaBuilder.exists(safeMenuItemRestaurantSubquery));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 
-    // --- You could also create individual specification methods if preferred ---
-    // Example:
+
     public static Specification<Restaurant> nameContains(String name) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.like(criteriaBuilder.lower(root.get("restaurantName")), "%" + name.toLowerCase() + "%");

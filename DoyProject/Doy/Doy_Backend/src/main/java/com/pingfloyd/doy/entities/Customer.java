@@ -1,4 +1,5 @@
 package com.pingfloyd.doy.entities;
+import com.pingfloyd.doy.enums.Allergens;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,16 @@ public class Customer extends User {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "current_address", referencedColumnName = "address_id")
     private Address current_address;
+
+
+    @ElementCollection(targetClass = Allergens.class)
+    @CollectionTable(
+            name = "customer_allergens", // NEW table name for customer allergens
+            joinColumns = @JoinColumn(name = "customer_id")
+    )
+    @Enumerated(EnumType.STRING)
+    @Column(name = "allergen", length = 30)
+    private Set<Allergens> allergens = new HashSet<>();
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PaymentInfo> paymentInfos = new HashSet<>();

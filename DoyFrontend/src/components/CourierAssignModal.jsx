@@ -88,7 +88,7 @@ const CourierAssignModal = ({
                                         <div>
                                             <span style={{ fontWeight: "bold" }}>{courier.firstName} {courier.lastName}</span>
                                             <div style={{ fontSize: '0.8em', color: darkMode ? '#bbb' : '#777' }}>
-                                                {courier.location || 'Konum Yok'}
+                                                {"Rating: " + courier.rating + "/5"}
                                             </div>
                                         </div>
                                     </div>

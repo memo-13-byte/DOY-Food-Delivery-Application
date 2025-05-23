@@ -10,6 +10,7 @@ import com.pingfloyd.doy.repositories.DistrictRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +26,17 @@ public class DistrictService
         this.addressRepository = addressRepository;
     }
 
+
     public District GetDistrict(CityEnum city , String district){
         return districtRepository.findByCityAndName(city,district).orElse(null);
+    }
+
+    public List<String> GetAllCities(){
+        return districtRepository.findAllCities();
+    }
+    public List<String> GetAllDistrictByCity(String city){
+        ArrayList<String> s = (ArrayList<String>) districtRepository.findAllNames(CityEnum.valueOf(city));
+        return s;
     }
 
     public Address SaveAddress(Address address){

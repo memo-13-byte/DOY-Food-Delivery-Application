@@ -19,13 +19,11 @@ import CustomerProfilePage from './pages/customer-profile-page';
 import FavoriteRestaurantPage from './pages/favorite-restaurant-page';
 import RestaurantProfilePage from './pages/restaurant-profile-page';
 import CourierProfilePage from './pages/courier-profile-page';
-import ProfileTestPageFixed from './pages/profile-test-page-fixed';
 import RestaurantDetail from './pages/RestaurantDetail.jsx';
 import RestaurantManagePage from './pages/edit-restaurant-page';
 import ForgotPassword from './pages/forgot-password';
 import UpdateItemPage from './pages/update-item-page';
 import AddItemPage from './pages/add-item-page';
-import RestaurantOwnerProfilePage from "./pages/restaurant-owner-profile-page";
 import CourierOrdersPage from "./pages/courier-orders-page";
 import AdminComplaintsPage from './pages/AdminComplaintsPage.jsx';
 import AdminAccountManagementPage from './pages/AdminAccountManagementPage.jsx';
@@ -38,6 +36,7 @@ import OrderReviewPage from './pages/order-review-form.jsx';
 import CommentPage from './pages/order-review-view.jsx';
 import CourierCommentPage from './pages/courier-comments.jsx';
 import RestaurantCommentPage from './pages/restaurant-comments.jsx';
+import PastOrdersPage from './pages/past-orders-page.jsx';
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -57,8 +56,8 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/customer/profile/:id?" element={<CustomerProfilePage />} />
+              <Route path="/forgot-password/:type" element={<ForgotPassword />} />
+              <Route path="/customer/profile" element={<CustomerProfilePage />} />
               <Route path="/restaurants/browse" element={<Home />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
@@ -69,24 +68,25 @@ function App() {
               <Route path="/restaurants/favorite" element={<FavoriteRestaurantPage />} />
               <Route path="/restaurantowner/profile/:id?" element={<RestaurantOwnerProfilePage/>} />
               <Route path="/courier/requests/:id?" element={<CourierOrdersPage/>} />
+              <Route path="/courier/requests" element={<CourierOrdersPage/>} />
               <Route path="/couriers/register" element={<CourierRegisterPage />} />
               <Route path="/courier/profile/:id?" element={<CourierProfilePage />} />
               <Route path="/restaurants/manage/:id?" element={<RestaurantManagePage />} />
               <Route path="/restaurant/:id" element={<RestaurantDetail />} />
-              <Route path="/restaurants/manage/:id/edit-item/:categoryId/:itemId" element={<UpdateItemPage />} />
-              <Route path="/restaurants/manage/:id/add-item/:categoryId" element={<AddItemPage />} />
-              <Route path="/profile-test" element={<ProfileTestPageFixed />} />     
+              <Route path="/restaurants/manage/edit-item/:categoryId/:itemId" element={<UpdateItemPage />} />
+              <Route path="/restaurants/manage/add-item/:categoryId" element={<AddItemPage />} />
               <Route path="/admin/complaints" element={<AdminComplaintsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/account-management" element={<AdminAccountManagementPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/pending-registrations" element={<PendingRegistrationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
               <Route path="/admin/platform-configurations" element={<PlatformConfigurationsPage darkMode={darkMode} setDarkMode={setDarkMode} />} />         
-              <Route path="/restaurant/profile/:id/orders" element={<OrderTrackingPage />} />
-              <Route path="/restaurant/profile/:id/orders-status" element={<OrderStatusRestaurant />} />
+              <Route path="/restaurant/profile/orders" element={<OrderTrackingPage />} />
+              <Route path="/restaurant/profile/orders-status" element={<OrderStatusRestaurant />} />
               <Route path="/courier/profile/:id/orders" element={<OrderStatusCourier />} />
               <Route path="/order/:id/review" element={<OrderReviewPage />} />
               <Route path="/order/:id/comment" element={<CommentPage />} />
-              <Route path="/courier/profile/:id/comments" element={<CourierCommentPage />} />
-              <Route path="/restaurant/profile/:id/comments" element={<RestaurantCommentPage />} />
+              <Route path="/courier/profile/comments" element={<CourierCommentPage />} />
+              <Route path="/restaurant/profile/comments" element={<RestaurantCommentPage />} />
+              <Route path="/customer/past-orders" element={<PastOrdersPage />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>

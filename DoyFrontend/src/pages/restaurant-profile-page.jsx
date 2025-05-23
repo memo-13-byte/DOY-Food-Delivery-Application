@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
+import { useState,useEffect } from "react"
+import { Link, useLocation, useNavigate,useParams } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
 import {
@@ -20,26 +20,25 @@ import {
   Linkedin,
 } from "lucide-react"
 import { motion } from "framer-motion"
-import { getUserById } from "../services/profileData"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
+
 
 export default function RestaurantProfilePage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const params = useParams()
-  const restaurantId = params.id
+  const {id:restaurantId} = useParams()
+  const [restaurantEmail, setRestaurantEmail] = useState("")
   const [darkMode, setDarkMode] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [governmentId, setGovernmentId] = useState("")
-
-  const [restaurantName, setRestaurantName] = useState("");
-  const [openingHour, setOpeningHour] = useState("");
-  const [closingHour, setClosingHour] = useState("");
-
-
+  const [ownersRestaurant, setOwnersRestaurant] = useState("")
   const [errorMessages, setErrorMessages] = useState([])
+  const fromAdmin = restaurantId !== undefined;
 
   // Restoran verilerini ID'ye göre al
   const [restaurant, setRestaurant] = useState({
@@ -58,10 +57,22 @@ export default function RestaurantProfilePage() {
   })
   const [showAlert, setShowAlert] = useState(false)
 
+
   useEffect(() => {
-    console.log("yetr")
+
     const loadRestaurantOwnerById = async () => {
-      const response = await getUserById(restaurantId);
+      let loadedEmail = "";
+      if (restaurantId !== undefined) {
+      const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/get-by-id/${restaurantId}`)
+      console.log(response.data);
+      setRestaurantEmail(response.data.email);
+      loadedEmail = response.data.email;
+    }else{
+      setRestaurantEmail(localStorage.getItem("email"));
+      loadedEmail = localStorage.getItem("email");
+    }
+
+      const response = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${loadedEmail}`)).data
 
       const data = {
         firstname: response.firstname,
@@ -74,21 +85,14 @@ export default function RestaurantProfilePage() {
       setEditableData(data)
       setGovernmentId(response.governmentId)
       
-      const response2 = await axios.get(`http://localhost:8080/api/restaurant/get/${response.restaurantId}`)
-      setRestaurantName(response2.data.restaurantName);
-      setOpeningHour(response2.data.openingHour);
-      setClosingHour(response2.data.closingHour);
+      const response2 = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${response.restaurantId}`)
+      setOwnersRestaurant(response2.data.restaurantName)
     }
 
     loadRestaurantOwnerById()
-  }, [])
 
-  // ID değiştiğinde restoran verilerini güncelle
-  useEffect(() => {
-    if (restaurantId) {
-      setRestaurant(getUserById(restaurantId))
-    }
-  }, [restaurantId])
+  }, [restaurantEmail])
+
 
   useEffect(() => {
     setIsLoaded(true)
@@ -100,42 +104,18 @@ export default function RestaurantProfilePage() {
   }
 
   const handleManageMenu = () => {
-    navigate(`/restaurants/manage/${restaurantId}`)
+    navigate(`/restaurants/manage`)
   }
 
   const handleUpdateProfile = async() => {
     setErrorMessages([])
     try {
       console.log(editableData)
-      await axios.put(`http://localhost:8080/api/users/restaurant-owners/update/${restaurant.email}`, {
+      await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/restaurant-owners/update/${restaurantEmail}`, {
         ...editableData,
         governmentId: governmentId,
         role: "RESTAURANT_OWNER"
       })
-
-
-      const response2 = await axios.get(`http://localhost:8080/api/restaurant/get/${restaurantId}`)
-      const res = response2.data;
-
-      let data = {
-        restaurantName: restaurantName || res.restaurantName,
-        restaurantPhone: restaurant.phoneNumber || res.restaurantPhone,
-        description: res.description || "",
-        restaurantCategory: res.restaurantCategory || "FAST_FOOD",
-        rating: res.rating || 0.0,
-        minOrderPrice: res.minOrderPrice || 0,
-        imageId: res.imageId || null,
-        openingHour: `${openingHour}:00`,  // örnek: "09:00:00"
-        closingHour: `${closingHour}:00`   // örnek: "22:00:00"
-      };
-
-      await axios.put(`http://localhost:8080/api/restaurant/update/${restaurantId}`, data);
-
-      setShowAlert(true);
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
-
     } catch (error) {
       setErrorMessages(getResponseErrors(error))
     }
@@ -171,81 +151,9 @@ export default function RestaurantProfilePage() {
     <div
       className={`flex flex-col min-h-screen ${darkMode ? "bg-[#1c1c1c] text-gray-100" : "bg-[#F2E8D6]"} transition-colors duration-300`}
     >
-      {/* Header section */}
-      <motion.header
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center shadow-md`}
-      >
-        <div className="flex items-center">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="text-xl font-bold text-white cursor-pointer"
-            onClick={() => navigate("/")}
-          >
-            <span className="flex items-center gap-2">
-              <motion.img
-                src="/image1.png"
-                alt="Doy Logo"
-                className="h-8 w-8 rounded-full bg-white p-1"
-                whileHover={{ rotate: 10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              />
-              Doy!
-            </span>
-          </motion.div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div onClick={() => setDarkMode(!darkMode)} className="flex items-center gap-2 cursor-pointer">
-              <div className="w-[34px] h-[18px] rounded-full bg-[#F8F5DE] relative">
-                <div
-                  className="w-[16px] h-[16px] rounded-full bg-[#000] absolute top-[1px]"
-                  style={{
-                    left: darkMode ? "17px" : "1px",
-                    transition: "left 0.3s",
-                  }}
-                />
-              </div>
-              <Moon className={`h-4 w-4 ${darkMode ? "text-[#F8F5DE]" : "text-[#F8F5DE]"}`} />
-            </div>
-          </div>
-          <Link to={`/restaurants/manage/${restaurantId}`}>
-            <span
-              className={`px-3 py-1.5 rounded-md text-sm font-medium ${
-                darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-amber-600 hover:bg-amber-700"
-              } transition-colors`}
-            >
-              Restoranı Yönet
-            </span>
-          </Link>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      {/* Logo section */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="flex justify-center py-8"
-      >
-        <motion.div
-          whileHover={{ scale: 1.05, rotate: 5 }}
-          className={`rounded-full ${darkMode ? "bg-[#2c2c2c]" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg transition-colors duration-300`}
-        >
-          <div className="relative w-24 h-24 flex flex-col items-center">
-            <img
-              src={restaurant.profileImage || "/image1.png"}
-              alt={`${restaurantName} logo`}
-              className="w-full h-full object-cover rounded-full"
-            />
-            <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-              FOOD DELIVERY
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+      <DoyLogo></DoyLogo>
 
       {errorMessages.map((message, i) => (
                         
@@ -294,36 +202,17 @@ export default function RestaurantProfilePage() {
             Hesap Profilim - Restoran
           </motion.h1>
           <motion.h2
-              initial={{opacity: 0}}
-              animate={{opacity: 1}}
-              transition={{duration: 0.5, delay: 0.5}}
-              className={`text-xl ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} text-center mb-6`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className={`text-xl ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} text-center mb-6`}
           >
-            <motion.div variants={item} className="flex gap-4 items-center justify-center">
-              <label className={`text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}>
-                Açılış Saati:
-              </label>
-              <input
-                  type="time"
-                  value={openingHour}
-                  onChange={(e) => setOpeningHour(e.target.value)}
-                  className={`border rounded-md px-2 py-1 ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-white border-amber-100"}`}
-              />
-              <label className={`text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}>
-                Kapanış Saati:
-              </label>
-              <input
-                  type="time"
-                  value={closingHour}
-                  onChange={(e) => setClosingHour(e.target.value)}
-                  className={`border rounded-md px-2 py-1 ${darkMode ? "bg-[#333] text-white border-gray-600" : "bg-white border-amber-100"}`}
-              />
-            </motion.div>
-
+            {ownersRestaurant}
           </motion.h2>
 
           {/* Manage Menu Button */}
-          <motion.div whileHover={{scale: 1.02}} whileTap={{scale: 0.98}}>
+          {!fromAdmin && <div>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
                 onClick={handleManageMenu}
                 className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
@@ -358,88 +247,9 @@ export default function RestaurantProfilePage() {
             >
               Puanlandırma ve Değerlendirmeleri Gör
             </Button>
-          </motion.div>
+          </motion.div>  </div>}
 
-          {/* Cuisine Types */}
-          {/*<motion.div variants={container} initial="hidden" animate={isLoaded ? "show" : "hidden"} className="mb-6">
-            <motion.label
-              variants={item}
-              className={`block text-sm ${darkMode ? "text-gray-300" : "text-[#6b4b10]"} mb-2`}
-            >
-              Mutfak Türleri
-            </motion.label>
-            <motion.div variants={item} className="flex flex-wrap gap-2">
-              {restaurant.cuisineTypes.map((cuisine, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.1 * index }}
-                  whileHover={{ scale: 1.1, rotate: 2 }}
-                >
-                  <Badge
-                    variant="outline"
-                    className={`${darkMode ? "bg-gray-700 text-purple-300 border-gray-600" : "bg-amber-100 text-[#6b4b10] border-amber-200"} px-3 py-1 transition-colors duration-200`}
-                  >
-                    {cuisine}
-                  </Badge>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>*/}
 
-          {/* Performance Statistics */}
-          {/*<motion.div
-            variants={container}
-            initial="hidden"
-            animate={isLoaded ? "show" : "hidden"}
-            className={`${darkMode ? "bg-[#333]" : "bg-[#F2E8D6]"} rounded-lg p-4 mb-6 transition-colors duration-300`}
-          >
-            <motion.h2
-              variants={item}
-              className={`text-sm font-medium mb-4 ${darkMode ? "text-gray-200" : "text-[#6b4b10]"}`}
-            >
-              Performans İstatistikleri
-            </motion.h2>
-
-            <div className="grid grid-cols-3 gap-4">
-              <motion.div
-                variants={item}
-                whileHover={{ y: -5 }}
-                className={`${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
-              >
-                <Award className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
-                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#6b4b10]"}`}>
-                  {restaurant.stats.monthlyOrders}
-                </div>
-                <div className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Aylık Sipariş</div>
-              </motion.div>
-
-              <motion.div
-                variants={item}
-                whileHover={{ y: -5 }}
-                className={`${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
-              >
-                <TrendingUp className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
-                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#6b4b10]"}`}>
-                  {restaurant.stats.onTimeDelivery}
-                </div>
-                <div className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Zamanında Teslimat</div>
-              </motion.div>
-
-              <motion.div
-                variants={item}
-                whileHover={{ y: -5 }}
-                className={`${darkMode ? "bg-[#2c2c2c] border border-gray-700" : "bg-white"} p-4 rounded-md flex flex-col items-center justify-center shadow-sm transition-all duration-200`}
-              >
-                <Clock3 className={`h-5 w-5 mb-2 ${darkMode ? "text-purple-400" : "text-[#6b4b10]"}`} />
-                <div className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#6b4b10]"}`}>
-                  {restaurant.stats.avgPrepTime}
-                </div>
-                <div className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Ort. Hazırlama Süresi</div>
-              </motion.div>
-            </div>
-          </motion.div>*/}
 
           {/* Restaurant Information */}
           <motion.div
@@ -516,6 +326,7 @@ export default function RestaurantProfilePage() {
                   <Mail className={`h-4 w-4 ${darkMode ? "text-gray-400" : "text-[#6b4b10]"} mr-2`} />
                 </div>
                 <input
+                  disabled
                   type="email"
                   value={editableData.email}
                   onChange={(e) => setEditableData({ ...editableData, email: e.target.value })}
@@ -565,68 +376,9 @@ export default function RestaurantProfilePage() {
           </motion.div>
 
 
-          {/* Working Hours */}
-          {/*<motion.div
-            variants={container}
-            initial="hidden"
-            animate={isLoaded ? "show" : "hidden"}
-            className="mb-8 w-full max-w-4xl mx-auto"
-          >
-            <motion.h3
-              variants={item}
-              className={`text-lg font-medium ${darkMode ? "text-amber-400" : "text-[#6b4b10]"} mb-3 flex items-center`}
-            >
-              <Clock className="h-5 w-5 mr-2" /> Çalışma Saatleri
-            </motion.h3>
-            <motion.div
-              variants={item}
-              className={`grid grid-cols-2 md:grid-cols-4 gap-3 ${darkMode ? "text-gray-300" : "text-[#6b4b10]"}`}
-            >
-              {Object.entries(editableData.workingHours).map(([day, hours]) => (
-                <div
-                  key={day}
-                  className={`${darkMode ? "bg-[#2c2c2c] border-gray-700" : "bg-white border-amber-100"} border rounded-md p-3 text-sm`}
-                >
-                  <div className="font-medium mb-1">{day}</div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className={`text-xs ${darkMode ? "text-gray-400" : "text-[#6b4b10]"}`}>Açılış</label>
-                      <input
-                        type="time"
-                        value={hours.open}
-                        onChange={(e) => {
-                          const updatedHours = { ...editableData.workingHours }
-                          updatedHours[day] = { ...hours, open: e.target.value }
-                          setEditableData({ ...editableData, workingHours: updatedHours })
-                        }}
-                        className={`w-full ${
-                          darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-white border-amber-100"
-                        } border rounded-md py-2 px-2 text-xs transition-colors duration-200 focus:ring-1 focus:ring-amber-500 focus:border-amber-500`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`text-xs ${darkMode ? "text-gray-400" : "text-[#6b4b10]"}`}>Kapanış</label>
-                      <input
-                        type="time"
-                        value={hours.close}
-                        onChange={(e) => {
-                          const updatedHours = { ...editableData.workingHours }
-                          updatedHours[day] = { ...hours, close: e.target.value }
-                          setEditableData({ ...editableData, workingHours: updatedHours })
-                        }}
-                        className={`w-full ${
-                          darkMode ? "bg-[#333] border-gray-600 text-white" : "bg-white border-amber-100"
-                        } border rounded-md py-2 px-2 text-xs transition-colors duration-200 focus:ring-1 focus:ring-amber-500 focus:border-amber-500`}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>*/}
-
           {/* Buttons */}
-          <motion.div
+          {
+            <motion.div
             variants={container}
             initial="hidden"
             animate={isLoaded ? "show" : "hidden"}
@@ -641,8 +393,8 @@ export default function RestaurantProfilePage() {
             >
               Profili Güncelle
             </motion.button>
-
-            <motion.button
+{
+  !fromAdmin && <motion.button
               variants={item}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -654,51 +406,15 @@ export default function RestaurantProfilePage() {
               <LogOut className="h-4 w-4" />
               Çıkış Yap
             </motion.button>
+}
+
           </motion.div>
+          }
+
         </motion.div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
-      >
-        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
 
       {/* Alertify notification */}
       {showAlert && (

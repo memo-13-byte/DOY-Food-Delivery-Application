@@ -4,6 +4,7 @@ import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
 import com.pingfloyd.doy.dto.RestaurantRequest;
 import com.pingfloyd.doy.entities.*;
+import com.pingfloyd.doy.enums.RestaurantCategory;
 import com.pingfloyd.doy.exception.RestaurantNotFoundException;
 import com.pingfloyd.doy.exception.UserNotFoundException;
 import com.pingfloyd.doy.repositories.CustomerRepository;
@@ -138,5 +139,9 @@ public class RestaurantService implements IRestaurantService {
         }
         customerRepository.save(customer);
         return customer.getFavoriteRestaurants().contains(restaurant);
+    }
+
+    public RestaurantCategory[] GetCategories(){
+        return RestaurantCategory.values();
     }
 }

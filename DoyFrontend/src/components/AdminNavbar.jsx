@@ -57,7 +57,7 @@ const AdminNavbar = ({ darkMode, setDarkMode }) => {
             {/* Sol Logo */}
             <div style={{ fontWeight: "bold", fontSize: "1.1rem", cursor: "pointer" }}
                  onClick={() => navigate("/")}>
-                Doy!
+                DOY!
             </div>
 
             {/* Menü */}

@@ -2,7 +2,16 @@ package com.pingfloyd.doy.controllers;
 
 import com.pingfloyd.doy.dto.DtoMenuItem;
 import com.pingfloyd.doy.dto.DtoMenuItemIU;
+import com.pingfloyd.doy.enums.Allergens;
+import com.pingfloyd.doy.enums.MenuItemType;
+
+import com.pingfloyd.doy.entities.UserRoles;
+import com.pingfloyd.doy.exception.UnauthorizedRequestException;
+import com.pingfloyd.doy.jwt.JwtService;
+
 import com.pingfloyd.doy.services.IItemService;
+import com.pingfloyd.doy.services.IRestaurantService;
+import com.pingfloyd.doy.services.UserService;
 import com.pingfloyd.doy.utils.ImageValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +27,46 @@ import java.util.List;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class ItemController implements IItemController {
 
+    private final IItemService itemService;
+    private final JwtService jwtService;
+    private final IRestaurantService restaurantService;
+    private final UserService userService;
+
     @Autowired
-    private IItemService itemService;
+    public ItemController(IItemService itemService, JwtService jwtService, IRestaurantService restaurantService, UserService userService) {
+        this.itemService = itemService;
+        this.jwtService = jwtService;
+        this.restaurantService = restaurantService;
+        this.userService = userService;
+    }
 
     @Override
     @PostMapping("/post")
     public ResponseEntity<DtoMenuItem> postItem(@RequestBody @Valid DtoMenuItemIU item) {
-        return ResponseEntity.ok(itemService.postItem(item));
+        if (jwtService.checkIfUserRole(UserRoles.RESTAURANT_OWNER))
+            return ResponseEntity.ok(itemService.postItem(item));
+        throw new UnauthorizedRequestException();
+
     }
 
     @Override
     @PutMapping("/update/{id}")
     public ResponseEntity<DtoMenuItem> updateItem(@PathVariable(name = "id")Long itemId, @RequestBody @Valid DtoMenuItemIU item) {
-        return ResponseEntity.ok(itemService.updateItem(itemId, item));
+        if (jwtService.checkIfUserRole(UserRoles.RESTAURANT_OWNER) &&
+                userService.checkIfSameUserFromToken(item.getRestaurantId()))
+            return ResponseEntity.ok(itemService.updateItem(itemId, item));
+        throw new UnauthorizedRequestException();
+
     }
 
     @Override
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<DtoMenuItem> deleteItem(@PathVariable("id")Long itemId) {
-        return ResponseEntity.ok(itemService.deleteItem(itemId));
+        if (jwtService.checkIfUserRole(UserRoles.RESTAURANT_OWNER) &&
+            userService.checkIfSameUserFromToken(itemService.getItem(itemId).getRestaurantId()))
+            return ResponseEntity.ok(itemService.deleteItem(itemId));
+        throw new UnauthorizedRequestException();
+
     }
 
     @Override
@@ -49,5 +79,10 @@ public class ItemController implements IItemController {
     @GetMapping("/get-items/{id}")
     public ResponseEntity<List<DtoMenuItem>> getRestaurantItems(@PathVariable("id") Long restaurantId) {
         return ResponseEntity.ok(itemService.getRestaurantItems(restaurantId));
+    }
+
+    @GetMapping("/get-types")
+    public ResponseEntity<Allergens[]> GetAllItemTypes(){
+        return ResponseEntity.ok(itemService.GetAllTypes());
     }
 }

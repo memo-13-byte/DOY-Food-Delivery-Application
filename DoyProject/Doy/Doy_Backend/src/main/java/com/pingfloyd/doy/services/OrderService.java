@@ -10,7 +10,9 @@ import com.pingfloyd.doy.repositories.CustomerOrderRepository;
 import com.pingfloyd.doy.repositories.OrderItemRepository;
 import com.pingfloyd.doy.repositories.PaymentRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,10 +37,11 @@ public class OrderService {
     private final DistrictService districtService;
     private final OrderItemRepository orderItemRepository;
     private final EmailService emailService;
+    private final OrderReviewService orderReviewService;
 
 
     @Autowired
-    public OrderService(ItemService itemService, UserService userService, CourierService courierService, RestaurantService restaurantService, CartService cartService, PaymentRepository paymentRepository, CustomerOrderRepository customerOrderRepository, CourierRequestService courierRequestService, DistrictService districtService, OrderItemRepository orderItemRepository, EmailService emailService){
+    public OrderService(ItemService itemService, UserService userService, CourierService courierService, RestaurantService restaurantService, CartService cartService, PaymentRepository paymentRepository, CustomerOrderRepository customerOrderRepository, CourierRequestService courierRequestService, DistrictService districtService, OrderItemRepository orderItemRepository, EmailService emailService, OrderReviewService orderReviewService){
         this.itemService = itemService;
         this.userService = userService;
         this.courierService = courierService;
@@ -50,6 +53,7 @@ public class OrderService {
         this.districtService = districtService;
         this.orderItemRepository = orderItemRepository;
         this.emailService = emailService;
+        this.orderReviewService = orderReviewService;
     }
 
     public Boolean ClearCartByRestaurant(Long id){
@@ -165,7 +169,7 @@ public class OrderService {
         Double price = 0.0;
         for(CartItem item : set){
             OrderItem orderItem = CreateOrderItem(item,customerOrder);
-            price +=  item.getMenuItem().getPrice().doubleValue();
+            price +=  item.getMenuItem().getPrice().doubleValue() * item.getQuantity();
             //orderItemRepository.save(orderItem);
             customerOrder.getItems().add(orderItem);
         }
@@ -226,7 +230,9 @@ public class OrderService {
         for(Courier c : couriers){
             if(c.getIsAvailable()){
                 DtoCourierForOrder dtoCourierForOrder = MapDtoCourierForOrder(c);
+                dtoCourierForOrder.setRating(c.getRating());
                 courierForOrderList.add(dtoCourierForOrder);
+
             }
         }
         return courierForOrderList;
@@ -461,6 +467,7 @@ public class OrderService {
                     itemInfo.setPrice(cartItem.getMenuItem().getPrice());
                     itemInfo.setDescription(cartItem.getMenuItem().getDescription());
                     itemInfo.setQuantity(cartItem.getQuantity());
+                    itemInfo.setImageId(cartItem.getMenuItem().getImage() == null ? null : cartItem.getMenuItem().getImage().getId());
                     cartDto.getItems().add(itemInfo);
                 } else {
                     System.err.println("WARN: Skipping invalid CartItem in cart " + cart.getCartId());
@@ -508,6 +515,26 @@ public class OrderService {
         dtoOrderUserInformation.setCustomerId(customerOrder.getCustomer().getId());
 
         return dtoOrderUserInformation;
+    }
+
+    public List<DtoOrderDetails> getPastOrdersOfCustomer(String customerEmail) {
+        DtoCustomer customer = userService.getCustomerByEmail(customerEmail);
+        List<CustomerOrder> orders = customerOrderRepository.findAllByCustomerIdAndStatus(customer.getId(), OrderStatus.DELIVERED);
+        List<DtoOrderDetails> dtoOrderDetails = new ArrayList<>();
+
+
+        for (CustomerOrder order: orders) {
+            DtoOrderDetails orderDetails = new DtoOrderDetails();
+            BeanUtils.copyProperties(order, orderDetails);
+            for(OrderItem item : order.getItems()){
+                DtoMenuItem dtoMenuItem = MapMenuItem(item.getMenuItem());
+                orderDetails.getMenuItems().add(dtoMenuItem);
+            }
+            orderDetails.setRestaurantName(order.getRestaurant().getRestaurantName());
+            orderDetails.setReviewed(orderReviewService.getOrderReview(orderDetails.getOrderId()) != null);
+            dtoOrderDetails.add(orderDetails);
+        }
+        return dtoOrderDetails;
     }
 
 

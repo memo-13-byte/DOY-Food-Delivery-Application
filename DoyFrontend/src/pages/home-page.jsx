@@ -1,139 +1,28 @@
 "use client"
 
-import { useNavigate } from "react-router-dom" // Wouter yerine react-router-dom kullanıyoruz
+import { useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
-import { ChevronRight, MapPin, Twitter, Instagram, Youtube, Linkedin, Menu, Sun, Moon } from "lucide-react"
-import { useState, useEffect } from "react"
-
-// Add Switch component
-const Switch = ({ checked, onCheckedChange, className }) => {
-  return (
-    <button
-      role="switch"
-      aria-checked={checked}
-      data-state={checked ? "checked" : "unchecked"}
-      onClick={() => onCheckedChange(!checked)}
-      className={`relative inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 ${
-        checked ? "bg-primary" : "bg-input"
-      } ${className}`}
-    >
-      <span
-        data-state={checked ? "checked" : "unchecked"}
-        className={`pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform ${
-          checked ? "translate-x-5" : "translate-x-0"
-        }`}
-      />
-    </button>
-  )
-}
+import { ChevronRight, MapPin } from "lucide-react"
+import { useState} from "react"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 export default function HomePage() {
-  const navigate = useNavigate() // React Router'ın useNavigate hook'unu kullanıyoruz
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const navigate = useNavigate() 
   const [darkMode, setDarkMode] = useState(false)
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
-    if (!darkMode) {
-      document.documentElement.classList.add("dark")
-      localStorage.setItem("darkMode", "true")
-    } else {
-      document.documentElement.classList.remove("dark")
-      localStorage.setItem("darkMode", "false")
-    }
-  }
-
-  // Initialize dark mode from localStorage
-  useEffect(() => {
-    const savedDarkMode = localStorage.getItem("darkMode") === "true"
-    setDarkMode(savedDarkMode)
-    if (savedDarkMode) {
-      document.documentElement.classList.add("dark")
-    }
+  useState(() => {
+    setDarkMode(localStorage.getItem("darkMode"));
   }, [])
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F2E8D6] dark:bg-[#1c1c1c] transition-colors duration-300">
-      {/* Header section */}
-      <header className="bg-[#47300A] dark:bg-[#333] text-white py-4 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50 transition-colors duration-300">
-        <div className="flex items-center">
-          <span className="font-bold text-2xl tracking-wide">DOY!</span>
-        </div>
 
-        {/* Mobile menu button */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="rounded-full w-10 h-10 bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Desktop navigation */}
-        <div className="hidden md:flex items-center gap-4">
-          <div className="flex items-center gap-2 mr-2">
-            <Switch
-              checked={darkMode}
-              onCheckedChange={toggleDarkMode}
-              className={`${darkMode ? "bg-amber-500" : "bg-gray-300"} transition-colors duration-300`}
-            />
-            {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </div>
-          <span className="mx-1 text-white/30">|</span>
-          <button
-            onClick={() => navigate("/auth")}
-            className="bg-[#e8c886] hover:bg-[#d9b978] dark:bg-amber-600 dark:hover:bg-amber-500 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200 text-[#6b4b10] dark:text-white"
-          >
-            Kayıt
-          </button>
-          <button
-            onClick={() => navigate("/auth")}
-            className="bg-[#d9b978] hover:bg-[#c9a968] dark:bg-amber-700 dark:hover:bg-amber-600 transition-colors rounded-full px-5 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200 text-[#6b4b10] dark:text-white"
-          >
-            Giriş
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#6b4b10] dark:bg-gray-800 text-white p-4 shadow-md transition-colors duration-300">
-          <div className="flex justify-center gap-3 mb-4">
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={darkMode}
-                onCheckedChange={toggleDarkMode}
-                className={`${darkMode ? "bg-amber-500" : "bg-gray-300"} transition-colors duration-300`}
-              />
-              {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => navigate("/auth")}
-              className="bg-[#e8c886] hover:bg-[#d9b978] dark:bg-amber-600 dark:hover:bg-amber-500 transition-colors rounded-full px-4 py-2 text-sm font-medium flex-1 text-[#6b4b10] dark:text-white"
-            >
-              Kayıt
-            </button>
-            <button
-              onClick={() => navigate("/auth")}
-              className="bg-[#d9b978] hover:bg-[#c9a968] dark:bg-amber-700 dark:hover:bg-amber-600 transition-colors rounded-full px-4 py-2 text-sm font-medium flex-1 text-[#6b4b10] dark:text-white"
-            >
-              Giriş
-            </button>
-          </div>
-        </div>
-      )}
+      <Header darkMode={darkMode} setDarkMode={setDarkMode}/>
 
       <main className="flex-grow">
-        {/* Logo section */}
-        <div className="flex justify-center py-10">
-          <div className="w-40 h-40 flex items-center justify-center bg-white dark:bg-gray-700 rounded-full shadow-xl p-2 transform hover:scale-105 transition-transform duration-300">
-            <img src="/image1.png" alt="DOY Logo" className="w-36 h-36 rounded-full object-cover" />
-          </div>
-        </div>
+        <DoyLogo></DoyLogo>
 
         {/* Welcome message */}
         <div className="max-w-[75%] mx-auto px-4">
@@ -182,7 +71,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-[70%] mx-auto">
+          <div className="flex justify-center gap-5 p-5">
             {/* Customer Section */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-transparent hover:border-amber-200 dark:hover:border-amber-700">
               <h2 className="text-2xl font-bold text-[#6b4b10] dark:text-amber-400 mb-4">Müşterimiz Olun!</h2>
@@ -257,45 +146,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="mt-8 p-8 flex justify-between items-center bg-white dark:bg-[#1a1a1a] transition-colors duration-300">
-        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

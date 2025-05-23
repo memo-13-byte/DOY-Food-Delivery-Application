@@ -6,11 +6,16 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +38,7 @@ public class JwtService {
         int expirationDateInMilliseconds = 1000 * 60 * 60 * 2;
 
         return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date())
-                .claim("role", userDetails.getAuthorities()) //embed role to token
+                .claim("role", userDetails.getAuthorities().iterator().next().getAuthority()) //embed role to token
                 .setExpiration(new Date(System.currentTimeMillis() + expirationDateInMilliseconds))
                 .signWith(getKey(), SignatureAlgorithm.HS256).compact();
     }
@@ -63,5 +68,26 @@ public class JwtService {
     public Key getKey() {
         byte[] bytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(bytes);
+    }
+
+    public boolean checkIfUserRole(UserRoles... roles) {
+        Collection<?> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        if (authorities == null || authorities == AuthorityUtils.NO_AUTHORITIES) {
+            return false;
+        }
+
+        SimpleGrantedAuthority simpleGrantedAuthority = ((SimpleGrantedAuthority)authorities.iterator().next());
+        if (simpleGrantedAuthority == null) return false;
+
+        String userRole = simpleGrantedAuthority.getAuthority();
+
+        for (UserRoles role: roles) {
+            if (role.value.equals(userRole)) return true;
+        }
+        return false;
+    }
+
+    public String getUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 }

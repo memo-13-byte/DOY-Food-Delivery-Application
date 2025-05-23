@@ -1,5 +1,6 @@
 package com.pingfloyd.doy.dto;
 
+import com.pingfloyd.doy.enums.Allergens;
 import com.pingfloyd.doy.enums.MenuItemType;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -30,6 +32,9 @@ public class DtoMenuItemIU {
 
     @NotNull
     private MenuItemType menuItemType;
+
+    @NotNull
+    private List<Allergens> allergens;
 
     private Long imageId;
 }

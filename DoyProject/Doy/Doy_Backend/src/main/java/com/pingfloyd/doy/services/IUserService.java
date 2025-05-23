@@ -22,4 +22,5 @@ public interface IUserService {
     DtoCustomer putCustomer(String email, DtoCustomerIU dtoCustomerIU);
     DtoCourier putCourier(String email, DtoCourierIU dtoCourierIU);
     DtoRestaurantOwner putRestaurantOwner(String email, DtoRestaurantOwnerIU dtoRestaurantOwnerIU);
+    boolean checkIfSameUserFromToken(Long id);
 }

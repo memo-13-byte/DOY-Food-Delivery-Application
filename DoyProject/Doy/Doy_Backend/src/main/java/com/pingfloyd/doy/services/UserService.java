@@ -4,9 +4,11 @@ package com.pingfloyd.doy.services;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.*;
+import com.pingfloyd.doy.enums.TokenType;
 import com.pingfloyd.doy.exception.ApiError;
 import com.pingfloyd.doy.exception.UserIsAlreadySuspendedException;
 import com.pingfloyd.doy.exception.UserNotFoundException;
+import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.repositories.CourierRepository;
 import com.pingfloyd.doy.repositories.CustomerRepository;
 import com.pingfloyd.doy.repositories.RestaurantOwnerRepository;
@@ -35,9 +37,14 @@ public class UserService implements UserDetailsService, IUserService {
     private final SuspensionService suspensionService;
     private final DistrictService districtService;
 
+    private final ConfirmationTokenService confirmationTokenService;
+    private final EmailService emailService;
+    private final JwtService jwtService;
+
     @Autowired
     public UserService(UserRepository userRepository, CustomerRepository customerRepository, BCryptPasswordEncoder bCryptPasswordEncoder
-    , CourierRepository courierRepository, RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService, DistrictService districtService){
+    , CourierRepository courierRepository,ConfirmationTokenService confirmationTokenService, EmailService emailService,RestaurantOwnerRepository restaurantOwnerRepository, SuspensionService suspensionService, DistrictService districtService, JwtService jwtService){
+
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -45,7 +52,14 @@ public class UserService implements UserDetailsService, IUserService {
         this.restaurantOwnerRepository = restaurantOwnerRepository;
         this.suspensionService = suspensionService;
         this.districtService = districtService;
+
+        this.confirmationTokenService = confirmationTokenService;
+        this.emailService = emailService;
+
+        this.jwtService = jwtService;
+
     }
+
 
     public String SignUpCustomer(User user, UserRoles role){
         user.setPasswordHash(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -129,6 +143,7 @@ public class UserService implements UserDetailsService, IUserService {
         for (Customer customer: dbCustomers) {
             DtoCustomer dtoCustomer = new DtoCustomer();
             BeanUtils.copyProperties(customer, dtoCustomer);
+            dtoCustomer.setAllergens(customer.getAllergens().stream().toList());
             dtoCustomers.add(dtoCustomer);
         }
         return dtoCustomers;
@@ -142,6 +157,7 @@ public class UserService implements UserDetailsService, IUserService {
         }
         DtoUser dtoUser = new DtoUser();
         BeanUtils.copyProperties(user.get(), dtoUser);
+
         return dtoUser;
     }
 
@@ -164,6 +180,7 @@ public class UserService implements UserDetailsService, IUserService {
         }
         DtoCustomer dtoCustomer = new DtoCustomer();
         BeanUtils.copyProperties(customer.get(), dtoCustomer);
+        dtoCustomer.setAllergens(customer.get().getAllergens().stream().toList());
         return dtoCustomer;
     }
 
@@ -201,6 +218,7 @@ public class UserService implements UserDetailsService, IUserService {
         }
         Customer savedCustomer = customer.get();
         BeanUtils.copyProperties(dtoCustomerIU, savedCustomer);
+        savedCustomer.setAllergens(new HashSet<>(dtoCustomerIU.getAllergens()));
 
         BeanUtils.copyProperties(dtoCustomerIU.getCurrent_address(), savedCustomer.getCurrent_address());
 
@@ -212,6 +230,7 @@ public class UserService implements UserDetailsService, IUserService {
         savedCustomer = customerRepository.save(savedCustomer);
         DtoCustomer dtoCustomer = new DtoCustomer();
         BeanUtils.copyProperties(savedCustomer, dtoCustomer);
+        dtoCustomer.setAllergens(savedCustomer.getAllergens().stream().toList());
         return dtoCustomer;
     }
 
@@ -366,6 +385,29 @@ public class UserService implements UserDetailsService, IUserService {
         return list;
     }
 
+    public void ResetPasswordRequest(String email){
+        Optional<User> user = loadUserByEmail(email);
+        if(user.isEmpty()){
+            return;
+        }
+        if(!user.get().isEnabled()){
+            throw new UserNotFoundException("Please check your email for account activation");
+        }
+        ConfirmationToken token = confirmationTokenService.createNumericToken(user.get() , 5);
+        token.setTokenType(TokenType.PASSWORD);
+        emailService.send(email , "Password Reset Request" , emailService.buildPasswordResetCodeEmail(user.get().getFirstname() , token.getToken()));
+    }
+
+    @Transactional
+    public void ResetPassword(ResetPasswordDto resetPasswordDto){
+        User user = confirmationTokenService.confirmToken(resetPasswordDto.getToken());
+        user.setPasswordHash(bCryptPasswordEncoder.encode(resetPasswordDto.getPassword()));
+        userRepository.save(user);
+    }
+
+    public boolean checkIfSameUserFromToken(Long id) {
+        return getUserById(id).getEmail().equals(jwtService.getUserEmail());
+    }
 
 
 }

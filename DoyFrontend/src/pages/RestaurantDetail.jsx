@@ -10,7 +10,10 @@ import { FiShoppingCart } from "react-icons/fi" // Added for cart icon
 import doyLogo from "../assets/doylogo.jpeg"
 import { FaXTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa6"
 import { FiChevronDown, FiChevronUp } from "react-icons/fi"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
+import { getResponseErrors } from "../services/exceptionUtils"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
 
 // Helper function to render star ratings
 const renderStars = (rating) => {
@@ -150,7 +153,7 @@ const RestaurantDetail = () => {
       setRestaurant(null) // Reset
       try {
         // Use the exact endpoint structure from user's code
-        const response = await axios.get(`http://localhost:8080/api/restaurant/get/${currentRestaurantId}`)
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/get/${currentRestaurantId}`)
         console.log("Restaurant API response:", response.data)
         setRestaurant(response.data)
       } catch (error) {
@@ -165,7 +168,7 @@ const RestaurantDetail = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         }
-        const response = await axios.get(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`, header)
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`)
         console.log("favorite restaurant?:", response.data)
         setIsFavorited(response.data)
     } catch(error) {
@@ -196,7 +199,7 @@ const RestaurantDetail = () => {
       setMenu({ categories: [] }) // Reset
       try {
         // Use the exact endpoint structure from user's code
-        const response = await axios.get(`http://localhost:8080/api/item/get-items/${currentRestaurantId}`)
+        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/api/item/get-items/${currentRestaurantId}`)
         console.log("Menu API response:", response.data)
         const responseItems = response.data || []
 
@@ -221,7 +224,7 @@ const RestaurantDetail = () => {
               description: item.description || "",
               price: isNaN(price) ? 0 : price,
               imageId: item.imageId,
-              image: `http://localhost:8080/api/upload/image/${item.imageId}`
+              image: item.imageId? `http://localhost:8080/api/upload/image/${item.imageId}`: "/placeholder.svg"
             })
             
           } else {
@@ -239,8 +242,8 @@ const RestaurantDetail = () => {
         })
         setExpandedCategories(initialExpandedState)
       } catch (error) {
-        console.error("Error fetching restaurant menu:", error)
-        setMenu({ categories: [] }) // Reset on error
+        alert(getResponseErrors(error))
+        setMenu({ categories: [] })
       } finally {
         setLoadingMenu(false)
       }
@@ -300,7 +303,9 @@ const RestaurantDetail = () => {
                   name: itemInfo.name || "İsimsiz Ürün",
                   price: isNaN(price) ? 0 : price,
                   description: itemInfo.description || "",
-                  // image: itemInfo.imageUrl // If available in DTO
+                  imageId: itemInfo.imageId,
+                  image: itemInfo.imageId? `http://localhost:8080/api/upload/image/${itemInfo.imageId}`: "/placeholder.svg",
+                 // image: itemInfo.imageUrl // If available in DTO
                 })
               }
             }
@@ -366,7 +371,7 @@ const RestaurantDetail = () => {
         }
       }
       console.log(header)
-      const response = await axios.get(url, header)
+      const response = await AuthorizedRequest.getRequest(url, header)
 
       if (response.data === true) {
         // Optimistic update - add to cart immediately
@@ -428,7 +433,7 @@ const RestaurantDetail = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       }
-      const response = await axios.get(url, header)
+      const response = await AuthorizedRequest.getRequest(url, header)
 
       if (response.data === true) {
         setCart((prevCart) => {
@@ -462,7 +467,7 @@ const RestaurantDetail = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       }
-      const response = await axios.get("http://localhost:8080/order/confirm", header)
+      const response = await AuthorizedRequest.getRequest("http://localhost:8080/order/confirm", header)
       
 
       console.log("Order confirmation response:", response.data)
@@ -488,7 +493,7 @@ const RestaurantDetail = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       }
-      const response = await axios.put(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`, null, header)
+      const response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/restaurant/favorite/${currentRestaurantId}`)
       console.log("toggled favorite:", response.data)
       setIsFavorited(response.data)
     } catch(error) {
@@ -549,105 +554,7 @@ const RestaurantDetail = () => {
         position: "relative", // For fixed elements
       }}
     >
-      {/* Top Bar - Enhanced for mobile */}
-      <div
-        style={{
-          backgroundColor: darkMode ? "#333" : "#47300A",
-          padding: isMobile ? "0.5rem 1rem" : "0.6rem 1.5rem",
-          color: "white",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            fontWeight: "bold",
-            fontSize: isMobile ? "1rem" : "1.1rem",
-            cursor: "pointer",
-          }}
-          onClick={() => navigate("/")}
-        >
-          Doy!
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "0.5rem" : "1rem" }}>
-          {/* Mobile Cart Button with Badge */}
-          {isMobile && (
-            <div
-              style={{
-                position: "relative",
-                cursor: "pointer",
-                marginRight: "0.5rem",
-              }}
-              onClick={toggleMobileCart}
-            >
-              <FiShoppingCart size={22} color="white" />
-              <CartBadge count={cartItemCount} darkMode={darkMode} />
-            </div>
-          )}
-
-          <div
-            onClick={() => setDarkMode(!darkMode)}
-            style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
-          >
-            <div
-              style={{
-                width: "34px",
-                height: "18px",
-                borderRadius: "20px",
-                backgroundColor: "#F8F5DE",
-                position: "relative",
-              }}
-            >
-              <div
-                style={{
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "50%",
-                  backgroundColor: "#000",
-                  position: "absolute",
-                  top: "1px",
-                  left: darkMode ? "17px" : "1px",
-                  transition: "left 0.3s",
-                }}
-              />
-            </div>
-            <BsMoon color={darkMode ? "#ccc" : "#fff"} size={18} />
-          </div>
-          <div style={{ display: "flex", backgroundColor: "#F8F5DE", borderRadius: "10px", overflow: "hidden" }}>
-            <button
-              onClick={() => navigate("/register")}
-              style={{
-                padding: isMobile ? "0.2rem 0.5rem" : "0.3rem 0.8rem",
-                backgroundColor: "transparent",
-                color: "#47300A",
-                fontWeight: "bold",
-                border: "none",
-                borderRight: "1px solid #ccc",
-                cursor: "pointer",
-                fontSize: isMobile ? "0.8rem" : "inherit",
-              }}
-            >
-              KAYIT
-            </button>
-            <button
-              onClick={() => navigate("/login")}
-              style={{
-                padding: isMobile ? "0.2rem 0.5rem" : "0.3rem 0.8rem",
-                backgroundColor: "transparent",
-                color: "#47300A",
-                fontWeight: "bold",
-                border: "none",
-                cursor: "pointer",
-                fontSize: isMobile ? "0.8rem" : "inherit",
-              }}
-            >
-              GİRİŞ
-            </button>
-          </div>
-        </div>
-      </div>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
       {/* Logo Bar - Enhanced for mobile */}
       <div
@@ -1093,49 +1000,7 @@ const RestaurantDetail = () => {
         )}
       </div>
 
-      {/* Footer - Enhanced for mobile */}
-      <footer
-        style={{
-          marginTop: "auto",
-          padding: isMobile ? "1.5rem 1rem" : "2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: darkMode ? "#1a1a1a" : "#ffffff",
-          borderTop: `1px solid ${darkMode ? "#444" : "#ddd"}`,
-          flexShrink: 0,
-        }}
-      >
-        <img
-          src={doyLogo || "/placeholder.svg"}
-          alt="Logo alt"
-          style={{
-            height: isMobile ? "40px" : "50px",
-            width: isMobile ? "40px" : "50px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
-        <div style={{ display: "flex", gap: isMobile ? "0.75rem" : "1rem" }}>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}>
-            <FaXTwitter size={isMobile ? 18 : 20} />
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}>
-            <FaInstagram size={isMobile ? 18 : 20} />
-          </a>
-          <a
-            href="https://googleusercontent.com/youtube.com/3"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={iconLinkStyle(darkMode)}
-          >
-            <FaYoutube size={isMobile ? 18 : 20} />
-          </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconLinkStyle(darkMode)}>
-            <FaLinkedin size={isMobile ? 18 : 20} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

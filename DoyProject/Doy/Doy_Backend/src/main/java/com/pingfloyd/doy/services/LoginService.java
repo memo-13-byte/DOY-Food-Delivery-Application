@@ -11,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 public class LoginService {
 
@@ -36,8 +38,8 @@ public class LoginService {
             User dbCustomer = userRepository.findByEmail(loginRequest.getUsername()).get();
             //create token for user, will ask user the token every time a request is made.
             String token = jwtService.generateTokenForUser(dbCustomer);
-
-            return new LoginAuthResponse(dbCustomer.getEmail(), token);
+            String role = jwtService.getClaimFromToken(token, "role").toString();
+            return new LoginAuthResponse(dbCustomer.getEmail(), token, role);
         } catch (Exception exception) {
             throw new InvalidLoginAttemptException("Wrong username or password");
         }

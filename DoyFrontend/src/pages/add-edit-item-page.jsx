@@ -10,7 +10,7 @@ import { Input } from "../components/ui/input"
 import { Textarea } from "../components/ui/textarea"
 import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 
 export default function AddEditItemPage() {
   const [location, setLocation] = useLocation()
@@ -132,7 +132,6 @@ export default function AddEditItemPage() {
         name: formData.name,
         description: formData.description,
         price: formData.price,
-        restaurantId: 1,
         menuItemType: reversemenuItemTypeMap[formData.menuItemType]
       }
       console.log(formDataToSend)
@@ -144,11 +143,11 @@ export default function AddEditItemPage() {
       let response
       if (isEditMode) {
         // Update existing item
-        response = await axios.put(`http://localhost:8080/api/item/update/${itemId}`, formDataToSend)
+        response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/item/update/${itemId}`, formDataToSend)
 
       } else {
         // Create new item
-        response = await axios.post("http://localhost:8080/api/item/post", formDataToSend, {
+        response = await AuthorizedRequest.postRequest("http://localhost:8080/api/item/post", formDataToSend, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

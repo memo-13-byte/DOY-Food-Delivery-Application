@@ -4,12 +4,14 @@ import { useState, useEffect } from "react"
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { Moon, Edit2, AlertTriangle, User, Phone, Mail, MapPin, LogOut, Check, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { getCustomerById, getUserById } from "../services/profileData"
 import { Twitter, Instagram, Youtube, Linkedin } from "lucide-react"
-import axios from "axios"
+import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
 import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address"
 import { Button } from "../components/Button"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import DoyLogo from "../components/DoyLogo"
 
 const Input = ({ className, ...props }) => (
   <input className={`w-full px-3 py-2 border rounded-lg ${className}`} {...props} />
@@ -25,12 +27,18 @@ export default function CustomerProfilePage() {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const customerId = params.id
+  const [customerEmail, setCustomerEmail] = useState(localStorage.getItem("email"))
   const [darkMode, setDarkMode] = useState(false)
   const [activeTab, setActiveTab] = useState("profile")
   const [isLoaded, setIsLoaded] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
   const [districts, setDistricts] = useState(DISTRICT_DATA["ISTANBUL"])
+
+  const [availableAllergens, setAvailableAllergens] = useState([]);
+
+// Add a state to handle potential loading errors for allergens
+  const [allergensLoadError, setAllergensLoadError] = useState(null);
+
   const [addressInfo, setAddressInfo] = useState({
     city: "ISTANBUL",
     district: "Adalar",
@@ -50,7 +58,8 @@ export default function CustomerProfilePage() {
     phoneNumber: " ",
     role: " ",
     addresses: " ",
-    name: " "
+    name: " ",
+    allergens: [],
   }) 
 
   // Form state for profile update
@@ -59,6 +68,7 @@ export default function CustomerProfilePage() {
     lastname: user.lastname,
     email: user.email,
     phoneNumber: user.phoneNumber,
+    allergens: user.allergens,
   })
 
   // State for allergens
@@ -77,9 +87,33 @@ export default function CustomerProfilePage() {
   )
 
   useEffect(() => {
+    // Fetch all available allergen types from the backend
+    // Using the same endpoint as AddItemPage as requested
+    AuthorizedRequest.getRequest(`http://localhost:8080/api/item/get-types`)
+        .then(response => {
+          if (Array.isArray(response.data)) {
+            setAvailableAllergens(response.data);
+            setAllergensLoadError(null); // Clear any previous errors
+          } else {
+            console.warn("Fetched allergen types are not in the expected array format:", response.data);
+            setAvailableAllergens([]);
+            setAllergensLoadError("Alerjen tipleri beklenmedik formatta.");
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching available allergens:", error);
+          // Assuming getResponseErrors can extract a user-friendly message
+          const errorMsg = getResponseErrors(error)?.message || "Alerjen tipleri yüklenemedi.";
+          setAllergensLoadError(errorMsg);
+          setAvailableAllergens([]); // Clear if there's an error
+        });
+  }, []); // Empty dependency array means this runs once on mount
+
+
+  useEffect(() => {
     const loadUser = async () => {
       try {
-        const userData = await getUserById(customerId)
+        const userData = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/customers/get-by-email/${customerEmail}`)).data;
         userData.name = userData.firstname + " " + userData.lastname
         setUser(userData)
         setFormData({
@@ -88,6 +122,7 @@ export default function CustomerProfilePage() {
           lastname: userData.lastname,
           email: userData.email,
           phoneNumber: userData.phoneNumber,
+          allergens: Array.isArray(userData.allergens) ? userData.allergens : [],
         })
         console.log(userData)
         if (userData.current_address) {
@@ -108,7 +143,7 @@ export default function CustomerProfilePage() {
     }
 
     loadUser()
-  }, [customerId])
+  }, [customerEmail])
 
   const onCityDropdownValueChanged = (event) => {
     const value = event.target.value
@@ -141,6 +176,17 @@ export default function CustomerProfilePage() {
     }))
   }
 
+  const handleAllergenChange = (allergenValue, checked) => {
+    setFormData((prev) => {
+      const currentAllergens = prev.allergens || [];
+      if (checked) {
+        return { ...prev, allergens: [...currentAllergens, allergenValue] };
+      } else {
+        return { ...prev, allergens: currentAllergens.filter((a) => a !== allergenValue) };
+      }
+    });
+    // No need for setTouched/validationAttempted here as it's not a direct input field with validation
+  };
   const handleProfileUpdate = async(e) => {
     e.preventDefault()
     setErrorMessages([])
@@ -153,7 +199,7 @@ export default function CustomerProfilePage() {
       }
       console.log("updated: ")
       console.log(putData)
-      const response = await axios.put(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
+      const response = await AuthorizedRequest.putRequest(`http://localhost:8080/api/users/customers/update/${user.email}`, putData)
       
       setUser({
         ...user,
@@ -162,6 +208,7 @@ export default function CustomerProfilePage() {
         email: formData.email,
         phoneNumber: formData.phoneNumber,
         current_address: addressInfo,
+        allergens: formData.allergens,
       })
   
       // Animation for success notification
@@ -179,18 +226,12 @@ export default function CustomerProfilePage() {
     }
   }
 
-  const handleAllergenChange = (id) => {
-    setAllergens((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }))
-  }
 
   const handleAddressInfoChange = (e) => {
     const { id, value } = e.target
     setAddressInfo(prev => ({
       ...prev,
-      [id]: id === 'buildingNumber' || id === 'apartmentNumber' ? Number(value) : value
+      [id]: value
     }))
   }
 
@@ -199,6 +240,7 @@ export default function CustomerProfilePage() {
     .map(([id]) => Number.parseInt(id))
 
   const handleLogout = () => {
+    localStorage.removeItem("token")
     navigate("/")
   }
 
@@ -261,68 +303,9 @@ const toggleDarkMode = () => {
       </div>
 
       {/* Header section */}
-      <motion.header
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className={`${darkMode ? "bg-[#333]" : "bg-[#47300A]"} text-white py-3 px-6 flex justify-between items-center shadow-md`}
-      >
-        <div className="flex items-center">
-          <Link to="/">
-            <span className="font-bold text-xl tracking-wide hover:text-amber-200 transition-colors duration-200">
-              Doy!
-            </span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggleDarkMode}
-              className={`w-10 h-5 rounded-full flex items-center ${darkMode ? "bg-amber-400 justify-end" : "bg-gray-300 justify-start"} p-1 transition-all duration-300`}
-            >
-              <div className="w-3 h-3 bg-white rounded-full"></div>
-            </button>
-            <Moon className="h-4 w-4 text-amber-200" />
-          </div>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className={`rounded-full w-10 h-10 ${darkMode ? "bg-amber-400" : "bg-amber-500"} flex items-center justify-center shadow-md hover:shadow-lg transition-shadow duration-200`}
-          >
-            <span className="text-white text-sm font-medium">
-              {user.firstname[0].toUpperCase() + user.lastname[0].toUpperCase()}
-            </span>
-          </motion.button>
-        </div>
-      </motion.header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      {/* Logo section */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="flex justify-center py-8"
-      >
-        <motion.div
-          whileHover={{ rotate: 5, scale: 1.05 }}
-          className={`rounded-full ${darkMode ? "bg-gray-800" : "bg-white"} p-6 w-32 h-32 flex items-center justify-center shadow-lg`}
-        >
-          <div className="relative w-24 h-24">
-            {user.profileImage ? (
-              <img
-                src={user.profileImage || "/placeholder.svg"}
-                alt={user?.firstname}
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              <img src="/image1.png" alt="DOY Logo" width={96} height={96} className="w-full h-full" />
-            )}
-            <div className={`text-center text-[10px] font-bold mt-1 ${darkMode ? "text-amber-400" : "text-amber-800"}`}>
-              {user.profileImage ? user.firstname : "FOOD DELIVERY"}
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+      <DoyLogo></DoyLogo>
 
       {/* Profile Content */}
       <div className="flex-grow flex justify-center items-start px-4 pb-8">
@@ -333,7 +316,7 @@ const toggleDarkMode = () => {
           className={`w-full md:w-4/5 max-w-5xl ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-xl p-6 shadow-xl`}
         >
           <h1 className={`text-2xl font-bold ${darkMode ? "text-amber-400" : "text-amber-800"} text-center mb-6`}>
-            Hesap Profilim - Müşteri {customerId ? `(ID: ${customerId})` : ""}
+            Hesap Profilim - Müşteri
           </h1>
 
           {/* Tabs */}
@@ -354,8 +337,7 @@ const toggleDarkMode = () => {
                 Profil Bilgileri
               </button>
               <button
-                disabled
-                onClick={() => setActiveTab("orders")}
+                onClick={() => navigate("/customer/past-orders")}
                 className={`py-2 px-4 text-center transition-colors duration-200 ${
                   activeTab === "orders"
                     ? darkMode
@@ -417,96 +399,96 @@ const toggleDarkMode = () => {
             </Button>
           </motion.div>
               {activeTab === "profile" && (
-                <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
-                  {/* Personal Information */}
-                  <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <User className="h-4 w-4 mr-2" /> Ad
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="text"
-                          name="firstname"
-                          value={formData.firstname}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                  <motion.div variants={containerVariants} initial="hidden" animate={isLoaded ? "visible" : "hidden"}>
+                    {/* Personal Information */}
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <label
+                            className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                         >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
+                          <User className="h-4 w-4 mr-2"/> Ad
+                        </label>
+                        <div className="flex">
+                          <input
+                              type="text"
+                              name="firstname"
+                              value={formData.firstname}
+                              onChange={handleInputChange}
+                              className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          />
+                          <button
+                              className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                          >
+                            <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`}/>
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <User className="h-4 w-4 mr-2" /> Soyad
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="text"
-                          name="lastname"
-                          value={formData.lastname}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                      <div>
+                        <label
+                            className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                         >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
+                          <User className="h-4 w-4 mr-2"/> Soyad
+                        </label>
+                        <div className="flex">
+                          <input
+                              type="text"
+                              name="lastname"
+                              value={formData.lastname}
+                              onChange={handleInputChange}
+                              className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          />
+                          <button
+                              className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                          >
+                            <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`}/>
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <Phone className="h-4 w-4 mr-2" /> Telefon
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="text"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                      <div>
+                        <label
+                            className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                         >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
+                          <Phone className="h-4 w-4 mr-2"/> Telefon
+                        </label>
+                        <div className="flex">
+                          <input
+                              type="text"
+                              name="phoneNumber"
+                              value={formData.phoneNumber}
+                              onChange={handleInputChange}
+                              className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          />
+                          <button
+                              className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                          >
+                            <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`}/>
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <label
-                        className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
-                      >
-                        <Mail className="h-4 w-4 mr-2" /> Email
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
-                        />
-                        <button
-                          className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                      <div>
+                        <label
+                            className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-1 flex items-center font-medium`}
                         >
-                          <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`} />
-                        </button>
+                          <Mail className="h-4 w-4 mr-2"/> Email
+                        </label>
+                        <div className="flex">
+                          <input
+                              type="email"
+                              name="email"
+                              value={formData.email}
+                              onChange={handleInputChange}
+                              className={`w-full ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-amber-50 border-amber-100"} border rounded-l-md py-3.5 px-5 text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none transition-all duration-200`}
+                          />
+                          <button
+                              className={`${darkMode ? "bg-gray-600 border-gray-600" : "bg-amber-50 border-amber-100"} border border-l-0 rounded-r-md px-2 hover:bg-amber-100 transition-colors duration-200`}
+                          >
+                            <Edit2 className={`h-4 w-4 ${darkMode ? "text-amber-400" : "text-amber-800"}`}/>
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
                     <div className="space-y-3">
                       <label htmlFor="cityDropdown" className="block text-base text-gray-800 dark:text-gray-200 mb-1">
@@ -658,54 +640,54 @@ const toggleDarkMode = () => {
                     </button>
                   </motion.div>
 
-                  {/* Logout Link */}
-                  <motion.div variants={itemVariants}>
-                    <button
-                      onClick={handleLogout}
-                      className={`w-full text-center py-2 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-gray-700" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200 flex items-center justify-center gap-2`}
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Hesabımdan Çıkış Yap
-                    </button>
+                    {/* Logout Link */}
+                    <motion.div variants={itemVariants}>
+                      <button
+                          onClick={handleLogout}
+                          className={`w-full text-center py-2 border ${darkMode ? "border-gray-600 text-gray-300 hover:bg-gray-700" : "border-gray-300 text-gray-600 hover:bg-gray-50"} rounded-md transition-colors duration-200 flex items-center justify-center gap-2`}
+                      >
+                        <LogOut className="h-4 w-4"/>
+                        Hesabımdan Çıkış Yap
+                      </button>
+                    </motion.div>
                   </motion.div>
-                </motion.div>
               )}
 
               {activeTab === "orders" && (
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate={isLoaded ? "visible" : "hidden"}
-                  className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow p-4`}
-                >
-                  <h2 className={`text-lg font-semibold ${darkMode ? "text-amber-400" : "text-amber-800"} mb-4`}>
-                    Sipariş Geçmişim
-                  </h2>
+                  <motion.div
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate={isLoaded ? "visible" : "hidden"}
+                      className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow p-4`}
+                  >
+                    <h2 className={`text-lg font-semibold ${darkMode ? "text-amber-400" : "text-amber-800"} mb-4`}>
+                      Sipariş Geçmişim
+                    </h2>
 
-                  {pastOrders.length > 0 ? (
-                    <div className="space-y-4">
-                      {pastOrders.map((order) => (
-                        <motion.div
-                          key={order.id}
-                          variants={itemVariants}
-                          className={`border ${darkMode ? "border-gray-700" : "border-gray-200"} rounded-lg p-4 hover:shadow-md transition-shadow duration-200`}
-                        >
-                          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-                            <div>
-                              <h3 className={`font-medium ${darkMode ? "text-white" : "text-gray-800"}`}>
-                                {order.restaurantName}
-                              </h3>
-                              <div className="flex items-center mt-1">
+                    {pastOrders.length > 0 ? (
+                        <div className="space-y-4">
+                          {pastOrders.map((order) => (
+                              <motion.div
+                                  key={order.id}
+                                  variants={itemVariants}
+                                  className={`border ${darkMode ? "border-gray-700" : "border-gray-200"} rounded-lg p-4 hover:shadow-md transition-shadow duration-200`}
+                              >
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+                                  <div>
+                                    <h3 className={`font-medium ${darkMode ? "text-white" : "text-gray-800"}`}>
+                                      {order.restaurantName}
+                                    </h3>
+                                    <div className="flex items-center mt-1">
                                 <span className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                                   {order.date}
                                 </span>
-                                <span
-                                  className={`ml-3 px-2 py-0.5 rounded-full text-xs ${
-                                    order.status === "delivered"
-                                      ? "bg-green-100 text-green-800"
-                                      : order.status === "processing"
-                                        ? "bg-blue-100 text-blue-800"
-                                        : "bg-amber-100 text-amber-800"
+                                      <span
+                                          className={`ml-3 px-2 py-0.5 rounded-full text-xs ${
+                                              order.status === "delivered"
+                                                  ? "bg-green-100 text-green-800"
+                                                  : order.status === "processing"
+                                                      ? "bg-blue-100 text-blue-800"
+                                                      : "bg-amber-100 text-amber-800"
                                   }`}
                                 >
                                   {order.status === "delivered"
@@ -776,47 +758,7 @@ const toggleDarkMode = () => {
         </motion.div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className={`mt-8 p-8 flex justify-between items-center ${darkMode ? "bg-[#1a1a1a]" : "bg-white"} transition-colors duration-300`}
-      >
-        <img src="/image1.png" alt="DOY Logo" className="h-[50px] w-[50px] rounded-full object-cover" />
-
-        <div className="flex gap-6">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Twitter size={24} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Instagram size={24} />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Youtube size={24} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-inherit no-underline p-[0.4rem] rounded-full transition-colors duration-300 cursor-pointer flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Linkedin size={24} />
-          </a>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   )
 }

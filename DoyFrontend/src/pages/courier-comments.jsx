@@ -16,10 +16,11 @@ import {
   Loader2,
 } from "lucide-react";
 
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import AuthorizedRequest from "../services/AuthorizedRequest";
 import { CommentSection } from "../components/CommentSection";
-import { getUserById } from "../services/profileData";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import DoyLogo from "../components/DoyLogo";
 
 
 
@@ -50,7 +51,8 @@ export default function CourierCommentPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeReplyId, setActiveReplyId] = useState(null);
-  const {id: courierId} = useParams()
+  const [courierId, setCourierId] = useState(0);
+  const [courierEmail, setCourierEmial] = useState(localStorage.getItem("email"));
   const [rating, setRating] = useState(0)
   const [ratingCount, setRatingCount] = useState(0)
 
@@ -75,14 +77,15 @@ export default function CourierCommentPage() {
 
   useEffect(() => {
     const getComments = async () => {
-        const ratingResponse = await getUserById(courierId);
+        const ratingResponse = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/couriers/get-by-email/${courierEmail}`)).data;
         setRating(ratingResponse.rating)
         setRatingCount(ratingResponse.ratingCount)
+        setCourierId(ratingResponse.id)
 
-        const reviewResponse = await axios.get(`http://localhost:8080/api/comment/get/for-courier/${courierId}`);
+        const reviewResponse = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get/for-courier/${ratingResponse.id}`);
         const comments = reviewResponse.data;
         let commentsData = await Promise.all( comments.map(async (element) => {
-            const replies = await axios.get(`http://localhost:8080/api/comment/get-replies/${element.id}`);
+            const replies = await AuthorizedRequest.getRequest(`http://localhost:8080/api/comment/get-replies/${element.id}`);
             return {
                     id: element.id,
                     author: element.user.firstname + " " + element.user.lastname,
@@ -115,7 +118,7 @@ export default function CourierCommentPage() {
       content: replyText,
       userId: courierId
     }
-    const response = await axios.post("http://localhost:8080/api/comment/post-reply", payload)
+    const response = await AuthorizedRequest.postRequest("http://localhost:8080/api/comment/post-reply", payload)
 
     alert(`Reply to comment ID: ${commentId} with text: ${replyText}`);
     setActiveReplyId(null);
@@ -131,74 +134,9 @@ export default function CourierCommentPage() {
         darkMode ? "bg-gray-900 text-gray-100" : "bg-gradient-to-b from-amber-50 to-amber-100"
       } transition-colors duration-300`}
     >
-      {/* Header */}
-      <header
-        className={`${
-          darkMode ? "bg-gray-800" : "bg-[#47300A]"
-        } text-white py-3 px-6 flex justify-between items-center sticky top-0 z-10 shadow-md transition-colors duration-300`}
-      >
-        <div className="flex items-center">
-          <a
-            href="/"
-            className="font-bold text-xl hover:text-amber-200 transition-colors duration-200 flex items-center gap-2"
-          >
-            <Utensils className="w-5 h-5" />
-            <span>Doy!</span>
-          </a>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={darkMode}
-              onCheckedChange={setDarkMode}
-              className={`${
-                darkMode ? "data-[state=checked]:bg-gray-600" : "data-[state=checked]:bg-amber-200"
-              } transition-colors duration-300`}
-            />
-            {darkMode ? (
-              <Sun className="w-4 h-4 text-yellow-300" />
-            ) : (
-              <Moon className="w-4 h-4 text-amber-200" />
-            )}
-          </div>
-          <a
-            href="/register"
-            className={`${
-              darkMode ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-amber-200 text-amber-800 hover:bg-amber-300"
-            } rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 transform hover:scale-105`}
-          >
-            KAYIT
-          </a>
-          <a
-            href="/login"
-            className={`${
-              darkMode ? "bg-gray-600 text-white hover:bg-gray-500" : "bg-white text-amber-800 hover:bg-amber-50"
-            } rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm`}
-          >
-            GİRİŞ
-          </a>
-        </div>
-      </header>
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} ></Header>
 
-      {/* Logo */}
-      <div className={`flex justify-center py-8 ${mounted ? "animate-fadeIn" : "opacity-0"}`}>
-        <div
-          className={`rounded-full ${
-            darkMode ? "bg-gray-800" : "bg-white"
-          } p-6 w-36 h-36 flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-105`}
-        >
-          <div className="relative w-28 h-28">
-            <img src="/image1.png" alt="DOY Logo" width={112} height={112} className="w-full h-full" />
-            <div
-              className={`text-center text-[10px] font-bold mt-1 ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              FOOD DELIVERY
-            </div>
-          </div>
-        </div>
-      </div>
+      <DoyLogo></DoyLogo>
 
       {/* Comment Sections */}
       <div className="flex-grow flex justify-center items-start px-4 pb-12">
@@ -224,79 +162,7 @@ export default function CourierCommentPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className={`${
-          darkMode ? "bg-gray-800 border-gray-700" : "bg-amber-50 border-amber-200"
-        } p-8 border-t transition-colors duration-300 mt-auto`}
-      >
-        <div className="flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto">
-          <div className="mb-6 md:mb-0">
-            <div
-              className={`rounded-full ${
-                darkMode ? "bg-gray-800" : "bg-white"
-              } p-4 w-24 h-24 flex items-center justify-center shadow-md transition-all duration-300 hover:shadow-lg transform hover:scale-105`}
-            >
-              <div className="relative w-16 h-16">
-                <img src="/image1.png" alt="DOY Logo" width={64} height={64} className="w-full h-full" />
-                <div
-                  className={`text-center text-[8px] font-bold mt-1 ${
-                    darkMode ? "text-gray-400" : "text-gray-600"
-                  }`}
-                >
-                  FOOD DELIVERY
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-8">
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${
-                darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"
-              } transition-all duration-200 transform hover:scale-110`}
-              aria-label="Twitter"
-            >
-              <Twitter className="w-6 h-6" />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${
-                darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"
-              } transition-all duration-200 transform hover:scale-110`}
-              aria-label="Instagram"
-            >
-              <Instagram className="w-6 h-6" />
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${
-                darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"
-              } transition-all duration-200 transform hover:scale-110`}
-              aria-label="YouTube"
-            >
-              <Youtube className="w-6 h-6" />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${
-                darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-amber-800"
-              } transition-all duration-200 transform hover:scale-110`}
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="w-6 h-6" />
-            </a>
-          </div>
-        </div>
-      </footer>
+      <Footer darkMode={darkMode}></Footer>
     </div>
   );
 }
