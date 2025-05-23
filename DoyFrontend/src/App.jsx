@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, {lazy, Suspense, useEffect, useState} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
@@ -36,6 +36,7 @@ import CommentPage from './pages/order-review-view.jsx';
 import CourierCommentPage from './pages/courier-comments.jsx';
 import RestaurantCommentPage from './pages/restaurant-comments.jsx';
 import PastOrdersPage from './pages/past-orders-page.jsx';
+import { initializeLocationData } from "./services/address"
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -45,8 +46,24 @@ const LoadingSpinner = () => (
   </div>
 );
 
+
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+
+  const [dataReady, setDataReady] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      await initializeLocationData(); // Load cities & districts
+      setDataReady(true); // Allow app to render
+    };
+    init();
+  }, []);
+
+  if (!dataReady) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
