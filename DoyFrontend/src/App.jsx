@@ -16,6 +16,7 @@ import RestaurantRegisterPage from './pages/restaurant-register-page';
 import CourierRegisterPage from './pages/courier-register-page';
 import NotFound from './pages/not-found';
 import CustomerProfilePage from './pages/customer-profile-page';
+import FavoriteRestaurantPage from './pages/favorite-restaurant-page';
 import RestaurantProfilePage from './pages/restaurant-profile-page';
 import CourierProfilePage from './pages/courier-profile-page';
 import RestaurantDetail from './pages/RestaurantDetail.jsx';
@@ -38,6 +39,7 @@ import RestaurantCommentPage from './pages/restaurant-comments.jsx';
 import PastOrdersPage from './pages/past-orders-page.jsx';
 import CustomerComplaintsPage from './pages/customer-complaints.jsx';
 import { initializeLocationData } from "./services/address"
+import ManagePromotionPage from './pages/ManagePromotionPage.jsx'
 
 // Loading spinner for Suspense fallback
 const LoadingSpinner = () => (
@@ -82,6 +84,8 @@ function App() {
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/restaurants/register" element={<RestaurantRegisterPage />} />
               <Route path="/restaurant/profile/:id?" element={<RestaurantProfilePage />} />
+              <Route path="/restaurants/favorite" element={<FavoriteRestaurantPage />} />
+              <Route path="/courier/requests/:id?" element={<CourierOrdersPage/>} />
               <Route path="/courier/requests" element={<CourierOrdersPage/>} />
               <Route path="/couriers/register" element={<CourierRegisterPage />} />
               <Route path="/courier/profile/:id?" element={<CourierProfilePage />} />
@@ -102,6 +106,7 @@ function App() {
               <Route path="/restaurant/profile/comments" element={<RestaurantCommentPage />} />
               <Route path="/customer/past-orders" element={<PastOrdersPage />} />
               <Route path="/customer/complaints" element={<CustomerComplaintsPage />} />
+              <Route path="/promotions/manage" element={<ManagePromotionPage />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>

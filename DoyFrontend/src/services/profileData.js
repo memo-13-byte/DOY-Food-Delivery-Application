@@ -365,3 +365,44 @@ export const getUserById = async(id) => {
   
   return user
 };
+
+export const getUserByToken = async() => {
+  
+  let user = null
+
+  try {
+    const token = localStorage.getItem("token")
+    const userResponse = await axios.get(`http://localhost:8080/api/users/user`, 
+      { headers: { Authorization: `Bearer ${token}` } })
+      const userData = userResponse.data
+      let url
+    switch (userData.role) {
+      case "CUSTOMER":
+        url = `http://localhost:8080/api/users/customers/get-by-email/${userData.email}`
+        break;
+      case "COURIER":
+        url = `http://localhost:8080/api/users/couriers/get-by-email/${userData.email}`
+        break;
+      case "RESTAURANT_OWNER":
+        url = `http://localhost:8080/api/users/restaurant-owners/get-by-email/${userData.email}`
+        break;
+      case "ADMIN":
+        url = null
+        break;
+      default:
+        url = null
+        break;
+    }
+    
+
+    const userTypeResponse = await axios.get(url, 
+      { headers: { Authorization: `Bearer ${token}` } })
+    console.log(userTypeResponse)
+    user = userTypeResponse.data 
+
+  } catch (error) {
+    console.error("Error " + error)
+  }
+  
+  return user
+};

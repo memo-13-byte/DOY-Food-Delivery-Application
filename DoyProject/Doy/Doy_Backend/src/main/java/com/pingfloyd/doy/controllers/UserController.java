@@ -3,25 +3,13 @@ package com.pingfloyd.doy.controllers;
 import com.pingfloyd.doy.dto.*;
 import com.pingfloyd.doy.entities.UserRoles;
 import com.pingfloyd.doy.exception.UnauthorizedRequestException;
-import com.pingfloyd.doy.exception.UserNotFoundException;
 import com.pingfloyd.doy.jwt.JwtService;
 import com.pingfloyd.doy.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -81,6 +69,12 @@ public class UserController implements IUserController{
             return ResponseEntity.ok(userService.getCourierByEmail(email));
         throw new UnauthorizedRequestException();
 
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<DtoUser> getUserByToken() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return ResponseEntity.ok(userService.getUserByEmail(username));
     }
 
     @Override

@@ -59,7 +59,7 @@ export default function RestaurantProfilePage() {
 
 
   useEffect(() => {
-    
+
     const loadRestaurantOwnerById = async () => {
       let loadedEmail = "";
       if (restaurantId !== undefined) {
@@ -73,7 +73,7 @@ export default function RestaurantProfilePage() {
     }
 
       const response = (await AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${loadedEmail}`)).data
-      
+
       const data = {
         firstname: response.firstname,
         lastname: response.lastname,
@@ -90,7 +90,7 @@ export default function RestaurantProfilePage() {
     }
 
     loadRestaurantOwnerById()
-      
+
   }, [restaurantEmail])
 
 
@@ -214,41 +214,42 @@ export default function RestaurantProfilePage() {
           {!fromAdmin && <div>
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={handleManageMenu}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+                onClick={handleManageMenu}
+                className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
               Menüyü Yönet
             </Button>
           </motion.div>
 
+          <motion.div whileHover={{scale: 1.02}} whileTap={{scale: 0.98}}>
+            <Button
+                onClick={() => {
+                  navigate(`/restaurant/profile/${restaurantId}/orders`)
+                }}
+                className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+            >
+              Gelen Siparişleri Gör
+            </Button>
+          </motion.div>
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/restaurant/profile/orders`)}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/orders-status`)}}
+              className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
-              See Given Orders
+              Hazırlanmış Siparişleri Gör
             </Button>
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              onClick={() => {navigate(`/restaurant/profile/orders-status`)}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+              onClick={() => {navigate(`/restaurant/profile/${restaurantId}/comments`)}}
+              className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
-              See Prepared Order Status
-            </Button>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              onClick={() => {navigate(`/restaurant/profile/comments`)}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
-            >
-              See Ratings and Reviews
+              Puanlandırma ve Değerlendirmeleri Gör
             </Button>
           </motion.div>  </div>}
-          
-          
+
+
 
           {/* Restaurant Information */}
           <motion.div
@@ -388,11 +389,7 @@ export default function RestaurantProfilePage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleUpdateProfile}
-              className={`py-2 px-4 rounded-md font-medium transition-all duration-200 ${
-                darkMode
-                  ? "bg-amber-500 hover:bg-amber-600 text-gray-900"
-                  : "bg-amber-400 hover:bg-amber-500 text-amber-900"
-              }`}
+              className={`py-2 px-4 rounded-md font-medium transition-all duration-200 ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"}`}
             >
               Profili Güncelle
             </motion.button>
@@ -410,10 +407,10 @@ export default function RestaurantProfilePage() {
               Çıkış Yap
             </motion.button>
 }
-            
+
           </motion.div>
           }
-          
+
         </motion.div>
       </div>
 

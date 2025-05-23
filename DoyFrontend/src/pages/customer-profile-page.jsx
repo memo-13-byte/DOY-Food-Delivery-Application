@@ -270,9 +270,17 @@ export default function CustomerProfilePage() {
     },
   }
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
+const toggleDarkMode = () => {
+  const newDarkMode = !darkMode;
+  setDarkMode(newDarkMode);
+  if (newDarkMode) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
   }
+  // Optional: persist the theme in localStorage
+  localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
+};
 
   return (
     <div
@@ -308,7 +316,7 @@ export default function CustomerProfilePage() {
           className={`w-full md:w-4/5 max-w-5xl ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white"} rounded-xl p-6 shadow-xl`}
         >
           <h1 className={`text-2xl font-bold ${darkMode ? "text-amber-400" : "text-amber-800"} text-center mb-6`}>
-            Hesap Profilim - Müşteri 
+            Hesap Profilim - Müşteri
           </h1>
 
           {/* Tabs */}
@@ -374,12 +382,20 @@ export default function CustomerProfilePage() {
                 </motion.div>
               ))}
 
-<motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               onClick={() => {navigate("/restaurants/browse")}}
-              className={`w-full ${darkMode ? "bg-purple-600 hover:bg-purple-700" : "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9]"} text-white font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+              className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
             >
-              Browse Restaurants
+              Restoranları Gez
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={() => {navigate("/restaurants/favorite")}}
+              className={`w-full ${darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"} font-medium mb-6 py-6 text-base shadow-md transition-all duration-200`}
+            >
+              Favori Restoranlarım
             </Button>
           </motion.div>
 
@@ -484,197 +500,155 @@ export default function CustomerProfilePage() {
                         </div>
                       </div>
 
-                      <div className="m-2">
-                        <label htmlFor="cityDropdown" className="block text-base text-gray-800 mb-1">
-                          İl
-                        </label>
-                        <div className="relative">
-                          <select
-                              id="cityDropdown"
-                              name="city"
-                              value={addressInfo.city}
-                              onChange={onCityDropdownValueChanged}
-                              className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
-                          >
-                            {TURKISH_CITIES.map((option) => (
-                                <option key={option.value} value={option.value} disabled={option.value === ""}>
-                                  {option.label}
-                                </option>
-                            ))}
-                          </select>
-                          <svg
-                              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              viewBox="0 0 24 24"
-                          >
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="m-2">
-                        <label htmlFor="districtDropdown" className="block text-base text-gray-800 mb-1">
-                          İlçe
-                        </label>
-                        <div className="relative">
-                          <select
-                              id="districtDropdown"
-                              name="district"
-                              value={addressInfo.district}
-                              onChange={onDistrictDropdownValueChanged}
-                              className="w-full p-2 text-base border border-gray-300 rounded-lg bg-[#f5f2e9] text-gray-800 appearance-none focus:outline-none focus:border-gray-500"
-                          >
-                            {districts.map((option) => (
-                                <option key={option} value={option}>
-                                  {option}
-                                </option>
-                            ))}
-                          </select>
-                          <svg
-                              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              viewBox="0 0 24 24"
-                          >
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                          </svg>
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label htmlFor="neighborhood" className="text-gray-700 dark:text-gray-300 font-medium">
-                          Mahalle
-                        </Label>
-                        <Input
-                            id="neighborhood"
-                            placeholder="Mahalle"
-                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            value={addressInfo.neighborhood}
-                            onChange={handleAddressInfoChange}
-                            required
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label htmlFor="avenue" className="text-gray-700 dark:text-gray-300 font-medium">
-                          Cadde
-                        </Label>
-                        <Input
-                            id="avenue"
-                            placeholder="Cadde"
-                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            value={addressInfo.avenue}
-                            onChange={handleAddressInfoChange}
-                            required
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label htmlFor="street" className="text-gray-700 dark:text-gray-300 font-medium">
-                          Sokak
-                        </Label>
-                        <Input
-                            id="street"
-                            placeholder="Sokak"
-                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            value={addressInfo.street}
-                            onChange={handleAddressInfoChange}
-                            required
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label htmlFor="buildingNumber" className="text-gray-700 dark:text-gray-300 font-medium">
-                          Bina No
-                        </Label>
-                        <Input
-                            id="buildingNumber"
-                            placeholder="Bina No"
-                            type="number"
-                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            value={addressInfo.buildingNumber}
-                            onChange={handleAddressInfoChange}
-                            required
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label htmlFor="apartmentNumber" className="text-gray-700 dark:text-gray-300 font-medium">
-                          Daire No
-                        </Label>
-                        <Input
-                            id="apartmentNumber"
-                            placeholder="Apartman No"
-                            type="number"
-                            className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            value={addressInfo.apartmentNumber}
-                            onChange={handleAddressInfoChange}
-                            required
-                        />
-                      </div>
-                    </motion.div>
-                    <motion.div variants={itemVariants} className="mb-6">
-                      <label
-                          className={`block text-sm ${darkMode ? "text-amber-300" : "text-[#6b4b10]"} mb-2 flex items-center font-medium`}>
-                        Alerjen Tercihleriniz
+                    <div className="space-y-3">
+                      <label htmlFor="cityDropdown" className="block text-base text-gray-800 dark:text-gray-200 mb-1">
+                        İl
                       </label>
-                      {allergensLoadError && ( // Display error if fetching allergens failed
-                          <p className={`text-xs ${darkMode ? "text-red-400" : "text-red-500"}`}>{allergensLoadError}</p>
-                      )}
-                      {availableAllergens.length === 0 && !allergensLoadError && ( // Display loading/not found if no allergens and no error
-                          <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}>Alerjen tipleri
-                            yükleniyor veya bulunamadı.</p>
-                      )}
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2">
-                        {availableAllergens.map((allergenKey) => (
-                            <motion.div
-                                key={allergenKey} // Unique key for each allergen
-                                className="flex items-center"
-                                whileHover={{scale: 1.05}}
-                                transition={{type: "spring", stiffness: 400}}
-                            >
-                              <input
-                                  type="checkbox"
-                                  id={`customer-allergen-${allergenKey}`} // Unique ID for customer profile
-                                  value={allergenKey}
-                                  checked={(formData.allergens || []).includes(allergenKey)}
-                                  onChange={(e) => handleAllergenChange(allergenKey, e.target.checked)}
-                                  className={`h-4 w-4 rounded border-gray-300 text-amber-500 focus:ring-amber-400 ${ // Using amber colors
-                                      darkMode ? "bg-gray-700 border-gray-600 focus:ring-offset-gray-800" : "focus:ring-offset-white"
-                                  }`}
-                              />
-                              <label
-                                  htmlFor={`customer-allergen-${allergenKey}`}
-                                  className={`ml-2 text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-                              >
-                                {allergenKey}
-                              </label>
-                            </motion.div>
-                        ))}
+                      <div className="relative">
+                        <select
+                          id="cityDropdown"
+                          name="city"
+                          value={addressInfo.city}
+                          onChange={onCityDropdownValueChanged}
+                          className="w-full px-3 py-2 border rounded-lg text-base border border-gray-300 rounded-lg bg-[#f5f2e9] dark:bg-gray-700 text-gray-800 dark:text-white appearance-none focus:outline-none focus:border-gray-500"
+                        >
+                          {TURKISH_CITIES.map((option) => (
+                            <option key={option.value} value={option.value} disabled={option.value === ""}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 pointer-events-none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          viewBox="0 0 24 24"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                       </div>
-                    </motion.div>
+                    </div>
+                    <div className="space-y-3">
+                      <label htmlFor="districtDropdown" className="block text-base text-gray-800 dark:text-gray-200 mb-1">
+                        İlçe
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="districtDropdown"
+                          name="district"
+                          value={addressInfo.district}
+                          onChange={onDistrictDropdownValueChanged}
+                          className="w-full px-3 py-2 border rounded-lg text-base border border-gray-300 rounded-lg bg-[#f5f2e9] dark:bg-gray-700 text-gray-800 dark:text-white appearance-none focus:outline-none focus:border-gray-500"
+                        >
+                          {districts.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-800 dark:text-gray-200 pointer-events-none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          viewBox="0 0 24 24"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="neighborhood" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Mahalle
+                      </Label>
+                      <Input
+                        id="neighborhood"
+                        placeholder="Mahalle"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.neighborhood}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="avenue" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Cadde
+                      </Label>
+                      <Input
+                        id="avenue"
+                        placeholder="Cadde"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.avenue}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="street" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Sokak
+                      </Label>
+                      <Input
+                        id="street"
+                        placeholder="Sokak"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.street}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="buildingNumber" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Bina No
+                      </Label>
+                      <Input
+                        id="buildingNumber"
+                        placeholder="Bina No"
+                        type="number"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.buildingNumber}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="apartmentNumber" className="text-gray-700 dark:text-gray-300 font-medium">
+                        Daire No
+                      </Label>
+                      <Input
+                        id="apartmentNumber"
+                        placeholder="Apartman No"
+                        type="number"
+                        className="bg-[#f5f0e1] border-[#e8e0d0] focus:border-[#5c4018] focus:ring-[#5c4018] rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value={addressInfo.apartmentNumber}
+                        onChange={handleAddressInfoChange}
+                        required
+                      />
+                    </div>
+                  </motion.div>
 
-                    {/* Update Button */}
-                    <motion.div variants={itemVariants}>
-                      <button
-                          onClick={handleProfileUpdate}
-                          className={`w-full py-2 px-4 rounded-md font-medium mb-4 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
-                              darkMode
-                                  ? "bg-amber-500 hover:bg-amber-600 text-gray-900"
-                                  : "bg-amber-400 hover:bg-amber-500 text-amber-900"
-                          }`}
-                      >
-                        Güncelle
-                      </button>
-                    </motion.div>
+                  {/* Update Button */}
+                  <motion.div variants={itemVariants}>
+                    <button
+                      onClick={handleProfileUpdate}
+                      className={`w-full py-2 px-4 rounded-md font-medium mb-4 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
+                        darkMode ? "bg-gradient-to-r from-[#6c5ce7] to-[#5b4bc9] hover:from-[#5b4bc9] hover:to-[#4a3ab9] !text-white"  : "bg-gradient-to-r from-[#fbbe24] to-[#fbbe24] hover:from-[#d49a08] hover:to-[#d49a08] !text-amber-900"
+                      }`}
+                    >
+                      Güncelle
+                    </button>
+                  </motion.div>
 
                     {/* Logout Link */}
                     <motion.div variants={itemVariants}>

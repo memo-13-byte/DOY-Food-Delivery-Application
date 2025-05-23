@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Button } from "../components/Button";
+import { useNavigate } from 'react-router-dom';
 
 const mockPromotions = [
     { id: 1, name: "Promotion A", description: "First Time Customers get %10 discount for..." },
@@ -9,7 +11,7 @@ const mockPromotions = [
 
 const PromotionList = ({ darkMode }) => {
     const [search, setSearch] = useState("");
-
+    const navigate = useNavigate();
     const filteredPromotions = mockPromotions.filter(promotion =>
         promotion.name.toLowerCase().includes(search.toLowerCase())
     );
@@ -59,7 +61,7 @@ const PromotionList = ({ darkMode }) => {
                             <div style={{ fontWeight: "bold" }}>{promotion.name}</div>
                             <small>{promotion.description}</small>
                         </div>
-                        <div style={{ fontSize: "1.5rem" }}>➔</div>
+                        <Button style={{ fontSize: "1.5rem" }} onClick={() => navigate('/promotions/manage')} > ➔ </Button>
                     </div>
                 ))}
             </div>

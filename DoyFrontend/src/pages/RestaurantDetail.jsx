@@ -243,7 +243,7 @@ const RestaurantDetail = () => {
         setExpandedCategories(initialExpandedState)
       } catch (error) {
         alert(getResponseErrors(error))
-        setMenu({ categories: [] }) 
+        setMenu({ categories: [] })
       } finally {
         setLoadingMenu(false)
       }
@@ -274,7 +274,13 @@ const RestaurantDetail = () => {
 
       try {
         // *** Ensure Axios sends authentication (e.g., JWT token via interceptors) ***
-        const response = await AuthorizedRequest.getRequest(`http://localhost:8080/order/cart`) // Your single endpoint
+        const header = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+        const url = `http://localhost:8080/order/cart`
+        const response = await AuthorizedRequest.getRequest(url, header)
         const userCartDto = response.data // Expecting UserCartDTO format defined before
 
         console.log("Received UserCartDTO:", userCartDto)
@@ -399,7 +405,7 @@ const RestaurantDetail = () => {
       if (error.response) {
         console.error("Error response from backend:", error.response.data)
       }
-      alert("Sepete eklerken bir sunucu hatası oluştu.")
+      alert(`${item.name} sepette başka bir restorandan ürün olduğu için sepete eklenemedi.`)
     
 
       // Show error feedback

@@ -2,6 +2,7 @@ package com.pingfloyd.doy.services;
 
 import com.pingfloyd.doy.dto.DtoRestaurant;
 import com.pingfloyd.doy.dto.DtoRestaurantIU;
+import com.pingfloyd.doy.dto.RestaurantRequest;
 import com.pingfloyd.doy.entities.*;
 import com.pingfloyd.doy.enums.RestaurantCategory;
 import com.pingfloyd.doy.exception.RestaurantNotFoundException;
@@ -11,10 +12,10 @@ import com.pingfloyd.doy.repositories.RestaurantRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService implements IRestaurantService {
@@ -113,6 +114,16 @@ public class RestaurantService implements IRestaurantService {
         }
         Restaurant restaurant = this.findRestaurantById(restaurantId);
         return customer.getFavoriteRestaurants().contains(restaurant);
+    }
+
+    public List<RestaurantRequest> getCustomerFavorites(String username) {
+        Customer customer = userService.SearchCustomer(username);
+        if(customer == null) {
+            throw new UserNotFoundException("User with given email doesn't exist!");
+        }
+        return customer.getFavoriteRestaurants().stream()
+                .map(RestaurantRequest::new)
+                .collect(Collectors.toList());
     }
 
     public Boolean setFavoriteRestaurant(String username, Long restaurantId) throws UserNotFoundException, RestaurantNotFoundException {
