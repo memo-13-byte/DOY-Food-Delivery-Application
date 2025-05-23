@@ -44,12 +44,12 @@ public class RestaurantSearchService {
         Specification<Restaurant> spec = null;
         if(customer == null || city != null ){
             spec = RestaurantSpecification.filterBy(
-                    name, minRating, maxMinOrderPrice, cuisine ,districtName ,city
+                    name, minRating, maxMinOrderPrice, cuisine ,districtName ,city, null
             );
         }
         else{
             spec = RestaurantSpecification.filterBy(
-                    name, minRating, maxMinOrderPrice, cuisine ,customer.getCurrent_address().getDistrict().getName() ,customer.getCurrent_address().getCityEnum()
+                    name, minRating, maxMinOrderPrice, cuisine ,customer.getCurrent_address().getDistrict().getName() ,customer.getCurrent_address().getCityEnum(), customer.getAllergens()
             );
         }
         int pageSize = (size <= 0) ? DataLimit : size;

@@ -2,44 +2,35 @@ package com.pingfloyd.doy.other;
 
 import com.pingfloyd.doy.entities.Address;
 import com.pingfloyd.doy.entities.District;
+import com.pingfloyd.doy.entities.MenuItem;
 import com.pingfloyd.doy.entities.Restaurant;
+import com.pingfloyd.doy.enums.Allergens;
 import com.pingfloyd.doy.enums.CityEnum;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate; // Use jakarta persistence
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils; // For checking empty strings
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RestaurantSpecification {
 
     // Private constructor to prevent instantiation
     private RestaurantSpecification() {}
 
-    /**
-     * Creates a specification based on multiple optional filter criteria.
-     *
-     * @param name Optional: Part of the restaurant name (case-insensitive).
-     * @param minRating Optional: Minimum acceptable rating.
-     * @param maxMinOrderPrice Optional: Maximum acceptable minimum order price.
-     * @param cuisine Optional: Exact cuisine type (case-insensitive).
-     * @return A Specification object combining the active filters.
-     */
     public static Specification<Restaurant> filterBy(
             String name,
             Float minRating,
             Double maxMinOrderPrice,
             String cuisine,
             String districtName,
-            CityEnum city // <--- ADD THIS PARAMETER
-    ) {
+            CityEnum city
+            , Set<Allergens> customerAllergens
+            ) {
 
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-
-            // ... (existing filters for name, minRating, maxMinOrderPrice, cuisine) ...
 
             if (StringUtils.hasText(name)) {
                 predicates.add(criteriaBuilder.like(
@@ -87,7 +78,6 @@ public class RestaurantSpecification {
                         "%" + districtName.toLowerCase() + "%"
                 ));
             }
-
             // --- ADD CITY ENUM FILTERING LOGIC ---
             if (city != null) { // Check if city enum is provided
                 // Use the districtJoin to filter by the city associated with the district
@@ -96,15 +86,32 @@ public class RestaurantSpecification {
                         city
                 ));
             }
-            // ------------------------------------------
+            if (customerAllergens != null && !customerAllergens.isEmpty()) {
+
+                jakarta.persistence.criteria.Subquery<Long> safeMenuItemRestaurantSubquery = query.subquery(Long.class);
+                jakarta.persistence.criteria.Root<MenuItem> menuItemRoot = safeMenuItemRestaurantSubquery.from(MenuItem.class);
+
+                jakarta.persistence.criteria.Subquery<Long> menuItemsWithCustomerAllergensSubquery = query.subquery(Long.class);
+                jakarta.persistence.criteria.Root<MenuItem> subMenuItemRoot = menuItemsWithCustomerAllergensSubquery.from(MenuItem.class);
+                SetJoin<MenuItem, Allergens> subMenuItemAllergenJoin = subMenuItemRoot.joinSet("allergens");
+
+                menuItemsWithCustomerAllergensSubquery.select(subMenuItemRoot.get("id"))
+                        .where(subMenuItemAllergenJoin.in(customerAllergens)); // MenuItem contains an allergen the customer is allergic to.
+
+
+                safeMenuItemRestaurantSubquery.select(menuItemRoot.get("restaurant").get("id")) // Select the Restaurant ID
+                        .where(
+                                criteriaBuilder.equal(menuItemRoot.get("restaurant").get("id"), root.get("id")),
+                                criteriaBuilder.not(menuItemRoot.get("id").in(menuItemsWithCustomerAllergensSubquery))
+                        );
+                predicates.add(criteriaBuilder.exists(safeMenuItemRestaurantSubquery));
+            }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 
 
-    // --- You could also create individual specification methods if preferred ---
-    // Example:
     public static Specification<Restaurant> nameContains(String name) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.like(criteriaBuilder.lower(root.get("restaurantName")), "%" + name.toLowerCase() + "%");
