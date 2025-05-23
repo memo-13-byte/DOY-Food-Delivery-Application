@@ -28,8 +28,32 @@ import { Label } from "../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import AuthorizedRequest from "../services/AuthorizedRequest"
 import { getResponseErrors } from "../services/exceptionUtils"
+import axios from "axios"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
+
+// Switch Component (Copied from Header to be self-contained in this file)
+const Switch = ({ checked, onCheckedChange, className }) => {
+    return (
+        <button
+            type= "button"
+            role="switch"
+            aria-checked={checked}
+            data-state={checked ? "checked" : "unchecked"}
+            onClick={() => onCheckedChange(!checked)}
+            className={`relative inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 ${
+                checked ? "bg-primary" : "bg-input"
+            } ${className}`}
+        >
+      <span
+          data-state={checked ? "checked" : "unchecked"}
+          className={`pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform ${
+              checked ? "translate-x-5" : "translate-x-0"
+          }`}
+      />
+        </button>
+    )
+}
 
 export default function AddItemPage() {
     const navigate = useNavigate()
@@ -64,79 +88,44 @@ export default function AddItemPage() {
         menuItemType: menuItemTypeId ? String(menuItemTypeId) : "1",
         image: null, // This will store the File object if a new image is selected
         allergens: [],
+        availability: true, // Initialized to true
         imageId: null, // This will store the ID of an existing image
     })
     const [availableAllergens, setAvailableAllergens] = useState([])
 
-  // menuItemType mapping
-  const menuItemTypeMap = {
-    "1": "Menüler",
-    "2": "Yiyecek Seçenekleri",
-    "3": "İçecek Seçenekleri",
-    "4": "Ek Seçenekleri",
-  }
-
-  const reversemenuItemTypeMap = {
-    "1": "COMBO",
-    "2": "MAIN_DISH",
-    "3": "DRINK",
-    "4": "EXTRA",
-  }
-
-  // Load item data if in edit mode
-  useEffect(() => {
-    if (isEditMode && itemId) {
-      (AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).then(
-(response) => {setRestaurantId(response.data.id)}
-      );
-      setIsLoading(true)
-      // In a real app, fetch the item data from API
-      AuthorizedRequest
-        .getRequest(`http://localhost:8080/api/item/get/${itemId}`)
-        .then((response) => {
-          const item = response.data
-          console.log(item)
-          setFormData({
-            name: item.name,
-            description: item.description,
-            price: item.price,
-            menuItemType: getmenuItemTypeIdFromType(item.menuItemType),
-            imageId: item.imageId,
-          })
-          // If there's an image URL in the response
-          if(item.imageId != null) {
-            setImagePreview(`http://localhost:8080/api/upload/image/${item.imageId}`)
-          } else {
-            setImagePreview("/placeholder.svg?height=200&width=200")
-          }
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          console.error("Error fetching item:", error)
-          setIsLoading(false)
-        })
+    // menuItemType mapping
+    const menuItemTypeMap = {
+        "1": "Menüler",
+        "2": "Yiyecek Seçenekleri",
+        "3": "İçecek Seçenekleri",
+        "4": "Ek Seçenekleri",
     }
-  }, [isEditMode, itemId])
 
+    const reversemenuItemTypeMap = {
+        "1": "COMBO",
+        "2": "MAIN_DISH",
+        "3": "DRINK",
+        "4": "EXTRA",
+    }
 
     // Load item data if in edit mode
     useEffect(() => {
-        if (!restaurantEmail) {
-            console.error("Restaurant email not found in localStorage.");
-            // Potentially navigate to login or show an error
-            setErrors(prev => ({ ...prev, auth: "Kullanıcı bilgileri bulunamadı."}));
-            return;
-        }
-
-        if (isEditMode && itemId) {
-            AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`).then((response) => {
+        // Fetch restaurant ID for both edit and add modes
+        AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)
+            .then((response) => {
                 if (response.data && response.data.id) {
                     setRestaurantId(response.data.id);
                 } else {
                     console.error("Could not fetch restaurant ID for email:", restaurantEmail);
                     setErrors(prev => ({ ...prev, restaurant: "Restoran bilgileri alınamadı."}));
                 }
+            })
+            .catch((error) => {
+                console.error("Error fetching restaurant ID:", error);
+                setErrors(prev => ({ ...prev, restaurant: "Restoran bilgileri alınamadı."}));
             });
+
+        if (isEditMode && itemId) {
             setIsLoading(true);
             AuthorizedRequest
                 .getRequest(`http://localhost:8080/api/item/get/${itemId}`)
@@ -147,10 +136,11 @@ export default function AddItemPage() {
                         name: item.name,
                         description: item.description,
                         price: item.price,
+                        availability: item.availability, // Set availability from fetched item data
                         menuItemType: getmenuItemTypeIdFromType(item.menuItemType),
-                        imageId: item.imageId, // Store existing imageId
+                        imageId: item.imageId,
                         allergens: Array.isArray(item.allergens) ? item.allergens : [],
-                        image: null, // Reset file input
+                        image: null,
                     });
                     if(item.imageId != null) {
                         setImagePreview(`http://localhost:8080/api/upload/image/${item.imageId}`);
@@ -164,16 +154,6 @@ export default function AddItemPage() {
                     setErrors(getResponseErrors(error));
                     setIsLoading(false);
                 });
-        } else {
-            // For new items, still fetch restaurantId
-            AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`).then((response) => {
-                if (response.data && response.data.id) {
-                    setRestaurantId(response.id);
-                } else {
-                    console.error("Could not fetch restaurant ID for email:", restaurantEmail);
-                    setErrors(prev => ({ ...prev, restaurant: "Restoran bilgileri alınamadı."}));
-                }
-            });
         }
     }, [isEditMode, itemId, restaurantEmail]);
 
@@ -246,6 +226,17 @@ export default function AddItemPage() {
             validateForm()
         }
     }
+
+    // Handler for availability switch
+    const handleAvailabilityChange = (newAvailability) => {
+        setFormData((prev) => ({
+            ...prev,
+            availability: newAvailability,
+        }));
+        setTouched((prev) => ({ ...prev, availability: true }));
+        // No validation needed for availability directly, but can re-validate if desired
+        if (validationAttempted) validateForm();
+    };
 
     const handleBlur = (e) => {
         const { name } = e.target
@@ -324,6 +315,7 @@ export default function AddItemPage() {
             price: Number.parseFloat(String(formData.price)), // Ensure price is float
             restaurantId: restaurantId,
             menuItemType: reversemenuItemTypeMap[formData.menuItemType],
+            availability: formData.availability, // Send availability status
             allergens: formData.allergens || [],
             imageId: formData.imageId, // Send existing imageId if no new image is uploaded
         };
@@ -787,9 +779,34 @@ export default function AddItemPage() {
                                     </AnimatePresence>
                                 </motion.div>
 
+                                {/* Availability Switch */}
+                                <motion.div custom={5} variants={formFieldVariants} initial="hidden" animate="visible" className="flex items-center justify-between space-x-2">
+                                    <Label htmlFor="availability" className="flex items-center gap-2">
+                                        <span>Ürün Stokta Mevcut Mu?</span>
+                                        <AnimatePresence mode="wait">
+                                            {formData.availability ? (
+                                                <motion.span key="available-icon" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className={`text-sm ${darkMode ? "text-green-400" : "text-green-600"}`}>
+                                                    (Evet)
+                                                </motion.span>
+                                            ) : (
+                                                <motion.span key="unavailable-icon" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className={`text-sm ${darkMode ? "text-red-400" : "text-red-600"}`}>
+                                                    (Hayır)
+                                                </motion.span>
+                                            )}
+                                        </AnimatePresence>
+                                    </Label>
+                                    <Switch
+                                        id="availability"
+                                        checked={formData.availability}
+                                        onCheckedChange={handleAvailabilityChange}
+                                        disabled={isLoading}
+                                        className={`${darkMode ? "bg-amber-600" : "bg-[#6c4c9c]"} transition-colors duration-300`}
+                                    />
+                                </motion.div>
+
                                 {/* Allergens selection */}
                                 <motion.div
-                                    custom={5} // Ensure this index is unique or adjust as needed
+                                    custom={6} // Adjusted index
                                     variants={formFieldVariants}
                                     initial="hidden"
                                     animate="visible"
@@ -831,7 +848,7 @@ export default function AddItemPage() {
 
                                 {/* Action Buttons */}
                                 <motion.div
-                                    custom={6} // Adjusted index
+                                    custom={7} // Adjusted index due to new element
                                     variants={formFieldVariants} initial="hidden" animate="visible" className="flex gap-3 pt-4"
                                 >
                                     <motion.button

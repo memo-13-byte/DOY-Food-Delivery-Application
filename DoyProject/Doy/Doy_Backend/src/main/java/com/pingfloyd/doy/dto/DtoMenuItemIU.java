@@ -21,6 +21,8 @@ public class DtoMenuItemIU {
 
     private String description;
 
+    private Boolean availability;
+
     @NotNull(message = "Item price must not be null.")
     @Positive(message = "Item price must be greater than zero")
     @Digits(integer = 10, fraction = 2, message = "Item price must not exceed 10 digits.")

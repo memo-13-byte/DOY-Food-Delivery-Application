@@ -172,6 +172,7 @@ public class UserService implements UserDetailsService, IUserService {
         return dtoUser;
     }
 
+
     @Override
     public DtoCustomer getCustomerByEmail(String email) {
         Optional<Customer> customer = customerRepository.findByEmail(email);

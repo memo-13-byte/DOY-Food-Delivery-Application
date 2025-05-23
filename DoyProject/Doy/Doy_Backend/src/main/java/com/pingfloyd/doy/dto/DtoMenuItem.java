@@ -16,6 +16,7 @@ public class DtoMenuItem {
     private Long id;
     private String name;
     private String description;
+    private Boolean availability;
     private BigDecimal price;
     private Long restaurantId;
     private MenuItemType menuItemType;
