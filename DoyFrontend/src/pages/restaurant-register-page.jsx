@@ -12,6 +12,7 @@ import {
 import { getResponseErrors } from "../services/exceptionUtils";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address";
 
 // --- Custom UI components (Button, Input, Label, Checkbox, Switch, Textarea, Select) ---
 // Assume these components are defined as in the previous examples
@@ -53,20 +54,20 @@ const SuccessIndicator = ({ darkMode }) => {
 // --- End of Success indicator component ---
 
 // --- Data for Dependent Dropdowns ---
-// NOTE: Populate this with more comprehensive data or fetch from an API
-const DISTRICT_DATA = {
-  "ANKARA": ["Çankaya", "Keçiören", "Yenimahalle", "Mamak", "Etimesgut", "Sincan", "Altındağ", "Pursaklar", "Gölbaşı", "Polatlı", "Kahramankazan", "Beypazarı", "Elmadağ", "Nallıhan", "Akyurt", "Şereflikoçhisar", "Haymana", "Çubuk", "Kızılcahamam", "Bala", "Kalecik", "Ayaş", "Güdül", "Çamlıdere", "Evren"],
-  "ISTANBUL": ["Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler", "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", "Güngören", "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer", "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"],
-  "IZMIR": ["Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla"],
-  "BURSA": ["Osmangazi", "Nilüfer", "Yıldırım", "Gürsu", "Kestel", /* ... other Bursa districts */],
-  "ANTALYA": ["Muratpaşa", "Kepez", "Konyaaltı", "Aksu", "Döşemealtı", /* ... other Antalya districts */],
-  // ... add other cities and their districts
-};
+// // NOTE: Populate this with more comprehensive data or fetch from an API
+// const DISTRICT_DATA = {
+//   "ANKARA": ["Çankaya", "Keçiören", "Yenimahalle", "Mamak", "Etimesgut", "Sincan", "Altındağ", "Pursaklar", "Gölbaşı", "Polatlı", "Kahramankazan", "Beypazarı", "Elmadağ", "Nallıhan", "Akyurt", "Şereflikoçhisar", "Haymana", "Çubuk", "Kızılcahamam", "Bala", "Kalecik", "Ayaş", "Güdül", "Çamlıdere", "Evren"],
+//   "ISTANBUL": ["Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler", "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", "Güngören", "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer", "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"],
+//   "IZMIR": ["Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla"],
+//   "BURSA": ["Osmangazi", "Nilüfer", "Yıldırım", "Gürsu", "Kestel", /* ... other Bursa districts */],
+//   "ANTALYA": ["Muratpaşa", "Kepez", "Konyaaltı", "Aksu", "Döşemealtı", /* ... other Antalya districts */],
+//   // ... add other cities and their districts
+// };
 
 
 // --- Constants (Categories, Cities) remain the same ---
 const RESTAURANT_CATEGORIES = [ /* ...categories */ { value: "", label: "Kategori Seçin" }, { value: "KEBAB", label: "Kebap" }, { value: "BURGER", label: "Burger" }, { value: "PIZZA", label: "Pizza" }, { value: "HOME_COOKING", label: "Ev Yemekleri" }, { value: "SEA_FOOD", label: "Deniz Ürünleri" }, { value: "DESERT", label: "Tatlı" }, { value: "COFFEE", label: "Kafe" }, { value: "OTHER", label: "Diğer" } ];
-const TURKISH_CITIES = [ /* ...cities */ { value: "", label: "Şehir Seçin" }, { value: "ISTANBUL", label: "İstanbul" }, { value: "ANKARA", label: "Ankara" }, { value: "IZMIR", label: "İzmir" }, { value: "BURSA", label: "Bursa" }, { value: "ANTALYA", label: "Antalya" } ];
+//const TURKISH_CITIES = [ /* ...cities */ { value: "", label: "Şehir Seçin" }, { value: "ISTANBUL", label: "İstanbul" }, { value: "ANKARA", label: "Ankara" }, { value: "IZMIR", label: "İzmir" }, { value: "BURSA", label: "Bursa" }, { value: "ANTALYA", label: "Antalya" } ];
 
 
 export default function RestaurantRegisterPage() {

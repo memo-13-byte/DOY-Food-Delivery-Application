@@ -11,6 +11,7 @@ import {
 import { getResponseErrors } from "../services/exceptionUtils";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { DISTRICT_DATA, TURKISH_CITIES } from "../services/address";
 
 // --- Custom UI components (Button, Input, Label, Checkbox, Switch, Select) ---
 // Assume these components are defined as in the previous examples
@@ -50,28 +51,28 @@ const SuccessIndicator = ({ darkMode }) => {
 
 // --- Data for Dependent Dropdowns ---
 // NOTE: Populate this with more comprehensive data or fetch from an API
-const DISTRICT_DATA = {
-  "ANKARA": ["Çankaya", "Keçiören", "Yenimahalle", "Mamak", "Etimesgut", "Sincan", "Altındağ", "Pursaklar", "Gölbaşı", "Polatlı", "Kahramankazan", "Beypazarı", "Elmadağ", "Nallıhan", "Akyurt", "Şereflikoçhisar", "Haymana", "Çubuk", "Kızılcahamam", "Bala", "Kalecik", "Ayaş", "Güdül", "Çamlıdere", "Evren"],
-  "ISTANBUL": ["Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler", "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", "Güngören", "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer", "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"],
-  "IZMIR": ["Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla"],
-  "ADANA": ["Seyhan", "Yüreğir", "Çukurova", "Sarıçam", "Ceyhan", "Kozan", "İmamoğlu", "Karataş", "Karaisalı", "Pozantı", "Yumurtalık", "Tufanbeyli", "Feke", "Aladağ", "Saimbeyli"], // Added Adana districts
-  "BURSA": ["Osmangazi", "Nilüfer", "Yıldırım", "Gürsu", "Kestel", /* ... */ ],
-  "ANTALYA": ["Muratpaşa", "Kepez", "Konyaaltı", "Aksu", "Döşemealtı", /* ... */ ],
-  // ... add other cities and their districts
-};
-
-
-// --- Constants ---
-const TURKISH_CITIES = [
-  { value: "", label: "Şehir Seçin" },
-  { value: "ISTANBUL", label: "İstanbul" },
-  { value: "ANKARA", label: "Ankara" },
-  { value: "IZMIR", label: "İzmir" },
-  { value: "BURSA", label: "Bursa" },
-  { value: "ANTALYA", label: "Antalya" },
-  { value: "ADANA", label: "Adana" }, // Added Adana
-  // ... add other cities
-];
+// const DISTRICT_DATA = {
+//   "ANKARA": ["Çankaya", "Keçiören", "Yenimahalle", "Mamak", "Etimesgut", "Sincan", "Altındağ", "Pursaklar", "Gölbaşı", "Polatlı", "Kahramankazan", "Beypazarı", "Elmadağ", "Nallıhan", "Akyurt", "Şereflikoçhisar", "Haymana", "Çubuk", "Kızılcahamam", "Bala", "Kalecik", "Ayaş", "Güdül", "Çamlıdere", "Evren"],
+//   "ISTANBUL": ["Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler", "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", "Güngören", "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer", "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"],
+//   "IZMIR": ["Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla"],
+//   "ADANA": ["Seyhan", "Yüreğir", "Çukurova", "Sarıçam", "Ceyhan", "Kozan", "İmamoğlu", "Karataş", "Karaisalı", "Pozantı", "Yumurtalık", "Tufanbeyli", "Feke", "Aladağ", "Saimbeyli"], // Added Adana districts
+//   "BURSA": ["Osmangazi", "Nilüfer", "Yıldırım", "Gürsu", "Kestel", /* ... */ ],
+//   "ANTALYA": ["Muratpaşa", "Kepez", "Konyaaltı", "Aksu", "Döşemealtı", /* ... */ ],
+//   // ... add other cities and their districts
+// };
+//
+//
+// // --- Constants ---
+// const TURKISH_CITIES = [
+//   { value: "", label: "Şehir Seçin" },
+//   { value: "ISTANBUL", label: "İstanbul" },
+//   { value: "ANKARA", label: "Ankara" },
+//   { value: "IZMIR", label: "İzmir" },
+//   { value: "BURSA", label: "Bursa" },
+//   { value: "ANTALYA", label: "Antalya" },
+//   { value: "ADANA", label: "Adana" }, // Added Adana
+//   // ... add other cities
+// ];
 
 
 export default function CourierRegisterPage() {
