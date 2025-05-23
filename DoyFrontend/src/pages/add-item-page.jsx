@@ -151,8 +151,8 @@ export default function AddItemPage() {
     } else {
       // For new items, still fetch restaurantId
       (AuthorizedRequest.getRequest(`http://localhost:8080/api/users/restaurant-owners/get-by-email/${restaurantEmail}`)).then((response) => {
-        if (response && response.id) {
-          setRestaurantId(response.id);
+        if (response.data && response.data.id) {
+          setRestaurantId(response.data.id);
         } else {
           console.error("Could not fetch restaurant ID for email:", restaurantEmail);
           setErrors(prev => ({ ...prev, restaurant: "Restoran bilgileri alınamadı."}));

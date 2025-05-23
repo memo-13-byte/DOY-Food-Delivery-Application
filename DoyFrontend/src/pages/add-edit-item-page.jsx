@@ -132,7 +132,6 @@ export default function AddEditItemPage() {
         name: formData.name,
         description: formData.description,
         price: formData.price,
-        restaurantId: 1,
         menuItemType: reversemenuItemTypeMap[formData.menuItemType]
       }
       console.log(formDataToSend)

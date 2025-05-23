@@ -43,8 +43,7 @@ public class ItemController implements IItemController {
     @Override
     @PostMapping("/post")
     public ResponseEntity<DtoMenuItem> postItem(@RequestBody @Valid DtoMenuItemIU item) {
-        if (jwtService.checkIfUserRole(UserRoles.RESTAURANT_OWNER) &&
-                userService.checkIfSameUserFromToken(item.getRestaurantId()))
+        if (jwtService.checkIfUserRole(UserRoles.RESTAURANT_OWNER))
             return ResponseEntity.ok(itemService.postItem(item));
         throw new UnauthorizedRequestException();
 
