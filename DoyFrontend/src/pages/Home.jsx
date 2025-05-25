@@ -26,7 +26,7 @@ const renderStars = (rating) => {
 }
 
 const Home = () => {
-  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode"))
+  const [darkMode, setDarkMode] = useState(false)
 
   const navigate = useNavigate()
   const [modalOpen, setModalOpen] = useState(false)

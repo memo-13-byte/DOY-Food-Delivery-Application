@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AuthorizedRequest from '../services/AuthorizedRequest';
 
 
 function ManagePromotionPage() {
@@ -18,12 +19,7 @@ function ManagePromotionPage() {
 
     const handleCreatePromotion = async (data) => {
         try {
-            const response = await axios.post('http://localhost:8080/promotion', data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer YOUR_JWT_TOKEN_HERE`
-                }
-            });
+            const response =await AuthorizedRequest.postRequest(`http://localhost:8080/api/promotion/post`, data);
             console.log('Promotion created:', response.data);
             alert('Promotion created successfully!');
             // Optional: Re-fetch the list or navigate after creation

@@ -13,7 +13,7 @@ export default function HomePage() {
   const [darkMode, setDarkMode] = useState(false)
 
   useState(() => {
-    setDarkMode(localStorage.getItem("darkMode"));
+    setDarkMode(false);
   }, [])
 
   return (

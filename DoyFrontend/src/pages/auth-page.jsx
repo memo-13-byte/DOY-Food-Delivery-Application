@@ -181,6 +181,9 @@ export default function AuthPage() {
     }
   )
 
+  useState(() => {
+    setDarkMode(false);
+  }, [])
 
   // Alertify state
   const [alertify, setAlertify] = useState({ show: false, message: "", type: "success" })
